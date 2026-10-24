@@ -342,32 +342,120 @@
     lang: function () { return root.getAttribute("data-lang") || "en"; } };
 })();
 
-/* Light/dark switch: a round button at the bottom right. Follows the system until the reader
-   picks a theme; the choice is saved per browser. */
+/* Theme: follows the system until the reader picks light or dark in the menu; saved per browser. */
 (function () {
   var KEY = "harness-book-theme", root = document.documentElement;
   var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
   var choice = null;
   try { choice = localStorage.getItem(KEY); } catch (e) {}
-  var SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/>' +
-    '<path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
-  var MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>';
-  var btn = document.createElement("button");
-  btn.className = "tbtn"; btn.type = "button";
   function current() { return choice || (mq && mq.matches ? "dark" : "light"); }
   function apply() {
-    var t = current();
-    root.setAttribute("data-theme", t);
-    btn.innerHTML = t === "dark" ? SUN : MOON;
-    btn.setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
-    btn.title = btn.getAttribute("aria-label");
+    root.setAttribute("data-theme", current());
+    document.querySelectorAll("[data-settheme]").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-settheme") === current()));
+    });
   }
-  btn.addEventListener("click", function () {
-    choice = current() === "dark" ? "light" : "dark";
-    try { localStorage.setItem(KEY, choice); } catch (e) {}
+  window.Book.getTheme = current;
+  window.Book.setTheme = function (t) {
+    choice = t;
+    try { localStorage.setItem(KEY, t); } catch (e) {}
     apply();
-  });
+  };
   if (mq) { if (mq.addEventListener) mq.addEventListener("change", apply); else if (mq.addListener) mq.addListener(apply); }
   apply();
-  document.body.appendChild(btn);
+})();
+
+/* Menu: a slim top bar with a menu button; navigation, language and theme live in a left drawer,
+   so the reading view stays clean. The single-file edition adds a chapter list (window.BookNav)
+   and search (window.openSearch). */
+(function () {
+  var B = window.Book;
+  var MENU = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+  var CLOSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  var FIND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>';
+  function bi(en, hi) { return '<span class="l-en">' + en + '</span><span class="l-hi">' + hi + "</span>"; }
+
+  var veil = document.createElement("div");
+  veil.className = "drawer-veil";
+  var dr = document.createElement("aside");
+  dr.className = "drawer";
+  dr.setAttribute("aria-label", "Menu");
+  dr.setAttribute("aria-hidden", "true");
+  document.body.appendChild(veil);
+  document.body.appendChild(dr);
+
+  function build() {
+    var nav = window.BookNav ? window.BookNav() : null;
+    var links = nav ? nav.links : [];
+    if (!nav) {                                    // separate-page edition: reuse the top bar's own links
+      var bar = document.querySelector(".topbar");
+      (bar ? bar.querySelectorAll(".crumbs a") : []).forEach(function (a) { links.push({ href: a.getAttribute("href"), html: a.innerHTML }); });
+    }
+    var t = B.getTheme(), l = B.lang();
+    var h = '<div class="drawer-head"><span>' + bi("Menu", "Menu") + '</span><button type="button" class="drawer-x" aria-label="Close menu">' + CLOSE + "</button></div>" +
+      '<div class="drawer-body">';
+    if (links.length || window.openSearch) {
+      h += "<h3>" + bi("Go to", "Kahan jaana hai") + '</h3><nav class="drawer-links">' +
+        links.map(function (k) { return '<a href="' + k.href + '">' + (k.html || bi(k.en, k.hi)) + "</a>"; }).join("") +
+        (window.openSearch ? '<a href="#" data-opensearch>' + bi("Search topics", "Topic dhoondho") + "</a>" : "") + "</nav>";
+    }
+    h += "<h3>" + bi("Language", "Bhasha") + '</h3><div class="seg" role="group" aria-label="Language">' +
+      '<button type="button" data-setlang="en" aria-pressed="' + (l === "en") + '">English</button>' +
+      '<button type="button" data-setlang="hi" aria-pressed="' + (l === "hi") + '">Hinglish</button></div>';
+    h += "<h3>" + bi("Mode", "Mode") + '</h3><div class="seg" role="group" aria-label="Theme">' +
+      '<button type="button" data-settheme="light" aria-pressed="' + (t === "light") + '">' + bi("Light", "Light") + "</button>" +
+      '<button type="button" data-settheme="dark" aria-pressed="' + (t === "dark") + '">' + bi("Dark", "Dark") + "</button></div>";
+    if (nav && nav.items && nav.items.length) {
+      h += "<h3>" + nav.title + '</h3><nav class="drawer-links drawer-chapters">' + nav.items.map(function (it) {
+        return '<a href="' + it.href + '"' + (it.current ? ' class="current" aria-current="page"' : "") + ">" + it.label + (it.done ? ' <span class="dn">✓</span>' : "") + "</a>";
+      }).join("") + "</nav>";
+    }
+    dr.innerHTML = h + "</div>";
+  }
+
+  function open() {
+    build();
+    dr.classList.add("open"); veil.classList.add("open");
+    dr.setAttribute("aria-hidden", "false");
+    var cur = dr.querySelector(".current"), list = dr.querySelector(".drawer-chapters");
+    if (cur && list) list.scrollTop = cur.offsetTop - list.offsetTop - list.clientHeight / 2;   // centre this chapter in the list
+    dr.querySelector(".drawer-x").focus();
+  }
+  function close() {
+    dr.classList.remove("open"); veil.classList.remove("open");
+    dr.setAttribute("aria-hidden", "true");
+  }
+  veil.addEventListener("click", close);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && dr.classList.contains("open")) close(); });
+  dr.addEventListener("click", function (e) {
+    var t = e.target.closest("button, a");
+    if (!t) return;
+    if (t.classList.contains("drawer-x")) return close();
+    if (t.hasAttribute("data-settheme")) return B.setTheme(t.getAttribute("data-settheme"));
+    if (t.hasAttribute("data-opensearch")) { e.preventDefault(); close(); return window.openSearch(); }
+    if (t.tagName === "A") close();                // navigating away
+  });
+
+  // Turn the page's top bar into the slim bar. Safe to call again (e.g. after the single-file router renders).
+  B.decorate = function () {
+    var bar = document.querySelector(".topbar");
+    if (!bar) return;
+    if (!bar.classList.contains("has-drawer")) {
+      bar.classList.add("has-drawer");
+      var m = document.createElement("button");
+      m.type = "button"; m.className = "bar-btn menu-btn"; m.innerHTML = MENU;
+      m.setAttribute("aria-label", "Open menu"); m.title = "Menu";
+      m.addEventListener("click", open);
+      bar.insertBefore(m, bar.firstChild);
+    }
+    if (window.openSearch && !bar.querySelector(".find-btn")) {
+      var f = document.createElement("button");
+      f.type = "button"; f.className = "bar-btn find-btn"; f.innerHTML = FIND;
+      f.setAttribute("aria-label", "Search topics"); f.title = "Search topics";
+      f.addEventListener("click", function () { window.openSearch(); });
+      bar.appendChild(f);
+    }
+  };
+  B.openMenu = open;
+  B.decorate();
 })();

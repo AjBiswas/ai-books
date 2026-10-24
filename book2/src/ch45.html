@@ -1,0 +1,91 @@
+  <div class="story">
+    <p class="l-en">Most prompts are tuned by hand: change a word, try two examples, "looks better", ship. That's guessing. <strong>Automatic prompt optimisation</strong> turns it into a search with a score. You provide a task, a small labelled dataset and a metric; a program tries many candidate instructions and example sets, scores each on held-out data, and keeps the best. <strong>DSPy</strong>, from Stanford, is the best-known library for this. This chapter builds the core idea from scratch so you can see exactly what such libraries do.</p>
+    <p class="l-hi">Zyaadatar prompts haath se tune hote hain: ek shabd badlo, do examples try karo, "behtar lagta hai", ship. Yeh andaaza hai. <strong>Automatic prompt optimisation</strong> ise score wali khoj bana deta hai. Aap kaam, chhota labelled dataset aur ek metric dete ho; program kai instructions aur example sets aazmaata hai, har ek ko alag rakhe data par score karta hai, aur sabse achha rakhta hai. Stanford ka <strong>DSPy</strong> iske liye sabse mashhoor library hai. Yeh chapter mool idea shunya se banata hai taaki dikhe ki aisi libraries asal mein kya karti hain.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Prompts as parameters to search over</span><span class="l-hi">Prompts ko parameters ki tarah khojna</span></li>
+    <li><b>2</b><span class="l-en">Train, dev and test splits for prompts</span><span class="l-hi">Prompts ke liye train, dev aur test splits</span></li>
+    <li><b>3</b><span class="l-en">A from-scratch optimiser with a local model</span><span class="l-hi">Local model ke saath shunya se optimiser</span></li>
+    <li><b>4</b><span class="l-en">What DSPy adds, and when to use it</span><span class="l-hi">DSPy kya jodta hai, aur kab use karein</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">A prompt is a setting you can search</span><span class="l-hi">Prompt ek setting hai jise khoja ja sakta hai</span></h2></div>
+<div class="story">
+  <p class="l-en">Look at a prompt the way Chapter 37 looked at weights: a set of knobs. The instruction wording is a knob. Which few-shot examples you include is a knob. Their order is a knob. You can't take gradients through words, but you can try candidates and keep what scores best, as long as you have a <strong>metric</strong> you trust (Ch 26). The same discipline applies as in training: choose on a <strong>dev</strong> set, then report on a <strong>test</strong> set you never looked at, or you'll fool yourself.</p>
+  <p class="l-hi">Prompt ko waise dekho jaise Chapter 37 ne weights ko dekha: knobs ka set. Instruction ke shabd ek knob. Kaunse few-shot examples shaamil karein, ek knob. Unka kram, ek knob. Shabdon par gradient nahi le sakte, par candidates aazma kar sabse achha score wala rakh sakte ho, bas ek bharosemand <strong>metric</strong> ho (Ch 26). Training wala hi anushaasan: <strong>dev</strong> set par chuno, phir aise <strong>test</strong> set par report karo jo kabhi nahi dekha, warna khud ko dhokha doge.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">An optimiser from scratch</span><span class="l-hi">Shunya se optimiser</span></h2></div>
+<div class="story">
+  <p class="l-en">The task: route Indian e-commerce support messages to billing, delivery, account or other. Four labelled examples to draw few-shot demos from, eight dev messages to choose with, eight test messages to report on. Three instructions, from lazy to precise, each tried with and without examples: six candidates, scored by plain accuracy.</p>
+  <p class="l-hi">Kaam: Indian e-commerce support messages ko billing, delivery, account ya other mein bhejna. Few-shot demos ke liye chaar labelled examples, chunne ke liye aath dev messages, report ke liye aath test messages. Teen instructions, aalsi se sateek tak, har ek examples ke saath aur bina: chhe candidates, saadi accuracy se score.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: search instructions × examples, choose on dev, report on test</span><span class="l-hi">Coders ke liye: instructions × examples khojo, dev par chuno, test par report</span><span class="lvl">code2/ch45/optimise_prompt.py</span></summary>
+  <div class="inner">
+<pre>for instruction, shots in itertools.product(INSTRUCTIONS, SHOTS.values()):
+    results.append((score(instruction, shots, DEV), instruction, shots))     # choose on DEV
+
+best = max(results)
+print("test (unseen):", score(best.instruction, best.shots, TEST))         # report on TEST</pre>
+<!--OPT_OUTPUT-->
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">What DSPy adds</span><span class="l-hi">DSPy kya jodta hai</span></h2></div>
+<div class="story">
+  <p class="l-en">DSPy changes how you write the program in the first place. Instead of prompt strings, you declare <strong>signatures</strong> ("message → category") and <strong>modules</strong> (predict, chain-of-thought, retrieve) and compose them like functions. Then an <strong>optimiser</strong> (DSPy calls them teleprompters) compiles the program against your metric: it can bootstrap few-shot examples from the model's own successful runs, and propose and test new instructions (the MIPRO family does both). When you switch models, you re-compile instead of re-tuning prompts by hand.</p>
+  <p class="l-hi">DSPy program likhne ka tareeka hi badal deta hai. Prompt strings ki jagah aap <strong>signatures</strong> ("message → category") aur <strong>modules</strong> (predict, chain-of-thought, retrieve) ghoshit karte ho aur unhe functions ki tarah jodte ho. Phir ek <strong>optimiser</strong> (DSPy inhe teleprompters kehta hai) program ko aapke metric ke khilaaf compile karta hai: woh model ke apne safal runs se few-shot examples bana sakta hai, aur naye instructions sujha kar test kar sakta hai (MIPRO parivaar dono karta hai). Model badlo toh prompts haath se dobara tune karne ki jagah dobara compile karo.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">When it's worth it</span><span class="l-hi">Kab faayde ka hai</span></h4>
+  <p class="l-en">Automatic optimisation pays off when the task is repeated thousands of times, you have (or can label) 50+ examples, and the metric is reliable. It also makes model switches cheap. It's overkill for a one-off prompt, and it can only be as good as your metric: optimise against a sloppy judge and you'll get a prompt that pleases the judge (Book 2, Ch 3). Always keep the human-readable final prompt in version control (Ch 41) and look at it.</p>
+  <p class="l-hi">Automatic optimisation tab faayde ka hai jab kaam hazaaron baar dohraaya jaaye, aapke paas 50+ examples hon (ya label kar sako), aur metric bharosemand ho. Yeh model badalna bhi sasta banata hai. Ek-baar ke prompt ke liye zyaada hai, aur yeh aapke metric jitna hi achha ho sakta hai: dheele judge par optimise karo toh judge ko khush karne wala prompt milega (Book 2, Ch 3). Aakhri, padhne laayak prompt hamesha version control mein rakho (Ch 41) aur use padho.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Treat instructions and examples as settings to search, scored by a metric you trust.</li><li>Choose on a dev set, report on an unseen test set.</li><li>Even a small search over a few candidates replaces guessing with measurement.</li><li>DSPy declares programs as signatures and modules, then compiles prompts against your metric.</li><li>Worth it for repeated tasks with data; useless with a bad metric.</li></ol>
+  <ol class="l-hi"><li>Instructions aur examples ko khojne laayak settings maano, bharosemand metric se score.</li><li>Dev set par chuno, anjaan test set par report karo.</li><li>Kuch candidates ki chhoti khoj bhi andaaze ki jagah naap le aati hai.</li><li>DSPy programs ko signatures aur modules ki tarah likhta, phir aapke metric par prompts compile karta hai.</li><li>Data wale dohraaye kaamon ke liye faayde ka; kharaab metric ke saath bekaar.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add a fourth instruction written by the model itself ("improve this instruction given these mistakes") and see if it beats yours. <span class="level">core</span></p><p class="l-hi">Model ka khud likha chautha instruction jodo ("in galtiyon ko dekh kar yeh instruction sudhaaro") aur dekho kya aapke wale ko haraata hai. <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Install DSPy and rebuild the router as a signature with a <code>BootstrapFewShot</code> optimiser. Compare with the lab. <span class="level">stretch</span></p><p class="l-hi">DSPy install karo aur router ko <code>BootstrapFewShot</code> optimiser ke saath signature ki tarah dobara banao. Lab se tulna karo. <span class="level">stretch</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Khattab et al. (2023). <em>DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines.</em></li>
+  <li>Opsahl-Ong et al. (2024). <em>Optimizing Instructions and Demonstrations for Multi-Stage Language Model Programs</em> (MIPRO).</li>
+  <li>Zhou et al. (2023). <em>Large Language Models Are Human-Level Prompt Engineers</em> (APE).</li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.flow("scA", [
+    { en: "Task + metric", hi: "Kaam + metric", sen: "route messages; accuracy", shi: "messages route karo; accuracy" },
+    { en: "Candidates", hi: "Candidates", sen: "3 instructions × 2 example sets", shi: "3 instructions × 2 example sets" },
+    { en: "Score on dev", hi: "Dev par score", sen: "8 labelled messages", shi: "8 labelled messages" },
+    { en: "Keep the best", hi: "Sabse achha rakho", sen: "highest dev accuracy", shi: "sabse zyaada dev accuracy" },
+    { en: "Report on test", hi: "Test par report", sen: "8 messages never used for choosing", shi: "8 messages jo chunne mein kabhi use nahi hue" },
+    { en: "Version it", hi: "Version karo", sen: "store the prompt, re-run on model change", shi: "prompt store karo, model badle toh dobara chalao" }
+  ], [
+    ["Start with a task and a number that says how well it's done.", "Kaam aur ek number se shuru karo jo bataaye kitna achha hua."],
+    ["Generate candidate prompts: different instructions, with and without examples.", "Candidate prompts banao: alag instructions, examples ke saath aur bina."],
+    ["Score every candidate on a dev set.", "Har candidate ko dev set par score karo."],
+    ["Keep the one with the best dev score.", "Sabse achhe dev score wala rakho."],
+    ["Report its score on a test set it never saw, for an honest number.", "Imaandaar number ke liye, kabhi na dekhe test set par score batao."],
+    ["Save the winning prompt like code, and re-run the search when the model changes.", "Jeetne wala prompt code ki tarah save karo, aur model badle toh khoj dobara chalao."]
+  ], { perRow: 3 });
+})();
+</script>

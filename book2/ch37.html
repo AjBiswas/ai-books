@@ -191,8 +191,8 @@ inputs     target  prediction
     var dots = path.map(function (w, k) {
       var g = E(s, "g", { "class": "anim" });
       E(g, "circle", { cx: xOf(w), cy: yOf(w) - 9, r: 9, style: "fill:var(--" + (k === path.length - 1 ? "signal" : "amber") + ")" });
-      var dx = k === 4 ? -24 : k === 5 ? 24 : 0;            // the last two balls sit close together: spread their labels
-      E(g, "text", { x: xOf(w) + dx, y: yOf(w) - 24, "text-anchor": "middle", "font-size": 11, "class": "mono" }, "step " + [0, 1, 2, 3, 5, 10][k]);
+      if (k !== 3 && k !== 4)                             // balls 3 and 4 sit close to their neighbours: the caption names them
+        E(g, "text", { x: xOf(w), y: yOf(w) - 24, "text-anchor": "middle", "font-size": 11, "class": "mono" }, "step " + [0, 1, 2, 3, 5, 10][k]);
       return g;
     });
     B.scene(S.fig, [

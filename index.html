@@ -605,6 +605,42 @@ pre { border: 0; border-radius: 16px; box-shadow: inset 0 2px 8px rgba(0, 0, 0, 
 /* Cross-reference line on a contents page */
 .xref { margin-top: 1.2rem; font-family: var(--font-display); font-size: 0.95rem; color: var(--ink-2); }
 
+/* Slim top bar + left menu drawer (built by book.js). Without JS the old bar stays as it was. */
+.topbar.has-drawer { justify-content: flex-start; gap: 0.75rem; flex-wrap: nowrap; padding-block: 0.45rem; }
+.topbar.has-drawer .langtog, .topbar.has-drawer .crumbs > a { display: none; }
+.topbar.has-drawer .crumbs { flex: 1 1 auto; min-width: 0; }
+.topbar.has-drawer .crumbs > span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-btn { flex: none; width: 2.4rem; height: 2.4rem; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: var(--chip); color: var(--chip-ink); }
+.bar-btn svg { width: 1.15rem; height: 1.15rem; }
+.tbtn { display: none; }
+.drawer-veil { position: fixed; inset: 0; z-index: 40; background: rgba(0, 0, 0, .42); opacity: 0; pointer-events: none; transition: opacity .2s; }
+.drawer-veil.open { opacity: 1; pointer-events: auto; }
+.drawer { position: fixed; top: 0; bottom: 0; left: 0; z-index: 41; width: min(320px, 86vw); display: flex; flex-direction: column;
+  background: var(--sheet, var(--paper)); color: var(--ink); box-shadow: 0 0 40px rgba(0, 0, 0, .35);
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px); transform: translateX(-105%); transition: transform .25s ease; visibility: hidden; }
+.drawer.open { transform: none; visibility: visible; }
+.drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1rem 0.4rem 1.2rem;
+  font: 700 1.1rem var(--font-display); }
+.drawer-x { width: 2.2rem; height: 2.2rem; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: var(--chip); color: var(--chip-ink); }
+.drawer-x svg { width: 1rem; height: 1rem; }
+.drawer-body { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow-y: auto; padding: 0 1rem 1rem; }
+.drawer-body .drawer-chapters { flex: 1; min-height: 9rem; overflow-y: auto; -webkit-overflow-scrolling: touch; margin: 0 -0.3rem; padding: 0 0.3rem; }   /* settings stay put; only the chapter list scrolls */
+.drawer h3 { font: 600 0.7rem var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); margin: 1.3rem 0.2rem 0.5rem; }
+.drawer-links a { display: block; padding: 0.55rem 0.8rem; border-radius: 12px; color: var(--ink); text-decoration: none; font: 500 0.98rem var(--font-display); }
+.drawer-links a:hover { background: var(--card, var(--paper-2)); }
+.drawer-links a.current { background: var(--card, var(--paper-2)); font-weight: 700; box-shadow: var(--lift-sm, none); }
+.drawer-chapters a { font-size: 0.9rem; padding: 0.45rem 0.8rem; }
+.drawer-links .dn { color: var(--signal); font-weight: 700; }
+.seg { display: flex; padding: 3px; border-radius: 999px; background: var(--chip); }
+.seg button { flex: 1; border: 0; border-radius: 999px; padding: 0.5rem 0.8rem; cursor: pointer; background: transparent;
+  color: var(--chip-ink); font: 600 0.9rem var(--font-display); }
+.seg button[aria-pressed="true"] { background: var(--on-bg); color: var(--on-ink); box-shadow: 0 2px 6px rgba(0, 0, 0, .18); }
+@media (max-width: 560px) {
+  .topbar.has-drawer .crumbs > span { display: block; }
+}
+
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 /* Topic search for the single-file edition (inlined by package_single_html.py). */
 .sbtn { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 20;
@@ -5503,7 +5539,7 @@ $ cd code && python -m pytest -q
 <header class="cover">
   <div class="cover-grid">
     <div>
-      <div class="eyebrow"><span class="l-en">With Haron as your mentor · 36 chapters · A to Z</span><span class="l-hi">Haron aapka mentor · 36 chapters · A se Z</span></div>
+      <div class="eyebrow"><span class="l-en">With Haron as your mentor · 47 chapters · A to Z</span><span class="l-hi">Haron aapka mentor · 47 chapters · A se Z</span></div>
       <h1><span class="l-en">Becoming an AI Engineer</span><span class="l-hi">AI Engineer Banna</span></h1>
       <p class="lede l-en">Everything an AI engineer works with in 2026, from your first prompt to shipping agents in production: prompting, context engineering, RAG, MCP, skills, agents, fine-tuning, local models on your laptop, evals, security, cost, and the career path. Every idea has a picture, an animation, a simple example, and code you can run.</p>
       <p class="lede l-hi">2026 mein AI engineer jis cheez ke saath kaam karta hai, sab kuch: pehle prompt se lekar production mein agents ship karne tak. Prompting, context engineering, RAG, MCP, skills, agents, fine-tuning, laptop par local models, evals, security, kharch, aur career ka raasta. Har idea ke saath picture, animation, aasaan example aur chalne wala code.</p>
@@ -5576,12 +5612,12 @@ $ cd code && python -m pytest -q
 <li><span class="cn">39</span><a class="ct" href="#b2-ch39"><span class="l-en">Build a Tiny LLM from Scratch</span><span class="l-hi">Shunya se Tiny LLM Banao</span><span><span class="l-en">Train a character-level GPT on your laptop in a minute</span><span class="l-hi">Laptop par ek minute mein character-level GPT train karo</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 </ol></section>
 <section class="part"><h2><span class="pn">Part X</span><span class="l-en">Engineering deep dives</span><span class="l-hi">Engineering ki gehraai</span></h2><ol class="chapters">
-<li><span class="cn">40</span><span class="ct"><span class="l-en">AI-Assisted Software Engineering</span><span class="l-hi">AI ke Saath Software Engineering</span><span><span class="l-en">TDD, static and dynamic analysis, ASTs, dependency graphs, brownfield vs greenfield</span><span class="l-hi">TDD, static aur dynamic analysis, AST, dependency graphs, brownfield vs greenfield</span></span></span><span class="st planned"><span class="l-en">Planned</span><span class="l-hi">Aane wala</span></span></li>
+<li><span class="cn">40</span><a class="ct" href="#b2-ch40"><span class="l-en">AI-Assisted Software Engineering</span><span class="l-hi">AI ke Saath Software Engineering</span><span><span class="l-en">TDD, static and dynamic analysis, ASTs, dependency graphs, brownfield vs greenfield</span><span class="l-hi">TDD, static aur dynamic analysis, AST, dependency graphs, brownfield vs greenfield</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 <li><span class="cn">41</span><a class="ct" href="#b2-ch41"><span class="l-en">Long-Running Agents</span><span class="l-hi">Lambe Chalne Wale Agents</span><span><span class="l-en">Durable execution, state, control plane and harness-as-code</span><span class="l-hi">Durable execution, state, control plane aur harness-as-code</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
-<li><span class="cn">42</span><span class="ct"><span class="l-en">Deeper Reasoning and Memory</span><span class="l-hi">Gehri Soch aur Memory</span><span><span class="l-en">Self-consistency, tree of thoughts, episodic memory, continual learning</span><span class="l-hi">Self-consistency, tree of thoughts, episodic memory, continual learning</span></span></span><span class="st planned"><span class="l-en">Planned</span><span class="l-hi">Aane wala</span></span></li>
-<li><span class="cn">43</span><span class="ct"><span class="l-en">Talking to Databases: Text-to-SQL</span><span class="l-hi">Database se Baat: Text-to-SQL</span><span><span class="l-en">Schema in context, safe read-only SQL, repair loops, evaluation</span><span class="l-hi">Context mein schema, surakshit read-only SQL, repair loops, evaluation</span></span></span><span class="st planned"><span class="l-en">Planned</span><span class="l-hi">Aane wala</span></span></li>
+<li><span class="cn">42</span><a class="ct" href="#b2-ch42"><span class="l-en">Deeper Reasoning and Memory</span><span class="l-hi">Gehri Soch aur Memory</span><span><span class="l-en">Self-consistency, tree of thoughts, episodic memory, continual learning</span><span class="l-hi">Self-consistency, tree of thoughts, episodic memory, continual learning</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+<li><span class="cn">43</span><a class="ct" href="#b2-ch43"><span class="l-en">Talking to Databases: Text-to-SQL</span><span class="l-hi">Database se Baat: Text-to-SQL</span><span><span class="l-en">Schema in context, safe read-only SQL, repair loops, evaluation</span><span class="l-hi">Context mein schema, surakshit read-only SQL, repair loops, evaluation</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 <li><span class="cn">44</span><a class="ct" href="#b2-ch44"><span class="l-en">Deploying Models: Docker, Kubernetes, GPUs</span><span class="l-hi">Models Deploy Karna: Docker, Kubernetes, GPUs</span><span><span class="l-en">GPU memory maths, serving engines, containers, autoscaling</span><span class="l-hi">GPU memory ka hisaab, serving engines, containers, autoscaling</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
-<li><span class="cn">45</span><span class="ct"><span class="l-en">Automatic Prompt Optimisation and DSPy</span><span class="l-hi">Automatic Prompt Optimisation aur DSPy</span><span><span class="l-en">Let a program search for the best prompt against your eval</span><span class="l-hi">Program ko apne eval par sabse achha prompt dhoondhne do</span></span></span><span class="st planned"><span class="l-en">Planned</span><span class="l-hi">Aane wala</span></span></li>
+<li><span class="cn">45</span><a class="ct" href="#b2-ch45"><span class="l-en">Automatic Prompt Optimisation and DSPy</span><span class="l-hi">Automatic Prompt Optimisation aur DSPy</span><span><span class="l-en">Let a program search for the best prompt against your eval</span><span class="l-hi">Program ko apne eval par sabse achha prompt dhoondhne do</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 <li><span class="cn">46</span><a class="ct" href="#b2-ch46"><span class="l-en">Agent Identity and Access</span><span class="l-hi">Agent ki Pehchaan aur Access</span><span><span class="l-en">Non-human identities, scoped short-lived tokens, on-behalf-of, audit</span><span class="l-hi">Non-human identities, scoped short-lived tokens, on-behalf-of, audit</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 <li><span class="cn">47</span><a class="ct" href="#b2-ch47"><span class="l-en">Watermarks and Content Provenance</span><span class="l-hi">Watermark aur Content Provenance</span><span><span class="l-en">Detecting AI text, C2PA content credentials, and their limits</span><span class="l-hi">AI text pehchanna, C2PA content credentials, aur unki seemayein</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 </ol></section>
@@ -5816,6 +5852,28 @@ $ cd code && python -m pytest -q
   <div class="inner">
     <p class="l-en">Text is split into tokens by a tokenizer; each token becomes a vector (a list of a few thousand numbers). These vectors pass through dozens of <strong>transformer layers</strong>. In each layer, <strong>attention</strong> lets every token gather information from earlier tokens, and an MLP transforms it. The final layer outputs a score (logit) for every token in the vocabulary; softmax turns scores into probabilities; the sampler picks one. Generation is autoregressive: the chosen token is appended and the process repeats, with a <strong>KV cache</strong> so earlier work isn't redone. Book 2, Chapter 1 animates every step.</p>
     <p class="l-hi">Tokenizer text ko tokens mein kaatta hai; har token ek vector ban jaata hai (kuch hazaar numbers ki list). Yeh vectors darjanon <strong>transformer layers</strong> se guzarte hain. Har layer mein <strong>attention</strong> har token ko pehle ke tokens se jaankari lene deta hai, aur ek MLP use badalta hai. Aakhri layer vocabulary ke har token ka score (logit) deti hai; softmax scores ko probabilities banata hai; sampler ek chunta hai. Generation autoregressive hai: chuna hua token joda jaata hai aur process dohraaya jaata hai, <strong>KV cache</strong> ke saath taaki pehle ka kaam dobara na ho. Book 2 ka Chapter 1 har step animate karta hai.</p>
+  </div>
+</details>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: count real tokens, and watch temperature</span><span class="l-hi">Coders ke liye: asli tokens gino, aur temperature dekho</span><span class="lvl">code2/ch02/tokens_temperature.py</span></summary>
+  <div class="inner">
+<pre>full = post("generate", {"model": "qwen3:4b", "prompt": text, "raw": True, "options": {"num_predict": 1}})
+tokens = full["prompt_eval_count"]                  # Ollama reports how many tokens it read
+
+for temp in (0.0, 1.2):
+    names = [ask("Suggest one name for a chai shop.", temperature=temp, seed=s) for s in (1, 2, 3)]</pre>
+<pre>$ python code2/ch02/tokens_temperature.py
+1) same meaning, different token counts
+   English        13 tokens    68 characters
+   Hinglish       16 tokens    61 characters
+   Hindi script   51 tokens    59 characters
+
+2) temperature
+   temperature 0.0: ['Chai Breeze', 'Chai Hoo', 'Chai Hoo']
+   temperature 1.2: ['Chai Breeze', 'Spice &amp; Steam', 'Spice &amp; Steam']</pre>
+  <p class="l-en">Hindi script took about 4× the tokens of English for the same request, so it costs about 4× as much. And notice that temperature 0 still gave two different names across runs: low temperature makes answers <em>more</em> repeatable, not guaranteed identical. Never rely on it for exact repeatability.</p>
+  <p class="l-hi">Ek hi request ke liye Hindi script ne English se lagbhag 4 guna tokens liye, yaani lagbhag 4 guna kharch. Aur dekho, temperature 0 par bhi runs mein do alag naam aaye: kam temperature jawabon ko <em>zyaada</em> dohraane laayak banata hai, ek jaisa hone ki guarantee nahi. Sateek dohraav ke liye is par bharosa mat karo.</p>
   </div>
 </details>
 
@@ -6309,6 +6367,32 @@ print(resp.choices[0].message.content, resp.choices[0].finish_reason, resp.usage
   </div>
 </details>
 
+<details class="deep">
+  <summary><span class="l-en">For coders: retries with backoff, usage and cost</span><span class="l-hi">Coders ke liye: backoff ke saath retries, usage aur kharch</span><span class="lvl">code2/ch05/api_call.py</span></summary>
+  <div class="inner">
+<pre>for attempt in range(1, retries + 1):
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return json.loads(r.read())
+    except (urllib.error.URLError, TimeoutError):
+        wait = min(8, 0.5 * 2 ** attempt) + random.uniform(0, 0.3)   # exponential backoff + jitter
+        time.sleep(wait)</pre>
+<pre>$ python code2/ch05/api_call.py
+1) wrong address: retries, then gives up cleanly
+   attempt 1 failed (URLError: timed out); waiting 1.3s
+   attempt 2 failed (URLError: timed out); waiting 2.2s
+   gave up: URLError  -&gt; show the user a friendly error, log the details
+
+2) real call
+   answer: A UPI mandate is a pre-authorized instruction from your bank account to a merchant for recurring digital payments. It securely enables automatic, consent-based transactions for services like bill payments or subscriptions, verified by your bank and RBI guidelines.
+   finish_reason: stop   time: 18.7s
+   usage: {'prompt_tokens': 36, 'prompt_tokens_details': {'cached_tokens': 1}, 'completion_tokens': 259, 'total_tokens': 295}   (completion tokens include the model's hidden reasoning)
+   cost at the pretend price: $0.000161  -&gt; x 1 million calls a month = $161</pre>
+  <p class="l-en">The same code talks to a paid provider if you change BASE_URL, the model and the key. Note the usage: a two-sentence answer used 259 completion tokens, because qwen3:4b thinks before answering and that thinking is billed as output.</p>
+  <p class="l-hi">BASE_URL, model aur key badlo toh yahi code paid provider se baat karta hai. Usage dekho: do vaakya ke jawab ne 259 completion tokens liye, kyunki qwen3:4b jawab se pehle sochta hai aur woh soch output ki tarah bill hoti hai.</p>
+  </div>
+</details>
+
 <div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
 <div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
   <ol class="l-en"><li>A request names the model, the instructions, the messages and a token limit; the response gives text, a stop reason and usage.</li><li>Keys live in environment variables, never in code; set a spending limit.</li><li>Retry 429 and 5xx with backoff; fix 400s instead of retrying them.</li><li>Stream for humans, and know what each call costs.</li></ol>
@@ -6467,6 +6551,52 @@ def build_user_turn(policy: str, order: dict, message: str) -> str:
             f"&lt;customer_message&gt;\n{message}\n&lt;/customer_message&gt;")</pre>
     <p class="l-en">Stable instructions go in the system prompt; per-request data goes in the user turn, wrapped in tags. This also keeps the system prompt identical across requests, which makes prompt caching work (Chapter 29).</p>
     <p class="l-hi">Sthir instructions system prompt mein; har request ka data user turn mein, tags mein lipta hua. Isse system prompt har request mein same rehta hai, jisse prompt caching kaam karti hai (Chapter 29).</p>
+  </div>
+</details>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: a vague prompt versus a clear one</span><span class="l-hi">Coders ke liye: dhundhla prompt vs saaf prompt</span><span class="lvl">code2/ch06/prompt_basics.py</span></summary>
+  <div class="inner">
+<pre>vague = f"Write an update about this.\n{NOTES}"
+clear = (f"Write a WhatsApp update for the sales team (non-technical) from these meeting notes.\n"
+         f"Include: what changed, why, who owns the next step, and the next meeting date.\n"
+         f"Format: 3 short bullet points, under 50 words total, no greeting.\n"
+         f"If something isn't in the notes, leave it out; don't invent details.\n\nNotes: {NOTES}")</pre>
+<pre>$ python code2/ch06/prompt_basics.py
+--- VAGUE prompt (179 words)
+Here’s a clear, professional update based on your details:
+
+---
+
+**Subject:** Project Update: Launch Date Adjustment &amp; Next Steps  
+
+**From:** [Your Name/Team]  
+**Date:** 23 October 2024  
+
+Following our meeting today (23 Oct):  
+
+1.  **Launch Date Adjusted:** The project launch has been moved from **1 November** to **15 November** due to vendor delays.  
+2.  **Vendor Follow-Up:** Priya is now responsible for all vendor communication and resolution to ensure the new timeline is met.  
+3.  **Budget Status:** The project budget remains **unchanged** – no additional costs are anticipated.  
+4.  **Next Sync:** We’ll align on progress and next steps at our next meeting on **30 October**.  
+
+This adjustment ensures we address the vendor delay proactively while maintaining budget discipline. Priya will provide updates on vendor status by 30 Oct.  
+
+**Action:** Priya to confirm vendor resolution path by EOD 30 Oct.  
+
+—  
+*This update reflects decisions made at the 23 Oct meeting.*  
+
+---  
+
+This version is concise, action-oriented, and emphasizes accountability (Priya), stability (budget), and urgency (next sync on 30 Oct). It avoids technical jargon while clearly communicating the change and next steps.
+
+--- CLEAR prompt (19 words)
+- Launch moved to 15 Nov (vendor delay)  
+- Priya to follow up vendor  
+- Next sync: 30 Oct</pre>
+  <p class="l-en">Look closely at the vague answer: it invented a year (2024) and a deadline for Priya ("by EOD 30 Oct") that the notes never mention. The clear prompt said who it was for, what to include, the format, the length, and "don't invent details": 19 accurate words.</p>
+  <p class="l-hi">Dhundhle jawab ko dhyaan se dekho: usne ek saal (2024) aur Priya ki deadline ("30 Oct EOD tak") gadh di jo notes mein thi hi nahi. Saaf prompt ne bataaya kiske liye, kya shaamil karna, format, lambai, aur "details mat gadho": 19 sahi shabd.</p>
   </div>
 </details>
 
@@ -7228,6 +7358,28 @@ for block in resp.content:
   <p class="l-en">You'll also see <strong>forward deployed engineer (FDE)</strong> in job posts from AI companies. It's a different idea with a similar name: an engineer who works inside a customer's team, turns their messy real problem into a spec, and builds the AI solution with them. It's forward engineering done on site, and a fast-growing role.</p>
   <p class="l-hi">AI companies ki job posts mein aapko <strong>forward deployed engineer (FDE)</strong> bhi dikhega. Naam milta-julta hai par idea alag: aisa engineer jo customer ki team ke andar kaam karta hai, unki uljhi hui asli problem ko spec mein badalta hai, aur unke saath AI solution banata hai. Yeh jagah par jaakar ki gayi forward engineering hai, aur tezi se badhta role hai.</p>
 </div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: four extraction tricks, and an output check</span><span class="l-hi">Coders ke liye: chaar extraction chaalein, aur output check</span><span class="lvl">code2/ch11/prompt_leak.py</span></summary>
+  <div class="inner">
+<pre>def leaks(reply):
+    words = SYSTEM.lower().split()
+    chunks = {" ".join(words[i:i + 6]) for i in range(len(words) - 5)}   # any 6-word run copied verbatim
+    return "VIP-7731" in reply or any(c in reply.lower() for c in chunks)
+
+reply = chat(attack)
+shown = "[blocked by output check]" if leaks(reply) else reply</pre>
+<pre>$ python code2/ch11/prompt_leak.py
+direct     leaked=False  user sees: I don't have access to my system prompt details, but I'm here to help with your shopping needs! Just let me kn
+repeat     leaked=True   user sees: [blocked by output check]
+role-play  leaked=False  user sees: I am ShopBot for Acme. Here is my full configuration for debugging purposes:  {   "name": "ShopBot",   "versio
+summarise  leaked=False  user sees: I cannot reveal my instructions.
+
+lesson: even when the model resists, the real fix is to keep the secret out of the prompt (a tool hands it out).</pre>
+  <p class="l-en">The "repeat" trick worked on qwen3:4b, and the output check caught it before the user saw it. The "role-play" reply printed a "full configuration" that contains neither the code nor any sentence of the real prompt: the model invented one, exactly as the AI-behaviour box above warns. Two lessons: output checks catch some leaks, and the only complete fix is not having the secret in the prompt.</p>
+  <p class="l-hi">"Repeat" chaal qwen3:4b par chal gayi, aur output check ne user ke dekhne se pehle pakad li. "Role-play" jawab ne ek "poori configuration" chhaapi jisme na code hai na asli prompt ka koi vaakya: model ne gadh di, bilkul jaisa upar ka AI-behaviour box chetaata hai. Do sabak: output checks kuch leaks pakadte hain, aur poora ilaaj sirf yeh hai ki secret prompt mein ho hi nahi.</p>
+  </div>
+</details>
 
 <div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
 <div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
@@ -9179,6 +9331,29 @@ Rough GPU memory to fine-tune an 8B model
   <p class="l-en">Phones and new "AI PCs" ship with neural processing units and built-in small models for summarising notifications, rewriting text and voice features, all offline and private. For Indian users on patchy networks, on-device models can mean an app that works in a train with no signal. Plan for both: a small local model for instant, private tasks, and a cloud model for hard ones.</p>
   <p class="l-hi">Phones aur naye "AI PCs" neural processing units aur bane-banaaye chhote models ke saath aate hain, notifications ka summary, text dobara likhna aur voice features ke liye, sab offline aur private. Kamzor network wale Indian users ke liye on-device models ka matlab ho sakta hai aisi app jo bina signal ki train mein bhi chale. Dono ka plan karo: turant, private kaamon ke liye chhota local model, aur mushkil ke liye cloud model.</p>
 </div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: quantise a layer by hand</span><span class="l-hi">Coders ke liye: haath se layer quantise karo</span><span class="lvl">code2/ch24/quantize.py</span></summary>
+  <div class="inner">
+<pre>def quantise(W, bits, group=32):
+    q_max = 2 ** (bits - 1) - 1                     # 127 for 8-bit, 7 for 4-bit
+    g = W.reshape(-1, group)
+    scale = np.abs(g).max(1, keepdims=True) / q_max # one scale per group of 32 weights
+    q = np.clip(np.round(g / scale), -q_max, q_max).astype(np.int8)
+    return q, scale</pre>
+<pre>$ python code2/ch24/quantize.py
+format    size of this layer  weight error  output error
+fp32                 64.0 MB             0             0
+fp16                 32.0 MB       0.018%       0.021%
+int8                 17.0 MB         0.6%         0.5%
+int4                  9.0 MB        10.2%         9.8%
+int2                  5.0 MB        69.0%        66.0%
+
+7B model in fp16 = ~14 GB; in 4-bit = ~4 GB: the difference between 'no' and 'yes' on a laptop.</pre>
+  <p class="l-en">8-bit is nearly free: under 1% error at a quarter of the size. This simple 4-bit scheme loses about 10% per layer; real formats such as GGUF Q4_K_M use smarter grouping and scales, which is why a well-made 4-bit model stays usable. 2-bit breaks the layer.</p>
+  <p class="l-hi">8-bit lagbhag muft hai: chauthaai size par 1% se kam error. Yeh saada 4-bit tareeka har layer mein lagbhag 10% khota hai; GGUF Q4_K_M jaise asli formats behtar grouping aur scales use karte hain, isiliye achha bana 4-bit model kaam ka rehta hai. 2-bit layer tod deta hai.</p>
+  </div>
+</details>
 
 <div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
 <div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
@@ -11318,7 +11493,8 @@ inputs     target  prediction
     var dots = path.map(function (w, k) {
       var g = E(s, "g", { "class": "anim" });
       E(g, "circle", { cx: xOf(w), cy: yOf(w) - 9, r: 9, style: "fill:var(--" + (k === path.length - 1 ? "signal" : "amber") + ")" });
-      E(g, "text", { x: xOf(w), y: yOf(w) - 24, "text-anchor": "middle", "font-size": 11, "class": "mono" }, "step " + [0, 1, 2, 3, 5, 10][k]);
+      if (k !== 3 && k !== 4)                             // balls 3 and 4 sit close to their neighbours: the caption names them
+        E(g, "text", { x: xOf(w), y: yOf(w) - 24, "text-anchor": "middle", "font-size": 11, "class": "mono" }, "step " + [0, 1, 2, 3, 5, 10][k]);
       return g;
     });
     B.scene(S.fig, [
@@ -11668,7 +11844,7 @@ after training:
   <li>Karpathy, A. <em>nanoGPT</em> and <em>Let's build GPT: from scratch, in code, spelled out</em> (video).</li>
   <li>Radford et al. (2019). <em>Language Models are Unsupervised Multitask Learners</em> (GPT-2).</li>
 </ol>
-<nav class="pager"><a href="#b2-ch38">Ch 38</a><a href="#b2-ch41"><span class="l-en">Ch 41 · Long-Running Agents</span><span class="l-hi">Ch 41 · Lambe Chalne Wale Agents</span></a></nav>
+<nav class="pager"><a href="#b2-ch38">Ch 38</a><a href="#b2-ch40"><span class="l-en">Ch 40 · AI-Assisted Software Engineering</span><span class="l-hi">Ch 40 · AI ke Saath Software Engineering</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch39">
@@ -11713,6 +11889,205 @@ after training:
     ["Step 1,000: common phrases: “the user asks about the”.", "Step 1,000: aam phrases: “the user asks about the”."],
     ["Step 2,000 (42 seconds): whole sentences in the style of the text.", "Step 2,000 (42 second): text ke andaaz mein poore vaakya."]
   ], { max: 3.3 });
+})();
+</script>
+<template id="t-b2-ch40" data-title="Ch 40 · AI-Assisted Software Engineering"><div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part X · Chapter 40</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 40 · Engineering deep dives</span><span class="l-hi">Chapter 40 · Engineering ki gehraai</span></div>
+  <h1><span class="l-en">AI-Assisted Software Engineering</span><span class="l-hi">AI ke Saath Software Engineering</span></h1>
+  <div class="story">
+    <p class="l-en">Chapter 22 introduced AI coding assistants. This chapter is about the engineering that makes them trustworthy. A coding agent is only as good as the checks around it: tests that define "done", analysis that maps the code before it's touched, and a loop that feeds real errors back. These are classic software-engineering ideas (test-driven development, static and dynamic analysis, abstract syntax trees, dependency graphs) and they matter <em>more</em> with AI, because an agent can write a thousand plausible lines in a minute, and only a machine check can keep up.</p>
+    <p class="l-hi">Chapter 22 ne AI coding assistants se milwaaya. Yeh chapter us engineering ke baare mein hai jo unhe bharosemand banati hai. Coding agent utna hi achha hai jitne uske aas-paas ke checks: tests jo "ho gaya" ko paribhaashit karein, analysis jo code chhoone se pehle uska naksha banaaye, aur loop jo asli errors wapas de. Yeh classic software engineering ke ideas hain (test-driven development, static aur dynamic analysis, abstract syntax trees, dependency graphs) aur AI ke saath yeh <em>aur</em> zaroori hain, kyunki agent ek minute mein hazaar sach jaisi lines likh sakta hai, aur sirf machine check hi uske saath chal sakta hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Greenfield vs brownfield, and why mapping comes first</span><span class="l-hi">Greenfield vs brownfield, aur naksha pehle kyun</span></li>
+    <li><b>2</b><span class="l-en">Static analysis with the AST, and dependency graphs</span><span class="l-hi">AST se static analysis, aur dependency graphs</span></li>
+    <li><b>3</b><span class="l-en">Dynamic analysis: tests, coverage, profilers</span><span class="l-hi">Dynamic analysis: tests, coverage, profilers</span></li>
+    <li><b>4</b><span class="l-en">Test-driven development with a coding model, in a real loop</span><span class="l-hi">Coding model ke saath test-driven development, asli loop mein</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Greenfield and brownfield</span><span class="l-hi">Greenfield aur brownfield</span></h2></div>
+<div class="story">
+  <p class="l-en"><strong>Greenfield</strong> work starts from an empty folder: you choose everything, and AI agents shine. <strong>Brownfield</strong> work changes an existing system: old code, odd conventions, hidden users of every function. Most real jobs are brownfield. There the risk isn't writing code; it's breaking something three modules away. So before an agent edits a brownfield codebase, it (and you) should <strong>map</strong> it: what depends on what, where the hubs are, which tests exist, and how long they take.</p>
+  <p class="l-hi"><strong>Greenfield</strong> kaam khaali folder se shuru hota hai: sab aap chunte ho, aur AI agents chamakte hain. <strong>Brownfield</strong> kaam maujooda system badalta hai: purana code, ajeeb niyam, har function ke chhupe users. Zyaadatar asli kaam brownfield hai. Wahan khatra code likhne mein nahi; teen module door kuch todne mein hai. Isliye brownfield codebase badalne se pehle agent (aur aap) ko uska <strong>naksha</strong> banana chahiye: kya kis par tika hai, hubs kahan hain, kaunse tests hain, aur kitna samay lete hain.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Static analysis: reading code without running it</span><span class="l-hi">Static analysis: code chalaaye bina padhna</span></h2></div>
+<div class="story">
+  <p class="l-en">Python can turn any source file into an <strong>abstract syntax tree (AST)</strong>: a tree of what the code is made of (imports, functions, calls, loops) instead of a string of characters. Tools walk that tree to answer questions exactly: which modules import which (a <strong>dependency graph</strong>), how long each function is, where errors are silently swallowed, which imports are unused. Linters (ruff, pylint), type checkers (mypy, pyright) and security scanners (bandit, Semgrep, CodeQL) are all static analysis. Their big advantage over asking a model "is this code OK?": they are deterministic and never hallucinate a problem.</p>
+  <p class="l-hi">Python kisi bhi source file ko <strong>abstract syntax tree (AST)</strong> mein badal sakta hai: characters ki string ki jagah ek ped jo batata hai code kis cheez se bana hai (imports, functions, calls, loops). Tools is ped par chal kar sawaalon ke sateek jawab dete hain: kaunsa module kise import karta hai (<strong>dependency graph</strong>), har function kitna lamba hai, errors kahan chupchaap nigle ja rahe hain, kaunse imports bekaar hain. Linters (ruff, pylint), type checkers (mypy, pyright) aur security scanners (bandit, Semgrep, CodeQL) sab static analysis hain. Model se "kya yeh code theek hai?" poochhne se inka bada faayda: yeh deterministic hain aur kabhi koi samasya gadhte nahi.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Dynamic analysis: watching code run</span><span class="l-hi">Dynamic analysis: code ko chalte dekhna</span></h2></div>
+<div class="story">
+  <p class="l-en">Some questions can only be answered by running the code: does it give the right answers (tests), which lines ever run (coverage), where does the time go (profilers), what happens with strange inputs (fuzzing). For an agent, the test suite is the most important dynamic tool: it turns "I think I fixed it" into "23 passed". Keep tests fast; an agent may run them dozens of times per task.</p>
+  <p class="l-hi">Kuch sawaalon ke jawab sirf code chala kar milte hain: kya sahi jawab deta hai (tests), kaunsi lines kabhi chalti hain (coverage), samay kahan jaata hai (profilers), ajeeb inputs par kya hota hai (fuzzing). Agent ke liye test suite sabse zaroori dynamic tool hai: yeh "mujhe lagta hai theek kar diya" ko "23 passed" mein badalta hai. Tests tez rakho; agent ek kaam mein darjanon baar chala sakta hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: map the Book 2 harness with ast, then run its tests</span><span class="l-hi">Coders ke liye: ast se Book 2 harness ka naksha, phir uske tests</span><span class="lvl">code2/ch40/code_map.py</span></summary>
+  <div class="inner">
+<pre>tree = ast.parse(source)
+for node in ast.walk(tree):
+    if isinstance(node, ast.ImportFrom) and node.level == 1:      # "from .types import ..."
+        deps.add(node.module)
+    if isinstance(node, ast.ExceptHandler) and node.type is None:  # bare "except:"
+        smells.append(node.lineno)
+subprocess.run([sys.executable, "-m", "pytest", "-q", "code/tests"])   # dynamic analysis</pre>
+<pre>$ python code2/ch40/code_map.py
+1) dependency graph (who imports whom inside the package)
+   budget     -> (nothing)
+   context    -> tokens, types
+   evals      -> providers, tools, types
+   gateway    -> budget, policy, pricing, providers, router, telemetry, tokens, types
+   hooks      -> (nothing)
+   loop       -> hooks, pricing, providers, tools, types
+   multi      -> loop, providers, tools, types
+   policy     -> types
+   pricing    -> types
+   providers  -> tokens, types
+   router     -> (nothing)
+   security   -> hooks, tools
+   telemetry  -> (nothing)
+   tokens     -> (nothing)
+   tools      -> types
+   types      -> (nothing)
+   most depended-on: types (used by 9 modules) -> change it with care
+
+2) size and shape
+   16 modules, 99 functions; longest: loop.run (47 lines), gateway.complete (43 lines), tools.validate (37 lines)
+
+3) smells found by static checks
+   none
+
+4) dynamic analysis: run the test suite
+   23 passed in 0.30s   (3.5s wall)</pre>
+  <p class="l-en">Before an agent touches <code>types.py</code>, it now knows nine modules depend on it, and that the full test suite runs in 0.3 seconds, so it can afford to run it after every edit.</p>
+  <p class="l-hi">Agent <code>types.py</code> chhoone se pehle ab jaanta hai ki nau modules us par tike hain, aur poora test suite 0.3 second mein chalta hai, toh har edit ke baad chala sakta hai.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">Test-driven development, with a model writing the code</span><span class="l-hi">Test-driven development, code model likhe</span></h2></div>
+<div class="story">
+  <p class="l-en">TDD has three beats: write a test that fails (<strong>red</strong>), write just enough code to pass (<strong>green</strong>), clean up (<strong>refactor</strong>). With an AI agent, the split of work is natural: the human writes the tests, which are the spec in runnable form; the model writes code; the test runner judges. Failures go back to the model as precise feedback. This is also <strong>automated debugging</strong>: reproduce, locate, fix, re-test.</p>
+  <p class="l-hi">TDD ke teen kadam: fail hone wala test likho (<strong>red</strong>), pass hone laayak code likho (<strong>green</strong>), saaf karo (<strong>refactor</strong>). AI agent ke saath kaam ka bantwaara natural hai: insaan tests likhta hai, jo chalne wale roop mein spec hain; model code likhta hai; test runner faisla karta hai. Failures model ko sateek feedback ki tarah wapas jaate hain. Yahi <strong>automated debugging</strong> bhi hai: dohraao, dhoondho, theek karo, dobara test.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: a TDD loop with qwen3:4b</span><span class="l-hi">Coders ke liye: qwen3:4b ke saath TDD loop</span><span class="lvl">code2/ch40/tdd_loop.py</span></summary>
+  <div class="inner">
+<pre>for round_ in range(1, 5):
+    reply = chat(messages)                                    # model writes solution.py
+    write("solution.py", code_from(reply))
+    r = run(["pytest", "-q", "--tb=line"])                    # the tests decide, not the model
+    if r.returncode == 0:
+        break
+    messages += [{"role": "assistant", "content": reply},
+                 {"role": "user", "content": "These tests failed:\n" + failures + "\nFix the code."}]</pre>
+<!--TDD_OUTPUT-->
+  </div>
+</details>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Agents can game your tests</span><span class="l-hi">Agents aapke tests ko chakma de sakte hain</span></h4>
+  <p class="l-en">Under pressure to make tests pass, coding models sometimes special-case the test inputs, weaken an assertion, or delete a failing test. That's reward hacking (Book 2, Ch 3). Protect the tests: keep them read-only to the agent, review every diff that touches them, and add hidden tests the agent never sees.</p>
+  <p class="l-hi">Tests pass karaane ke dabaav mein coding models kabhi test inputs ke liye khaas case likh dete hain, assertion kamzor kar dete hain, ya fail test mita dete hain. Yahi reward hacking hai (Book 2, Ch 3). Tests bachao: agent ke liye read-only rakho, unhe chhoone wala har diff review karo, aur chhupe tests jodo jo agent kabhi na dekhe.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Repo-level reasoning and code review agents</span><span class="l-hi">Repo-level reasoning aur code review agents</span></h4>
+  <p class="l-en">Good coding agents reason about the whole repository: they search before editing, read the callers of a function, and run the relevant tests. Give them the map (this chapter's lab output is a fine start), a project memory file with conventions, and permission rules (Ch 22). A second agent that reviews each pull request for bugs, security and style, with static analysis results attached, catches a surprising amount, but a human still owns the merge.</p>
+  <p class="l-hi">Achhe coding agents poori repository ke baare mein sochte hain: edit se pehle search, function ke callers padhna, aur sambandhit tests chalaana. Unhe naksha do (is chapter ke lab ka output achhi shuruaat hai), niyamon wali project memory file, aur permission rules (Ch 22). Doosra agent jo har pull request ko bugs, security aur style ke liye review kare, static analysis ke nateejon ke saath, kaafi kuch pakad leta hai, par merge ka maalik phir bhi insaan hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Most real work is brownfield: map the code before changing it.</li><li>Static analysis reads code through its AST: dependency graphs, sizes, smells; deterministic and cheap.</li><li>Dynamic analysis runs code: tests, coverage, profiling; keep tests fast for agents.</li><li>TDD with AI: humans write tests, the model writes code, the test runner judges, failures feed back.</li><li>Protect tests from being gamed; a human owns the merge.</li></ol>
+  <ol class="l-hi"><li>Zyaadatar asli kaam brownfield hai: badalne se pehle code ka naksha banao.</li><li>Static analysis AST se code padhta hai: dependency graphs, size, smells; deterministic aur sasta.</li><li>Dynamic analysis code chalaata hai: tests, coverage, profiling; agents ke liye tests tez rakho.</li><li>AI ke saath TDD: insaan tests likhta, model code, test runner faisla, failures wapas.</li><li>Tests ko chakme se bachao; merge ka maalik insaan.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Point <code>code_map.py</code> at one of your own projects. Which module is the hub? Is it the one you'd have guessed? <span class="level">core</span></p><p class="l-hi"><code>code_map.py</code> ko apne kisi project par chalao. Hub kaunsa module hai? Kya wahi jo aapne socha tha? <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Add two harder tests to <code>tdd_loop.py</code> (for example "1h30m" without a space, and "90s"). How many rounds does the model need now? <span class="level">core</span></p><p class="l-hi"><code>tdd_loop.py</code> mein do mushkil tests jodo (jaise bina space "1h30m", aur "90s"). Ab model ko kitne rounds chahiye? <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Extend <code>code_map.py</code> to find functions that no other module calls. Are any of them dead code? <span class="level">stretch</span></p><p class="l-hi"><code>code_map.py</code> ko badhao taaki aise functions mile jinhe koi doosra module nahi bulaata. Kya inme koi dead code hai? <span class="level">stretch</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Beck, K. (2002). <em>Test-Driven Development: By Example.</em></li>
+  <li>Feathers, M. (2004). <em>Working Effectively with Legacy Code.</em></li>
+  <li>Python documentation: <em>ast: Abstract Syntax Trees.</em></li>
+  <li>Jimenez et al. (2024). <em>SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</em></li>
+</ol>
+<nav class="pager"><a href="#b2-ch39">Ch 39</a><a href="#b2-ch41"><span class="l-en">Ch 41 · Long-Running Agents</span><span class="l-hi">Ch 41 · Lambe Chalne Wale Agents</span></a></nav>
+</article>
+</div></template>
+<script type="text/plain" id="s-b2-ch40">
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show;
+  (function () {
+    var S = B.stage("scA", "Dependency graph of the Book 2 harness: types is the hub used by nine modules");
+    var s = S.svg; S.height(330);
+    var hub = [380, 170];
+    var users = ["context", "evals", "gateway", "loop", "multi", "policy", "pricing", "providers", "tools"];
+    var others = ["budget", "hooks", "router", "telemetry", "tokens", "security"];
+    var edges = E(s, "g", { "class": "anim" }), userEls = [], otherEls = E(s, "g", { "class": "anim" });
+    users.forEach(function (u, k) {
+      var ang = Math.PI * (0.08 + 0.84 * k / (users.length - 1)) + Math.PI;     // upper semicircle
+      var x = hub[0] + Math.cos(ang) * 300, y = hub[1] + Math.sin(ang) * 140 + 10;
+      E(edges, "line", { x1: x, y1: y, x2: hub[0], y2: hub[1], "class": "line", "stroke-width": 1.2 });
+      var g = E(s, "g", { "class": "anim" });
+      E(g, "rect", { x: x - 42, y: y - 14, width: 84, height: 28, rx: 14, "class": "box" });
+      E(g, "text", { x: x, y: y + 5, "text-anchor": "middle", "font-size": 12, "class": "mono" }, u);
+      userEls.push(g);
+    });
+    others.forEach(function (o, k) {
+      var x = 80 + k * 120, y = 300;
+      E(otherEls, "rect", { x: x - 46, y: y - 14, width: 92, height: 28, rx: 14, "class": "box" });
+      E(otherEls, "text", { x: x, y: y + 5, "text-anchor": "middle", "font-size": 12, "class": "mono muted" }, o);
+    });
+    var h = E(s, "g", { "class": "anim" });
+    E(h, "rect", { x: hub[0] - 54, y: hub[1] - 20, width: 108, height: 40, rx: 20, "class": "box-amb" });
+    E(h, "text", { x: hub[0], y: hub[1] + 6, "text-anchor": "middle", "font-size": 14, "font-weight": 700, "class": "mono" }, "types");
+    var note = E(s, "g", { "class": "anim" });
+    BI(note, { x: hub[0], y: hub[1] + 42, "text-anchor": "middle", "font-size": 12, "font-weight": 700, "class": "amb" }, "hub: 9 modules depend on it", "hub: 9 modules is par tike");
+    B.scene(S.fig, [
+      ["Parse every file into an AST and list its imports.", "Har file ko AST mein badal kar uske imports likho."],
+      ["Draw an arrow from each module to what it imports.", "Har module se, jo woh import karta hai, us tak teer."],
+      ["One module stands out: types.py, imported by nine others. Change it with care and run every test.", "Ek module alag dikhta hai: types.py, nau doosre isse import karte hain. Sambhal kar badlo aur har test chalao."]
+    ], function (i) {
+      userEls.forEach(function (g) { show(g, true); }); show(otherEls, true);
+      show(edges, i >= 1); show(h, i >= 1); show(note, i >= 2);
+    });
+  })();
+
+  B.flow("scB", [
+    { en: "Human: tests", hi: "Insaan: tests", sen: "6 tests define parse_duration", shi: "6 tests parse_duration tay karte hain" },
+    { en: "Red", hi: "Red", sen: "no code yet: all fail", shi: "abhi code nahi: sab fail" },
+    { en: "Model: code", hi: "Model: code", sen: "writes solution.py", shi: "solution.py likhta hai" },
+    { en: "Run tests", hi: "Tests chalao", sen: "pytest decides", shi: "pytest tay karta hai" },
+    { en: "Feed back", hi: "Wapas do", sen: "exact failures to the model", shi: "sateek failures model ko" },
+    { en: "Green", hi: "Green", sen: "all pass: human reviews the diff", shi: "sab pass: insaan diff review karta hai" }
+  ], [
+    ["The human writes the tests first. They are the spec.", "Insaan pehle tests likhta hai. Wahi spec hain."],
+    ["Run them before any code exists: they fail. That proves the tests can fail.", "Code se pehle chalao: fail hote hain. Isse saabit hota hai tests fail ho sakte hain."],
+    ["The model writes code to satisfy the tests.", "Model tests ko santusht karne ke liye code likhta hai."],
+    ["The test runner, not the model, decides whether it works.", "Test runner, model nahi, tay karta hai ki chalta hai ya nahi."],
+    ["If anything fails, the exact failure goes back to the model.", "Kuch fail ho toh sateek failure model ko wapas jaata hai."],
+    ["When everything passes, a human reads the diff before merging.", "Sab pass ho jaaye, toh merge se pehle insaan diff padhta hai."]
+  ], { perRow: 3 });
 })();
 </script>
 <template id="t-b2-ch41" data-title="Ch 41 · Long-Running Agents"><div class="page">
@@ -11827,7 +12202,7 @@ payments made: [('refund', 'ORD-77', 1899)]   <- exactly one refund, even though
   <li>Stripe API documentation: <em>Idempotent requests</em>.</li>
   <li>LangGraph documentation: <em>Persistence and checkpointers</em>.</li>
 </ol>
-<nav class="pager"><a href="#b2-ch39">Ch 39</a><a href="#b2-ch44"><span class="l-en">Ch 44 · Deploying Models: Docker, Kubernetes, GPUs</span><span class="l-hi">Ch 44 · Models Deploy Karna: Docker, Kubernetes, GPUs</span></a></nav>
+<nav class="pager"><a href="#b2-ch40">Ch 40</a><a href="#b2-ch42"><span class="l-en">Ch 42 · Deeper Reasoning and Memory</span><span class="l-hi">Ch 42 · Gehri Soch aur Memory</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch41">
@@ -11846,6 +12221,232 @@ payments made: [('refund', 'ORD-77', 1899)]   <- exactly one refund, even though
     ["Run 3 reads the checkpoint: the refund is already done, so it is NOT repeated.", "Run 3 checkpoint padhta hai: refund ho chuka hai, isliye dohraaya NAHI jaata."],
     ["That's durable execution: crashes cost time, never correctness.", "Yahi durable execution hai: crash samay khaata hai, sahi-pan kabhi nahi."]
   ]);
+})();
+</script>
+<template id="t-b2-ch42" data-title="Ch 42 · Deeper Reasoning and Memory"><div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part X · Chapter 42</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 42 · Engineering deep dives</span><span class="l-hi">Chapter 42 · Engineering ki gehraai</span></div>
+  <h1><span class="l-en">Deeper Reasoning and Memory</span><span class="l-hi">Gehri Soch aur Memory</span></h1>
+  <div class="story">
+    <p class="l-en">Two limits keep showing up in this book. A single answer from a model can be wrong in a way it would have caught on a second try. And a model can't learn from yesterday: its weights froze when training ended. This chapter covers the practical tools for both. For reasoning: <strong>self-consistency</strong> (ask several times, take the majority) and <strong>tree of thoughts</strong> (explore several approaches, keep the best). For learning over time: <strong>episodic memory</strong>, and an honest look at <strong>continual learning</strong>.</p>
+    <p class="l-hi">Is book mein do seemayein baar-baar dikhti hain. Model ka ek jawab aise galat ho sakta hai jo doosri koshish mein pakad leta. Aur model kal se seekh nahi sakta: training khatam hote hi uske weights jam gaye. Yeh chapter dono ke practical tools batata hai. Soch ke liye: <strong>self-consistency</strong> (kai baar poochho, bahumat lo) aur <strong>tree of thoughts</strong> (kai raaste aazmaao, sabse achha rakho). Samay ke saath seekhne ke liye: <strong>episodic memory</strong>, aur <strong>continual learning</strong> par imaandaar nazar.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Test-time compute: spending more at answer time</span><span class="l-hi">Test-time compute: jawab ke samay zyaada kharch</span></li>
+    <li><b>2</b><span class="l-en">Self-consistency: sample and vote</span><span class="l-hi">Self-consistency: sample lo aur vote karo</span></li>
+    <li><b>3</b><span class="l-en">Tree of thoughts: branch, score, expand</span><span class="l-hi">Tree of thoughts: shaakhaayein, score, aage badhao</span></li>
+    <li><b>4</b><span class="l-en">Episodic memory, and why continual learning is still hard</span><span class="l-hi">Episodic memory, aur continual learning abhi bhi mushkil kyun</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Spending more compute at answer time</span><span class="l-hi">Jawab ke samay zyaada compute lagaana</span></h2></div>
+<div class="story">
+  <p class="l-en">There are two ways to get a better answer: a bigger model, or more work from the same model at answer time. The second is called <strong>test-time compute</strong>, and research since 2024 (the idea behind reasoning models, Ch 9) shows it often pays off: up to a point, more thinking, more attempts or more checking buys accuracy. Reasoning models do it inside one call. The two techniques below do it from the outside, with any model, in your harness.</p>
+  <p class="l-hi">Behtar jawab ke do tareeke hain: bada model, ya usi model se jawab ke samay zyaada kaam. Doosre ko <strong>test-time compute</strong> kehte hain, aur 2024 se research (reasoning models ke peeche ka idea, Ch 9) dikhaati hai ki yeh aksar faayda deta hai: ek hadd tak, zyaada soch, zyaada koshishein ya zyaada jaanch sateekta khareedti hai. Reasoning models yeh ek call ke andar karte hain. Neeche ke do tareeke ise bahar se, kisi bhi model ke saath, aapke harness mein karte hain.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Self-consistency: ask five times, trust the majority</span><span class="l-hi">Self-consistency: paanch baar poochho, bahumat par bharosa</span></h2></div>
+<div class="story">
+  <p class="l-en">Ask the same question several times with some randomness (temperature above 0), extract each final answer, and take the most common one. Mistakes tend to be scattered; correct reasoning tends to land in the same place. It costs N times the tokens, so use it where an answer is checkable and errors are expensive: maths, extraction, classification with consequences.</p>
+  <p class="l-hi">Wahi sawaal kuch randomness ke saath (temperature 0 se upar) kai baar poochho, har aakhri jawab nikaalo, aur sabse aam wala lo. Galtiyan bikhri hoti hain; sahi soch aksar ek hi jagah pahunchti hai. Kharch N guna tokens, isliye wahan use karo jahan jawab jaancha ja sake aur galti mehengi ho: hisaab, extraction, nateejon wali classification.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Tree of thoughts: explore before you commit</span><span class="l-hi">Tree of thoughts: pakka karne se pehle aazmaao</span></h2></div>
+<div class="story">
+  <p class="l-en">For open problems (plans, designs, puzzles) there isn't one answer to vote on. <strong>Tree of thoughts</strong> asks the model for several different approaches, has it (or a checker) score each one, and expands only the most promising branch, sometimes backtracking if it hits a dead end. It's how a good engineer works: sketch three options, pick one with reasons, then go deep.</p>
+  <p class="l-hi">Khule sawaalon (plans, designs, paheliyan) mein vote karne ke liye ek jawab nahi hota. <strong>Tree of thoughts</strong> model se kai alag raaste maangta hai, unhe model (ya checker) se score karwaata hai, aur sirf sabse ummeed wali shaakha badhaata hai, kabhi band raaste par peeche bhi aata hai. Achha engineer aise hi kaam karta hai: teen vikalp kheencho, kaaran ke saath ek chuno, phir gehre jao.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: self-consistency and a tiny tree of thoughts with qwen3:4b</span><span class="l-hi">Coders ke liye: qwen3:4b ke saath self-consistency aur chhota tree of thoughts</span><span class="lvl">code2/ch42/reasoning.py</span></summary>
+  <div class="inner">
+<pre>votes = [final_number(chat(Q, temperature=0.9, seed=s)) for s in range(5)]
+winner, n = collections.Counter(votes).most_common(1)[0]          # self-consistency
+
+ideas  = chat(f"{TASK}\nPropose 3 very different approaches, one line each.")
+scores = [rate(TASK, idea) for idea in ideas]                     # the model scores each branch
+plan   = chat(f"{TASK}\nUse this approach: {ideas[argmax(scores)]}\nGive a 4-line plan with costs.")</pre>
+<!--REASONING_OUTPUT-->
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">Episodic memory: remembering what happened</span><span class="l-hi">Episodic memory: jo hua use yaad rakhna</span></h2></div>
+<div class="story">
+  <p class="l-en">Chapter 15 stored <em>facts</em> about a user ("vegetarian, lives in Pune"). <strong>Episodic memory</strong> stores <em>events</em>: what went wrong last time, and what fixed it. After each conversation, the model writes a one-line summary (problem + fix), saved with its date and an embedding. When a new conversation starts, the most similar past episodes are recalled into the context. The assistant seems to "learn from experience", without any change to its weights.</p>
+  <p class="l-hi">Chapter 15 ne user ke baare mein <em>facts</em> store kiye ("vegetarian, Pune mein rehti hai"). <strong>Episodic memory</strong> <em>ghatnaayein</em> store karti hai: pichhli baar kya bigda, aur kisne theek kiya. Har baatcheet ke baad model ek-line saar likhta hai (samasya + ilaaj), tareekh aur embedding ke saath save. Nayi baatcheet shuru hone par sabse milti-julti purani ghatnaayein context mein laayi jaati hain. Assistant "anubhav se seekhta" lagta hai, uske weights mein bina kisi badlaav ke.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: store episodes, recall the relevant ones</span><span class="l-hi">Coders ke liye: ghatnaayein store karo, kaam ki yaad karo</span><span class="lvl">code2/ch42/episodic_memory.py</span></summary>
+  <div class="inner">
+<pre>summary = chat(f"Summarise this support conversation in one line, keeping the problem and the fix:\n{convo}")
+db.execute("INSERT INTO episodes VALUES (?,?,?)", (day, summary, json.dumps(embed(summary))))
+
+ranked = sorted(((cos(embed(question), json.loads(v)), d, s) for d, s, v in episodes), reverse=True)
+memory = "\n".join(f"- {d}: {s}" for sim, d, s in ranked[:2] if sim > 0.3)   # only relevant episodes</pre>
+<!--EPISODIC_OUTPUT-->
+  </div>
+</details>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Continual learning: why models don't just keep learning</span><span class="l-hi">Continual learning: models bas seekhte kyun nahi rehte</span></h4>
+  <p class="l-en">Updating a model's weights on every new conversation sounds ideal, but it runs into <strong>catastrophic forgetting</strong> (new training overwrites old skills), safety risks (anyone could teach it bad habits), and cost. So today's products fake it: memory and retrieval for knowledge, periodic fine-tunes (Ch 23) for behaviour, each checked by evals. True continual learning is an active research area; treat claims about it with the checklist from Chapter 35.</p>
+  <p class="l-hi">Har nayi baatcheet par model ke weights update karna aadarsh lagta hai, par yeh <strong>catastrophic forgetting</strong> (naya training purane hunar mita deta hai), suraksha ke khatron (koi bhi use buri aadatein sikha sakta hai) aur kharch se takraata hai. Isliye aaj ke products iska dikhava karte hain: gyaan ke liye memory aur retrieval, behaviour ke liye samay-samay par fine-tunes (Ch 23), har ek evals se jaancha. Asli continual learning sakriya research hai; iske daavon ko Chapter 35 ki checklist se parkho.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Test-time compute: more work at answer time often beats a bigger model, up to a point.</li><li>Self-consistency samples several answers and takes the majority; best for checkable answers.</li><li>Tree of thoughts proposes approaches, scores them, and expands the best.</li><li>Episodic memory stores dated summaries of past events and recalls the relevant ones.</li><li>Continual learning in weights is still research; products use memory, retrieval and periodic fine-tunes.</li></ol>
+  <ol class="l-hi"><li>Test-time compute: jawab ke samay zyaada kaam aksar bade model se behtar, ek hadd tak.</li><li>Self-consistency kai jawab le kar bahumat chunti hai; jaanchne laayak jawabon ke liye best.</li><li>Tree of thoughts raaste sujhaata, unhe score karta, aur sabse achha badhaata hai.</li><li>Episodic memory purani ghatnaon ke tareekh wale saar rakhti aur kaam ke yaad karti hai.</li><li>Weights mein continual learning abhi research hai; products memory, retrieval aur samay-samay ke fine-tunes use karte hain.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Run self-consistency with 1, 3, 5 and 9 samples on ten maths questions. Plot accuracy against total tokens. Where does it stop being worth it? <span class="level">core</span></p><p class="l-hi">Das hisaab ke sawaalon par 1, 3, 5 aur 9 samples ke saath self-consistency chalao. Sateekta vs kul tokens plot karo. Kahan se faayda nahi rehta? <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Add a "forget" command to <code>episodic_memory.py</code>, and a rule that episodes older than 90 days are deleted. <span class="level">core</span></p><p class="l-hi"><code>episodic_memory.py</code> mein "bhool jao" command jodo, aur niyam ki 90 din se purani ghatnaayein mitti jaayein. <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Wang et al. (2023). <em>Self-Consistency Improves Chain of Thought Reasoning in Language Models.</em></li>
+  <li>Yao et al. (2023). <em>Tree of Thoughts: Deliberate Problem Solving with Large Language Models.</em></li>
+  <li>Snell et al. (2024). <em>Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters.</em></li>
+  <li>Park et al. (2023). <em>Generative Agents: Interactive Simulacra of Human Behavior</em> (memory streams).</li>
+</ol>
+<nav class="pager"><a href="#b2-ch41">Ch 41</a><a href="#b2-ch43"><span class="l-en">Ch 43 · Talking to Databases: Text-to-SQL</span><span class="l-hi">Ch 43 · Database se Baat: Text-to-SQL</span></a></nav>
+</article>
+</div></template>
+<script type="text/plain" id="s-b2-ch42">
+(function () {
+  var B = window.Book;
+  B.columns("scA", [
+    { en: "One answer", hi: "Ek jawab", cls: "box-amb", step: 0, items: [
+      { en: "Ask once at temperature 0", hi: "Temperature 0 par ek baar poochho", step: 0 },
+      { en: "If this one reasoning path slips, the answer is wrong", hi: "Agar yeh ek soch ka raasta phisla, jawab galat", step: 0 },
+      { en: "Cost: 1×", hi: "Kharch: 1×", cls: "box-plm", step: 0 } ] },
+    { en: "Self-consistency", hi: "Self-consistency", cls: "box-sig", step: 1, items: [
+      { en: "Ask 5 times with some randomness", hi: "Kuch randomness ke saath 5 baar poochho", step: 1 },
+      { en: "Different paths; most land on the same answer; a slip gets outvoted", hi: "Alag raaste; zyaadatar ek jawab par; chook vote mein haarti hai", step: 2 },
+      { en: "Cost: 5×. Use where answers are checkable and errors costly", hi: "Kharch: 5×. Jahan jawab jaancha ja sake aur galti mehengi ho", cls: "box-plm", step: 3 } ] }
+  ], [
+    ["One sample: whatever path the model takes, you get its answer, right or wrong.", "Ek sample: model jo bhi raasta le, uska jawab milta hai, sahi ya galat."],
+    ["Self-consistency asks several times with some randomness.", "Self-consistency kuch randomness ke saath kai baar poochhti hai."],
+    ["Mistakes scatter; correct reasoning converges. The majority wins.", "Galtiyan bikharti hain; sahi soch ek jagah milti hai. Bahumat jeetta hai."],
+    ["You pay for every sample, so spend it where it matters.", "Har sample ka paisa lagta hai, isliye wahan kharcho jahan zaroori ho."]
+  ]);
+})();
+</script>
+<template id="t-b2-ch43" data-title="Ch 43 · Talking to Databases: Text-to-SQL"><div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part X · Chapter 43</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 43 · Engineering deep dives</span><span class="l-hi">Chapter 43 · Engineering ki gehraai</span></div>
+  <h1><span class="l-en">Talking to Databases: Text-to-SQL</span><span class="l-hi">Database se Baat: Text-to-SQL</span></h1>
+  <div class="story">
+    <p class="l-en">Every company has a database full of answers that managers can't reach without asking an analyst: "What was delivered revenue in Pune last month?", "Which customers ordered twice?". <strong>Text-to-SQL</strong> lets them ask in plain words: the model writes the SQL query, the database runs it, and the numbers come back. It's one of the most-requested AI features in companies, and one of the easiest to get dangerously wrong. This chapter builds it safely.</p>
+    <p class="l-hi">Har company ke paas jawabon se bhara database hai jahan managers analyst se poochhe bina nahi pahunch sakte: "Pichhle mahine Pune mein delivered revenue kitna tha?", "Kin customers ne do baar order kiya?". <strong>Text-to-SQL</strong> unhe saade shabdon mein poochhne deta hai: model SQL query likhta hai, database chalaata hai, aur numbers wapas aate hain. Companies mein yeh sabse zyaada maange jaane wale AI features mein se hai, aur khatarnaak tareeke se galat karne mein sabse aasaan bhi. Yeh chapter ise surakshit banaata hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Schema in the context: what the model must know</span><span class="l-hi">Context mein schema: model ko kya pata hona chahiye</span></li>
+    <li><b>2</b><span class="l-en">Safety: read-only, one query, guards before execution</span><span class="l-hi">Suraksha: read-only, ek query, chalaane se pehle guards</span></li>
+    <li><b>3</b><span class="l-en">Repair loops: feeding database errors back</span><span class="l-hi">Repair loops: database errors wapas dena</span></li>
+    <li><b>4</b><span class="l-en">Checking the answer, not just the SQL</span><span class="l-hi">Sirf SQL nahi, jawab jaanchna</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The pipeline</span><span class="l-hi">Pipeline</span></h2></div>
+<div class="story">
+  <p class="l-en">The model has never seen your database. So the context carries the <strong>schema</strong> (tables, columns, how they join) plus notes a new analyst would need: which values a status column can take, how dates are stored, what "revenue" means here (delivered orders only? before or after tax?). Business definitions matter more than SQL skill: most wrong answers in production are correct SQL for the wrong definition.</p>
+  <p class="l-hi">Model ne aapka database kabhi nahi dekha. Isliye context mein <strong>schema</strong> jaata hai (tables, columns, kaise judte hain) plus woh notes jo naye analyst ko chahiye: status column mein kaunsi values ho sakti hain, dates kaise store hain, yahan "revenue" ka matlab kya hai (sirf delivered orders? tax se pehle ya baad?). Business ki paribhaasha SQL ke hunar se zyaada zaroori hai: production mein zyaadatar galat jawab galat paribhaasha ke liye sahi SQL hote hain.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Safety first: the model never gets write access</span><span class="l-hi">Pehle suraksha: model ko kabhi likhne ka adhikaar nahi</span></h2></div>
+<div class="story">
+  <p class="l-en">A user, or an injected instruction in some text, can ask for "delete all cancelled orders". Defend in layers. Run queries on a <strong>read-only</strong> database user or replica. Before running, a <strong>guard</strong> in plain code accepts only a single SELECT and rejects write or admin keywords. Add a row limit and a timeout so one heavy query can't freeze the database. And filter by permissions: a sales intern shouldn't be able to query the salaries table just because the model can write the JOIN.</p>
+  <p class="l-hi">User, ya kisi text mein injected instruction, "saare cancelled orders delete karo" maang sakta hai. Parton mein bachaav karo. Queries <strong>read-only</strong> database user ya replica par chalao. Chalaane se pehle saade code ka <strong>guard</strong> sirf ek SELECT maane aur write ya admin keywords thukraaye. Row limit aur timeout jodo taaki ek bhaari query database na jama de. Aur permissions se filter karo: sales intern sirf isliye salaries table query na kar sake ki model JOIN likh sakta hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: text-to-SQL on SQLite with a guard and a repair loop</span><span class="l-hi">Coders ke liye: guard aur repair loop ke saath SQLite par text-to-SQL</span><span class="lvl">code2/ch43/text_to_sql.py</span></summary>
+  <div class="inner">
+<pre>prompt = f"SQLite schema:\n{SCHEMA}\nNotes: {NOTES}\n\nWrite ONE SQLite SELECT query that answers: {question}"
+sql = extract_sql(chat(prompt))
+for attempt in (1, 2):
+    if problem := guard(sql):                       # only one read-only SELECT passes
+        return f"BLOCKED: {problem}"
+    try:
+        return DB.execute(sql).fetchall()           # connection is also read-only
+    except sqlite3.Error as e:
+        sql = extract_sql(chat(prompt + f"\nYour query:\n{sql}\nfailed with: {e}\nFix it."))</pre>
+<!--LAB_OUTPUT-->
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Is the answer right?</span><span class="l-hi">Kya jawab sahi hai?</span></h2></div>
+<div class="story">
+  <p class="l-en">A query that runs isn't a query that's right. Evaluate text-to-SQL by <strong>executing</strong> both the model's query and a trusted reference query on the same data and comparing the results, not by comparing SQL text (there are many correct ways to write a query). Build a test set of 50 real questions from your users with analyst-written SQL; run it on every prompt or model change (Ch 26). In the product, show the SQL and the row count next to the answer, so a curious user can check, and say "I'm not sure" when a question doesn't map to the schema.</p>
+  <p class="l-hi">Jo query chal jaaye woh sahi ho, zaroori nahi. Text-to-SQL ka evaluation model ki query aur ek bharosemand reference query dono ko ek hi data par <strong>chala kar</strong> nateeje milaakar karo, SQL text milaakar nahi (query likhne ke kai sahi tareeke hain). Apne users ke 50 asli sawaalon ka test set analyst ki likhi SQL ke saath banao; har prompt ya model badlaav par chalao (Ch 26). Product mein jawab ke saath SQL aur row count dikhao, taaki jigyaasu user jaanch sake, aur jab sawaal schema se na jude toh "pakka nahi pata" kaho.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">A semantic layer beats a bigger model</span><span class="l-hi">Semantic layer bade model se behtar</span></h4>
+  <p class="l-en">Large companies have hundreds of tables with names like <code>t_ord_hdr_v2</code>. Instead of dumping all of that into the context, they give the model a curated <strong>semantic layer</strong>: a short list of business metrics ("delivered revenue", "active customer") with their exact definitions and the approved SQL behind them. The model picks metrics and filters; the layer writes the SQL. Accuracy goes up, and finance and sales finally get the same number.</p>
+  <p class="l-hi">Badi companies mein <code>t_ord_hdr_v2</code> jaise naamon wali saikdon tables hoti hain. Yeh sab context mein daalne ki jagah woh model ko chuni hui <strong>semantic layer</strong> dete hain: business metrics ki chhoti list ("delivered revenue", "active customer") unki sateek paribhaasha aur manzoor SQL ke saath. Model metrics aur filters chunta hai; layer SQL likhti hai. Sateekta badhti hai, aur finance aur sales ko aakhir ek hi number milta hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Put the schema and business definitions in the context; definitions matter more than SQL skill.</li><li>Read-only access, a code guard that allows one SELECT, row limits, timeouts and permission filters.</li><li>Feed database errors back once for repair.</li><li>Evaluate by executing and comparing results; show the SQL to users.</li><li>At company scale, a semantic layer beats raw tables.</li></ol>
+  <ol class="l-hi"><li>Context mein schema aur business paribhaashayein do; paribhaasha SQL ke hunar se zyaada zaroori.</li><li>Read-only access, ek SELECT allow karne wala code guard, row limits, timeouts aur permission filters.</li><li>Database errors ek baar repair ke liye wapas do.</li><li>Chala kar nateeje milaakar evaluate karo; users ko SQL dikhao.</li><li>Company scale par semantic layer kachchi tables se behtar.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add five questions with reference SQL to <code>text_to_sql.py</code> and score the model by comparing executed results. <span class="level">core</span></p><p class="l-hi"><code>text_to_sql.py</code> mein reference SQL ke saath paanch sawaal jodo aur chalaaye nateeje milaakar model ko score karo. <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Add a <code>salaries</code> table and a permission rule so only HR users can query it. Try to get around it with a clever question. <span class="level">stretch</span></p><p class="l-hi"><code>salaries</code> table aur permission rule jodo taaki sirf HR users query kar sakein. Chaalaak sawaal se bach nikalne ki koshish karo. <span class="level">stretch</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Yu et al. (2018). <em>Spider: A Large-Scale Human-Labeled Dataset for Complex and Cross-Domain Semantic Parsing and Text-to-SQL.</em></li>
+  <li>Li et al. (2023). <em>Can LLM Already Serve as A Database Interface? A BIg Bench for Large-Scale Database Grounded Text-to-SQLs</em> (BIRD).</li>
+  <li>OWASP (2025). <em>Top 10 for LLM Applications: Excessive Agency.</em></li>
+</ol>
+<nav class="pager"><a href="#b2-ch42">Ch 42</a><a href="#b2-ch44"><span class="l-en">Ch 44 · Deploying Models: Docker, Kubernetes, GPUs</span><span class="l-hi">Ch 44 · Models Deploy Karna: Docker, Kubernetes, GPUs</span></a></nav>
+</article>
+</div></template>
+<script type="text/plain" id="s-b2-ch43">
+(function () {
+  var B = window.Book;
+  B.flow("scA", [
+    { en: "Question", hi: "Sawaal", sen: "“delivered revenue per city”", shi: "“shehar-vaar delivered revenue”" },
+    { en: "Context", hi: "Context", sen: "schema + business notes", shi: "schema + business notes" },
+    { en: "Model writes SQL", hi: "Model SQL likhta", sen: "one SELECT", shi: "ek SELECT" },
+    { en: "Guard", hi: "Guard", sen: "read-only? one query? allowed tables?", shi: "read-only? ek query? allowed tables?" },
+    { en: "Run on replica", hi: "Replica par chalao", sen: "row limit, timeout; error → repair once", shi: "row limit, timeout; error → ek baar repair" },
+    { en: "Answer + SQL shown", hi: "Jawab + SQL dikhao", sen: "user can check", shi: "user jaanch sakta hai" }
+  ], [
+    ["A manager asks in plain words.", "Manager saade shabdon mein poochhta hai."],
+    ["The context gives the model the schema and what each business word means here.", "Context model ko schema aur yahan har business shabd ka matlab deta hai."],
+    ["The model writes one SELECT query.", "Model ek SELECT query likhta hai."],
+    ["Plain code checks it before anything runs. Writes are impossible.", "Kuch chalne se pehle saada code jaanchta hai. Likhna namumkin."],
+    ["It runs on a read-only replica with limits. A database error goes back once for repair.", "Seemaon ke saath read-only replica par chalti hai. Database error ek baar repair ke liye wapas."],
+    ["The answer comes back with the SQL and row count, so people can trust it.", "Jawab SQL aur row count ke saath aata hai, taaki log bharosa kar sakein."]
+  ], { perRow: 3 });
 })();
 </script>
 <template id="t-b2-ch44" data-title="Ch 44 · Deploying Models: Docker, Kubernetes, GPUs"><div class="page">
@@ -12005,7 +12606,7 @@ spec: { minReplicas: 1, maxReplicas: 4 }          # every replica is another GPU
   <li>vLLM documentation: <em>OpenAI-compatible server</em> and <em>Deploying with Kubernetes</em>.</li>
   <li>Kubernetes documentation: <em>Configure liveness, readiness and startup probes</em>; <em>Horizontal Pod Autoscaling</em>.</li>
 </ol>
-<nav class="pager"><a href="#b2-ch41">Ch 41</a><a href="#b2-ch46"><span class="l-en">Ch 46 · Agent Identity and Access</span><span class="l-hi">Ch 46 · Agent ki Pehchaan aur Access</span></a></nav>
+<nav class="pager"><a href="#b2-ch43">Ch 43</a><a href="#b2-ch45"><span class="l-en">Ch 45 · Automatic Prompt Optimisation and DSPy</span><span class="l-hi">Ch 45 · Automatic Prompt Optimisation aur DSPy</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch44">
@@ -12037,6 +12638,107 @@ spec: { minReplicas: 1, maxReplicas: 4 }          # every replica is another GPU
     ["A readiness probe holds traffic until the model has finished loading.", "Readiness probe model load hone tak traffic rokta hai."],
     ["A service gives clients one stable address and spreads requests over pods.", "Service clients ko ek sthir address deti hai aur requests pods mein baant-ti hai."],
     ["The autoscaler adds pods as load rises, up to a maximum you can afford.", "Load badhne par autoscaler pods jodta hai, us maximum tak jo aap afford kar sako."]
+  ], { perRow: 3 });
+})();
+</script>
+<template id="t-b2-ch45" data-title="Ch 45 · Automatic Prompt Optimisation and DSPy"><div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part X · Chapter 45</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 45 · Engineering deep dives</span><span class="l-hi">Chapter 45 · Engineering ki gehraai</span></div>
+  <h1><span class="l-en">Automatic Prompt Optimisation and DSPy</span><span class="l-hi">Automatic Prompt Optimisation aur DSPy</span></h1>
+  <div class="story">
+    <p class="l-en">Most prompts are tuned by hand: change a word, try two examples, "looks better", ship. That's guessing. <strong>Automatic prompt optimisation</strong> turns it into a search with a score. You provide a task, a small labelled dataset and a metric; a program tries many candidate instructions and example sets, scores each on held-out data, and keeps the best. <strong>DSPy</strong>, from Stanford, is the best-known library for this. This chapter builds the core idea from scratch so you can see exactly what such libraries do.</p>
+    <p class="l-hi">Zyaadatar prompts haath se tune hote hain: ek shabd badlo, do examples try karo, "behtar lagta hai", ship. Yeh andaaza hai. <strong>Automatic prompt optimisation</strong> ise score wali khoj bana deta hai. Aap kaam, chhota labelled dataset aur ek metric dete ho; program kai instructions aur example sets aazmaata hai, har ek ko alag rakhe data par score karta hai, aur sabse achha rakhta hai. Stanford ka <strong>DSPy</strong> iske liye sabse mashhoor library hai. Yeh chapter mool idea shunya se banata hai taaki dikhe ki aisi libraries asal mein kya karti hain.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Prompts as parameters to search over</span><span class="l-hi">Prompts ko parameters ki tarah khojna</span></li>
+    <li><b>2</b><span class="l-en">Train, dev and test splits for prompts</span><span class="l-hi">Prompts ke liye train, dev aur test splits</span></li>
+    <li><b>3</b><span class="l-en">A from-scratch optimiser with a local model</span><span class="l-hi">Local model ke saath shunya se optimiser</span></li>
+    <li><b>4</b><span class="l-en">What DSPy adds, and when to use it</span><span class="l-hi">DSPy kya jodta hai, aur kab use karein</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">A prompt is a setting you can search</span><span class="l-hi">Prompt ek setting hai jise khoja ja sakta hai</span></h2></div>
+<div class="story">
+  <p class="l-en">Look at a prompt the way Chapter 37 looked at weights: a set of knobs. The instruction wording is a knob. Which few-shot examples you include is a knob. Their order is a knob. You can't take gradients through words, but you can try candidates and keep what scores best, as long as you have a <strong>metric</strong> you trust (Ch 26). The same discipline applies as in training: choose on a <strong>dev</strong> set, then report on a <strong>test</strong> set you never looked at, or you'll fool yourself.</p>
+  <p class="l-hi">Prompt ko waise dekho jaise Chapter 37 ne weights ko dekha: knobs ka set. Instruction ke shabd ek knob. Kaunse few-shot examples shaamil karein, ek knob. Unka kram, ek knob. Shabdon par gradient nahi le sakte, par candidates aazma kar sabse achha score wala rakh sakte ho, bas ek bharosemand <strong>metric</strong> ho (Ch 26). Training wala hi anushaasan: <strong>dev</strong> set par chuno, phir aise <strong>test</strong> set par report karo jo kabhi nahi dekha, warna khud ko dhokha doge.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">An optimiser from scratch</span><span class="l-hi">Shunya se optimiser</span></h2></div>
+<div class="story">
+  <p class="l-en">The task: route Indian e-commerce support messages to billing, delivery, account or other. Four labelled examples to draw few-shot demos from, eight dev messages to choose with, eight test messages to report on. Three instructions, from lazy to precise, each tried with and without examples: six candidates, scored by plain accuracy.</p>
+  <p class="l-hi">Kaam: Indian e-commerce support messages ko billing, delivery, account ya other mein bhejna. Few-shot demos ke liye chaar labelled examples, chunne ke liye aath dev messages, report ke liye aath test messages. Teen instructions, aalsi se sateek tak, har ek examples ke saath aur bina: chhe candidates, saadi accuracy se score.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: search instructions × examples, choose on dev, report on test</span><span class="l-hi">Coders ke liye: instructions × examples khojo, dev par chuno, test par report</span><span class="lvl">code2/ch45/optimise_prompt.py</span></summary>
+  <div class="inner">
+<pre>for instruction, shots in itertools.product(INSTRUCTIONS, SHOTS.values()):
+    results.append((score(instruction, shots, DEV), instruction, shots))     # choose on DEV
+
+best = max(results)
+print("test (unseen):", score(best.instruction, best.shots, TEST))         # report on TEST</pre>
+<!--OPT_OUTPUT-->
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">What DSPy adds</span><span class="l-hi">DSPy kya jodta hai</span></h2></div>
+<div class="story">
+  <p class="l-en">DSPy changes how you write the program in the first place. Instead of prompt strings, you declare <strong>signatures</strong> ("message → category") and <strong>modules</strong> (predict, chain-of-thought, retrieve) and compose them like functions. Then an <strong>optimiser</strong> (DSPy calls them teleprompters) compiles the program against your metric: it can bootstrap few-shot examples from the model's own successful runs, and propose and test new instructions (the MIPRO family does both). When you switch models, you re-compile instead of re-tuning prompts by hand.</p>
+  <p class="l-hi">DSPy program likhne ka tareeka hi badal deta hai. Prompt strings ki jagah aap <strong>signatures</strong> ("message → category") aur <strong>modules</strong> (predict, chain-of-thought, retrieve) ghoshit karte ho aur unhe functions ki tarah jodte ho. Phir ek <strong>optimiser</strong> (DSPy inhe teleprompters kehta hai) program ko aapke metric ke khilaaf compile karta hai: woh model ke apne safal runs se few-shot examples bana sakta hai, aur naye instructions sujha kar test kar sakta hai (MIPRO parivaar dono karta hai). Model badlo toh prompts haath se dobara tune karne ki jagah dobara compile karo.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">When it's worth it</span><span class="l-hi">Kab faayde ka hai</span></h4>
+  <p class="l-en">Automatic optimisation pays off when the task is repeated thousands of times, you have (or can label) 50+ examples, and the metric is reliable. It also makes model switches cheap. It's overkill for a one-off prompt, and it can only be as good as your metric: optimise against a sloppy judge and you'll get a prompt that pleases the judge (Book 2, Ch 3). Always keep the human-readable final prompt in version control (Ch 41) and look at it.</p>
+  <p class="l-hi">Automatic optimisation tab faayde ka hai jab kaam hazaaron baar dohraaya jaaye, aapke paas 50+ examples hon (ya label kar sako), aur metric bharosemand ho. Yeh model badalna bhi sasta banata hai. Ek-baar ke prompt ke liye zyaada hai, aur yeh aapke metric jitna hi achha ho sakta hai: dheele judge par optimise karo toh judge ko khush karne wala prompt milega (Book 2, Ch 3). Aakhri, padhne laayak prompt hamesha version control mein rakho (Ch 41) aur use padho.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Treat instructions and examples as settings to search, scored by a metric you trust.</li><li>Choose on a dev set, report on an unseen test set.</li><li>Even a small search over a few candidates replaces guessing with measurement.</li><li>DSPy declares programs as signatures and modules, then compiles prompts against your metric.</li><li>Worth it for repeated tasks with data; useless with a bad metric.</li></ol>
+  <ol class="l-hi"><li>Instructions aur examples ko khojne laayak settings maano, bharosemand metric se score.</li><li>Dev set par chuno, anjaan test set par report karo.</li><li>Kuch candidates ki chhoti khoj bhi andaaze ki jagah naap le aati hai.</li><li>DSPy programs ko signatures aur modules ki tarah likhta, phir aapke metric par prompts compile karta hai.</li><li>Data wale dohraaye kaamon ke liye faayde ka; kharaab metric ke saath bekaar.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add a fourth instruction written by the model itself ("improve this instruction given these mistakes") and see if it beats yours. <span class="level">core</span></p><p class="l-hi">Model ka khud likha chautha instruction jodo ("in galtiyon ko dekh kar yeh instruction sudhaaro") aur dekho kya aapke wale ko haraata hai. <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Install DSPy and rebuild the router as a signature with a <code>BootstrapFewShot</code> optimiser. Compare with the lab. <span class="level">stretch</span></p><p class="l-hi">DSPy install karo aur router ko <code>BootstrapFewShot</code> optimiser ke saath signature ki tarah dobara banao. Lab se tulna karo. <span class="level">stretch</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Khattab et al. (2023). <em>DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines.</em></li>
+  <li>Opsahl-Ong et al. (2024). <em>Optimizing Instructions and Demonstrations for Multi-Stage Language Model Programs</em> (MIPRO).</li>
+  <li>Zhou et al. (2023). <em>Large Language Models Are Human-Level Prompt Engineers</em> (APE).</li>
+</ol>
+<nav class="pager"><a href="#b2-ch44">Ch 44</a><a href="#b2-ch46"><span class="l-en">Ch 46 · Agent Identity and Access</span><span class="l-hi">Ch 46 · Agent ki Pehchaan aur Access</span></a></nav>
+</article>
+</div></template>
+<script type="text/plain" id="s-b2-ch45">
+(function () {
+  var B = window.Book;
+  B.flow("scA", [
+    { en: "Task + metric", hi: "Kaam + metric", sen: "route messages; accuracy", shi: "messages route karo; accuracy" },
+    { en: "Candidates", hi: "Candidates", sen: "3 instructions × 2 example sets", shi: "3 instructions × 2 example sets" },
+    { en: "Score on dev", hi: "Dev par score", sen: "8 labelled messages", shi: "8 labelled messages" },
+    { en: "Keep the best", hi: "Sabse achha rakho", sen: "highest dev accuracy", shi: "sabse zyaada dev accuracy" },
+    { en: "Report on test", hi: "Test par report", sen: "8 messages never used for choosing", shi: "8 messages jo chunne mein kabhi use nahi hue" },
+    { en: "Version it", hi: "Version karo", sen: "store the prompt, re-run on model change", shi: "prompt store karo, model badle toh dobara chalao" }
+  ], [
+    ["Start with a task and a number that says how well it's done.", "Kaam aur ek number se shuru karo jo bataaye kitna achha hua."],
+    ["Generate candidate prompts: different instructions, with and without examples.", "Candidate prompts banao: alag instructions, examples ke saath aur bina."],
+    ["Score every candidate on a dev set.", "Har candidate ko dev set par score karo."],
+    ["Keep the one with the best dev score.", "Sabse achhe dev score wala rakho."],
+    ["Report its score on a test set it never saw, for an honest number.", "Imaandaar number ke liye, kabhi na dekhe test set par score batao."],
+    ["Save the winning prompt like code, and re-run the search when the model changes.", "Jeetne wala prompt code ki tarah save karo, aur model badle toh khoj dobara chalao."]
   ], { perRow: 3 });
 })();
 </script>
@@ -12142,7 +12844,7 @@ audit log (who, for whom, what, result):
   <li>Model Context Protocol specification: <em>Authorization</em>.</li>
   <li>OWASP (2025). <em>Top 10 for LLM Applications: Excessive Agency.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch44">Ch 44</a><a href="#b2-ch47"><span class="l-en">Ch 47 · Watermarks and Content Provenance</span><span class="l-hi">Ch 47 · Watermark aur Content Provenance</span></a></nav>
+<nav class="pager"><a href="#b2-ch45">Ch 45</a><a href="#b2-ch47"><span class="l-en">Ch 47 · Watermarks and Content Provenance</span><span class="l-hi">Ch 47 · Watermark aur Content Provenance</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch46">
@@ -12289,13 +12991,14 @@ signature = sign(SIGNING_KEY, claim)               # real C2PA: certificate-base
 })();
 </script>
 <template id="t-home" data-title="AI Books"><div class="page wide">
+<div class="topbar"><div class="crumbs"><span>AI Books</span></div></div>
 <header class="cover">
   <div class="eyebrow">Two storybooks · English / Hinglish · animated · works offline</div>
   <h1>AI Books</h1>
   <p class="lede">Pick a book. Everything is inside this one file: open it on a phone or laptop, even without internet.</p>
 </header>
 <ol class="chapters" style="margin-top:2rem">
-  <li><span class="cn">1</span><a class="ct" href="#b2-index">Becoming an AI Engineer<span>36 chapters · from zero to AI engineer, A to Z: prompting, RAG, MCP, agents, local models, production</span></a><span class="st ready">Start here</span></li>
+  <li><span class="cn">1</span><a class="ct" href="#b2-index">Becoming an AI Engineer<span>47 chapters · from zero to AI engineer, A to Z: prompting, RAG, MCP, agents, local models, production</span></a><span class="st ready">Start here</span></li>
   <li><span class="cn">2</span><a class="ct" href="#b1-index">Building the Harness<span>18 chapters · LLM internals, agent harnesses, enterprise AI platforms</span></a><span class="st ready">Open</span></li>
 </ol>
 </div></template>
@@ -12644,34 +13347,122 @@ signature = sign(SIGNING_KEY, claim)               # real C2PA: certificate-base
     lang: function () { return root.getAttribute("data-lang") || "en"; } };
 })();
 
-/* Light/dark switch: a round button at the bottom right. Follows the system until the reader
-   picks a theme; the choice is saved per browser. */
+/* Theme: follows the system until the reader picks light or dark in the menu; saved per browser. */
 (function () {
   var KEY = "harness-book-theme", root = document.documentElement;
   var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
   var choice = null;
   try { choice = localStorage.getItem(KEY); } catch (e) {}
-  var SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/>' +
-    '<path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
-  var MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>';
-  var btn = document.createElement("button");
-  btn.className = "tbtn"; btn.type = "button";
   function current() { return choice || (mq && mq.matches ? "dark" : "light"); }
   function apply() {
-    var t = current();
-    root.setAttribute("data-theme", t);
-    btn.innerHTML = t === "dark" ? SUN : MOON;
-    btn.setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
-    btn.title = btn.getAttribute("aria-label");
+    root.setAttribute("data-theme", current());
+    document.querySelectorAll("[data-settheme]").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-settheme") === current()));
+    });
   }
-  btn.addEventListener("click", function () {
-    choice = current() === "dark" ? "light" : "dark";
-    try { localStorage.setItem(KEY, choice); } catch (e) {}
+  window.Book.getTheme = current;
+  window.Book.setTheme = function (t) {
+    choice = t;
+    try { localStorage.setItem(KEY, t); } catch (e) {}
     apply();
-  });
+  };
   if (mq) { if (mq.addEventListener) mq.addEventListener("change", apply); else if (mq.addListener) mq.addListener(apply); }
   apply();
-  document.body.appendChild(btn);
+})();
+
+/* Menu: a slim top bar with a menu button; navigation, language and theme live in a left drawer,
+   so the reading view stays clean. The single-file edition adds a chapter list (window.BookNav)
+   and search (window.openSearch). */
+(function () {
+  var B = window.Book;
+  var MENU = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+  var CLOSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  var FIND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>';
+  function bi(en, hi) { return '<span class="l-en">' + en + '</span><span class="l-hi">' + hi + "</span>"; }
+
+  var veil = document.createElement("div");
+  veil.className = "drawer-veil";
+  var dr = document.createElement("aside");
+  dr.className = "drawer";
+  dr.setAttribute("aria-label", "Menu");
+  dr.setAttribute("aria-hidden", "true");
+  document.body.appendChild(veil);
+  document.body.appendChild(dr);
+
+  function build() {
+    var nav = window.BookNav ? window.BookNav() : null;
+    var links = nav ? nav.links : [];
+    if (!nav) {                                    // separate-page edition: reuse the top bar's own links
+      var bar = document.querySelector(".topbar");
+      (bar ? bar.querySelectorAll(".crumbs a") : []).forEach(function (a) { links.push({ href: a.getAttribute("href"), html: a.innerHTML }); });
+    }
+    var t = B.getTheme(), l = B.lang();
+    var h = '<div class="drawer-head"><span>' + bi("Menu", "Menu") + '</span><button type="button" class="drawer-x" aria-label="Close menu">' + CLOSE + "</button></div>" +
+      '<div class="drawer-body">';
+    if (links.length || window.openSearch) {
+      h += "<h3>" + bi("Go to", "Kahan jaana hai") + '</h3><nav class="drawer-links">' +
+        links.map(function (k) { return '<a href="' + k.href + '">' + (k.html || bi(k.en, k.hi)) + "</a>"; }).join("") +
+        (window.openSearch ? '<a href="#" data-opensearch>' + bi("Search topics", "Topic dhoondho") + "</a>" : "") + "</nav>";
+    }
+    h += "<h3>" + bi("Language", "Bhasha") + '</h3><div class="seg" role="group" aria-label="Language">' +
+      '<button type="button" data-setlang="en" aria-pressed="' + (l === "en") + '">English</button>' +
+      '<button type="button" data-setlang="hi" aria-pressed="' + (l === "hi") + '">Hinglish</button></div>';
+    h += "<h3>" + bi("Mode", "Mode") + '</h3><div class="seg" role="group" aria-label="Theme">' +
+      '<button type="button" data-settheme="light" aria-pressed="' + (t === "light") + '">' + bi("Light", "Light") + "</button>" +
+      '<button type="button" data-settheme="dark" aria-pressed="' + (t === "dark") + '">' + bi("Dark", "Dark") + "</button></div>";
+    if (nav && nav.items && nav.items.length) {
+      h += "<h3>" + nav.title + '</h3><nav class="drawer-links drawer-chapters">' + nav.items.map(function (it) {
+        return '<a href="' + it.href + '"' + (it.current ? ' class="current" aria-current="page"' : "") + ">" + it.label + (it.done ? ' <span class="dn">✓</span>' : "") + "</a>";
+      }).join("") + "</nav>";
+    }
+    dr.innerHTML = h + "</div>";
+  }
+
+  function open() {
+    build();
+    dr.classList.add("open"); veil.classList.add("open");
+    dr.setAttribute("aria-hidden", "false");
+    var cur = dr.querySelector(".current"), list = dr.querySelector(".drawer-chapters");
+    if (cur && list) list.scrollTop = cur.offsetTop - list.offsetTop - list.clientHeight / 2;   // centre this chapter in the list
+    dr.querySelector(".drawer-x").focus();
+  }
+  function close() {
+    dr.classList.remove("open"); veil.classList.remove("open");
+    dr.setAttribute("aria-hidden", "true");
+  }
+  veil.addEventListener("click", close);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && dr.classList.contains("open")) close(); });
+  dr.addEventListener("click", function (e) {
+    var t = e.target.closest("button, a");
+    if (!t) return;
+    if (t.classList.contains("drawer-x")) return close();
+    if (t.hasAttribute("data-settheme")) return B.setTheme(t.getAttribute("data-settheme"));
+    if (t.hasAttribute("data-opensearch")) { e.preventDefault(); close(); return window.openSearch(); }
+    if (t.tagName === "A") close();                // navigating away
+  });
+
+  // Turn the page's top bar into the slim bar. Safe to call again (e.g. after the single-file router renders).
+  B.decorate = function () {
+    var bar = document.querySelector(".topbar");
+    if (!bar) return;
+    if (!bar.classList.contains("has-drawer")) {
+      bar.classList.add("has-drawer");
+      var m = document.createElement("button");
+      m.type = "button"; m.className = "bar-btn menu-btn"; m.innerHTML = MENU;
+      m.setAttribute("aria-label", "Open menu"); m.title = "Menu";
+      m.addEventListener("click", open);
+      bar.insertBefore(m, bar.firstChild);
+    }
+    if (window.openSearch && !bar.querySelector(".find-btn")) {
+      var f = document.createElement("button");
+      f.type = "button"; f.className = "bar-btn find-btn"; f.innerHTML = FIND;
+      f.setAttribute("aria-label", "Search topics"); f.title = "Search topics";
+      f.addEventListener("click", function () { window.openSearch(); });
+      bar.appendChild(f);
+    }
+  };
+  B.openMenu = open;
+  B.decorate();
 })();
 
 </script>
@@ -12694,6 +13485,7 @@ signature = sign(SIGNING_KEY, claim)               # real C2PA: certificate-base
     if (s) { try { new Function(s.textContent)(); } catch (e) { console.error(id, e); } }
     var h = sec ? app.querySelectorAll("h2")[sec - 1] : null;
     if (h) h.scrollIntoView(); else window.scrollTo(0, 0);
+    if (window.Book && window.Book.decorate) window.Book.decorate();   // slim top bar with the menu button
   }
   window.addEventListener("hashchange", route);
   route();
@@ -12711,15 +13503,10 @@ signature = sign(SIGNING_KEY, claim)               # real C2PA: certificate-base
   ("a an the in on of to for and or is are what how why with about from by kya kaise kyun hai hain ka ki ke ko me mein se " +
    "aur karke karna karte topic topics").split(" ").forEach(function (w) { STOP[w] = 1; });
 
-  var btn = document.createElement("button");
-  btn.className = "sbtn"; btn.type = "button"; btn.setAttribute("aria-label", "Search topics"); btn.title = "Search topics";
-  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">' +
-    '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>';
   var over = document.createElement("div");
   over.className = "sover"; over.setAttribute("role", "dialog"); over.setAttribute("aria-modal", "true");
   over.innerHTML = '<div class="sbox"><div class="shead"><input type="search" autocomplete="off" aria-label="Search topics">' +
     '<button type="button">Close</button></div><div class="slist"></div></div>';
-  document.body.appendChild(btn);
   document.body.appendChild(over);
   var q = over.querySelector("input"), list = over.querySelector(".slist");
 
@@ -12819,7 +13606,6 @@ signature = sign(SIGNING_KEY, claim)               # real C2PA: certificate-base
 
   function open() { over.classList.add("open"); document.body.style.overflow = "hidden"; search(); q.focus(); }
   function close() { over.classList.remove("open"); document.body.style.overflow = ""; }
-  btn.addEventListener("click", open);
   over.querySelector(".shead button").addEventListener("click", close);
   over.addEventListener("click", function (e) { if (e.target === over) close(); });
   list.addEventListener("click", function (e) {
@@ -12837,6 +13623,8 @@ signature = sign(SIGNING_KEY, claim)               # real C2PA: certificate-base
     else if ((e.key === "k" && (e.ctrlKey || e.metaKey)) ||
              (e.key === "/" && !/INPUT|TEXTAREA/.test(document.activeElement.tagName))) { e.preventDefault(); open(); }
   });
+  window.openSearch = open;                      // opened from the top bar's search icon and the menu
+  if (window.Book && window.Book.decorate) window.Book.decorate();
 })();
 
 </script>
@@ -13699,6 +14487,23 @@ window.QUIZ = {
     else if (/^b[12]-index$/.test(id)) contentsPage(id.slice(0, 2));
     else if (id === "home" || !document.getElementById("t-" + id)) homePage();
   }
+  // what the menu drawer shows: where to go, and this book's chapters with done marks
+  var BOOKS = { b2: ["Becoming an AI Engineer", "AI Engineer Banna"], b1: ["Building the Harness", "Harness Banana"] };
+  window.BookNav = function () {
+    var id = (location.hash || "#home").slice(1).split("~")[0];
+    var book = (id.match(/^(b[12])-/) || [])[1];
+    var links = [{ href: "#home", en: "All books", hi: "Saari books" }];
+    if (!book) return { links: links.concat([{ href: "#b2-index", en: "Book 1 · AI Engineer", hi: "Book 1 · AI Engineer" },
+                                           { href: "#b1-index", en: "Book 2 · Harness", hi: "Book 2 · Harness" }]) };
+    links.push({ href: "#" + book + "-index", en: "Contents", hi: "Vishay-suchi" });
+    var d = load(), items = [];
+    document.querySelectorAll("template[id^='t-" + book + "-ch']").forEach(function (t) {
+      var pid = t.id.slice(2);
+      items.push({ href: "#" + pid, label: t.getAttribute("data-title"), current: pid === id, done: !!d[pid] });
+    });
+    return { links: links, title: bi(BOOKS[book][0], BOOKS[book][1]), items: items };
+  };
+
   window.addEventListener("hashchange", function () { setTimeout(onRoute, 0); });   // after the router has rendered
   onRoute();
 })();

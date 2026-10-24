@@ -1,0 +1,111 @@
+  <div class="story">
+    <p class="l-en">Two limits keep showing up in this book. A single answer from a model can be wrong in a way it would have caught on a second try. And a model can't learn from yesterday: its weights froze when training ended. This chapter covers the practical tools for both. For reasoning: <strong>self-consistency</strong> (ask several times, take the majority) and <strong>tree of thoughts</strong> (explore several approaches, keep the best). For learning over time: <strong>episodic memory</strong>, and an honest look at <strong>continual learning</strong>.</p>
+    <p class="l-hi">Is book mein do seemayein baar-baar dikhti hain. Model ka ek jawab aise galat ho sakta hai jo doosri koshish mein pakad leta. Aur model kal se seekh nahi sakta: training khatam hote hi uske weights jam gaye. Yeh chapter dono ke practical tools batata hai. Soch ke liye: <strong>self-consistency</strong> (kai baar poochho, bahumat lo) aur <strong>tree of thoughts</strong> (kai raaste aazmaao, sabse achha rakho). Samay ke saath seekhne ke liye: <strong>episodic memory</strong>, aur <strong>continual learning</strong> par imaandaar nazar.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Test-time compute: spending more at answer time</span><span class="l-hi">Test-time compute: jawab ke samay zyaada kharch</span></li>
+    <li><b>2</b><span class="l-en">Self-consistency: sample and vote</span><span class="l-hi">Self-consistency: sample lo aur vote karo</span></li>
+    <li><b>3</b><span class="l-en">Tree of thoughts: branch, score, expand</span><span class="l-hi">Tree of thoughts: shaakhaayein, score, aage badhao</span></li>
+    <li><b>4</b><span class="l-en">Episodic memory, and why continual learning is still hard</span><span class="l-hi">Episodic memory, aur continual learning abhi bhi mushkil kyun</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Spending more compute at answer time</span><span class="l-hi">Jawab ke samay zyaada compute lagaana</span></h2></div>
+<div class="story">
+  <p class="l-en">There are two ways to get a better answer: a bigger model, or more work from the same model at answer time. The second is called <strong>test-time compute</strong>, and research since 2024 (the idea behind reasoning models, Ch 9) shows it often pays off: up to a point, more thinking, more attempts or more checking buys accuracy. Reasoning models do it inside one call. The two techniques below do it from the outside, with any model, in your harness.</p>
+  <p class="l-hi">Behtar jawab ke do tareeke hain: bada model, ya usi model se jawab ke samay zyaada kaam. Doosre ko <strong>test-time compute</strong> kehte hain, aur 2024 se research (reasoning models ke peeche ka idea, Ch 9) dikhaati hai ki yeh aksar faayda deta hai: ek hadd tak, zyaada soch, zyaada koshishein ya zyaada jaanch sateekta khareedti hai. Reasoning models yeh ek call ke andar karte hain. Neeche ke do tareeke ise bahar se, kisi bhi model ke saath, aapke harness mein karte hain.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Self-consistency: ask five times, trust the majority</span><span class="l-hi">Self-consistency: paanch baar poochho, bahumat par bharosa</span></h2></div>
+<div class="story">
+  <p class="l-en">Ask the same question several times with some randomness (temperature above 0), extract each final answer, and take the most common one. Mistakes tend to be scattered; correct reasoning tends to land in the same place. It costs N times the tokens, so use it where an answer is checkable and errors are expensive: maths, extraction, classification with consequences.</p>
+  <p class="l-hi">Wahi sawaal kuch randomness ke saath (temperature 0 se upar) kai baar poochho, har aakhri jawab nikaalo, aur sabse aam wala lo. Galtiyan bikhri hoti hain; sahi soch aksar ek hi jagah pahunchti hai. Kharch N guna tokens, isliye wahan use karo jahan jawab jaancha ja sake aur galti mehengi ho: hisaab, extraction, nateejon wali classification.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Tree of thoughts: explore before you commit</span><span class="l-hi">Tree of thoughts: pakka karne se pehle aazmaao</span></h2></div>
+<div class="story">
+  <p class="l-en">For open problems (plans, designs, puzzles) there isn't one answer to vote on. <strong>Tree of thoughts</strong> asks the model for several different approaches, has it (or a checker) score each one, and expands only the most promising branch, sometimes backtracking if it hits a dead end. It's how a good engineer works: sketch three options, pick one with reasons, then go deep.</p>
+  <p class="l-hi">Khule sawaalon (plans, designs, paheliyan) mein vote karne ke liye ek jawab nahi hota. <strong>Tree of thoughts</strong> model se kai alag raaste maangta hai, unhe model (ya checker) se score karwaata hai, aur sirf sabse ummeed wali shaakha badhaata hai, kabhi band raaste par peeche bhi aata hai. Achha engineer aise hi kaam karta hai: teen vikalp kheencho, kaaran ke saath ek chuno, phir gehre jao.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: self-consistency and a tiny tree of thoughts with qwen3:4b</span><span class="l-hi">Coders ke liye: qwen3:4b ke saath self-consistency aur chhota tree of thoughts</span><span class="lvl">code2/ch42/reasoning.py</span></summary>
+  <div class="inner">
+<pre>votes = [final_number(chat(Q, temperature=0.9, seed=s)) for s in range(5)]
+winner, n = collections.Counter(votes).most_common(1)[0]          # self-consistency
+
+ideas  = chat(f"{TASK}\nPropose 3 very different approaches, one line each.")
+scores = [rate(TASK, idea) for idea in ideas]                     # the model scores each branch
+plan   = chat(f"{TASK}\nUse this approach: {ideas[argmax(scores)]}\nGive a 4-line plan with costs.")</pre>
+<!--REASONING_OUTPUT-->
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">Episodic memory: remembering what happened</span><span class="l-hi">Episodic memory: jo hua use yaad rakhna</span></h2></div>
+<div class="story">
+  <p class="l-en">Chapter 15 stored <em>facts</em> about a user ("vegetarian, lives in Pune"). <strong>Episodic memory</strong> stores <em>events</em>: what went wrong last time, and what fixed it. After each conversation, the model writes a one-line summary (problem + fix), saved with its date and an embedding. When a new conversation starts, the most similar past episodes are recalled into the context. The assistant seems to "learn from experience", without any change to its weights.</p>
+  <p class="l-hi">Chapter 15 ne user ke baare mein <em>facts</em> store kiye ("vegetarian, Pune mein rehti hai"). <strong>Episodic memory</strong> <em>ghatnaayein</em> store karti hai: pichhli baar kya bigda, aur kisne theek kiya. Har baatcheet ke baad model ek-line saar likhta hai (samasya + ilaaj), tareekh aur embedding ke saath save. Nayi baatcheet shuru hone par sabse milti-julti purani ghatnaayein context mein laayi jaati hain. Assistant "anubhav se seekhta" lagta hai, uske weights mein bina kisi badlaav ke.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: store episodes, recall the relevant ones</span><span class="l-hi">Coders ke liye: ghatnaayein store karo, kaam ki yaad karo</span><span class="lvl">code2/ch42/episodic_memory.py</span></summary>
+  <div class="inner">
+<pre>summary = chat(f"Summarise this support conversation in one line, keeping the problem and the fix:\n{convo}")
+db.execute("INSERT INTO episodes VALUES (?,?,?)", (day, summary, json.dumps(embed(summary))))
+
+ranked = sorted(((cos(embed(question), json.loads(v)), d, s) for d, s, v in episodes), reverse=True)
+memory = "\n".join(f"- {d}: {s}" for sim, d, s in ranked[:2] if sim > 0.3)   # only relevant episodes</pre>
+<!--EPISODIC_OUTPUT-->
+  </div>
+</details>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Continual learning: why models don't just keep learning</span><span class="l-hi">Continual learning: models bas seekhte kyun nahi rehte</span></h4>
+  <p class="l-en">Updating a model's weights on every new conversation sounds ideal, but it runs into <strong>catastrophic forgetting</strong> (new training overwrites old skills), safety risks (anyone could teach it bad habits), and cost. So today's products fake it: memory and retrieval for knowledge, periodic fine-tunes (Ch 23) for behaviour, each checked by evals. True continual learning is an active research area; treat claims about it with the checklist from Chapter 35.</p>
+  <p class="l-hi">Har nayi baatcheet par model ke weights update karna aadarsh lagta hai, par yeh <strong>catastrophic forgetting</strong> (naya training purane hunar mita deta hai), suraksha ke khatron (koi bhi use buri aadatein sikha sakta hai) aur kharch se takraata hai. Isliye aaj ke products iska dikhava karte hain: gyaan ke liye memory aur retrieval, behaviour ke liye samay-samay par fine-tunes (Ch 23), har ek evals se jaancha. Asli continual learning sakriya research hai; iske daavon ko Chapter 35 ki checklist se parkho.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Test-time compute: more work at answer time often beats a bigger model, up to a point.</li><li>Self-consistency samples several answers and takes the majority; best for checkable answers.</li><li>Tree of thoughts proposes approaches, scores them, and expands the best.</li><li>Episodic memory stores dated summaries of past events and recalls the relevant ones.</li><li>Continual learning in weights is still research; products use memory, retrieval and periodic fine-tunes.</li></ol>
+  <ol class="l-hi"><li>Test-time compute: jawab ke samay zyaada kaam aksar bade model se behtar, ek hadd tak.</li><li>Self-consistency kai jawab le kar bahumat chunti hai; jaanchne laayak jawabon ke liye best.</li><li>Tree of thoughts raaste sujhaata, unhe score karta, aur sabse achha badhaata hai.</li><li>Episodic memory purani ghatnaon ke tareekh wale saar rakhti aur kaam ke yaad karti hai.</li><li>Weights mein continual learning abhi research hai; products memory, retrieval aur samay-samay ke fine-tunes use karte hain.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Run self-consistency with 1, 3, 5 and 9 samples on ten maths questions. Plot accuracy against total tokens. Where does it stop being worth it? <span class="level">core</span></p><p class="l-hi">Das hisaab ke sawaalon par 1, 3, 5 aur 9 samples ke saath self-consistency chalao. Sateekta vs kul tokens plot karo. Kahan se faayda nahi rehta? <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Add a "forget" command to <code>episodic_memory.py</code>, and a rule that episodes older than 90 days are deleted. <span class="level">core</span></p><p class="l-hi"><code>episodic_memory.py</code> mein "bhool jao" command jodo, aur niyam ki 90 din se purani ghatnaayein mitti jaayein. <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Wang et al. (2023). <em>Self-Consistency Improves Chain of Thought Reasoning in Language Models.</em></li>
+  <li>Yao et al. (2023). <em>Tree of Thoughts: Deliberate Problem Solving with Large Language Models.</em></li>
+  <li>Snell et al. (2024). <em>Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters.</em></li>
+  <li>Park et al. (2023). <em>Generative Agents: Interactive Simulacra of Human Behavior</em> (memory streams).</li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.columns("scA", [
+    { en: "One answer", hi: "Ek jawab", cls: "box-amb", step: 0, items: [
+      { en: "Ask once at temperature 0", hi: "Temperature 0 par ek baar poochho", step: 0 },
+      { en: "If this one reasoning path slips, the answer is wrong", hi: "Agar yeh ek soch ka raasta phisla, jawab galat", step: 0 },
+      { en: "Cost: 1×", hi: "Kharch: 1×", cls: "box-plm", step: 0 } ] },
+    { en: "Self-consistency", hi: "Self-consistency", cls: "box-sig", step: 1, items: [
+      { en: "Ask 5 times with some randomness", hi: "Kuch randomness ke saath 5 baar poochho", step: 1 },
+      { en: "Different paths; most land on the same answer; a slip gets outvoted", hi: "Alag raaste; zyaadatar ek jawab par; chook vote mein haarti hai", step: 2 },
+      { en: "Cost: 5×. Use where answers are checkable and errors costly", hi: "Kharch: 5×. Jahan jawab jaancha ja sake aur galti mehengi ho", cls: "box-plm", step: 3 } ] }
+  ], [
+    ["One sample: whatever path the model takes, you get its answer, right or wrong.", "Ek sample: model jo bhi raasta le, uska jawab milta hai, sahi ya galat."],
+    ["Self-consistency asks several times with some randomness.", "Self-consistency kuch randomness ke saath kai baar poochhti hai."],
+    ["Mistakes scatter; correct reasoning converges. The majority wins.", "Galtiyan bikharti hain; sahi soch ek jagah milti hai. Bahumat jeetta hai."],
+    ["You pay for every sample, so spend it where it matters.", "Har sample ka paisa lagta hai, isliye wahan kharcho jahan zaroori ho."]
+  ]);
+})();
+</script>

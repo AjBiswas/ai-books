@@ -91,13 +91,14 @@ for folder, key, title in [("book", "b1", "Building the Harness"), ("book2", "b2
         pages[f"{key}-{m.group(1)}"] = (t, st + rewrite_links(body, key), script)
 
 HOME = """<div class="page wide">
+<div class="topbar"><div class="crumbs"><span>AI Books</span></div></div>
 <header class="cover">
   <div class="eyebrow">Two storybooks · English / Hinglish · animated · works offline</div>
   <h1>AI Books</h1>
   <p class="lede">Pick a book. Everything is inside this one file: open it on a phone or laptop, even without internet.</p>
 </header>
 <ol class="chapters" style="margin-top:2rem">
-  <li><span class="cn">1</span><a class="ct" href="#b2-index">Becoming an AI Engineer<span>36 chapters · from zero to AI engineer, A to Z: prompting, RAG, MCP, agents, local models, production</span></a><span class="st ready">Start here</span></li>
+  <li><span class="cn">1</span><a class="ct" href="#b2-index">Becoming an AI Engineer<span>47 chapters · from zero to AI engineer, A to Z: prompting, RAG, MCP, agents, local models, production</span></a><span class="st ready">Start here</span></li>
   <li><span class="cn">2</span><a class="ct" href="#b1-index">Building the Harness<span>18 chapters · LLM internals, agent harnesses, enterprise AI platforms</span></a><span class="st ready">Open</span></li>
 </ol>
 </div>"""
@@ -146,6 +147,7 @@ parts.append("""<script>
     if (s) { try { new Function(s.textContent)(); } catch (e) { console.error(id, e); } }
     var h = sec ? app.querySelectorAll("h2")[sec - 1] : null;
     if (h) h.scrollIntoView(); else window.scrollTo(0, 0);
+    if (window.Book && window.Book.decorate) window.Book.decorate();   // slim top bar with the menu button
   }
   window.addEventListener("hashchange", route);
   route();

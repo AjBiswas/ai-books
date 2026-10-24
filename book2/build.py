@@ -172,7 +172,7 @@ INDEX_TOP = """<title>Becoming an AI Engineer</title>
 <header class="cover">
   <div class="cover-grid">
     <div>
-      <div class="eyebrow"><span class="l-en">With Haron as your mentor · 36 chapters · A to Z</span><span class="l-hi">Haron aapka mentor · 36 chapters · A se Z</span></div>
+      <div class="eyebrow"><span class="l-en">With Haron as your mentor · 47 chapters · A to Z</span><span class="l-hi">Haron aapka mentor · 47 chapters · A se Z</span></div>
       <h1><span class="l-en">Becoming an AI Engineer</span><span class="l-hi">AI Engineer Banna</span></h1>
       <p class="lede l-en">Everything an AI engineer works with in 2026, from your first prompt to shipping agents in production: prompting, context engineering, RAG, MCP, skills, agents, fine-tuning, local models on your laptop, evals, security, cost, and the career path. Every idea has a picture, an animation, a simple example, and code you can run.</p>
       <p class="lede l-hi">2026 mein AI engineer jis cheez ke saath kaam karta hai, sab kuch: pehle prompt se lekar production mein agents ship karne tak. Prompting, context engineering, RAG, MCP, skills, agents, fine-tuning, laptop par local models, evals, security, kharch, aur career ka raasta. Har idea ke saath picture, animation, aasaan example aur chalne wala code.</p>

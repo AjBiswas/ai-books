@@ -130,6 +130,23 @@
     else if (/^b[12]-index$/.test(id)) contentsPage(id.slice(0, 2));
     else if (id === "home" || !document.getElementById("t-" + id)) homePage();
   }
+  // what the menu drawer shows: where to go, and this book's chapters with done marks
+  var BOOKS = { b2: ["Becoming an AI Engineer", "AI Engineer Banna"], b1: ["Building the Harness", "Harness Banana"] };
+  window.BookNav = function () {
+    var id = (location.hash || "#home").slice(1).split("~")[0];
+    var book = (id.match(/^(b[12])-/) || [])[1];
+    var links = [{ href: "#home", en: "All books", hi: "Saari books" }];
+    if (!book) return { links: links.concat([{ href: "#b2-index", en: "Book 1 · AI Engineer", hi: "Book 1 · AI Engineer" },
+                                           { href: "#b1-index", en: "Book 2 · Harness", hi: "Book 2 · Harness" }]) };
+    links.push({ href: "#" + book + "-index", en: "Contents", hi: "Vishay-suchi" });
+    var d = load(), items = [];
+    document.querySelectorAll("template[id^='t-" + book + "-ch']").forEach(function (t) {
+      var pid = t.id.slice(2);
+      items.push({ href: "#" + pid, label: t.getAttribute("data-title"), current: pid === id, done: !!d[pid] });
+    });
+    return { links: links, title: bi(BOOKS[book][0], BOOKS[book][1]), items: items };
+  };
+
   window.addEventListener("hashchange", function () { setTimeout(onRoute, 0); });   // after the router has rendered
   onRoute();
 })();

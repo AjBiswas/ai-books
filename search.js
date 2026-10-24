@@ -9,15 +9,10 @@
   ("a an the in on of to for and or is are what how why with about from by kya kaise kyun hai hain ka ki ke ko me mein se " +
    "aur karke karna karte topic topics").split(" ").forEach(function (w) { STOP[w] = 1; });
 
-  var btn = document.createElement("button");
-  btn.className = "sbtn"; btn.type = "button"; btn.setAttribute("aria-label", "Search topics"); btn.title = "Search topics";
-  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">' +
-    '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>';
   var over = document.createElement("div");
   over.className = "sover"; over.setAttribute("role", "dialog"); over.setAttribute("aria-modal", "true");
   over.innerHTML = '<div class="sbox"><div class="shead"><input type="search" autocomplete="off" aria-label="Search topics">' +
     '<button type="button">Close</button></div><div class="slist"></div></div>';
-  document.body.appendChild(btn);
   document.body.appendChild(over);
   var q = over.querySelector("input"), list = over.querySelector(".slist");
 
@@ -117,7 +112,6 @@
 
   function open() { over.classList.add("open"); document.body.style.overflow = "hidden"; search(); q.focus(); }
   function close() { over.classList.remove("open"); document.body.style.overflow = ""; }
-  btn.addEventListener("click", open);
   over.querySelector(".shead button").addEventListener("click", close);
   over.addEventListener("click", function (e) { if (e.target === over) close(); });
   list.addEventListener("click", function (e) {
@@ -135,4 +129,6 @@
     else if ((e.key === "k" && (e.ctrlKey || e.metaKey)) ||
              (e.key === "/" && !/INPUT|TEXTAREA/.test(document.activeElement.tagName))) { e.preventDefault(); open(); }
   });
+  window.openSearch = open;                      // opened from the top bar's search icon and the menu
+  if (window.Book && window.Book.decorate) window.Book.decorate();
 })();

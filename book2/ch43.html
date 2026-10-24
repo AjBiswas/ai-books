@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 43 · Talking to Databases: Text-to-SQL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<script>(function(){var r=document.documentElement,t=null;try{t=localStorage.getItem("harness-book-theme")}catch(e){}r.setAttribute("data-theme",t||(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"))})()</script>
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part X · Chapter 43</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 43 · Engineering deep dives</span><span class="l-hi">Chapter 43 · Engineering ki gehraai</span></div>
+  <h1><span class="l-en">Talking to Databases: Text-to-SQL</span><span class="l-hi">Database se Baat: Text-to-SQL</span></h1>
+  <div class="story">
+    <p class="l-en">Every company has a database full of answers that managers can't reach without asking an analyst: "What was delivered revenue in Pune last month?", "Which customers ordered twice?". <strong>Text-to-SQL</strong> lets them ask in plain words: the model writes the SQL query, the database runs it, and the numbers come back. It's one of the most-requested AI features in companies, and one of the easiest to get dangerously wrong. This chapter builds it safely.</p>
+    <p class="l-hi">Har company ke paas jawabon se bhara database hai jahan managers analyst se poochhe bina nahi pahunch sakte: "Pichhle mahine Pune mein delivered revenue kitna tha?", "Kin customers ne do baar order kiya?". <strong>Text-to-SQL</strong> unhe saade shabdon mein poochhne deta hai: model SQL query likhta hai, database chalaata hai, aur numbers wapas aate hain. Companies mein yeh sabse zyaada maange jaane wale AI features mein se hai, aur khatarnaak tareeke se galat karne mein sabse aasaan bhi. Yeh chapter ise surakshit banaata hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Schema in the context: what the model must know</span><span class="l-hi">Context mein schema: model ko kya pata hona chahiye</span></li>
+    <li><b>2</b><span class="l-en">Safety: read-only, one query, guards before execution</span><span class="l-hi">Suraksha: read-only, ek query, chalaane se pehle guards</span></li>
+    <li><b>3</b><span class="l-en">Repair loops: feeding database errors back</span><span class="l-hi">Repair loops: database errors wapas dena</span></li>
+    <li><b>4</b><span class="l-en">Checking the answer, not just the SQL</span><span class="l-hi">Sirf SQL nahi, jawab jaanchna</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The pipeline</span><span class="l-hi">Pipeline</span></h2></div>
+<div class="story">
+  <p class="l-en">The model has never seen your database. So the context carries the <strong>schema</strong> (tables, columns, how they join) plus notes a new analyst would need: which values a status column can take, how dates are stored, what "revenue" means here (delivered orders only? before or after tax?). Business definitions matter more than SQL skill: most wrong answers in production are correct SQL for the wrong definition.</p>
+  <p class="l-hi">Model ne aapka database kabhi nahi dekha. Isliye context mein <strong>schema</strong> jaata hai (tables, columns, kaise judte hain) plus woh notes jo naye analyst ko chahiye: status column mein kaunsi values ho sakti hain, dates kaise store hain, yahan "revenue" ka matlab kya hai (sirf delivered orders? tax se pehle ya baad?). Business ki paribhaasha SQL ke hunar se zyaada zaroori hai: production mein zyaadatar galat jawab galat paribhaasha ke liye sahi SQL hote hain.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Safety first: the model never gets write access</span><span class="l-hi">Pehle suraksha: model ko kabhi likhne ka adhikaar nahi</span></h2></div>
+<div class="story">
+  <p class="l-en">A user, or an injected instruction in some text, can ask for "delete all cancelled orders". Defend in layers. Run queries on a <strong>read-only</strong> database user or replica. Before running, a <strong>guard</strong> in plain code accepts only a single SELECT and rejects write or admin keywords. Add a row limit and a timeout so one heavy query can't freeze the database. And filter by permissions: a sales intern shouldn't be able to query the salaries table just because the model can write the JOIN.</p>
+  <p class="l-hi">User, ya kisi text mein injected instruction, "saare cancelled orders delete karo" maang sakta hai. Parton mein bachaav karo. Queries <strong>read-only</strong> database user ya replica par chalao. Chalaane se pehle saade code ka <strong>guard</strong> sirf ek SELECT maane aur write ya admin keywords thukraaye. Row limit aur timeout jodo taaki ek bhaari query database na jama de. Aur permissions se filter karo: sales intern sirf isliye salaries table query na kar sake ki model JOIN likh sakta hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: text-to-SQL on SQLite with a guard and a repair loop</span><span class="l-hi">Coders ke liye: guard aur repair loop ke saath SQLite par text-to-SQL</span><span class="lvl">code2/ch43/text_to_sql.py</span></summary>
+  <div class="inner">
+<pre>prompt = f"SQLite schema:\n{SCHEMA}\nNotes: {NOTES}\n\nWrite ONE SQLite SELECT query that answers: {question}"
+sql = extract_sql(chat(prompt))
+for attempt in (1, 2):
+    if problem := guard(sql):                       # only one read-only SELECT passes
+        return f"BLOCKED: {problem}"
+    try:
+        return DB.execute(sql).fetchall()           # connection is also read-only
+    except sqlite3.Error as e:
+        sql = extract_sql(chat(prompt + f"\nYour query:\n{sql}\nfailed with: {e}\nFix it."))</pre>
+<!--LAB_OUTPUT-->
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Is the answer right?</span><span class="l-hi">Kya jawab sahi hai?</span></h2></div>
+<div class="story">
+  <p class="l-en">A query that runs isn't a query that's right. Evaluate text-to-SQL by <strong>executing</strong> both the model's query and a trusted reference query on the same data and comparing the results, not by comparing SQL text (there are many correct ways to write a query). Build a test set of 50 real questions from your users with analyst-written SQL; run it on every prompt or model change (Ch 26). In the product, show the SQL and the row count next to the answer, so a curious user can check, and say "I'm not sure" when a question doesn't map to the schema.</p>
+  <p class="l-hi">Jo query chal jaaye woh sahi ho, zaroori nahi. Text-to-SQL ka evaluation model ki query aur ek bharosemand reference query dono ko ek hi data par <strong>chala kar</strong> nateeje milaakar karo, SQL text milaakar nahi (query likhne ke kai sahi tareeke hain). Apne users ke 50 asli sawaalon ka test set analyst ki likhi SQL ke saath banao; har prompt ya model badlaav par chalao (Ch 26). Product mein jawab ke saath SQL aur row count dikhao, taaki jigyaasu user jaanch sake, aur jab sawaal schema se na jude toh "pakka nahi pata" kaho.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">A semantic layer beats a bigger model</span><span class="l-hi">Semantic layer bade model se behtar</span></h4>
+  <p class="l-en">Large companies have hundreds of tables with names like <code>t_ord_hdr_v2</code>. Instead of dumping all of that into the context, they give the model a curated <strong>semantic layer</strong>: a short list of business metrics ("delivered revenue", "active customer") with their exact definitions and the approved SQL behind them. The model picks metrics and filters; the layer writes the SQL. Accuracy goes up, and finance and sales finally get the same number.</p>
+  <p class="l-hi">Badi companies mein <code>t_ord_hdr_v2</code> jaise naamon wali saikdon tables hoti hain. Yeh sab context mein daalne ki jagah woh model ko chuni hui <strong>semantic layer</strong> dete hain: business metrics ki chhoti list ("delivered revenue", "active customer") unki sateek paribhaasha aur manzoor SQL ke saath. Model metrics aur filters chunta hai; layer SQL likhti hai. Sateekta badhti hai, aur finance aur sales ko aakhir ek hi number milta hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Put the schema and business definitions in the context; definitions matter more than SQL skill.</li><li>Read-only access, a code guard that allows one SELECT, row limits, timeouts and permission filters.</li><li>Feed database errors back once for repair.</li><li>Evaluate by executing and comparing results; show the SQL to users.</li><li>At company scale, a semantic layer beats raw tables.</li></ol>
+  <ol class="l-hi"><li>Context mein schema aur business paribhaashayein do; paribhaasha SQL ke hunar se zyaada zaroori.</li><li>Read-only access, ek SELECT allow karne wala code guard, row limits, timeouts aur permission filters.</li><li>Database errors ek baar repair ke liye wapas do.</li><li>Chala kar nateeje milaakar evaluate karo; users ko SQL dikhao.</li><li>Company scale par semantic layer kachchi tables se behtar.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add five questions with reference SQL to <code>text_to_sql.py</code> and score the model by comparing executed results. <span class="level">core</span></p><p class="l-hi"><code>text_to_sql.py</code> mein reference SQL ke saath paanch sawaal jodo aur chalaaye nateeje milaakar model ko score karo. <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Add a <code>salaries</code> table and a permission rule so only HR users can query it. Try to get around it with a clever question. <span class="level">stretch</span></p><p class="l-hi"><code>salaries</code> table aur permission rule jodo taaki sirf HR users query kar sakein. Chaalaak sawaal se bach nikalne ki koshish karo. <span class="level">stretch</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Yu et al. (2018). <em>Spider: A Large-Scale Human-Labeled Dataset for Complex and Cross-Domain Semantic Parsing and Text-to-SQL.</em></li>
+  <li>Li et al. (2023). <em>Can LLM Already Serve as A Database Interface? A BIg Bench for Large-Scale Database Grounded Text-to-SQLs</em> (BIRD).</li>
+  <li>OWASP (2025). <em>Top 10 for LLM Applications: Excessive Agency.</em></li>
+</ol>
+<nav class="pager"><a href="ch42.html">Ch 42</a><a href="ch44.html"><span class="l-en">Ch 44 · Deploying Models: Docker, Kubernetes, GPUs</span><span class="l-hi">Ch 44 · Models Deploy Karna: Docker, Kubernetes, GPUs</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.flow("scA", [
+    { en: "Question", hi: "Sawaal", sen: "“delivered revenue per city”", shi: "“shehar-vaar delivered revenue”" },
+    { en: "Context", hi: "Context", sen: "schema + business notes", shi: "schema + business notes" },
+    { en: "Model writes SQL", hi: "Model SQL likhta", sen: "one SELECT", shi: "ek SELECT" },
+    { en: "Guard", hi: "Guard", sen: "read-only? one query? allowed tables?", shi: "read-only? ek query? allowed tables?" },
+    { en: "Run on replica", hi: "Replica par chalao", sen: "row limit, timeout; error → repair once", shi: "row limit, timeout; error → ek baar repair" },
+    { en: "Answer + SQL shown", hi: "Jawab + SQL dikhao", sen: "user can check", shi: "user jaanch sakta hai" }
+  ], [
+    ["A manager asks in plain words.", "Manager saade shabdon mein poochhta hai."],
+    ["The context gives the model the schema and what each business word means here.", "Context model ko schema aur yahan har business shabd ka matlab deta hai."],
+    ["The model writes one SELECT query.", "Model ek SELECT query likhta hai."],
+    ["Plain code checks it before anything runs. Writes are impossible.", "Kuch chalne se pehle saada code jaanchta hai. Likhna namumkin."],
+    ["It runs on a read-only replica with limits. A database error goes back once for repair.", "Seemaon ke saath read-only replica par chalti hai. Database error ek baar repair ke liye wapas."],
+    ["The answer comes back with the SQL and row count, so people can trust it.", "Jawab SQL aur row count ke saath aata hai, taaki log bharosa kar sakein."]
+  ], { perRow: 3 });
+})();
+</script>
+
+</body>
+</html>
