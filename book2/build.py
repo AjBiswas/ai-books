@@ -32,7 +32,7 @@ CHAPTERS = [
     (8, 1, "Structured Outputs", "Structured Outputs", "JSON, schemas and constrained decoding", "JSON, schemas aur constrained decoding"),
     (9, 1, "Reasoning Models", "Sochne Wale Models", "Thinking, effort and when it's worth paying for", "Thinking, effort aur kab iska paisa dena faayde ka hai"),
     (10, 1, "Context Engineering", "Context Engineering", "What goes into the window, in what order, and what stays out", "Window mein kya jaaye, kis order mein, aur kya bahar rahe"),
-    (11, 1, "Reverse Engineering AI", "AI ki Reverse Engineering", "Prompt leaks, probing behaviour, distillation, and defences", "Prompt leaks, behaviour probing, distillation, aur bachaav"),
+    (11, 1, "Reverse & Forward Engineering", "Reverse aur Forward Engineering", "Prompt leaks, probing, distillation; and building forward from a spec", "Prompt leaks, probing, distillation; aur spec se aage banana"),
     (12, 1, "Multimodal AI", "Multimodal AI", "Images, documents, voice, and image and video generation", "Images, documents, awaaz, aur image aur video banana"),
     (13, 2, "Embeddings & Vector Databases", "Embeddings aur Vector Databases", "Meaning as numbers, similarity search, vector DBs", "Matlab numbers mein, similarity search, vector DBs"),
     (14, 2, "RAG from Zero to Production", "RAG: Zero se Production", "Chunk, embed, retrieve, rerank, answer, evaluate", "Chunk, embed, retrieve, rerank, jawab, evaluate"),

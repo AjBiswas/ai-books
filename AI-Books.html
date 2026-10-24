@@ -5493,7 +5493,7 @@ $ cd code && python -m pytest -q
 <li><span class="cn">08</span><a class="ct" href="#b2-ch08"><span class="l-en">Structured Outputs</span><span class="l-hi">Structured Outputs</span><span><span class="l-en">JSON, schemas and constrained decoding</span><span class="l-hi">JSON, schemas aur constrained decoding</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 <li><span class="cn">09</span><a class="ct" href="#b2-ch09"><span class="l-en">Reasoning Models</span><span class="l-hi">Sochne Wale Models</span><span><span class="l-en">Thinking, effort and when it's worth paying for</span><span class="l-hi">Thinking, effort aur kab iska paisa dena faayde ka hai</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 <li><span class="cn">10</span><a class="ct" href="#b2-ch10"><span class="l-en">Context Engineering</span><span class="l-hi">Context Engineering</span><span><span class="l-en">What goes into the window, in what order, and what stays out</span><span class="l-hi">Window mein kya jaaye, kis order mein, aur kya bahar rahe</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
-<li><span class="cn">11</span><a class="ct" href="#b2-ch11"><span class="l-en">Reverse Engineering AI</span><span class="l-hi">AI ki Reverse Engineering</span><span><span class="l-en">Prompt leaks, probing behaviour, distillation, and defences</span><span class="l-hi">Prompt leaks, behaviour probing, distillation, aur bachaav</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+<li><span class="cn">11</span><a class="ct" href="#b2-ch11"><span class="l-en">Reverse &amp; Forward Engineering</span><span class="l-hi">Reverse aur Forward Engineering</span><span><span class="l-en">Prompt leaks, probing, distillation; and building forward from a spec</span><span class="l-hi">Prompt leaks, probing, distillation; aur spec se aage banana</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 <li><span class="cn">12</span><a class="ct" href="#b2-ch12"><span class="l-en">Multimodal AI</span><span class="l-hi">Multimodal AI</span><span><span class="l-en">Images, documents, voice, and image and video generation</span><span class="l-hi">Images, documents, awaaz, aur image aur video banana</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 </ol></section>
 <section class="part"><h2><span class="pn">Part III</span><span class="l-en">Giving models knowledge</span><span class="l-hi">Model ko gyaan dena</span></h2><ol class="chapters">
@@ -7029,7 +7029,7 @@ for block in resp.content:
   <li>Chroma Research (2025). <em>Context Rot.</em></li>
   <li>Book 2, Chapter 8: <em>Packing the Diary.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch09">Ch 9</a><a href="#b2-ch11"><span class="l-en">Ch 11 · Reverse Engineering AI</span><span class="l-hi">Ch 11 · AI ki Reverse Engineering</span></a></nav>
+<nav class="pager"><a href="#b2-ch09">Ch 9</a><a href="#b2-ch11"><span class="l-en">Ch 11 · Reverse &amp; Forward Engineering</span><span class="l-hi">Ch 11 · Reverse aur Forward Engineering</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch10">
@@ -7078,22 +7078,23 @@ for block in resp.content:
   ], { perRow: 4 });
 })();
 </script>
-<template id="t-b2-ch11" data-title="Ch 11 · Reverse Engineering AI"><div class="page">
+<template id="t-b2-ch11" data-title="Ch 11 · Reverse & Forward Engineering"><div class="page">
 <div class="topbar">
   <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 11</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
   <div class="eyebrow"><span class="l-en">Chapter 11 · Talking to models</span><span class="l-hi">Chapter 11 · Model se baat</span></div>
-  <h1><span class="l-en">Reverse Engineering AI</span><span class="l-hi">AI ki Reverse Engineering</span></h1>
+  <h1><span class="l-en">Reverse &amp; Forward Engineering</span><span class="l-hi">Reverse aur Forward Engineering</span></h1>
   <div class="story">
-    <p class="l-en">"Reverse engineering" means working backwards from what you can see to how something was built. In AI it has four faces: people trying to pull the hidden prompt out of your app, you studying a great AI product to learn how it works, probing a model to map its strengths and weaknesses, and researchers opening the model itself to see what its numbers mean. You need to know all four: to learn faster, and to defend what you build.</p>
-    <p class="l-hi">"Reverse engineering" ka matlab hai jo dikhta hai usse peeche jaakar samajhna ki cheez kaise bani. AI mein iske chaar chehre hain: log aapki app ka chhupa prompt nikaalne ki koshish karte hain, aap kisi shaandaar AI product ko padh kar seekhte ho woh kaise chalta hai, model ko probe karke uski taakat aur kamzoriyon ka naksha banana, aur researchers model ko hi kholkar dekhte hain ki uske numbers ka matlab kya hai. Aapko chaaron jaanne chahiye: tez seekhne ke liye, aur apni banaayi cheez bachaane ke liye.</p>
+    <p class="l-en">"Reverse engineering" means working backwards from what you can see to how something was built. In AI it has four faces: people trying to pull the hidden prompt out of your app, you studying a great AI product to learn how it works, probing a model to map its strengths and weaknesses, and researchers opening the model itself to see what its numbers mean. You need to know all four: to learn faster, and to defend what you build. Then we turn around: <strong>forward engineering</strong> is the opposite direction, from an idea and a written spec to a working AI system.</p>
+    <p class="l-hi">"Reverse engineering" ka matlab hai jo dikhta hai usse peeche jaakar samajhna ki cheez kaise bani. AI mein iske chaar chehre hain: log aapki app ka chhupa prompt nikaalne ki koshish karte hain, aap kisi shaandaar AI product ko padh kar seekhte ho woh kaise chalta hai, model ko probe karke uski taakat aur kamzoriyon ka naksha banana, aur researchers model ko hi kholkar dekhte hain ki uske numbers ka matlab kya hai. Aapko chaaron jaanne chahiye: tez seekhne ke liye, aur apni banaayi cheez bachaane ke liye. Phir hum palatte hain: <strong>forward engineering</strong> ulti disha hai, ek idea aur likhe hue spec se chalti hui AI system tak.</p>
   </div>
   <ul class="objectives">
     <li><b>1</b><span class="l-en">Prompt extraction, and why you should assume prompts leak</span><span class="l-hi">Prompt extraction, aur kyun maano ki prompts leak hote hain</span></li>
     <li><b>2</b><span class="l-en">Reverse-engineering an AI product to learn from it</span><span class="l-hi">AI product ko reverse-engineer karke seekhna</span></li>
     <li><b>3</b><span class="l-en">Probing models, distillation, and interpretability</span><span class="l-hi">Models ko probe karna, distillation, aur interpretability</span></li>
+    <li><b>4</b><span class="l-en">Forward engineering: from a spec to a working AI feature</span><span class="l-hi">Forward engineering: spec se chalte AI feature tak</span></li>
   </ul>
 </section>
 
@@ -7143,16 +7144,45 @@ for block in resp.content:
   <p class="l-hi">Bachaav layers mein: (1) prompts mein secrets nahi; (2) prompt maangne par mana karne ka instruction; (3) output check jo system prompt ke lambe hu-ba-hu hisse wale jawab rok de; (4) extraction koshishon ke liye rate limits aur monitoring; (5) keemti logic prompt text mein nahi, code aur tools mein rakho. Chapter 27 poori security tasveer deta hai.</p>
 </div>
 
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">Forward engineering: the other direction</span><span class="l-hi">Forward engineering: doosri disha</span></h2></div>
+<div class="story">
+  <p class="l-en">Reverse engineering goes from a finished product back to its design. <strong>Forward engineering</strong> goes the normal way: from a problem, to a written design, to a working system. The word comes from classic software engineering, and in AI it matters even more, because a model will happily produce <em>something</em> for any vague request. Without a spec, you can't tell if that something is right.</p>
+  <p class="l-hi">Reverse engineering bane hue product se uske design tak peeche jaata hai. <strong>Forward engineering</strong> seedha raasta hai: problem se, likhe hue design tak, chalti system tak. Yeh shabd classic software engineering se aaya hai, aur AI mein aur bhi zaroori hai, kyunki model kisi bhi dhundhli request par khushi se <em>kuchh na kuchh</em> bana deta hai. Spec ke bina aap bata hi nahi sakte ki woh kuchh sahi hai ya nahi.</p>
+  <p class="l-en">Here is the forward path for a real feature: "summarise each support ticket and suggest a reply". Notice that the tests are written <strong>before</strong> the prompt.</p>
+  <p class="l-hi">Asli feature ke liye forward raasta yeh hai: "har support ticket ka saar do aur jawab sujhao". Dhyaan do ki tests prompt se <strong>pehle</strong> likhe jaate hain.</p>
+</div>
+<figure class="scene" id="scD"></figure>
+
+<div class="analogy">
+  <div><span class="k">Reverse engineering</span><p class="l-en">Product, then guess the design. "How did they build this?"</p><p class="l-hi">Product, phir design ka andaaza. "Unhone yeh kaise banaaya?"</p></div>
+  <div><span class="k">Forward engineering</span><p class="l-en">Problem, spec, evals, then build. "How will I build this, and how will I know it works?"</p><p class="l-hi">Problem, spec, evals, phir build. "Main yeh kaise banaunga, aur kaise pata chalega ki chalta hai?"</p></div>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Spec-driven development with coding agents</span><span class="l-hi">Coding agents ke saath spec-driven development</span></h4>
+  <p class="l-en">The same idea now drives AI coding tools. Instead of "vibe coding" a feature one chat message at a time, you write a short spec (goal, inputs, outputs, edge cases, acceptance tests), let the agent plan and build against it, and check its work against the tests. Tools such as GitHub Spec Kit and AWS Kiro are built around this. Chapter 22 shows it in practice.</p>
+  <p class="l-hi">Yahi idea ab AI coding tools chalaata hai. Feature ko ek-ek chat message se "vibe coding" karne ki jagah, aap chhota spec likhte ho (goal, inputs, outputs, edge cases, acceptance tests), agent usi ke hisaab se plan karke banata hai, aur aap tests se uska kaam check karte ho. GitHub Spec Kit aur AWS Kiro jaise tools isi par bane hain. Chapter 22 ise practice mein dikhata hai.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">"Forward deployed engineer": a related job title</span><span class="l-hi">"Forward deployed engineer": milta-julta job title</span></h4>
+  <p class="l-en">You'll also see <strong>forward deployed engineer (FDE)</strong> in job posts from AI companies. It's a different idea with a similar name: an engineer who works inside a customer's team, turns their messy real problem into a spec, and builds the AI solution with them. It's forward engineering done on site, and a fast-growing role.</p>
+  <p class="l-hi">AI companies ki job posts mein aapko <strong>forward deployed engineer (FDE)</strong> bhi dikhega. Naam milta-julta hai par idea alag: aisa engineer jo customer ki team ke andar kaam karta hai, unki uljhi hui asli problem ko spec mein badalta hai, aur unke saath AI solution banata hai. Yeh jagah par jaakar ki gayi forward engineering hai, aur tezi se badhta role hai.</p>
+</div>
+
 <div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
 <div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
-  <ol class="l-en"><li>Assume your prompt can be read; never put secrets in it.</li><li>Learn by observing great products, guessing their design, testing, and rebuilding small.</li><li>Probing maps a model's behaviour; distillation copies it (check the terms); interpretability looks inside.</li><li>Only test systems you own or are allowed to.</li></ol>
-  <ol class="l-hi"><li>Maano aapka prompt padha ja sakta hai; usme kabhi secrets mat rakho.</li><li>Shaandaar products dekhkar, unke design ka andaaza laga kar, test karke, aur chhota dobara bana kar seekho.</li><li>Probing model ke behaviour ka naksha banata hai; distillation use copy karta hai (terms check karo); interpretability andar dekhta hai.</li><li>Sirf apne ya ijaazat wale systems test karo.</li></ol>
+  <ol class="l-en"><li>Assume your prompt can be read; never put secrets in it.</li><li>Learn by observing great products, guessing their design, testing, and rebuilding small.</li><li>Probing maps a model's behaviour; distillation copies it (check the terms); interpretability looks inside.</li><li>Only test systems you own or are allowed to.</li><li>Forward engineering goes the other way: problem, spec, evals first, then build, iterate and watch.</li></ol>
+  <ol class="l-hi"><li>Maano aapka prompt padha ja sakta hai; usme kabhi secrets mat rakho.</li><li>Shaandaar products dekhkar, unke design ka andaaza laga kar, test karke, aur chhota dobara bana kar seekho.</li><li>Probing model ke behaviour ka naksha banata hai; distillation use copy karta hai (terms check karo); interpretability andar dekhta hai.</li><li>Sirf apne ya ijaazat wale systems test karo.</li><li>Forward engineering ulta chalta hai: problem, spec, pehle evals, phir build, sudhaar aur nazar.</li></ol>
 </div></div>
 
 <h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
 <div class="exercises">
   <div class="exercise"><p class="l-en">Give your laptop model a system prompt with a fake "secret code". Try five ways to extract it. Then add defences and try again. <span class="level">core</span></p><p class="l-hi">Apne laptop model ko nakli "secret code" wala system prompt do. Use nikaalne ke paanch tareeke try karo. Phir bachaav jodo aur dobara try karo. <span class="level">core</span></p></div>
   <div class="exercise"><p class="l-en">Pick an AI feature you admire. Write five observations and your hypothesis for its pipeline (model, retrieval, tools, guardrails). <span class="level">core</span></p><p class="l-hi">Koi AI feature chuno jo aapko pasand ho. Paanch observations aur uski pipeline ka andaaza likho (model, retrieval, tools, guardrails). <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Forward-engineer a tiny feature: write a one-page spec and ten test cases for "classify an email as urgent or not", then build it with your laptop model and score it. <span class="level">core</span></p><p class="l-hi">Ek chhota feature forward-engineer karo: "email urgent hai ya nahi" ke liye ek page ka spec aur das test cases likho, phir laptop model se banao aur score karo. <span class="level">core</span></p></div>
 </div>
 
 <h2>References</h2>
@@ -7193,6 +7223,22 @@ for block in resp.content:
     ["Design a test that would come out differently if you're wrong.", "Aisa test banao jo aap galat ho toh alag nateeja de."],
     ["Rebuild a small version. You'll learn more from this than from ten tutorials.", "Chhota version dobara banao. Das tutorials se zyaada isse seekhoge."]
   ], { perRow: 4 });
+
+  B.flow("scD", [
+    { en: "Problem", hi: "Problem", sen: "agents spend 6 min per ticket", shi: "agent ek ticket par 6 min lagaate" },
+    { en: "Spec", hi: "Spec", sen: "input, output format, tone, “don't know” rule, budget", shi: "input, output format, tone, “nahi pata” niyam, budget" },
+    { en: "Evals first", hi: "Pehle evals", sen: "50 real tickets with good answers", shi: "50 asli tickets, achhe jawab ke saath" },
+    { en: "Build small", hi: "Chhota banao", sen: "one prompt + ticket history in context", shi: "ek prompt + context mein ticket history" },
+    { en: "Iterate", hi: "Sudhaaro", sen: "score 62% → 88% by fixing failures", shi: "failures theek karke score 62% → 88%" },
+    { en: "Ship & watch", hi: "Ship aur nazar", sen: "monitor, collect feedback, repeat", shi: "monitor, feedback lo, dohraao" }
+  ], [
+    ["Start from the <strong>problem</strong> and a number you want to move, not from the model.", "<strong>Problem</strong> aur ek number se shuru karo jise badalna hai, model se nahi."],
+    ["Write the <strong>spec</strong>: what goes in, what must come out, and what to do when unsure.", "<strong>Spec</strong> likho: kya andar jaata hai, kya bahar aana chahiye, aur shak ho toh kya karna."],
+    ["Write the <strong>evals</strong> before any prompt. They are the spec in runnable form (Ch 26).", "Kisi bhi prompt se pehle <strong>evals</strong> likho. Yeh chalne wale roop mein spec hi hain (Ch 26)."],
+    ["Build the <strong>smallest</strong> version that could pass: one prompt, the right context.", "<strong>Sabse chhota</strong> version banao jo pass ho sake: ek prompt, sahi context."],
+    ["<strong>Iterate</strong> against the evals: fix the failures, re-run, keep what helps.", "Evals ke saath <strong>sudhaaro</strong>: failures theek karo, dobara chalao, jo madad kare woh rakho."],
+    ["<strong>Ship</strong>, then keep watching real use. Real failures become new test cases.", "<strong>Ship</strong> karo, phir asli use par nazar rakho. Asli failures naye test cases bante hain."]
+  ], { perRow: 2 });
 
   B.columns("scC", [
     { en: "Probing", hi: "Probing", cls: "box-sig", step: 0, items: [
@@ -10925,6 +10971,10 @@ def chat(body: dict):
 (function () {
   var BOOK = { b2: "Book 1 · AI Engineer", b1: "Book 2 · Harness" };
   var index = null;
+  // Filler words (English and Hinglish) that would otherwise have to match too.
+  var STOP = {};
+  ("a an the in on of to for and or is are what how why with about from by kya kaise kyun hai hain ka ki ke ko me mein se " +
+   "aur karke karna karte topic topics").split(" ").forEach(function (w) { STOP[w] = 1; });
 
   var btn = document.createElement("button");
   btn.className = "sbtn"; btn.type = "button"; btn.setAttribute("aria-label", "Search topics"); btn.title = "Search topics";
@@ -10996,26 +11046,36 @@ def chat(body: dict):
     var l = lang();
     q.placeholder = l === "hi" ? "Topic dhoondhiye: RAG, MCP, tokens..." : "Search topics: RAG, MCP, tokens...";
     over.querySelector(".shead button").textContent = l === "hi" ? "Band" : "Close";
-    var words = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+    var typed = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+    var words = typed.filter(function (w) { return !STOP[w]; });
+    if (!words.length) words = typed;
+    var phrase = words.join(" ");
     if (!words.length) {
       list.innerHTML = '<div class="sempty">' + (l === "hi" ? "Koi topic likhiye, jaise RAG, MCP, LoRA, agents." : "Type a topic, like RAG, MCP, LoRA, agents.") + "</div>";
       return;
     }
-    var hits = [];
+    // Every word must match; if nothing does, fall back to sections matching most of the words.
+    var hits = [], near = [], need = Math.max(1, Math.ceil(words.length / 2));
     index.forEach(function (e) {
       var head = (e.head.en + " " + e.head.hi).toLowerCase();
       var all = head + " " + (e.body.en + " " + e.body.hi).toLowerCase();
-      if (!words.every(function (w) { return all.indexOf(w) >= 0; })) return;
-      var score = e.n === 0 ? 2 : 0;
+      var found = words.filter(function (w) { return all.indexOf(w) >= 0; }).length;
+      if (found < need) return;
+      var score = (e.n === 0 ? 2 : 0) + found * 20;
+      if (words.length > 1 && head.indexOf(phrase) >= 0) score += 60;
+      else if (words.length > 1 && all.indexOf(phrase) >= 0) score += 30;
       words.forEach(function (w) { if (head.indexOf(w) >= 0) score += 10; score += Math.min(5, all.split(w).length - 1); });
-      hits.push({ e: e, score: score });
+      (found === words.length ? hits : near).push({ e: e, score: score });
     });
+    var closest = !hits.length && near.length;
+    if (closest) hits = near;
     hits.sort(function (a, b) { return b.score - a.score; });
     if (!hits.length) {
       list.innerHTML = '<div class="sempty">' + (l === "hi" ? "Kuchh nahi mila. Doosra shabd try kijiye." : "Nothing found. Try another word.") + "</div>";
       return;
     }
-    list.innerHTML = hits.slice(0, 40).map(function (h) {
+    list.innerHTML = (closest ? '<div class="sempty">' + (l === "hi" ? "Poora match nahi mila. Sabse kareeb:" : "No exact match. Closest topics:") + "</div>" : "") +
+      hits.slice(0, 40).map(function (h) {
       var e = h.e, head = e.head[l] || e.head.en, body = (e.body[l] || e.body.en).trim();
       return '<a href="#' + e.id + (e.n ? "~" + e.n : "") + '"><span class="sk">' + esc(e.book + " · " + e.chap) + "</span>" +
         '<span class="sh">' + mark(head, words) + '</span><span class="ss">' + mark(snippet(body, words), words) + "</span></a>";

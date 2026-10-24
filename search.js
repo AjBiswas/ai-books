@@ -4,6 +4,10 @@
 (function () {
   var BOOK = { b2: "Book 1 · AI Engineer", b1: "Book 2 · Harness" };
   var index = null;
+  // Filler words (English and Hinglish) that would otherwise have to match too.
+  var STOP = {};
+  ("a an the in on of to for and or is are what how why with about from by kya kaise kyun hai hain ka ki ke ko me mein se " +
+   "aur karke karna karte topic topics").split(" ").forEach(function (w) { STOP[w] = 1; });
 
   var btn = document.createElement("button");
   btn.className = "sbtn"; btn.type = "button"; btn.setAttribute("aria-label", "Search topics"); btn.title = "Search topics";
@@ -75,26 +79,36 @@
     var l = lang();
     q.placeholder = l === "hi" ? "Topic dhoondhiye: RAG, MCP, tokens..." : "Search topics: RAG, MCP, tokens...";
     over.querySelector(".shead button").textContent = l === "hi" ? "Band" : "Close";
-    var words = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+    var typed = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+    var words = typed.filter(function (w) { return !STOP[w]; });
+    if (!words.length) words = typed;
+    var phrase = words.join(" ");
     if (!words.length) {
       list.innerHTML = '<div class="sempty">' + (l === "hi" ? "Koi topic likhiye, jaise RAG, MCP, LoRA, agents." : "Type a topic, like RAG, MCP, LoRA, agents.") + "</div>";
       return;
     }
-    var hits = [];
+    // Every word must match; if nothing does, fall back to sections matching most of the words.
+    var hits = [], near = [], need = Math.max(1, Math.ceil(words.length / 2));
     index.forEach(function (e) {
       var head = (e.head.en + " " + e.head.hi).toLowerCase();
       var all = head + " " + (e.body.en + " " + e.body.hi).toLowerCase();
-      if (!words.every(function (w) { return all.indexOf(w) >= 0; })) return;
-      var score = e.n === 0 ? 2 : 0;
+      var found = words.filter(function (w) { return all.indexOf(w) >= 0; }).length;
+      if (found < need) return;
+      var score = (e.n === 0 ? 2 : 0) + found * 20;
+      if (words.length > 1 && head.indexOf(phrase) >= 0) score += 60;
+      else if (words.length > 1 && all.indexOf(phrase) >= 0) score += 30;
       words.forEach(function (w) { if (head.indexOf(w) >= 0) score += 10; score += Math.min(5, all.split(w).length - 1); });
-      hits.push({ e: e, score: score });
+      (found === words.length ? hits : near).push({ e: e, score: score });
     });
+    var closest = !hits.length && near.length;
+    if (closest) hits = near;
     hits.sort(function (a, b) { return b.score - a.score; });
     if (!hits.length) {
       list.innerHTML = '<div class="sempty">' + (l === "hi" ? "Kuchh nahi mila. Doosra shabd try kijiye." : "Nothing found. Try another word.") + "</div>";
       return;
     }
-    list.innerHTML = hits.slice(0, 40).map(function (h) {
+    list.innerHTML = (closest ? '<div class="sempty">' + (l === "hi" ? "Poora match nahi mila. Sabse kareeb:" : "No exact match. Closest topics:") + "</div>" : "") +
+      hits.slice(0, 40).map(function (h) {
       var e = h.e, head = e.head[l] || e.head.en, body = (e.body[l] || e.body.en).trim();
       return '<a href="#' + e.id + (e.n ? "~" + e.n : "") + '"><span class="sk">' + esc(e.book + " · " + e.chap) + "</span>" +
         '<span class="sh">' + mark(head, words) + '</span><span class="ss">' + mark(snippet(body, words), words) + "</span></a>";
