@@ -6,8 +6,8 @@ Two illustrated, animated storybooks about building with AI, in **English and Hi
 
 | Book | What it covers |
 |---|---|
-| **Building the Harness** (18 chapters) | How LLMs work inside, AI behaviour patterns, building an agent harness, and running an enterprise AI platform with its own rules and token budgets |
-| **Becoming an AI Engineer** (34 chapters) | A to Z for new AI engineers: prompting, context engineering, RAG, MCP, skills, agents, local models, fine-tuning, evals, security, cost, production, career |
+| **Book 1 · Becoming an AI Engineer** (34 chapters, start here) | A to Z for new AI engineers: prompting, context engineering, RAG, MCP, skills, agents, local models, fine-tuning, evals, security, cost, production, career |
+| **Book 2 · Building the Harness** (18 chapters) | How LLMs work inside, AI behaviour patterns, building an agent harness, and running an enterprise AI platform with its own rules and token budgets |
 
 ## Offline
 
@@ -18,10 +18,10 @@ Two illustrated, animated storybooks about building with AI, in **English and Hi
 | Path | Contents |
 |---|---|
 | `index.html`, `AI-Books.html` | The single-file edition (same file) |
-| `book/` | Book 1 as separate pages |
-| `book2/` | Book 2 as separate pages; `src/` holds chapter sources, `build.py` rebuilds them |
-| `code/` | Book 1 labs: a provider-agnostic Python harness (`code/harness/`) with tests (`python -m pytest -q`) |
-| `code2/` | Book 2 labs, run against a local Ollama model (`qwen3:4b`, `all-minilm`) |
+| `book2/` | Book 1 (AI Engineer) as separate pages; `src/` holds chapter sources, `build.py` rebuilds them |
+| `book/` | Book 2 (Harness) as separate pages |
+| `code/` | Book 2 labs: a provider-agnostic Python harness (`code/harness/`) with tests (`python -m pytest -q`) |
+| `code2/` | Book 1 labs, run against a local Ollama model (`qwen3:4b`, `all-minilm`) |
 | `package_single_html.py` | Rebuilds `AI-Books.html` from `book/` and `book2/` |
 | `package_offline.py` | Builds a multi-file offline folder and zip in `dist/` |
 

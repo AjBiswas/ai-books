@@ -20,8 +20,8 @@
   <div class="eyebrow"><span class="l-en">Chapter 02 · Start here</span><span class="l-hi">Chapter 02 · Shuruaat</span></div>
   <h1><span class="l-en">LLMs in 15 Minutes</span><span class="l-hi">15 Minute mein LLM</span></h1>
   <div class="story">
-    <p class="l-en">Before you build with a model, you need a mental picture of what it is. Not the maths, just the picture. Haron explains itself in fifteen minutes. (If you read Book 1, this is the short version; skip ahead if you like.)</p>
-    <p class="l-hi">Model ke saath kuch banaane se pehle uski ek tasveer dimaag mein honi chahiye. Maths nahi, bas tasveer. Haron pandrah minute mein khud ko samjhaata hai. (Agar aapne Book 1 padhi hai, toh yeh chhota version hai; chaaho toh aage badh jao.)</p>
+    <p class="l-en">Before you build with a model, you need a mental picture of what it is. Not the maths, just the picture. Haron explains itself in fifteen minutes. (Book 2, Chapter 1 animates every step in much more depth.)</p>
+    <p class="l-hi">Model ke saath kuch banaane se pehle uski ek tasveer dimaag mein honi chahiye. Maths nahi, bas tasveer. Haron pandrah minute mein khud ko samjhaata hai. (Book 2 ka Chapter 1 har step ko kahin zyaada gehraai se animate karta hai.)</p>
   </div>
   <ul class="objectives">
     <li><b>1</b><span class="l-en">How a model turns text into the next word</span><span class="l-hi">Model text ko agle word mein kaise badalta hai</span></li>
@@ -81,8 +81,8 @@
 <details class="deep">
   <summary><span class="l-en">Deep dive: what's inside (one paragraph)</span><span class="l-hi">Gehraai mein: andar kya hai (ek paragraph)</span><span class="lvl">advanced</span></summary>
   <div class="inner">
-    <p class="l-en">Text is split into tokens by a tokenizer; each token becomes a vector (a list of a few thousand numbers). These vectors pass through dozens of <strong>transformer layers</strong>. In each layer, <strong>attention</strong> lets every token gather information from earlier tokens, and an MLP transforms it. The final layer outputs a score (logit) for every token in the vocabulary; softmax turns scores into probabilities; the sampler picks one. Generation is autoregressive: the chosen token is appended and the process repeats, with a <strong>KV cache</strong> so earlier work isn't redone. Book 1, Chapter 1 animates every step.</p>
-    <p class="l-hi">Tokenizer text ko tokens mein kaatta hai; har token ek vector ban jaata hai (kuch hazaar numbers ki list). Yeh vectors darjanon <strong>transformer layers</strong> se guzarte hain. Har layer mein <strong>attention</strong> har token ko pehle ke tokens se jaankari lene deta hai, aur ek MLP use badalta hai. Aakhri layer vocabulary ke har token ka score (logit) deti hai; softmax scores ko probabilities banata hai; sampler ek chunta hai. Generation autoregressive hai: chuna hua token joda jaata hai aur process dohraaya jaata hai, <strong>KV cache</strong> ke saath taaki pehle ka kaam dobara na ho. Book 1 ka Chapter 1 har step animate karta hai.</p>
+    <p class="l-en">Text is split into tokens by a tokenizer; each token becomes a vector (a list of a few thousand numbers). These vectors pass through dozens of <strong>transformer layers</strong>. In each layer, <strong>attention</strong> lets every token gather information from earlier tokens, and an MLP transforms it. The final layer outputs a score (logit) for every token in the vocabulary; softmax turns scores into probabilities; the sampler picks one. Generation is autoregressive: the chosen token is appended and the process repeats, with a <strong>KV cache</strong> so earlier work isn't redone. Book 2, Chapter 1 animates every step.</p>
+    <p class="l-hi">Tokenizer text ko tokens mein kaatta hai; har token ek vector ban jaata hai (kuch hazaar numbers ki list). Yeh vectors darjanon <strong>transformer layers</strong> se guzarte hain. Har layer mein <strong>attention</strong> har token ko pehle ke tokens se jaankari lene deta hai, aur ek MLP use badalta hai. Aakhri layer vocabulary ke har token ka score (logit) deti hai; softmax scores ko probabilities banata hai; sampler ek chunta hai. Generation autoregressive hai: chuna hua token joda jaata hai aur process dohraaya jaata hai, <strong>KV cache</strong> ke saath taaki pehle ka kaam dobara na ho. Book 2 ka Chapter 1 har step animate karta hai.</p>
   </div>
 </details>
 
@@ -102,7 +102,7 @@
 <ol class="refs">
   <li>Vaswani et al. (2017). <em>Attention Is All You Need.</em></li>
   <li>Karpathy, A. (2023). <em>Intro to Large Language Models</em> (video lecture).</li>
-  <li>Book 1, <em>Building the Harness</em>, Chapter 1: <em>Inside Haron's Brain.</em></li>
+  <li>Book 2, <em>Building the Harness</em>, Chapter 1: <em>Inside Haron's Brain.</em></li>
 </ol>
 <nav class="pager"><a href="ch01.html">← Ch 1</a><a href="ch03.html"><span class="l-en">Ch 3 · The Model Zoo →</span><span class="l-hi">Ch 3 · Models ka Chidiyaghar →</span></a></nav>
 </article>

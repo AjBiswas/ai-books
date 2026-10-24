@@ -1,4 +1,4 @@
-"""Book 2, Chapter 4 lab: talk to a model running on your own laptop through Ollama.
+"""Book 1, Chapter 4 lab: talk to a model running on your own laptop through Ollama.
 
 Setup (once):  install Ollama from ollama.com, then:  ollama pull qwen3:4b
 Run:           python local_model.py

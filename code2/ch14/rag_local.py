@@ -1,4 +1,4 @@
-"""Book 2, Chapter 14 lab: a complete RAG pipeline on your laptop.
+"""Book 1, Chapter 14 lab: a complete RAG pipeline on your laptop.
 
 chunk -> embed (all-minilm) -> hybrid search (vector + keyword) -> answer with citations (qwen3:4b)
 Setup:  ollama pull all-minilm ; ollama pull qwen3:4b

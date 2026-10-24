@@ -1,4 +1,4 @@
-"""Book 2, Chapter 17 lab: a tool-calling agent running fully on your laptop.
+"""Book 1, Chapter 16 lab: a tool-calling agent running fully on your laptop.
 
 The model (qwen3:4b via Ollama) decides which tool to call; Python runs it; we loop.
 Run:  python local_agent.py

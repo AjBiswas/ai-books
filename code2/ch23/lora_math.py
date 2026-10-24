@@ -1,4 +1,4 @@
-"""Book 2, Chapter 23 lab: why LoRA works. A weight update is often low-rank.
+"""Book 1, Chapter 23 lab: why LoRA works. A weight update is often low-rank.
 
 We fake a "fine-tuning update" dW that is mostly low-rank plus noise, then see how well
 a rank-r LoRA (dW ~= B @ A) captures it, and how many parameters that needs.

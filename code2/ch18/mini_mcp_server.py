@@ -1,4 +1,4 @@
-"""Book 2, Chapter 18 lab: an MCP server written from scratch, so you can see the protocol.
+"""Book 1, Chapter 18 lab: an MCP server written from scratch, so you can see the protocol.
 
 MCP over stdio = JSON-RPC 2.0 messages, one per line, on stdin/stdout.
 For real projects use the official SDK (pip install mcp):

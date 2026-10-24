@@ -1,4 +1,4 @@
-"""Book 2, Chapter 8 lab: "please reply in JSON" vs. schema-constrained decoding.
+"""Book 1, Chapter 8 lab: "please reply in JSON" vs. schema-constrained decoding.
 
 Ollama's `format` field accepts a JSON Schema and constrains generation to it.
 Run:  python structured.py

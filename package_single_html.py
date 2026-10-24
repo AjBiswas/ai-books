@@ -94,14 +94,14 @@ HOME = """<div class="page wide">
   <p class="lede">Pick a book. Everything is inside this one file: open it on a phone or laptop, even without internet.</p>
 </header>
 <ol class="chapters" style="margin-top:2rem">
-  <li><span class="cn">1</span><a class="ct" href="#b1-index">Building the Harness<span>18 chapters · LLM internals, agent harnesses, enterprise AI platforms</span></a><span class="st ready">Open</span></li>
-  <li><span class="cn">2</span><a class="ct" href="#b2-index">Becoming an AI Engineer<span>34 chapters · prompting to production, A to Z</span></a><span class="st ready">Open</span></li>
+  <li><span class="cn">1</span><a class="ct" href="#b2-index">Becoming an AI Engineer<span>34 chapters · from zero to AI engineer, A to Z: prompting, RAG, MCP, agents, local models, production</span></a><span class="st ready">Start here</span></li>
+  <li><span class="cn">2</span><a class="ct" href="#b1-index">Building the Harness<span>18 chapters · LLM internals, agent harnesses, enterprise AI platforms</span></a><span class="st ready">Open</span></li>
 </ol>
 </div>"""
 pages["home"] = ("AI Books", HOME, "")
 
 css = read(os.path.join(ROOT, "book2", "book.css"))
-js = read(os.path.join(ROOT, "book2", "book.js"))   # superset of Book 1's runtime
+js = read(os.path.join(ROOT, "book2", "book.js"))   # superset of the Harness book's runtime
 fonts = inline_fonts()
 
 parts = ["""<!doctype html>

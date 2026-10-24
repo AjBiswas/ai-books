@@ -1,4 +1,4 @@
-"""Book 2, Chapter 4 lab: what "thinking" costs on a laptop model.
+"""Book 1, Chapter 4 lab: what "thinking" costs on a laptop model.
 
 Same question, three ways. Run:  python think_compare.py
 """

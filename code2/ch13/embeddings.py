@@ -1,4 +1,4 @@
-"""Book 2, Chapter 13 lab: embeddings and cosine similarity with a local model.
+"""Book 1, Chapter 13 lab: embeddings and cosine similarity with a local model.
 
 Uses Ollama's /api/embed. A dedicated embedding model (e.g. `ollama pull nomic-embed-text`
 or `bge-m3`) gives better results; this demo uses whatever model you set in MODEL.

@@ -19,8 +19,8 @@
 
 <div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Better, or just lucky?</span><span class="l-hi">Behtar, ya bas kismat?</span></h2></div>
 <div class="story">
-  <p class="l-en">From Book 1's eval lab: an old prompt (v1) and a new one (v2), each run on 200 tickets. The new one scores higher on average. Should it ship? Watch what the error bars and one slice say.</p>
-  <p class="l-hi">Book 1 ke eval lab se: purana prompt (v1) aur naya (v2), dono 200 tickets par chale. Naye ka average zyaada hai. Kya ship karein? Dekho error bars aur ek slice kya kehte hain.</p>
+  <p class="l-en">From Book 2's eval lab: an old prompt (v1) and a new one (v2), each run on 200 tickets. The new one scores higher on average. Should it ship? Watch what the error bars and one slice say.</p>
+  <p class="l-hi">Book 2 ke eval lab se: purana prompt (v1) aur naya (v2), dono 200 tickets par chale. Naye ka average zyaada hai. Kya ship karein? Dekho error bars aur ek slice kya kehte hain.</p>
 </div>
 <figure class="scene" id="scC"></figure>
 
@@ -62,14 +62,14 @@ def run_suite(system, scorer):
     return scores, mean
 
 contains = lambda case, out: float(case["expect"].lower() in out.lower())</pre>
-<pre>$ python code/ch16/evals_demo.py      (Book 1)
+<pre>$ python code/ch16/evals_demo.py      (Book 2)
 v1 baseline: 80.0% (95% CI 74.0%-85.5%), 40 failed
 v2 candidate: 84.5% (95% CI 79.0%-89.0%), 31 failed
 gate: diff +4.5% (95% CI -4.0% to +12.5%) -> FAIL
   v1 baseline   Hindi slice: 85%
   v2 candidate  Hindi slice: 48%</pre>
-    <p class="l-en">Book 1's <code>harness/evals.py</code> adds bootstrap confidence intervals, an LLM judge and a paired release gate.</p>
-    <p class="l-hi">Book 1 ka <code>harness/evals.py</code> bootstrap confidence intervals, LLM judge aur paired release gate jodta hai.</p>
+    <p class="l-en">Book 2's <code>harness/evals.py</code> adds bootstrap confidence intervals, an LLM judge and a paired release gate.</p>
+    <p class="l-hi">Book 2 ka <code>harness/evals.py</code> bootstrap confidence intervals, LLM judge aur paired release gate jodta hai.</p>
   </div>
 </details>
 
@@ -89,7 +89,7 @@ gate: diff +4.5% (95% CI -4.0% to +12.5%) -> FAIL
   <li>Zheng et al. (2023). <em>Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena.</em></li>
   <li>Miller (2024). <em>Adding Error Bars to Evals.</em></li>
   <li>Husain, H. (2024). <em>Your AI Product Needs Evals.</em></li>
-  <li>Book 1, Chapter 16: <em>Haron's Exams.</em></li>
+  <li>Book 2, Chapter 16: <em>Haron's Exams.</em></li>
 </ol>
 </article>
 <script>

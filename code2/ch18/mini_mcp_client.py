@@ -1,4 +1,4 @@
-"""Book 2, Chapter 18 lab: an MCP client (the harness side) talking to mini_mcp_server.py.
+"""Book 1, Chapter 18 lab: an MCP client (the harness side) talking to mini_mcp_server.py.
 
 Run:  python mini_mcp_client.py
 """

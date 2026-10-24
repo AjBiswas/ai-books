@@ -1,4 +1,4 @@
-"""Build "Becoming an AI Engineer" (Book 2).
+"""Build "Becoming an AI Engineer" (Book 1).
 
 Each chapter's content lives in src/chNN.html (opener + article + one <script>).
 This script wraps it with the shared head, top bar and prev/next links, and writes index.html.
@@ -148,7 +148,7 @@ INDEX_TOP = """<title>Becoming an AI Engineer</title>
 </style>
 <div class="page wide">
 <div class="topbar">
-  <div class="crumbs"><span><span class="l-en">Book 2 · A storybook course</span><span class="l-hi">Book 2 · Kahani wala course</span></span></div>
+  <div class="crumbs"><span><span class="l-en">Book 1 · A storybook course</span><span class="l-hi">Book 1 · Kahani wala course</span></span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <header class="cover">
