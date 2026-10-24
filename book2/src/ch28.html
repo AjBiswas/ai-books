@@ -1,0 +1,117 @@
+  <div class="story">
+    <p class="l-en">Launch day is the beginning, not the end. Real users ask things nobody tested, providers quietly update models, a prompt tweak meant for one customer breaks another, and the bill doubles because an agent started looping. <strong>LLMOps</strong> is the practice of running AI apps in production: versioning prompts like code, tracing every request, watching quality, cost and drift, and turning every failure into a test.</p>
+    <p class="l-hi">Launch ka din shuruaat hai, ant nahi. Asli users aisi cheezein poochte hain jo kisi ne test nahi ki, providers chupchaap models update karte hain, ek customer ke liye kiya prompt badlaav doosre ko tod deta hai, aur bill double ho jaata hai kyunki ek agent loop karne laga. <strong>LLMOps</strong> production mein AI apps chalaane ka tareeka hai: prompts ko code ki tarah version karna, har request trace karna, quality, kharch aur drift par nazar, aur har failure ko test banana.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The improvement loop</span><span class="l-hi">Sudhaar ka loop</span></li>
+    <li><b>2</b><span class="l-en">What to log for every request</span><span class="l-hi">Har request ke liye kya log karein</span></li>
+    <li><b>3</b><span class="l-en">The dashboard that matters</span><span class="l-hi">Kaam ka dashboard</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The improvement loop</span><span class="l-hi">Sudhaar ka loop</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">A trace: one request's story</span><span class="l-hi">Trace: ek request ki kahani</span></h2></div>
+<div class="story">
+  <p class="l-en">A <strong>trace</strong> records everything that happened for one request, as nested steps (spans): each model call with its prompt version, model, tokens, cost and time; each tool call with its input and result. When a user complains, the trace tells you exactly what Haron saw and did.</p>
+  <p class="l-hi"><strong>Trace</strong> ek request ke liye hua sab kuch record karta hai, nested steps (spans) ki tarah: har model call apne prompt version, model, tokens, kharch aur samay ke saath; har tool call apne input aur result ke saath. Jab user shikaayat kare, trace bilkul batata hai Haron ne kya dekha aur kiya.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">The dashboard</span><span class="l-hi">Dashboard</span></h2></div>
+<div class="story">
+  <p class="l-en">Roll the traces up and patterns appear. From Book 1's observability lab, 300 simulated runs across three model tiers: the expensive model handled 11% of calls but 44% of the cost.</p>
+  <p class="l-hi">Traces jodo toh patterns dikhte hain. Book 1 ke observability lab se, teen model tiers par 300 simulated runs: mehenge model ne 11% calls sambhaalin par kharch 44%.</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">AI fails quietly</span><span class="l-hi">AI chupchaap fail hota hai</span></h4>
+  <p class="l-en">Normal software crashes loudly. AI usually fails politely: a fluent wrong answer, an extra loop, a reasonable-sounding refusal, answers that slowly get longer after a model update. Watch <strong>behaviour signals</strong> (thumbs-down rate, refusal rate, steps per task, answer length, a judge score on a sample of live traffic), not just errors and latency.</p>
+  <p class="l-hi">Aam software zor se crash hota hai. AI aksar vinamrata se fail hota hai: saaf galat jawab, extra loop, samajhdaar lagta inkaar, model update ke baad dheere-dheere lambe hote jawab. Sirf errors aur latency nahi, <strong>behaviour signals</strong> dekho (thumbs-down rate, refusal rate, har kaam ke steps, jawab ki lambaai, live traffic ke sample par judge score).</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Version everything that changes behaviour</span><span class="l-hi">Behaviour badalne wali har cheez version karo</span></h4>
+  <p class="l-en">Prompt text, model ID (pin a dated or fixed version where the provider offers one), tool definitions, retrieval settings and temperature or effort are all part of "the model" your users experience. Store them in Git or a prompt registry, record the version in every trace, and change them only through a reviewed release with an eval gate and a quick rollback.</p>
+  <p class="l-hi">Prompt text, model ID (jahan provider de wahan fixed version pin karo), tool definitions, retrieval settings aur temperature ya effort, sab us "model" ka hissa hain jo users anubhav karte hain. Inhe Git ya prompt registry mein rakho, har trace mein version record karo, aur sirf eval gate aur jaldi rollback wali reviewed release se badlo.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Tools you'll meet</span><span class="l-hi">Tools jo milenge</span></h4>
+  <p class="l-en">LLM observability platforms such as Langfuse, LangSmith, Arize Phoenix, Helicone and others store traces, prompts, datasets and eval runs; most accept <strong>OpenTelemetry</strong> data, which now has standard <code>gen_ai.*</code> attribute names. Pick one that can be self-hosted if prompts contain sensitive data, and don't log raw personal data by default.</p>
+  <p class="l-hi">Langfuse, LangSmith, Arize Phoenix, Helicone aur doosre LLM observability platforms traces, prompts, datasets aur eval runs rakhte hain; zyaadatar <strong>OpenTelemetry</strong> data lete hain, jiske ab standard <code>gen_ai.*</code> attribute names hain. Agar prompts mein sensitive data ho toh self-host ho sakne wala chuno, aur default mein raw personal data log mat karo.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Production is a loop: ship, trace, watch, collect failures, fix, re-test.</li><li>Trace every request with versions, tokens, cost and tool calls.</li><li>Watch behaviour signals, not just errors.</li><li>Version prompts and models like code, with gates and rollbacks.</li></ol>
+  <ol class="l-hi"><li>Production ek loop hai: ship, trace, nazar, failures jama, theek, dobara test.</li><li>Har request versions, tokens, kharch aur tool calls ke saath trace karo.</li><li>Sirf errors nahi, behaviour signals dekho.</li><li>Prompts aur models code ki tarah version karo, gates aur rollbacks ke saath.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add logging to the Chapter 16 local agent: for each step write a JSON line with step number, tool, input, output size, tokens and seconds. Then answer: which step is slowest? <span class="level">coder</span></p><p class="l-hi">Chapter 16 ke local agent mein logging jodo: har step ke liye step number, tool, input, output size, tokens aur seconds ki JSON line likho. Phir batao: sabse dheema step kaunsa? <span class="level">coder</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>OpenTelemetry. <em>Semantic conventions for generative AI.</em></li>
+  <li>Shankar et al. (2024). <em>Who Validates the Validators?</em></li>
+  <li>Book 1, Chapter 17: <em>Watching Haron Work.</em></li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.flow("scA", [
+    { en: "Ship", hi: "Ship", sen: "versioned prompt + model + tools", shi: "versioned prompt + model + tools" },
+    { en: "Trace", hi: "Trace", sen: "every request, every step", shi: "har request, har step" },
+    { en: "Watch", hi: "Nazar", sen: "quality · cost · latency · drift", shi: "quality · kharch · latency · drift" },
+    { en: "Collect", hi: "Jama karo", sen: "thumbs-down, complaints, judge flags", shi: "thumbs-down, shikaayatein, judge flags" },
+    { en: "Add to evals", hi: "Evals mein jodo", sen: "each failure becomes a test case", shi: "har failure test case banta hai" },
+    { en: "Fix + gate", hi: "Theek + gate", sen: "change → eval passes → ship again", shi: "badlaav → eval pass → phir ship" }
+  ], [
+    ["Ship a specific, versioned configuration.", "Ek tay, versioned configuration ship karo."],
+    ["Trace everything it does.", "Woh jo kare sab trace karo."],
+    ["Watch dashboards and alerts.", "Dashboards aur alerts dekho."],
+    ["Collect the failures users and monitors find.", "Users aur monitors jo failures dhoondhein unhe jama karo."],
+    ["Turn each into an eval case, so it can never silently come back.", "Har ek ko eval case banao, taaki chupchaap wapas na aaye."],
+    ["Fix, prove with the eval, ship, and go around again.", "Theek karo, eval se saabit karo, ship karo, aur phir chakkar."]
+  ], { perRow: 3 });
+
+  B.stack("scB", [
+    { en: "request · user=cust-881 · tenant=retail · 4.2 s · $0.0021", hi: "request · user=cust-881 · tenant=retail · 4.2 s · $0.0021", sen: "root span: the whole run, stop_reason=done", shi: "root span: poora run, stop_reason=done", cls: "box" },
+    { en: "model call #1 · prompt v14 · 310 in / 24 out · 1.1 s", hi: "model call #1 · prompt v14 · 310 in / 24 out · 1.1 s", sen: "decided to call get_order", shi: "get_order call karne ka faisla", cls: "box-sig" },
+    { en: "tool get_order(ORD-100231) · 0.3 s", hi: "tool get_order(ORD-100231) · 0.3 s", sen: "result: delivered, ₹1,499", shi: "result: delivered, ₹1,499", cls: "box-amb" },
+    { en: "model call #2 · 362 in / 19 out · 1.2 s", hi: "model call #2 · 362 in / 19 out · 1.2 s", sen: "decided to refund", shi: "refund ka faisla", cls: "box-sig" },
+    { en: "tool refund(ORD-100231) · approved · idempotency key", hi: "tool refund(ORD-100231) · approved · idempotency key", sen: "write action, recorded", shi: "write action, record hua", cls: "box-amb" },
+    { en: "model call #3 · 401 in / 21 out · 1.1 s", hi: "model call #3 · 401 in / 21 out · 1.1 s", sen: "final reply to the customer", shi: "customer ko aakhri jawab", cls: "box-sig" }
+  ], [
+    ["The root span: who, which tenant, total time and cost, why it stopped.", "Root span: kaun, kaunsa tenant, kul samay aur kharch, kyun ruka."],
+    ["Each model call: prompt version, tokens, time.", "Har model call: prompt version, tokens, samay."],
+    ["Each tool call: input and result.", "Har tool call: input aur result."],
+    ["The next decision.", "Agla faisla."],
+    ["Write actions with their approval and idempotency key.", "Write actions apne approval aur idempotency key ke saath."],
+    ["The final answer. Any complaint about this request can now be investigated in a minute.", "Aakhri jawab. Is request ki koi bhi shikaayat ab ek minute mein jaanchi ja sakti hai."]
+  ]);
+
+  B.bars("scC", [
+    { en: "Small tier: share of calls", hi: "Small tier: calls ka hissa", v: 61, txt: "61% of calls", cls: "box-sig", step: 0 },
+    { en: "Large tier: share of calls", hi: "Large tier: calls ka hissa", v: 11, txt: "11% of calls", cls: "box-plm", step: 0 },
+    { en: "Small tier: share of cost", hi: "Small tier: kharch ka hissa", v: 6, txt: "6% of cost", cls: "box-sig", step: 1 },
+    { en: "Large tier: share of cost", hi: "Large tier: kharch ka hissa", v: 44, txt: "44% of cost", cls: "box-plm", step: 1 },
+    { en: "Answer length after a silent model update", hi: "Chupchaap model update ke baad jawab ki lambaai", v: 45, txt: "+45% → drift alert", cls: "box-amb", step: 2 }
+  ], [
+    ["Most calls go to the small, cheap tier.", "Zyaadatar calls chhote, saste tier par."],
+    ["But 11% of calls on the large tier cause 44% of the cost. Is every one of them needed?", "Par large tier ki 11% calls 44% kharch karaati hain. Kya har ek zaroori hai?"],
+    ["And a drift monitor catches a silent change: answers got 45% longer after a model update. No error was thrown; only the dashboard noticed.", "Aur drift monitor chupchaap badlaav pakadta hai: model update ke baad jawab 45% lambe. Koi error nahi; sirf dashboard ne dekha."]
+  ], { max: 100 });
+})();
+</script>

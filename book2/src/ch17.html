@@ -1,0 +1,134 @@
+  <div class="story">
+    <p class="l-en">"Agent" is the most used and least defined word in AI. Here's a useful definition: an <strong>agent</strong> is a model that decides its own next step in a loop, using tools, until a goal is met. That's powerful for open-ended work and wasteful for predictable work. This chapter shows the whole range from fixed workflows to autonomous agents, the frameworks people use, and the honest question to ask first: do you need an agent at all?</p>
+    <p class="l-hi">"Agent" AI ka sabse zyaada use hone wala aur sabse kam paribhaashit shabd hai. Kaam ki paribhasha: <strong>agent</strong> aisa model hai jo loop mein, tools use karke, lakshya poora hone tak apna agla step khud tay karta hai. Khule kaam ke liye taakatwar, pehle se pata kaam ke liye barbaadi. Yeh chapter fixed workflows se autonomous agents tak poori range, log jo frameworks use karte hain, aur pehle poochne wala imaandaar sawaal dikhata hai: kya aapko agent chahiye bhi?</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The autonomy ladder: workflows to agents</span><span class="l-hi">Autonomy ki seedhi: workflows se agents tak</span></li>
+    <li><b>2</b><span class="l-en">Five workflow patterns that solve most problems</span><span class="l-hi">Paanch workflow patterns jo zyaadatar samasyaayein suljhaate hain</span></li>
+    <li><b>3</b><span class="l-en">The agent loop and its stop rules</span><span class="l-hi">Agent loop aur rukne ke niyam</span></li>
+    <li><b>4</b><span class="l-en">Frameworks, and when to use none</span><span class="l-hi">Frameworks, aur kab koi nahi</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The autonomy ladder</span><span class="l-hi">Autonomy ki seedhi</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">Climb only as high as you must. A fixed workflow is cheaper, faster, easier to test and easier to explain to an auditor. Use an agent when the steps <strong>genuinely can't be known in advance</strong>, the outcome is worth the extra cost, and mistakes can be caught (tests, review, undo).</p>
+  <p class="l-hi">Utna hi upar chadho jitna zaroori ho. Fixed workflow sasta, tez, test karne mein aasaan aur auditor ko samjhaane mein aasaan hai. Agent tab use karo jab steps <strong>sach mein pehle se pata na ho sakein</strong>, nateeja extra kharch ke laayak ho, aur galtiyaan pakdi ja sakein (tests, review, undo).</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Five patterns before you need an agent</span><span class="l-hi">Agent se pehle paanch patterns</span></h2></div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">The agent loop</span><span class="l-hi">Agent loop</span></h2></div>
+<div class="story">
+  <p class="l-en">At the top of the ladder, the loop is simple: the model looks at the goal and everything so far, picks a tool (or decides it's done), your code runs the tool, the result goes into the context, repeat. The hard parts are around the loop: when to stop, what to do when a tool fails, how to keep the context clean, and how to stop it doing something harmful.</p>
+  <p class="l-hi">Seedhi ke top par loop seedha hai: model lakshya aur ab tak ka sab dekhta hai, ek tool chunta hai (ya tay karta hai kaam ho gaya), aapka code tool chalaata hai, result context mein jaata hai, dohraao. Mushkil hisse loop ke aas-paas hain: kab rukna, tool fail ho toh kya karna, context saaf kaise rakhna, aur use nuksaan karne se kaise rokna.</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<h2><span class="l-en">Frameworks at a glance (late 2026)</span><span class="l-hi">Frameworks ek nazar mein (late 2026)</span></h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Framework</th><th><span class="l-en">Style</span><span class="l-hi">Style</span></th><th><span class="l-en">Good when</span><span class="l-hi">Kab achha</span></th></tr></thead>
+<tbody>
+<tr><td><b><span class="l-en">Plain code</span><span class="l-hi">Seedha code</span></b></td><td><span class="l-en">A while-loop around the provider SDK</span><span class="l-hi">Provider SDK ke chaaron taraf while-loop</span></td><td><span class="l-en">Learning; small agents; full control (Book 1 builds one)</span><span class="l-hi">Seekhna; chhote agents; poora control (Book 1 ek banati hai)</span></td></tr>
+<tr><td><b><span class="l-en">Provider SDK runners</span><span class="l-hi">Provider SDK runners</span></b></td><td><span class="l-en">Tool runners in the Anthropic/OpenAI SDKs; OpenAI Agents SDK</span><span class="l-hi">Anthropic/OpenAI SDKs ke tool runners; OpenAI Agents SDK</span></td><td><span class="l-en">You use one provider and want less boilerplate</span><span class="l-hi">Ek provider use karte ho aur kam boilerplate chahiye</span></td></tr>
+<tr><td><b>Claude Agent SDK</b></td><td><span class="l-en">Claude Code's harness as a library: files, shell, search, sub-agents</span><span class="l-hi">Library ki tarah Claude Code ka harness: files, shell, search, sub-agents</span></td><td><span class="l-en">Coding and computer-work agents on your own infra</span><span class="l-hi">Apne infra par coding aur computer-kaam agents</span></td></tr>
+<tr><td><b>LangGraph</b></td><td><span class="l-en">Agents as graphs of steps with state and checkpoints</span><span class="l-hi">State aur checkpoints ke saath steps ke graph jaise agents</span></td><td><span class="l-en">Complex, long-running flows needing resume and human approval</span><span class="l-hi">Mushkil, lambe flows jinhe resume aur insaani approval chahiye</span></td></tr>
+<tr><td><b>CrewAI, AutoGen/AG2</b></td><td><span class="l-en">Teams of role-playing agents</span><span class="l-hi">Role nibhaane wale agents ki teams</span></td><td><span class="l-en">Multi-agent experiments (Chapter 20)</span><span class="l-hi">Multi-agent prayog (Chapter 20)</span></td></tr>
+<tr><td><b>LlamaIndex, Pydantic AI, Google ADK, smolagents</b></td><td><span class="l-en">Data-centric, typed, or lightweight agent toolkits</span><span class="l-hi">Data-centric, typed, ya halke agent toolkits</span></td><td><span class="l-en">RAG-heavy agents; strict typing; quick experiments</span><span class="l-hi">RAG-bhaari agents; sakht typing; jaldi prayog</span></td></tr>
+</tbody></table></div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Learn the loop before the framework</span><span class="l-hi">Framework se pehle loop seekho</span></h4>
+  <p class="l-en">Frameworks change every few months; the loop doesn't. Build one agent with plain code first (Chapter 16's lab is 60 lines). Then you'll know what a framework is doing for you, and you'll be able to debug it when it does something surprising. Many production teams end up with a thin custom loop anyway.</p>
+  <p class="l-hi">Frameworks har kuch mahine badalte hain; loop nahi. Pehle seedhe code se ek agent banao (Chapter 16 ka lab 60 lines ka hai). Tab aapko pata hoga framework aapke liye kya kar raha hai, aur kuch ajeeb kare toh debug kar paoge. Kai production teams aakhir mein patla custom loop hi rakhti hain.</p>
+</div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Agents declare victory early, or never stop</span><span class="l-hi">Agents jaldi jeet maan lete hain, ya kabhi nahi rukte</span></h4>
+  <p class="l-en">Two classic failures: saying "done!" when the task isn't finished (or a tool silently failed), and wandering for 50 steps re-reading the same files. Give a clear definition of done that code can check, cap steps and tokens, detect repeated identical calls, and make the agent show evidence (test output, a link, a record ID) before it may finish.</p>
+  <p class="l-hi">Do purani galtiyaan: kaam adhoora ho (ya tool chupchaap fail hua ho) tab bhi "ho gaya!" bolna, aur 50 steps tak same files dobara padhte bhatakna. Code se check hone laayak "done" ki saaf paribhasha do, steps aur tokens par limit, dohraayi same calls pakdo, aur khatam karne se pehle agent se saboot maango (test output, link, record ID).</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Hosted agents</span><span class="l-hi">Hosted agents</span></h4>
+  <p class="l-en">Providers now also run the whole agent for you: the loop, a sandboxed computer for tools, files and long sessions (for example Anthropic's Managed Agents). You trade some control for not running infrastructure. Whether you self-host or use a hosted agent, the design questions in this chapter (autonomy, tools, stop rules, approvals) stay the same.</p>
+  <p class="l-hi">Providers ab poora agent bhi aapke liye chalaate hain: loop, tools ke liye sandboxed computer, files aur lambe sessions (jaise Anthropic ke Managed Agents). Infrastructure na chalaane ke badle thoda control chhodte ho. Khud host karo ya hosted agent lo, is chapter ke design sawaal (autonomy, tools, rukne ke niyam, approvals) wahi rehte hain.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>An agent decides its own next step in a loop with tools.</li><li>Climb the autonomy ladder only as far as the task needs.</li><li>Chaining, routing, parallel, orchestrator-workers and evaluator-optimiser solve most problems.</li><li>Stop rules, evidence and approvals make agents safe; learn the plain loop before any framework.</li></ol>
+  <ol class="l-hi"><li>Agent tools ke saath loop mein apna agla step khud tay karta hai.</li><li>Autonomy ki seedhi par utna hi chadho jitna kaam ko chahiye.</li><li>Chaining, routing, parallel, orchestrator-workers aur evaluator-optimiser zyaadatar samasyaayein suljhaate hain.</li><li>Rukne ke niyam, saboot aur approvals agents ko surakshit banaate hain; kisi framework se pehle seedha loop seekho.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">List five tasks at your work. Place each on the autonomy ladder. Which truly needs an agent? <span class="level">easy</span></p><p class="l-hi">Apne kaam ke paanch tasks likho. Har ek ko autonomy ki seedhi par rakho. Kise sach mein agent chahiye? <span class="level">easy</span></p></div>
+  <div class="exercise"><p class="l-en">Rebuild Chapter 16's agent in one framework from the table. Count lines of code and note what you gained and lost. <span class="level">coder</span></p><p class="l-hi">Chapter 16 ka agent table ke kisi ek framework mein dobara banao. Code ki lines gino aur likho kya mila aur kya khoya. <span class="level">coder</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Anthropic (2024). <em>Building effective agents.</em></li>
+  <li>Yao et al. (2022). <em>ReAct: Synergizing Reasoning and Acting in Language Models.</em></li>
+  <li>LangChain. <em>LangGraph</em> documentation. · OpenAI. <em>Agents SDK.</em> · Anthropic. <em>Claude Agent SDK.</em></li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.bars("scA", [
+    { en: "1 · Single call", hi: "1 · Ek call", v: 1, txt: "summarise this email", cls: "box-sig", step: 0 },
+    { en: "2 · Fixed workflow", hi: "2 · Fixed workflow", v: 2, txt: "extract → check → draft", cls: "box-sig", step: 1 },
+    { en: "3 · Workflow + tools", hi: "3 · Workflow + tools", v: 3, txt: "look up order, then reply", cls: "box-amb", step: 2 },
+    { en: "4 · Agent, with approvals", hi: "4 · Agent, approvals ke saath", v: 4, txt: "model picks steps; human OKs writes", cls: "box-amb", step: 3 },
+    { en: "5 · Autonomous agent", hi: "5 · Autonomous agent", v: 5, txt: "runs for hours on its own", cls: "box-plm", step: 4 }
+  ], [
+    ["Rung 1: one model call. Most “AI features” are this, and that's fine.", "Seedhi 1: ek model call. Zyaadatar “AI features” yahi hain, aur theek hai."],
+    ["Rung 2: a fixed sequence of calls that your code controls.", "Seedhi 2: calls ka fixed silsila jise aapka code control kare."],
+    ["Rung 3: the workflow uses tools at known points.", "Seedhi 3: workflow jaane hue points par tools use karta hai."],
+    ["Rung 4: the model chooses the steps, but a human approves anything risky.", "Seedhi 4: model steps chunta hai, par risky kuch bhi insaan approve kare."],
+    ["Rung 5: long, autonomous runs. The most powerful, and the most expensive to make safe.", "Seedhi 5: lambe, autonomous runs. Sabse taakatwar, aur surakshit banaane mein sabse mehenge."]
+  ]);
+
+  B.columns("scB", [
+    { en: "Workflow patterns", hi: "Workflow patterns", cls: "box-sig", step: 0, items: [
+      { en: "Chaining: step A's output feeds step B (Chapter 7)", hi: "Chaining: step A ka output step B ko khilaata (Chapter 7)", step: 0 },
+      { en: "Routing: a classifier sends each request to the right prompt or model", hi: "Routing: classifier har request ko sahi prompt ya model par bhejta", step: 1 },
+      { en: "Parallelisation: split into independent parts, or vote", hi: "Parallelisation: alag hisson mein baanto, ya vote lo", step: 2 },
+      { en: "Orchestrator–workers: a lead model splits work and combines results", hi: "Orchestrator–workers: lead model kaam baantta aur results jodta", step: 3 },
+      { en: "Evaluator–optimiser: one model drafts, another critiques, repeat", hi: "Evaluator–optimiser: ek model draft, doosra critique, dohraao", step: 4 } ] }
+  ], [
+    ["<strong>Chaining</strong>: a fixed assembly line.", "<strong>Chaining</strong>: fixed assembly line."],
+    ["<strong>Routing</strong>: “refund questions go to the refund prompt, everything else to the general one”.", "<strong>Routing</strong>: “refund ke sawaal refund prompt par, baaki general par”."],
+    ["<strong>Parallelisation</strong>: check a contract for five risks at once, or ask three times and vote.", "<strong>Parallelisation</strong>: contract ko ek saath paanch risks ke liye check karo, ya teen baar poochkar vote lo."],
+    ["<strong>Orchestrator–workers</strong>: when the parts aren't known until you see the task.", "<strong>Orchestrator–workers</strong>: jab hisse kaam dekhne ke baad hi pata chalein."],
+    ["<strong>Evaluator–optimiser</strong>: when you can say what “better” means. These five cover most real products before you need a free-roaming agent.", "<strong>Evaluator–optimiser</strong>: jab aap bata sako “behtar” ka matlab kya. Free-roaming agent ki zaroorat se pehle yeh paanch zyaadatar asli products cover karte hain."]
+  ]);
+
+  B.flow("scC", [
+    { en: "Goal + context", hi: "Lakshya + context", sen: "task, tools, history", shi: "kaam, tools, history" },
+    { en: "Model decides", hi: "Model tay kare", sen: "a tool call, or “done”", shi: "tool call, ya “done”" },
+    { en: "Guards", hi: "Guards", sen: "valid? allowed? budget left? repeated?", shi: "valid? allowed? budget bacha? dohraaya?" },
+    { en: "Run tool", hi: "Tool chalao", sen: "result or error", shi: "result ya error" },
+    { en: "Update context", hi: "Context update", sen: "append; compact if large", shi: "jodo; bada ho toh compact" },
+    { en: "Stop?", hi: "Rukein?", sen: "done + evidence · max steps · budget · stuck", shi: "done + saboot · max steps · budget · atka" }
+  ], [
+    ["The loop starts with the goal, the tool list and everything so far.", "Loop lakshya, tools ki list aur ab tak ke sab se shuru hota hai."],
+    ["The model chooses the next action.", "Model agla kaam chunta hai."],
+    ["Guards check it before anything runs.", "Kuch chalne se pehle guards check karte hain."],
+    ["The tool runs; failures come back as results.", "Tool chalta hai; failures result ki tarah wapas aate hain."],
+    ["The context grows; manage it (Chapter 10).", "Context badhta hai; use sambhaalo (Chapter 10)."],
+    ["Stop for a named reason, and record it. Book 1, Chapter 6 builds this loop with all six stop doors.", "Naam wali wajah se ruko, aur record karo. Book 1 ka Chapter 6 yeh loop chhe darwaazon ke saath banata hai."]
+  ], { perRow: 3 });
+})();
+</script>

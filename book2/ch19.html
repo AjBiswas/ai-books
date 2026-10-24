@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 19 · Skills, Plugins & Sub-agents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 19</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 19 · Agents</span><span class="l-hi">Chapter 19 · Agents</span></div>
+  <h1><span class="l-en">Skills, Plugins &amp; Sub-agents</span><span class="l-hi">Skills, Plugins aur Sub-agents</span></h1>
+  <div class="story">
+    <p class="l-en">"Can we teach Haron our way of filing GST returns?" People imagine this needs retraining the model. It almost never does. There's a ladder of ways to add a skill, from a paragraph in the prompt to a full fine-tune, and the cheap rungs solve most needs. The newest rung, <strong>Agent Skills</strong>, packages know-how into a folder Haron loads only when it needs it.</p>
+    <p class="l-hi">"Kya hum Haron ko apna GST return file karne ka tareeka sikha sakte hain?" Log sochte hain iske liye model retrain karna padega. Lagbhag kabhi nahi. Skill jodne ki ek seedhi hai, prompt ke ek paragraph se poore fine-tune tak, aur saste daande zyaadatar zaroorat poori kar dete hain. Sabse naya daanda, <strong>Agent Skills</strong>, gyaan ko ek folder mein pack karta hai jise Haron sirf zaroorat par load karta hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Six ways to add a capability, cheapest first</span><span class="l-hi">Kaabiliyat jodne ke chhe tareeke, saste pehle</span></li>
+    <li><b>2</b><span class="l-en">How Skills load: progressive disclosure</span><span class="l-hi">Skills kaise load hoti hain: progressive disclosure</span></li>
+    <li><b>3</b><span class="l-en">Plugins and sub-agents</span><span class="l-hi">Plugins aur sub-agents</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The ladder of adding skills</span><span class="l-hi">Skills jodne ki seedhi</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">How a Skill loads</span><span class="l-hi">Skill kaise load hoti hai</span></h2></div>
+<div class="story">
+  <p class="l-en">A Skill is a folder with a <code>SKILL.md</code> file: a short name and description at the top, step-by-step instructions below, and optional scripts, templates and reference files alongside. The trick is <strong>progressive disclosure</strong>: only the one-line descriptions sit in Haron's context all the time. The full instructions load when a task matches, and the extra files only when a step needs them. You can install hundreds of skills without filling the window.</p>
+  <p class="l-hi">Skill ek folder hai jisme <code>SKILL.md</code> file hoti hai: upar chhota naam aur description, neeche step-by-step instructions, aur saath mein optional scripts, templates aur reference files. Chaabi hai <strong>progressive disclosure</strong>: Haron ke context mein hamesha sirf ek-line descriptions rehti hain. Poore instructions tab load hote hain jab kaam match kare, aur extra files tabhi jab kisi step ko chahiye. Aap window bhare bina saikadon skills install kar sakte ho.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="codehead"><span>skills/gst-return/SKILL.md</span><span>markdown</span></div>
+<pre>---
+name: gst-return
+description: Prepare a monthly GSTR-3B summary from the sales ledger. Use when someone asks to prepare or check a GST return.
+---
+# Preparing GSTR-3B
+
+1. Read the ledger with `read_sheet`. Group taxable value by rate: 5%, 12%, 18%, 28%.
+2. Run `scripts/reconcile.py ledger.xlsx gstr2b.json` to match input tax credit.
+3. Fill `templates/gstr3b.json`. Explain any mismatch above ₹1,000.
+4. Never submit. Hand the draft to a human for review and filing.</pre>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Skill, tool, MCP, sub-agent, plugin</span><span class="l-hi">Skill, tool, MCP, sub-agent, plugin</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Writing a skill that triggers</span><span class="l-hi">Aisi skill likhna jo sahi waqt chale</span></h4>
+  <p class="l-en">The description decides when Haron reaches for the skill, so write it like a search result: what it does <em>and</em> when to use it, with the words users actually say ("GST", "return", "GSTR-3B"). Keep <code>SKILL.md</code> short and move long references into separate files the steps point to. Put deterministic work (calculations, file conversions) in scripts: code is cheaper and more reliable than tokens.</p>
+  <p class="l-hi">Description tay karti hai Haron skill kab uthaata hai, isliye ise search result ki tarah likho: kya karti hai <em>aur</em> kab use karni hai, unhi shabdon mein jo users bolte hain ("GST", "return", "GSTR-3B"). <code>SKILL.md</code> chhoti rakho aur lambe references alag files mein daalo jinki taraf steps ishaara karein. Pakka kaam (hisaab, file conversion) scripts mein rakho: code tokens se sasta aur bharosemand hai.</p>
+</div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Skills can carry hidden instructions</span><span class="l-hi">Skills chhupe instructions bhi la sakti hain</span></h4>
+  <p class="l-en">A skill is instructions Haron will follow, plus code it may run. A skill downloaded from a stranger can tell Haron to send files somewhere, or ship a script that does. Read every third-party skill before installing it, just as you'd read a script before running it with admin rights.</p>
+  <p class="l-hi">Skill woh instructions hain jo Haron maanega, aur code jo woh chala sakta hai. Kisi anjaan se download ki skill Haron ko files kahin bhejne ko keh sakti hai, ya aisa script la sakti hai jo yeh kare. Install karne se pehle har teesre ki skill padho, jaise admin rights se chalaane se pehle script padhte ho.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">A company skills library</span><span class="l-hi">Company ki skills library</span></h4>
+  <p class="l-en">Teams turn their playbooks into shared skills: "how we write release notes", "our brand voice", "how to triage a P1 incident", "our SQL conventions". Version them in Git, review changes like code, and distribute them as plugins so every employee's AI assistant follows the same playbook. The same idea appears under other names: Custom GPTs in ChatGPT, Gems in Gemini, project instructions in many tools.</p>
+  <p class="l-hi">Teams apni playbooks ko shared skills banaati hain: "hum release notes kaise likhte hain", "hamari brand awaaz", "P1 incident ka triage kaise", "hamare SQL niyam". Inhe Git mein version karo, badlaav code ki tarah review karo, aur plugins ki tarah baanto taaki har employee ka AI assistant same playbook maane. Yahi idea doosre naamon se bhi hai: ChatGPT mein Custom GPTs, Gemini mein Gems, kai tools mein project instructions.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: a sub-agent definition</span><span class="l-hi">Coders ke liye: sub-agent definition</span><span class="lvl">markdown</span></summary>
+  <div class="inner">
+    <div class="codehead"><span>.claude/agents/sql-reviewer.md  (Claude Code style)</span><span>markdown</span></div>
+<pre>---
+name: sql-reviewer
+description: Reviews SQL migrations for locking, missing indexes and data loss. Use before merging any migration.
+tools: Read, Grep, Glob
+---
+You are a careful database reviewer. For each migration file:
+1. Flag statements that lock large tables (ALTER on big tables, missing CONCURRENTLY).
+2. Flag DROP or destructive UPDATE without a backup step.
+3. Reply with a short table: file, line, risk, fix.</pre>
+    <p class="l-en">The main agent hands the sub-agent a task; the sub-agent works in its own fresh context with only read tools, and returns just the table. That keeps the main context clean and the reviewer unable to change anything.</p>
+    <p class="l-hi">Main agent sub-agent ko kaam deta hai; sub-agent apne naye context mein sirf read tools ke saath kaam karta hai, aur sirf table lautaata hai. Isse main context saaf rehta hai aur reviewer kuch badal nahi sakta.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Add skills from the cheapest rung up: prompt, knowledge, tools, Skills, sub-agents, and only then fine-tuning.</li><li>A Skill is a folder of instructions and scripts, loaded only when needed.</li><li>Good descriptions make skills trigger at the right time.</li><li>Read third-party skills before installing; share company skills through plugins.</li></ol>
+  <ol class="l-hi"><li>Skills sabse saste daande se jodo: prompt, gyaan, tools, Skills, sub-agents, aur tabhi fine-tuning.</li><li>Skill instructions aur scripts ka folder hai, sirf zaroorat par load.</li><li>Achhi descriptions skills ko sahi waqt chalaati hain.</li><li>Teesre ki skills install se pehle padho; company skills plugins se baanto.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Write a <code>SKILL.md</code> for a task you repeat every week. Keep it under 40 lines and put one script beside it. <span class="level">core</span></p><p class="l-hi">Har hafte dohraaye jaane wale kaam ke liye <code>SKILL.md</code> likho. 40 lines se kam rakho aur saath mein ek script rakho. <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Anthropic (2025). <em>Equipping agents for the real world with Agent Skills.</em></li>
+  <li>Anthropic. <em>Claude Code: Skills, Sub-agents and Plugins</em> documentation.</li>
+  <li>OpenAI. <em>Custom GPTs.</em> · Google. <em>Gemini Gems.</em></li>
+</ol>
+<nav class="pager"><a href="ch18.html">← Ch 18</a><a href="ch20.html"><span class="l-en">Ch 20 · Multi-Agent Systems &amp; A2A →</span><span class="l-hi">Ch 20 · Multi-Agent Systems aur A2A →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.bars("scA", [
+    { en: "1 · Say it in the prompt", hi: "1 · Prompt mein kaho", v: 1, txt: "minutes · free", cls: "box-sig", step: 0 },
+    { en: "2 · Give it knowledge (RAG)", hi: "2 · Gyaan do (RAG)", v: 2, txt: "hours · cheap", cls: "box-sig", step: 1 },
+    { en: "3 · Give it tools / MCP", hi: "3 · Tools / MCP do", v: 3, txt: "hours-days", cls: "box-sig", step: 2 },
+    { en: "4 · Package a Skill", hi: "4 · Skill pack karo", v: 3.5, txt: "hours · reusable", cls: "box-amb", step: 3 },
+    { en: "5 · Add a sub-agent", hi: "5 · Sub-agent jodo", v: 4, txt: "a day · more tokens", cls: "box-amb", step: 4 },
+    { en: "6 · Fine-tune the model", hi: "6 · Model fine-tune", v: 6, txt: "weeks · data + cost", cls: "box-plm", step: 5 }
+  ], [
+    ["Rung 1: a clear paragraph in the prompt. Try this first, always.", "Daanda 1: prompt mein saaf paragraph. Hamesha pehle yeh."],
+    ["Rung 2: if it needs facts it doesn't have, retrieve them.", "Daanda 2: agar use aise facts chahiye jo uske paas nahi, toh laao."],
+    ["Rung 3: if it needs to act or look things up live, give it tools.", "Daanda 3: agar use kaam karna ya live dekhna hai, tools do."],
+    ["Rung 4: if it's a repeatable procedure with steps and scripts, package a Skill.", "Daanda 4: agar steps aur scripts wala dohraaya jaane wala tareeka hai, Skill banao."],
+    ["Rung 5: if it needs its own focus, tools and context, make a sub-agent.", "Daanda 5: agar use apna focus, tools aur context chahiye, sub-agent banao."],
+    ["Rung 6: only for a consistent style or format at huge volume that rungs 1–5 couldn't reach (Chapter 23).", "Daanda 6: sirf bade volume par ek jaise style ya format ke liye jo daande 1–5 se na mile (Chapter 23)."]
+  ]);
+
+  B.flow("scB", [
+    { en: "Always loaded", hi: "Hamesha loaded", sen: "names + one-line descriptions of all skills (~100 tokens each)", shi: "saari skills ke naam + ek-line description (~100 tokens har ek)" },
+    { en: "Task matches", hi: "Kaam match", sen: "“prepare our GST return” → gst-return", shi: "“hamara GST return taiyaar karo” → gst-return" },
+    { en: "Load SKILL.md", hi: "SKILL.md load", sen: "full steps enter the context", shi: "poore steps context mein" },
+    { en: "Load on demand", hi: "Zaroorat par load", sen: "scripts/, templates/, reference.md only if a step needs them", shi: "scripts/, templates/, reference.md sirf step ko chahiye toh" }
+  ], [
+    ["Only a short index of skills sits in the context all the time.", "Context mein hamesha sirf skills ka chhota index rehta hai."],
+    ["When a request matches a description, Haron picks that skill.", "Jab request kisi description se match kare, Haron woh skill chunta hai."],
+    ["Now the full instructions load.", "Ab poore instructions load hote hain."],
+    ["Scripts and reference files load only for the step that needs them. Script code can even run without ever being read into the context.", "Scripts aur reference files sirf us step ke liye load hoti hain jise chahiye. Script ka code context mein padhe bina bhi chal sakta hai."]
+  ], { perRow: 4 });
+
+  B.columns("scC", [
+    { en: "Adds know-how", hi: "Gyaan jodta hai", cls: "box-sig", step: 0, items: [
+      { en: "Skill: a procedure (+ scripts) loaded on demand", hi: "Skill: tareeka (+ scripts) zaroorat par load", step: 0 },
+      { en: "Prompt / project instructions: always-on guidance", hi: "Prompt / project instructions: hamesha ka margdarshan", step: 0 } ] },
+    { en: "Adds actions", hi: "Kaam jodta hai", cls: "box-amb", step: 1, items: [
+      { en: "Tool: one action your code runs", hi: "Tool: ek kaam jo aapka code chalaata hai", step: 1 },
+      { en: "MCP server: a standard bundle of tools and data from another system", hi: "MCP server: doosre system ke tools aur data ka standard bundle", step: 1 } ] },
+    { en: "Adds a worker", hi: "Worker jodta hai", cls: "box-plm", step: 2, items: [
+      { en: "Sub-agent: a specialist with its own prompt, tools and fresh context", hi: "Sub-agent: apne prompt, tools aur naye context wala specialist", step: 2 },
+      { en: "Plugin: a shareable bundle of skills, sub-agents, commands, hooks and MCP servers", hi: "Plugin: skills, sub-agents, commands, hooks aur MCP servers ka shareable bundle", step: 2 } ] }
+  ], [
+    ["<strong>Skills and instructions</strong> add know-how: how to do something.", "<strong>Skills aur instructions</strong> gyaan jodte hain: kuch kaise karna hai."],
+    ["<strong>Tools and MCP</strong> add actions: the ability to do something.", "<strong>Tools aur MCP</strong> kaam jodte hain: kuch karne ki kaabiliyat."],
+    ["<strong>Sub-agents</strong> add a worker; <strong>plugins</strong> package all of these for sharing.", "<strong>Sub-agents</strong> worker jodte hain; <strong>plugins</strong> in sab ko baantne ke liye pack karte hain."]
+  ]);
+})();
+</script>
+
+</body>
+</html>

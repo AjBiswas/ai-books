@@ -1,0 +1,114 @@
+  <div class="story">
+    <p class="l-en">Bigger isn't always better. A 3-billion-parameter model that runs on a phone, answers in 50 milliseconds and costs nothing per call can beat a giant cloud model for a narrow job. This chapter is about making models <strong>smaller, cheaper and faster</strong>: small language models, distillation (a big teacher trains a small student), quantisation (smaller numbers), and cascades that use the small model first.</p>
+    <p class="l-hi">Bada hamesha behtar nahi. Phone par chalne wala, 50 milliseconds mein jawab dene wala aur har call par kuch kharch na karne wala 3 arab parameter ka model sankare kaam mein vishaal cloud model ko hara sakta hai. Yeh chapter models ko <strong>chhota, sasta aur tez</strong> banaane ke baare mein hai: small language models, distillation (bada teacher chhote student ko train kare), quantisation (chhote numbers), aur cascades jo pehle chhota model use karte hain.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Where small models win</span><span class="l-hi">Chhote models kahan jeette hain</span></li>
+    <li><b>2</b><span class="l-en">Distillation: teacher to student</span><span class="l-hi">Distillation: teacher se student</span></li>
+    <li><b>3</b><span class="l-en">Quantisation and cascades</span><span class="l-hi">Quantisation aur cascades</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Where small wins</span><span class="l-hi">Chhota kahan jeetta hai</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Teacher and student</span><span class="l-hi">Teacher aur student</span></h2></div>
+<div class="story">
+  <p class="l-en">A big model is excellent at classifying your tickets, but too expensive for 10 million a month. So you let it label 20,000 real tickets, check a sample, and fine-tune a small model on those labels. The student learns to imitate the teacher on <em>this one task</em>, at a fraction of the cost. This is <strong>distillation</strong>, and it's how many "small but surprisingly good" models were made.</p>
+  <p class="l-hi">Bada model aapke tickets classify karne mein behtareen hai, par mahine ke 1 crore ke liye bahut mehenga. Toh aap use 20,000 asli tickets label karne dete ho, sample check karte ho, aur un labels par chhota model fine-tune karte ho. Student <em>isi ek kaam</em> par teacher ki nakal seekhta hai, kharch ke chhote hisse mein. Ise <strong>distillation</strong> kehte hain, aur kai "chhote par hairaan karne wale achhe" models aise hi bane.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Smaller numbers, and asking the small one first</span><span class="l-hi">Chhote numbers, aur pehle chhote se poochhna</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Small models are narrow, and fail quietly</span><span class="l-hi">Chhote models sankare hote hain, aur chupchaap fail karte hain</span></h4>
+  <p class="l-en">A distilled model that's 97% as good as its teacher on ticket labels may be 50% as good on anything else, and it won't tell you. Its reasoning, world knowledge and non-English ability usually drop the most. Keep it on the task it was trained for, monitor its confidence, and escalate unsure cases to a bigger model.</p>
+  <p class="l-hi">Ticket labels par teacher jitna 97% achha distilled model baaki kisi cheez par 50% bhi ho sakta hai, aur batayega nahi. Uski reasoning, duniya ka gyaan aur non-English kaabiliyat aksar sabse zyaada girti hai. Use usi kaam par rakho jiske liye train hua, uske confidence par nazar rakho, aur shak wale cases bade model par bhejo.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Other speed tricks you'll hear about</span><span class="l-hi">Speed ke doosre tricks jo sunoge</span></h4>
+  <p class="l-en"><strong>Speculative decoding</strong>: a tiny draft model guesses several tokens and the big model checks them in one pass; same output, faster. <strong>Pruning</strong>: remove weights or layers that matter least. <strong>Mixture-of-experts</strong>: a huge model that only uses a small part of itself per token. You mostly get these from your serving engine or model choice rather than building them.</p>
+  <p class="l-hi"><strong>Speculative decoding</strong>: chhota draft model kai tokens guess karta hai aur bada model ek pass mein check karta hai; same output, tez. <strong>Pruning</strong>: sabse kam zaroori weights ya layers hatao. <strong>Mixture-of-experts</strong>: vishaal model jo har token par apna chhota hissa hi use kare. Yeh zyaadatar serving engine ya model choice se milte hain, khud banaate nahi.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">On-device AI</span><span class="l-hi">On-device AI</span></h4>
+  <p class="l-en">Phones and new "AI PCs" ship with neural processing units and built-in small models for summarising notifications, rewriting text and voice features, all offline and private. For Indian users on patchy networks, on-device models can mean an app that works in a train with no signal. Plan for both: a small local model for instant, private tasks, and a cloud model for hard ones.</p>
+  <p class="l-hi">Phones aur naye "AI PCs" neural processing units aur bane-banaaye chhote models ke saath aate hain, notifications ka summary, text dobara likhna aur voice features ke liye, sab offline aur private. Kamzor network wale Indian users ke liye on-device models ka matlab ho sakta hai aisi app jo bina signal ki train mein bhi chale. Dono ka plan karo: turant, private kaamon ke liye chhota local model, aur mushkil ke liye cloud model.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Small models win on narrow, high-volume, fast or private tasks.</li><li>Distillation lets a big teacher train a small student for one task.</li><li>Quantisation shrinks memory 2–4× with a small quality cost.</li><li>Cascades ask the small model first and escalate only when unsure.</li></ol>
+  <ol class="l-hi"><li>Chhote models sankare, bade-volume, tez ya private kaamon mein jeette hain.</li><li>Distillation se bada teacher ek kaam ke liye chhote student ko train karta hai.</li><li>Quantisation memory 2–4× chhoti karta hai, thodi quality ki keemat par.</li><li>Cascades pehle chhote model se poochte hain aur shak hone par hi upar bhejte hain.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Run the same 20 classification questions on <code>qwen3:4b</code> and a 1B model in Ollama. Where does the small one fail? Could a cascade catch those cases? <span class="level">core</span></p><p class="l-hi">Ollama mein same 20 classification sawaal <code>qwen3:4b</code> aur 1B model par chalao. Chhota kahan fail hota hai? Kya cascade un cases ko pakad sakta hai? <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Hinton, Vinyals &amp; Dean (2015). <em>Distilling the Knowledge in a Neural Network.</em></li>
+  <li>Abdin et al. (2024). <em>Phi-3 Technical Report.</em></li>
+  <li>Leviathan et al. (2023). <em>Fast Inference from Transformers via Speculative Decoding.</em></li>
+  <li>Chen, Zaharia &amp; Zou (2023). <em>FrugalGPT</em> (LLM cascades).</li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.columns("scA", [
+    { en: "Small model wins", hi: "Chhota model jeetta", cls: "box-sig", step: 0, items: [
+      { en: "Classifying, routing, extracting fields", hi: "Classify, route, fields nikaalna", step: 0 },
+      { en: "Millions of calls a day", hi: "Roz laakhon calls", step: 0 },
+      { en: "Real-time: autocomplete, voice, games", hi: "Real-time: autocomplete, voice, games", step: 0 },
+      { en: "Offline or private data on a device", hi: "Device par offline ya private data", step: 0 } ] },
+    { en: "Big model wins", hi: "Bada model jeetta", cls: "box-plm", step: 1, items: [
+      { en: "Multi-step reasoning and planning", hi: "Multi-step reasoning aur planning", step: 1 },
+      { en: "Hard code, long documents", hi: "Mushkil code, lambe documents", step: 1 },
+      { en: "Open-ended agents with many tools", hi: "Kai tools wale khule agents", step: 1 },
+      { en: "Rare languages and broad world knowledge", hi: "Durlabh bhashayein aur vyaapak duniya ka gyaan", step: 1 } ] }
+  ], [
+    ["Small models win when the task is narrow, frequent, fast or private.", "Chhote models tab jeette hain jab kaam sankara, baar-baar, tez ya private ho."],
+    ["Big models win on breadth and depth. Most products use both.", "Bade models chaudaai aur gehraai mein jeette hain. Zyaadatar products dono use karte hain."]
+  ]);
+
+  B.flow("scB", [
+    { en: "Real inputs", hi: "Asli inputs", sen: "20,000 support tickets", shi: "20,000 support tickets" },
+    { en: "Teacher labels", hi: "Teacher label kare", sen: "big model, carefully prompted", shi: "bada model, dhyaan se prompt" },
+    { en: "Check a sample", hi: "Sample check", sen: "humans verify ~300", shi: "insaan ~300 verify karein" },
+    { en: "Train student", hi: "Student train", sen: "small model, LoRA (Ch 23)", shi: "chhota model, LoRA (Ch 23)" },
+    { en: "Compare", hi: "Compare", sen: "student vs teacher on held-out tickets", shi: "alag rakhe tickets par student vs teacher" },
+    { en: "Deploy", hi: "Deploy", sen: "~95% of the quality at a fraction of the cost", shi: "kharch ke chhote hisse mein ~95% quality" }
+  ], [
+    ["Start with real inputs from your product.", "Apne product ke asli inputs se shuru."],
+    ["The big model labels them. It's expensive once, not forever.", "Bada model unhe label karta hai. Ek baar mehenga, hamesha nahi."],
+    ["Spot-check the labels: the student will copy the teacher's mistakes.", "Labels spot-check karo: student teacher ki galtiyaan copy karega."],
+    ["Fine-tune a small model on the labelled data.", "Labelled data par chhota model fine-tune karo."],
+    ["Compare on tickets neither model has seen.", "Aise tickets par compare karo jo kisi model ne nahi dekhe."],
+    ["Deploy the student; keep the teacher for hard cases. (Check that the teacher's licence or terms allow training on its outputs.)", "Student deploy karo; mushkil cases ke liye teacher rakho. (Check karo ki teacher ka licence ya terms uske outputs par training allow karti hain.)"]
+  ], { perRow: 3 });
+
+  B.bars("scC", [
+    { en: "8B model, bf16 (16-bit)", hi: "8B model, bf16 (16-bit)", v: 16, txt: "≈ 16 GB", cls: "box-plm", step: 0 },
+    { en: "8B model, int8", hi: "8B model, int8", v: 8, txt: "≈ 8 GB", cls: "box-amb", step: 1 },
+    { en: "8B model, 4-bit (Q4_K_M)", hi: "8B model, 4-bit (Q4_K_M)", v: 5, txt: "≈ 5 GB · small quality loss", cls: "box-sig", step: 2 },
+    { en: "Cascade: small answers 80%", hi: "Cascade: chhota 80% jawab de", v: 4, txt: "big model only for the unsure 20%", cls: "box-sig", step: 3 }
+  ], [
+    ["An 8B model in 16-bit needs about 16 GB just for weights.", "16-bit mein 8B model ko sirf weights ke liye lagbhag 16 GB."],
+    ["8-bit halves it, with almost no quality loss.", "8-bit aadha karta hai, lagbhag bina quality nuksaan."],
+    ["4-bit quarters it. A small loss you must measure on your eval, especially for maths, code and Indian languages.", "4-bit chauthaai karta hai. Thoda nuksaan jo apne eval par naapna zaroori, khaaskar maths, code aur Indian bhashaon ke liye."],
+    ["And a <strong>cascade</strong> saves even more: the small model handles easy cases and passes only unsure ones up (using a confidence score or a quick check).", "Aur <strong>cascade</strong> aur bachaata hai: chhota model aasaan cases sambhaalta hai aur sirf shak wale upar bhejta hai (confidence score ya jaldi check se)."]
+  ]);
+})();
+</script>

@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 4 · Models on Your Laptop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 04</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 04 · Start here</span><span class="l-hi">Chapter 04 · Shuruaat</span></div>
+  <h1><span class="l-en">Models on Your Laptop</span><span class="l-hi">Laptop par Models</span></h1>
+  <div class="story">
+    <p class="l-en">Haron has a secret twin that lives on your laptop. No internet, no API key, no bill. It's smaller and slower than the cloud models, but it's private, free and always there, which makes it perfect for learning, for prototypes, and for data that must never leave your machine. Every lab in this book was run on an ordinary laptop with 15 GB of RAM and no gaming GPU.</p>
+    <p class="l-hi">Haron ka ek gupt judwaa hai jo aapke laptop par rehta hai. Na internet, na API key, na bill. Yeh cloud models se chhota aur dheema hai, par private, free aur hamesha haazir, isliye seekhne, prototypes, aur aise data ke liye perfect hai jo kabhi machine se bahar nahi jaana chahiye. Is book ka har lab 15 GB RAM aur bina gaming GPU wale ek aam laptop par chala hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Which models your laptop can run, by RAM</span><span class="l-hi">RAM ke hisaab se aapka laptop kaunse models chala sakta hai</span></li>
+    <li><b>2</b><span class="l-en">Setting up Ollama in five minutes</span><span class="l-hi">Paanch minute mein Ollama setup</span></li>
+    <li><b>3</b><span class="l-en">Quantisation and GGUF, in plain words</span><span class="l-hi">Quantisation aur GGUF, seedhi bhasha mein</span></li>
+    <li><b>4</b><span class="l-en">Real speed numbers, and the cost of "thinking"</span><span class="l-hi">Asli speed numbers, aur "thinking" ki keemat</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Will it fit?</span><span class="l-hi">Kya fit hoga?</span></h2></div>
+<div class="story">
+  <p class="l-en">A model is a giant file of numbers. To run it, the whole file must fit in memory (RAM, or the GPU's memory). <strong>Quantisation</strong> stores each number in fewer bits, like saving a photo as a smaller JPEG: a little detail lost, much smaller file. At 4-bit quantisation, a model needs roughly <strong>0.6 GB per billion parameters</strong>, plus room for the conversation.</p>
+  <p class="l-hi">Model numbers ki ek vishaal file hai. Chalaane ke liye poori file memory (RAM, ya GPU memory) mein aani chahiye. <strong>Quantisation</strong> har number ko kam bits mein rakhta hai, jaise photo ko chhoti JPEG ki tarah save karna: thodi detail gayi, file bahut chhoti. 4-bit quantisation par model ko lagbhag <strong>har arab parameter par 0.6 GB</strong> chahiye, aur baatcheet ke liye jagah.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Five minutes to your own AI</span><span class="l-hi">Paanch minute mein apna AI</span></h2></div>
+<figure class="scene" id="scB"></figure>
+
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Tool</span><span class="l-hi">Tool</span></th><th><span class="l-en">Best for</span><span class="l-hi">Kiske liye best</span></th></tr></thead>
+<tbody>
+<tr><td><b>Ollama</b></td><td><span class="l-en">Developers: one command to pull and run; a local API on port 11434 your code can call</span><span class="l-hi">Developers: ek command se pull aur run; port 11434 par local API jise code call kar sake</span></td></tr>
+<tr><td><b>LM Studio</b></td><td><span class="l-en">A friendly desktop app with a chat window and model browser; also serves an OpenAI-compatible API</span><span class="l-hi">Chat window aur model browser wali aasaan desktop app; OpenAI-compatible API bhi deti hai</span></td></tr>
+<tr><td><b>llama.cpp</b></td><td><span class="l-en">The engine under many tools; maximum control and the widest hardware support</span><span class="l-hi">Kai tools ke neeche ka engine; sabse zyaada control aur hardware support</span></td></tr>
+<tr><td><b>MLX</b> (Mac)</td><td><span class="l-en">Fast on Apple-silicon Macs</span><span class="l-hi">Apple-silicon Macs par tez</span></td></tr>
+<tr><td><b>Jan / GPT4All</b></td><td><span class="l-en">Offline chat apps for non-developers</span><span class="l-hi">Non-developers ke liye offline chat apps</span></td></tr>
+</tbody></table></div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">The price of thinking, measured</span><span class="l-hi">Sochne ki keemat, naap kar</span></h2></div>
+<div class="story">
+  <p class="l-en">Qwen3 is a "thinking" model: it can reason privately before answering. We asked it one short question three ways on this laptop. The answer was the same one sentence each time. The work was not.</p>
+  <p class="l-hi">Qwen3 ek "thinking" model hai: jawab dene se pehle chupchaap soch sakta hai. Humne is laptop par use ek chhota sawaal teen tarah se poocha. Har baar jawab wahi ek sentence tha. Mehnat nahi.</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Switches don't always work the way the docs say</span><span class="l-hi">Switches hamesha docs jaise kaam nahi karte</span></h4>
+  <p class="l-en">In our run, <code>think: false</code> still produced about 330 tokens of reasoning inside the answer, and adding <code>/no_think</code> to the prompt made the model think <em>six times longer</em>. Behaviour depends on the model version, the runtime version and the chat template. Never assume; <strong>measure tokens and time</strong> for the exact setup you will ship.</p>
+  <p class="l-hi">Hamare run mein <code>think: false</code> ke baad bhi jawab ke andar lagbhag 330 tokens ki reasoning aayi, aur prompt mein <code>/no_think</code> jodne se model ne <em>chhe guna lamba</em> socha. Behaviour model version, runtime version aur chat template par depend karta hai. Kabhi maan kar mat chalo; jo setup ship karoge uske <strong>tokens aur samay naapo</strong>.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Use the same code for laptop and cloud</span><span class="l-hi">Laptop aur cloud ke liye same code</span></h4>
+  <p class="l-en">Ollama, LM Studio and vLLM all offer an <strong>OpenAI-compatible</strong> endpoint. Write your app against that shape (or a small adapter, as in Book 1), and switching between your laptop model and a paid API becomes a one-line config change. Develop free on the laptop; switch to a stronger model only where your evals say you need it.</p>
+  <p class="l-hi">Ollama, LM Studio aur vLLM sab <strong>OpenAI-compatible</strong> endpoint dete hain. Apni app usi shape ke against likho (ya ek chhota adapter, Book 1 jaisa), aur laptop model aur paid API ke beech badalna ek line ka config badlaav ban jaata hai. Laptop par free develop karo; majboot model par tabhi jao jahan evals kahein.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Laptop models in companies</span><span class="l-hi">Companies mein laptop models</span></h4>
+  <p class="l-en">Teams use local models for offline demos, for working with confidential documents that can't go to a cloud API, for cheap bulk pre-processing, and on new "AI PCs" with NPUs built for this. Check your company's policy before downloading model weights onto a work laptop: licences and security reviews apply.</p>
+  <p class="l-hi">Teams local models use karti hain offline demos ke liye, aise confidential documents ke saath kaam ke liye jo cloud API par nahi ja sakte, saste bulk pre-processing ke liye, aur naye "AI PCs" par jinme iske liye NPUs bane hain. Office laptop par model weights download karne se pehle company ki policy check karo: licences aur security reviews laagu hote hain.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: GGUF and quantisation names</span><span class="l-hi">Gehraai mein: GGUF aur quantisation ke naam</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <p class="l-en"><strong>GGUF</strong> is the file format used by llama.cpp and Ollama. Its names describe the quantisation: <code>Q8_0</code> (8-bit, near-original quality), <code>Q5_K_M</code>, <code>Q4_K_M</code> (4-bit, the usual sweet spot), <code>Q3_K_S</code>/<code>Q2_K</code> (smaller, noticeably worse). "K" variants quantise in blocks with per-block scales; "M/S/L" choose how many layers keep higher precision. Memory ≈ parameters × bits ÷ 8, plus the KV cache, which grows with context length. Speed on CPU is mostly limited by memory bandwidth: a 4B model at 4-bit reads about 2.5 GB per token, so DDR5 laptops reach tens of tokens per second, while a GPU with fast VRAM is several times faster.</p>
+    <p class="l-hi"><strong>GGUF</strong> llama.cpp aur Ollama ka file format hai. Iske naam quantisation batate hain: <code>Q8_0</code> (8-bit, lagbhag asli quality), <code>Q5_K_M</code>, <code>Q4_K_M</code> (4-bit, aam sweet spot), <code>Q3_K_S</code>/<code>Q2_K</code> (chhote, saaf kharab). "K" variants blocks mein quantise karte hain, har block ka scale; "M/S/L" tay karte hain kitni layers zyaada precision rakhein. Memory ≈ parameters × bits ÷ 8, aur KV cache, jo context ke saath badhta hai. CPU par speed zyaadatar memory bandwidth se limited hai: 4-bit par 4B model har token par lagbhag 2.5 GB padhta hai, isliye DDR5 laptops dasiyon tokens per second tak pahunchte hain, jabki tez VRAM wala GPU kai guna tez hai.</p>
+  </div>
+</details>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: call your laptop model from Python</span><span class="l-hi">Coders ke liye: Python se laptop model call karo</span><span class="lvl">code2/ch04/</span></summary>
+  <div class="inner">
+<pre>ollama pull qwen3:4b          # 2.5 GB download, once
+python code2/ch04/local_model.py</pre>
+<pre>def chat(messages, model="qwen3:4b", think=False, stream=False):
+    body = json.dumps({"model": model, "messages": messages, "stream": stream,
+                       "think": think, "options": {"temperature": 0.2}}).encode()
+    req = urllib.request.Request("http://localhost:11434/api/chat", data=body,
+                                 headers={"Content-Type": "application/json"})
+    ...</pre>
+<pre>$ python code2/ch04/local_model.py
+answer: … A context window is the maximum amount of input text a language model can process at once, defined by a fixed length.
+time to first token: 11.24s | total: 31.18s | output tokens: 334 | speed: 16.7 tokens/s
+prompt tokens: 20 | cost: $0.00 (your laptop)
+
+$ python code2/ch04/think_compare.py
+think=True (reasoning separated)    28.2s   438 output tokens  thinking field: 1831 chars
+think=False                         21.3s   329 output tokens  thinking field: 0 chars
+'/no_think' in the prompt          163.7s  2149 output tokens  thinking field: 10025 chars</pre>
+    <p class="l-en">The 11-second first token includes loading the model into memory; later calls start much faster while the model stays loaded.</p>
+    <p class="l-hi">11 second ka pehla token model ko memory mein load karna bhi shaamil karta hai; model load rehne tak baad ki calls bahut jaldi shuru hoti hain.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>At 4-bit, budget about 0.6 GB of memory per billion parameters, plus room to talk.</li><li>Ollama gets you running in minutes, with an API your code can call.</li><li>Laptop models are free and private, but smaller and slower.</li><li>Thinking costs time and tokens; measure your exact setup.</li></ol>
+  <ol class="l-hi"><li>4-bit par har arab parameter ke liye lagbhag 0.6 GB memory, aur baat karne ki jagah rakho.</li><li>Ollama minutes mein chalu kar deta hai, ek API ke saath jise code call kar sake.</li><li>Laptop models free aur private hain, par chhote aur dheeme.</li><li>Sochne mein samay aur tokens lagte hain; apna setup naapo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Install Ollama, pull <code>qwen3:4b</code> (or a 1–3B model if you have 8 GB RAM), and run <code>local_model.py</code>. Note your tokens per second. <span class="level">easy</span></p><p class="l-hi">Ollama install karo, <code>qwen3:4b</code> pull karo (8 GB RAM ho toh 1–3B model), aur <code>local_model.py</code> chalao. Apne tokens per second note karo. <span class="level">easy</span></p></div>
+  <div class="exercise"><p class="l-en">Ask the same five questions to your laptop model and to a free cloud chatbot. Score each answer 0–2. Where is the gap biggest? <span class="level">core</span></p><p class="l-hi">Same paanch sawaal apne laptop model aur ek free cloud chatbot se poochho. Har jawab ko 0–2 score do. Farak kahan sabse bada hai? <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Ollama. <em>Documentation and API reference</em> (ollama.com).</li>
+  <li>ggml-org. <em>llama.cpp</em> and the GGUF format.</li>
+  <li>Dettmers et al. (2022). <em>LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale.</em></li>
+  <li>Qwen Team (2025). <em>Qwen3 Technical Report.</em></li>
+</ol>
+<nav class="pager"><a href="ch03.html">← Ch 3</a><a href="ch05.html"><span class="l-en">Ch 5 · Your First API Call →</span><span class="l-hi">Ch 5 · Pehli API Call →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.bars("scA", [
+    { en: "3B model, 4-bit", hi: "3B model, 4-bit", v: 2, txt: "≈ 2 GB · any 8 GB laptop", cls: "box-sig", step: 0 },
+    { en: "4B model, 4-bit (qwen3:4b)", hi: "4B model, 4-bit (qwen3:4b)", v: 2.5, txt: "2.5 GB · measured", cls: "box-sig", step: 0 },
+    { en: "8B model, 4-bit", hi: "8B model, 4-bit", v: 5, txt: "≈ 5 GB · 16 GB laptop", cls: "box-sig", step: 1 },
+    { en: "14B model, 4-bit", hi: "14B model, 4-bit", v: 9, txt: "≈ 9 GB · 16 GB, tight", cls: "box-amb", step: 2 },
+    { en: "32B model, 4-bit", hi: "32B model, 4-bit", v: 20, txt: "≈ 20 GB · 32 GB+ or a GPU", cls: "box-amb", step: 3 },
+    { en: "70B model, 4-bit", hi: "70B model, 4-bit", v: 40, txt: "≈ 40 GB · workstation", cls: "box-plm", step: 4 }
+  ], [
+    ["Tiny models (1–4B parameters) fit on any modern laptop. Our 4B model takes 2.5 GB on disk.", "Chhote models (1–4B parameters) kisi bhi modern laptop par fit. Hamara 4B model disk par 2.5 GB."],
+    ["8B models are the sweet spot for a 16 GB laptop: noticeably smarter, still usable.", "16 GB laptop ke liye 8B models sweet spot hain: saaf zyaada samajhdaar, phir bhi chalne laayak."],
+    ["14B models fit in 16 GB but leave little room for anything else.", "14B models 16 GB mein aa jaate hain par aur kisi cheez ke liye jagah kam bachti hai."],
+    ["32B models need 32 GB RAM, a Mac with lots of unified memory, or a GPU.", "32B models ko 32 GB RAM, zyaada unified memory wala Mac, ya GPU chahiye."],
+    ["70B models are workstation or server territory. That's where Book 1's self-hosting chapter takes over.", "70B models workstation ya server ka ilaaka hain. Wahan Book 1 ka self-hosting chapter kaam aata hai."]
+  ]);
+
+  B.flow("scB", [
+    { en: "Install Ollama", hi: "Ollama install", sen: "ollama.com · Windows/Mac/Linux", shi: "ollama.com · Windows/Mac/Linux" },
+    { en: "Pull a model", hi: "Model pull karo", sen: "ollama pull qwen3:4b", shi: "ollama pull qwen3:4b" },
+    { en: "Chat in terminal", hi: "Terminal mein chat", sen: "ollama run qwen3:4b", shi: "ollama run qwen3:4b" },
+    { en: "Local API", hi: "Local API", sen: "localhost:11434/api/chat", shi: "localhost:11434/api/chat" },
+    { en: "Your code", hi: "Aapka code", sen: "Python, JS, any language", shi: "Python, JS, koi bhi bhasha" },
+    { en: "Swap to cloud", hi: "Cloud par badlo", sen: "same code, new base URL", shi: "same code, naya base URL" }
+  ], [
+    ["Download and install Ollama. It runs quietly in the background.", "Ollama download aur install karo. Yeh background mein chupchaap chalta hai."],
+    ["Pull a model: one command, a one-time download.", "Model pull karo: ek command, ek baar ka download."],
+    ["Chat with it right in the terminal to get a feel for it.", "Terminal mein hi chat karke andaaza lo."],
+    ["Ollama also serves an HTTP API on your machine.", "Ollama aapki machine par HTTP API bhi deta hai."],
+    ["Your programs call that API: this book's labs use only Python's standard library.", "Aapke programs woh API call karte hain: is book ke labs sirf Python ki standard library use karte hain."],
+    ["Later, point the same code at a cloud model when you need more power.", "Baad mein zyaada taakat chahiye toh same code cloud model ki taraf point karo."]
+  ], { perRow: 3 });
+
+  B.bars("scC", [
+    { en: "think = true", hi: "think = true", v: 28.2, txt: "28.2 s · 438 tokens", cls: "box-sig", step: 0 },
+    { en: "think = false", hi: "think = false", v: 21.3, txt: "21.3 s · 329 tokens", cls: "box-amb", step: 1 },
+    { en: "“/no_think” in prompt", hi: "“/no_think” prompt mein", v: 163.7, txt: "163.7 s · 2,149 tokens", cls: "box-plm", step: 2 }
+  ], [
+    ["Thinking on, separated into its own field: 28 seconds for a one-sentence answer.", "Thinking on, alag field mein: ek sentence ke jawab ke liye 28 second."],
+    ["Thinking “off”: still 329 tokens, because the model reasoned inside the answer anyway.", "Thinking “off”: phir bhi 329 tokens, kyunki model ne jawab ke andar hi socha."],
+    ["A prompt switch meant to disable thinking made it think six times longer: 2,149 tokens, almost three minutes. Always measure.", "Thinking band karne wale prompt switch ne chhe guna lamba sochwaaya: 2,149 tokens, lagbhag teen minute. Hamesha naapo."]
+  ]);
+})();
+</script>
+
+</body>
+</html>

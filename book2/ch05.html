@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 5 · Your First API Call</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 05</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 05 · Start here</span><span class="l-hi">Chapter 05 · Shuruaat</span></div>
+  <h1><span class="l-en">Your First API Call</span><span class="l-hi">Pehli API Call</span></h1>
+  <div class="story">
+    <p class="l-en">Your laptop model is great for learning. But one day you'll want the strongest models, and those live behind an <strong>API</strong>: you send a request over the internet, the provider runs the model, and you get an answer and a bill. This chapter is your first real call, and all the boring-but-vital things around it: keys, errors, retries, streaming and cost.</p>
+    <p class="l-hi">Aapka laptop model seekhne ke liye badhiya hai. Par ek din aapko sabse majboot models chahiye honge, aur woh <strong>API</strong> ke peeche rehte hain: aap internet par request bhejte ho, provider model chalaata hai, aur aapko jawab aur bill milta hai. Yeh chapter aapki pehli asli call hai, aur uske aas-paas ki boring par zaroori cheezein: keys, errors, retries, streaming aur kharch.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">What a request and a response contain</span><span class="l-hi">Request aur response mein kya hota hai</span></li>
+    <li><b>2</b><span class="l-en">Keeping API keys safe</span><span class="l-hi">API keys surakshit rakhna</span></li>
+    <li><b>3</b><span class="l-en">Errors, retries and rate limits</span><span class="l-hi">Errors, retries aur rate limits</span></li>
+    <li><b>4</b><span class="l-en">Streaming and the cost of one call</span><span class="l-hi">Streaming aur ek call ka kharch</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">A letter and its reply</span><span class="l-hi">Ek chitthi aur uska jawab</span></h2></div>
+<div class="story">
+  <p class="l-en">An API call is like posting a letter with a very precise form. You fill in which model, the instructions, the conversation, and how long the reply may be. The reply comes back with the text, the reason it stopped, and a receipt of tokens used.</p>
+  <p class="l-hi">API call ek bilkul sateek form wali chitthi bhejne jaisa hai. Aap bharte ho kaunsa model, instructions, baatcheet, aur jawab kitna lamba ho sakta hai. Jawab text, rukne ki wajah, aur use hue tokens ki raseed ke saath aata hai.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">The leaked-key story happens every week</span><span class="l-hi">Leak hui key ki kahani har hafte hoti hai</span></h4>
+  <p class="l-en">Someone pastes an API key into code and pushes it to a public GitHub repo. Bots scan GitHub constantly; within minutes the key is used to run thousands of requests, and the owner wakes up to a huge bill. Keep keys in <strong>environment variables</strong> or a secrets manager, add <code>.env</code> to <code>.gitignore</code>, set a <strong>spending limit</strong> in the provider console, and rotate any key that was ever exposed.</p>
+  <p class="l-hi">Koi API key code mein paste karke public GitHub repo par push kar deta hai. Bots lagaataar GitHub scan karte hain; minutes mein key se hazaaron requests chal jaati hain, aur maalik bade bill ke saath jaagta hai. Keys <strong>environment variables</strong> ya secrets manager mein rakho, <code>.env</code> ko <code>.gitignore</code> mein daalo, provider console mein <strong>spending limit</strong> lagao, aur jo bhi key kabhi bahar aayi use badal do.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">When the post office is busy</span><span class="l-hi">Jab daakghar vyast ho</span></h2></div>
+<div class="story">
+  <p class="l-en">APIs fail sometimes: you're sending too fast (<strong>429, rate limited</strong>), the provider is overloaded (<strong>5xx / overloaded</strong>), or the network blips. The polite fix is <strong>retry with exponential backoff</strong>: wait a little, try again, wait twice as long, try again. But some errors must <em>not</em> be retried: a 400 means your request is wrong, and retrying just wastes time.</p>
+  <p class="l-hi">APIs kabhi fail hoti hain: aap bahut tez bhej rahe ho (<strong>429, rate limited</strong>), provider overloaded hai (<strong>5xx / overloaded</strong>), ya network atak gaya. Vinamra ilaaj hai <strong>exponential backoff ke saath retry</strong>: thoda ruko, phir try, do guna ruko, phir try. Par kuch errors ko retry <em>nahi</em> karna: 400 matlab aapki request galat hai, retry bas samay barbaad karta hai.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Stream anything a human waits for</span><span class="l-hi">Jiska insaan intezaar kare use stream karo</span></h4>
+  <p class="l-en">Without streaming, the user stares at a spinner until the whole answer is written. With <strong>streaming</strong>, tokens appear as they're generated, so the first words show up in under a second. Same cost, much better feel. For long outputs, streaming also avoids HTTP timeouts. Always set <code>max_tokens</code> so a runaway answer can't run up your bill.</p>
+  <p class="l-hi">Streaming ke bina user tab tak spinner dekhta hai jab tak poora jawab na likh jaaye. <strong>Streaming</strong> ke saath tokens bante hi dikhte hain, toh pehle words second se kam mein aa jaate hain. Same kharch, kahin behtar ehsaas. Lambe outputs mein streaming HTTP timeouts se bhi bachaata hai. Hamesha <code>max_tokens</code> set karo taaki bhaagta jawab bill na badha de.</p>
+</div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">What one call costs</span><span class="l-hi">Ek call ka kharch</span></h2></div>
+<div class="story">
+  <p class="l-en">A typical support reply: 2,000 tokens in (instructions + conversation + a document) and 500 tokens out. Here's what 1,000 such calls cost on three Claude tiers, at October 2026 list prices.</p>
+  <p class="l-hi">Ek aam support jawab: 2,000 tokens andar (instructions + baatcheet + ek document) aur 500 tokens bahar. October 2026 ke list prices par teen Claude tiers par aisi 1,000 calls ka kharch yeh hai.</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Check why the model stopped</span><span class="l-hi">Check karo model kyun ruka</span></h4>
+  <p class="l-en">Every response has a stop reason. <code>end_turn</code>/<code>stop</code>: finished normally. <code>max_tokens</code>/<code>length</code>: cut off mid-sentence, so don't show half an answer as if it were complete. <code>tool_use</code>: the model wants to call a tool (Chapter 16). <code>refusal</code>: the model declined. Code that ignores the stop reason ships truncated JSON and silent failures.</p>
+  <p class="l-hi">Har response mein rukne ki wajah hoti hai. <code>end_turn</code>/<code>stop</code>: aam tarah khatam. <code>max_tokens</code>/<code>length</code>: sentence ke beech kata, toh aadha jawab poora jaisa mat dikhao. <code>tool_use</code>: model tool call karna chahta hai (Chapter 16). <code>refusal</code>: model ne mana kiya. Rukne ki wajah ignore karne wala code adhoora JSON aur chupchaap failures ship karta hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the same call in three ways</span><span class="l-hi">Coders ke liye: ek hi call teen tarah se</span><span class="lvl">python</span></summary>
+  <div class="inner">
+    <div class="codehead"><span>Anthropic Python SDK  ·  pip install anthropic</span><span>python</span></div>
+<pre>import anthropic
+client = anthropic.Anthropic()               # reads ANTHROPIC_API_KEY from the environment
+resp = client.messages.create(
+    model="claude-opus-5-5",
+    max_tokens=1024,
+    system="You are Acme's support assistant. Be brief.",
+    messages=[{"role": "user", "content": "Where is order ORD-100232?"}],
+)
+print(resp.content[0].text, resp.stop_reason, resp.usage.input_tokens, resp.usage.output_tokens)</pre>
+    <div class="codehead"><span>OpenAI-compatible SDK pointed at your laptop  ·  pip install openai</span><span>python</span></div>
+<pre>from openai import OpenAI
+client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")   # Ollama ignores the key
+resp = client.chat.completions.create(
+    model="qwen3:4b",
+    max_tokens=512,
+    messages=[{"role": "system", "content": "You are Acme's support assistant. Be brief."},
+              {"role": "user", "content": "Where is order ORD-100232?"}],
+)
+print(resp.choices[0].message.content, resp.choices[0].finish_reason, resp.usage)</pre>
+    <div class="codehead"><span>Streaming with the Anthropic SDK</span><span>python</span></div>
+<pre>with client.messages.stream(model="claude-opus-5-5", max_tokens=1024,
+                            messages=[{"role": "user", "content": "Explain RAG in 3 lines."}]) as stream:
+    for text in stream.text_stream:
+        print(text, end="", flush=True)</pre>
+    <p class="l-en">The official SDKs already retry 429 and 5xx errors with backoff (2 retries by default; configurable with <code>max_retries</code>). Don't wrap them in a second retry loop unless you need different behaviour. Note: on current Claude models, sampling knobs like <code>temperature</code> are rejected; depth is controlled with an <code>effort</code> setting instead.</p>
+    <p class="l-hi">Official SDKs pehle se 429 aur 5xx errors ko backoff ke saath retry karte hain (default 2 retries; <code>max_retries</code> se badal sakte ho). Jab tak alag behaviour na chahiye, unhe doosre retry loop mein mat lapeto. Dhyaan do: current Claude models par <code>temperature</code> jaise sampling knobs reject hote hain; gehraai <code>effort</code> setting se control hoti hai.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>A request names the model, the instructions, the messages and a token limit; the response gives text, a stop reason and usage.</li><li>Keys live in environment variables, never in code; set a spending limit.</li><li>Retry 429 and 5xx with backoff; fix 400s instead of retrying them.</li><li>Stream for humans, and know what each call costs.</li></ol>
+  <ol class="l-hi"><li>Request mein model, instructions, messages aur token limit; response mein text, rukne ki wajah aur usage.</li><li>Keys environment variables mein, code mein kabhi nahi; spending limit lagao.</li><li>429 aur 5xx ko backoff ke saath retry; 400 ko retry nahi, theek karo.</li><li>Insaanon ke liye stream karo, aur har call ka kharch jaano.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Run the OpenAI-compatible example against your laptop's Ollama. Then change only <code>base_url</code>, <code>api_key</code> and <code>model</code> to a cloud provider. Did anything else need to change? <span class="level">easy</span></p><p class="l-hi">OpenAI-compatible example apne laptop ke Ollama par chalao. Phir sirf <code>base_url</code>, <code>api_key</code> aur <code>model</code> cloud provider ke liye badlo. Kya aur kuch badalna pada? <span class="level">easy</span></p></div>
+  <div class="exercise"><p class="l-en">Write a function that prints a warning whenever <code>stop_reason</code> is <code>max_tokens</code>, and test it by setting <code>max_tokens=20</code>. <span class="level">core</span></p><p class="l-hi">Ek function likho jo <code>stop_reason</code> <code>max_tokens</code> hone par warning print kare, aur <code>max_tokens=20</code> set karke test karo. <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Anthropic. <em>Messages API</em>, <em>Streaming</em> and <em>Errors</em> documentation.</li>
+  <li>OpenAI. <em>Chat Completions API</em> reference. · Ollama. <em>OpenAI compatibility.</em></li>
+  <li>GitHub. <em>Secret scanning</em> documentation.</li>
+</ol>
+<nav class="pager"><a href="ch04.html">← Ch 4</a><a href="ch06.html"><span class="l-en">Ch 6 · Prompt Engineering Basics →</span><span class="l-hi">Ch 6 · Prompt Engineering ki Buniyaad →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.columns("scA", [
+    { en: "Request (you send)", hi: "Request (aap bhejte ho)", cls: "box-sig", step: 0, items: [
+      { en: "model: which brain, e.g. claude-opus-5-5", hi: "model: kaunsa dimaag, jaise claude-opus-5-5", step: 0 },
+      { en: "system: the standing instructions", hi: "system: hamesha ke instructions", step: 1 },
+      { en: "messages: the conversation so far", hi: "messages: ab tak ki baatcheet", step: 1 },
+      { en: "max_tokens: the longest reply you'll pay for", hi: "max_tokens: sabse lamba jawab jiska paisa doge", step: 2 },
+      { en: "tools (optional): actions it may ask for", hi: "tools (optional): kaam jo woh maang sakta hai", step: 2 } ] },
+    { en: "Response (you get)", hi: "Response (aapko milta hai)", cls: "box-plm", step: 3, items: [
+      { en: "content: the text (and any tool calls)", hi: "content: text (aur koi tool calls)", step: 3 },
+      { en: "stop_reason: finished, cut off, wants a tool, or refused", hi: "stop_reason: khatam, kata, tool chahiye, ya mana", step: 4 },
+      { en: "usage: input and output tokens, your receipt", hi: "usage: input aur output tokens, aapki raseed", step: 4 },
+      { en: "id: quote it when reporting a problem", hi: "id: problem report karte waqt bataao", step: 4 },
+      { en: "headers: rate-limit info, retry-after", hi: "headers: rate-limit jaankari, retry-after", step: 4 } ] }
+  ], [
+    ["Every request names a <strong>model</strong>.", "Har request ek <strong>model</strong> ka naam leti hai."],
+    ["Then the <strong>system</strong> instructions and the <strong>messages</strong>. Remember: the model has no memory, so you send the whole conversation.", "Phir <strong>system</strong> instructions aur <strong>messages</strong>. Yaad rakho: model ki memory nahi, toh poori baatcheet bhejte ho."],
+    ["A <strong>max_tokens</strong> limit, and optionally a list of <strong>tools</strong>.", "<strong>max_tokens</strong> limit, aur optional <strong>tools</strong> ki list."],
+    ["The response carries the <strong>content</strong>.", "Response <strong>content</strong> laata hai."],
+    ["And the metadata you must check: why it stopped, how many tokens it used, and an id for support.", "Aur metadata jo check karna zaroori hai: kyun ruka, kitne tokens lage, aur support ke liye id."]
+  ]);
+
+  B.flow("scB", [
+    { en: "Send", hi: "Bhejo", sen: "attempt 1", shi: "koshish 1" },
+    { en: "429 rate limited", hi: "429 rate limited", sen: "too fast", shi: "bahut tez" },
+    { en: "Wait 1 s", hi: "1 s ruko", sen: "+ a little random jitter", shi: "+ thoda random jitter" },
+    { en: "Send", hi: "Bhejo", sen: "attempt 2", shi: "koshish 2" },
+    { en: "529 overloaded", hi: "529 overloaded", sen: "provider busy", shi: "provider vyast" },
+    { en: "Wait 2 s", hi: "2 s ruko", sen: "double the wait", shi: "intezaar double" },
+    { en: "Send", hi: "Bhejo", sen: "attempt 3", shi: "koshish 3" },
+    { en: "200 OK", hi: "200 OK", sen: "answer arrives", shi: "jawab aaya" }
+  ], [
+    ["First attempt.", "Pehli koshish."],
+    ["429: you're over the rate limit for your account tier.", "429: aap apne account tier ki rate limit ke paar ho."],
+    ["Wait a second. Random jitter stops many clients retrying at the exact same moment.", "Ek second ruko. Random jitter kai clients ko bilkul same pal retry karne se rokta hai."],
+    ["Try again.", "Phir try karo."],
+    ["Now the provider is overloaded. Also retryable.", "Ab provider overloaded hai. Yeh bhi retry ho sakta hai."],
+    ["Wait twice as long.", "Do guna intezaar."],
+    ["Third try.", "Teesri koshish."],
+    ["Success. (A 400 “bad request” would have stopped at step 1: fix the request, don't retry.)", "Safal. (400 “bad request” step 1 par hi ruk jaata: request theek karo, retry nahi.)"]
+  ], { perRow: 4, delay: 2000 });
+
+  B.bars("scC", [
+    { en: "Claude Haiku 5.5", hi: "Claude Haiku 5.5", v: 0.45, txt: "$0.45 per 1,000 calls", cls: "box-sig", step: 0 },
+    { en: "Claude Sonnet 5.5", hi: "Claude Sonnet 5.5", v: 9, txt: "$9 per 1,000 calls", cls: "box-amb", step: 1 },
+    { en: "Claude Opus 5.5", hi: "Claude Opus 5.5", v: 18, txt: "$18 per 1,000 calls", cls: "box-plm", step: 2 },
+    { en: "Opus, 1 lakh calls/month", hi: "Opus, 1 lakh calls/mahina", v: 18, txt: "$1,800 / month", cls: "box-plm", step: 3 }
+  ], [
+    ["Small tier: 2,000 × $0.10/M + 500 × $0.50/M ≈ $0.00045 per call.", "Chhota tier: 2,000 × $0.10/M + 500 × $0.50/M ≈ $0.00045 har call."],
+    ["Balanced tier: 20× more.", "Santulit tier: 20× zyaada."],
+    ["Top tier: 40× the small one.", "Top tier: chhote ka 40×."],
+    ["At 1 lakh calls a month, the tier choice is the difference between $45 and $1,800. Cost per call is a design decision.", "Mahine ki 1 lakh calls par tier ka chunav $45 aur $1,800 ka farak hai. Har call ka kharch ek design faisla hai."]
+  ]);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 2 · Haron's Wallet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 02</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 02 · How models behave</span><span class="l-hi">Chapter 02 · Model kaise behave karte hain</span></div>
+  <h1><span class="l-en">Haron's Wallet</span><span class="l-hi">Haron ka Wallet</span></h1>
+  <div class="story">
+    <p class="l-en">On its first day at work, Haron gets a wallet. Every word it <strong>reads</strong> costs a tiny coin. Every word it <strong>writes</strong> costs a bigger coin. And because Haron forgets everything, the team must hand over the whole diary again on every turn, so the coins add up much faster than anyone expects.</p>
+    <p class="l-hi">Kaam ke pehle din Haron ko ek wallet milta hai. Har word jo woh <strong>padhta</strong> hai, ek chhota sikka lagta hai. Har word jo woh <strong>likhta</strong> hai, ek bada sikka. Aur kyunki Haron sab bhool jaata hai, team ko har turn par poori diary dobara deni padti hai, isliye sikke kisi ki soch se kahin zyaada tezi se jud jaate hain.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Why a chat gets more expensive every turn</span><span class="l-hi">Chat har turn par mehengi kyun hoti jaati hai</span></li>
+    <li><b>2</b><span class="l-en">What the context window really is, and why "big" isn't "perfect"</span><span class="l-hi">Context window asal mein kya hai, aur "bada" matlab "perfect" kyun nahi</span></li>
+    <li><b>3</b><span class="l-en">How caching, model choice and language change the bill</span><span class="l-hi">Caching, model choice aur bhasha bill ko kaise badalte hain</span></li>
+    <li><b>4</b><span class="l-en">How to measure cost per finished task</span><span class="l-hi">Har poore kaam ka kharch kaise naapein</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The bill that keeps growing</span><span class="l-hi">Badhta hua bill</span></h2></div>
+<div class="story">
+  <p class="l-en">A customer asks Haron five short questions. Each question is tiny, about 200 tokens. But on every turn, the team sends Haron the rules (2,000 tokens) <em>plus</em> everything said so far. Watch what Haron actually reads.</p>
+  <p class="l-hi">Ek customer Haron se paanch chhote sawaal poochta hai. Har sawaal chhota hai, lagbhag 200 tokens. Lekin har turn par team Haron ko niyam (2,000 tokens) <em>aur</em> ab tak ki poori baatcheet bhejti hai. Dekho Haron asal mein kitna padhta hai.</p>
+</div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 320" width="760" role="img" aria-label="Five turns of a chat; each turn re-sends the rules and all history"></svg></div></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">In a chat or an agent loop, total input grows roughly with the <strong>square</strong> of the number of turns. Turn 40 pays for turns 1 to 39 again. That's why long agent runs get expensive, and why caching and compaction exist.</p>
+  <p class="l-hi">Chat ya agent loop mein total input turns ki sankhya ke lagbhag <strong>square</strong> ke hisaab se badhta hai. Turn 40 par turn 1 se 39 ka paisa phir lagta hai. Isliye lambe agent runs mehenge padte hain, aur isiliye caching aur compaction bane hain.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">The diary has a size limit</span><span class="l-hi">Diary ki ek limit hai</span></h2></div>
+<div class="story">
+  <p class="l-en">Haron's diary can hold only so many tokens: this is the <strong>context window</strong>. Today's big models hold 200,000 to 1,000,000 tokens, which is several thick books. But a bigger diary has two catches: every page costs money each turn, and Haron reads the far pages less carefully.</p>
+  <p class="l-hi">Haron ki diary mein sirf itne hi tokens aa sakte hain: ise <strong>context window</strong> kehte hain. Aaj ke bade models 2,00,000 se 10,00,000 tokens tak rakh sakte hain, yaani kai moti kitaabein. Lekin badi diary ki do dikkatein hain: har page har turn par paisa leta hai, aur door ke pages Haron kam dhyaan se padhta hai.</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 250" width="760" role="img" aria-label="The context window fills up, overflows, and is compacted"></svg></div></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Big window, smaller "useful" window</span><span class="l-hi">Badi window, chhoti "kaam ki" window</span></h4>
+  <p class="l-en">A model that <em>accepts</em> 1M tokens doesn't use all of them equally well. As the diary fills, accuracy on finding and combining facts usually drops; researchers call this <strong>context rot</strong>. Tests like "needle in a haystack" are easy; tasks that need many facts from many places are much harder. So a harness keeps the diary <strong>as small as the task allows</strong>, even when the window is huge.</p>
+  <p class="l-hi">Jo model 10 lakh tokens <em>le sakta</em> hai, woh sabko barabar achhe se use nahi karta. Diary bharne ke saath facts dhoondhne aur jodne ki accuracy aksar girti hai; researchers ise <strong>context rot</strong> kehte hain. "Bhoose mein sui" jaise test aasaan hain; kai jagah se kai facts jodne wale kaam bahut mushkil. Isliye harness diary ko <strong>kaam ki zaroorat jitna chhota</strong> rakhta hai, chahe window kitni bhi badi ho.</p>
+</div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Same message, different price</span><span class="l-hi">Same message, alag daam</span></h2></div>
+<div class="story">
+  <p class="l-en">Two things change the price of the same work: the <strong>language</strong> (how many tokens a message becomes) and the <strong>model tier</strong> (how much each token costs). Here is a real calculation from this chapter's lab.</p>
+  <p class="l-hi">Same kaam ka daam do cheezein badalti hain: <strong>bhasha</strong> (message kitne tokens banta hai) aur <strong>model tier</strong> (har token kitne ka hai). Yeh is chapter ke lab ka asli hisaab hai.</p>
+</div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 300" width="760" role="img" aria-label="English and Hindi token counts, then monthly bills on three model tiers"></svg></div></figure>
+
+<div class="callout harness">
+  <span class="tag">Harness note</span>
+  <h4><span class="l-en">Measure cost per finished task, not per request</span><span class="l-hi">Har request nahi, har poore kaam ka kharch naapo</span></h4>
+  <p class="l-en">A cheap model that needs 9 tries and a human fix can cost more than an expensive model that gets it right once. The harness should log, for every task: model calls, input/output/cached tokens, tool calls, retries, and whether the task <em>succeeded</em>. Then compare <strong>cost ÷ successful tasks</strong>.</p>
+  <p class="l-hi">Sasta model jise 9 baar try karna pade aur phir insaan theek kare, woh ek baar mein sahi karne wale mehenge model se zyaada mehenga pad sakta hai. Harness har kaam ke liye log kare: model calls, input/output/cached tokens, tool calls, retries, aur kaam <em>safal</em> hua ya nahi. Phir <strong>kharch ÷ safal kaam</strong> compare karo.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">Prices change; models retire</span><span class="l-hi">Daam badalte hain; models retire hote hain</span></h4>
+  <p class="l-en">Provider prices change several times a year, and models are deprecated on a schedule. Keep prices in <strong>config, not code</strong> (this book's <code>harness/pricing.py</code> is one dictionary), record the price used with every audit record, and re-run your cost model when a new tier appears. A new model at the same price can use a different tokenizer and change your bill by 30%.</p>
+  <p class="l-hi">Providers ke daam saal mein kai baar badalte hain, aur models tay schedule par band hote hain. Daam <strong>code mein nahi, config mein</strong> rakho (is book ki <code>harness/pricing.py</code> bas ek dictionary hai), har audit record ke saath use hua daam save karo, aur naya tier aaye toh cost model dobara chalao. Same daam wala naya model alag tokenizer use karke bill 30% badal sakta hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: the cost formula and every lever</span><span class="l-hi">Gehraai mein: cost ka formula aur har lever</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <div class="eq">cost = (in × p<sub>in</sub> + out × p<sub>out</sub> + cache_read × p<sub>cr</sub> + cache_write × p<sub>cw</sub>) / 10⁶ <span class="lbl">(2.1)</span></div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Model</th><th class="n">input $/M</th><th class="n">output $/M</th><th class="n">cache read $/M</th></tr></thead>
+      <tbody>
+        <tr><td>claude-haiku-5-5</td><td class="n">0.10</td><td class="n">0.50</td><td class="n">0.01</td></tr>
+        <tr><td>claude-sonnet-5-5</td><td class="n">2.00</td><td class="n">10.00</td><td class="n">0.20</td></tr>
+        <tr><td>claude-opus-5-5</td><td class="n">4.00</td><td class="n">20.00</td><td class="n">0.20</td></tr>
+      </tbody>
+    </table></div>
+    <p class="l-en">Anthropic list prices, October 2026 (Haiku 5.5 prices apply to prompts up to 100K tokens). Cache writes cost 1.25× input for a 5-minute cache. <strong>Thinking tokens are billed as output.</strong> Levers, roughly in order of "free first": (1) prompt caching, (2) trimming what you send (tool results, old turns), (3) output caps and terse formats, (4) batch processing for non-urgent work (about 50% off on major providers), (5) lower <code>effort</code> where quality holds, (6) routing easy work to a smaller tier.</p>
+    <p class="l-hi">Anthropic list prices, October 2026 (Haiku 5.5 ke daam 100K tokens tak ke prompts par). 5-minute cache ke liye cache write input ka 1.25× padta hai. <strong>Thinking tokens output ki tarah bill hote hain.</strong> Levers, "pehle muft wale" order mein: (1) prompt caching, (2) bheji jaane wali cheezein kam karo (tool results, purane turns), (3) output limit aur chhote formats, (4) jo kaam urgent nahi uske liye batch (bade providers par lagbhag 50% kam), (5) jahan quality bani rahe wahan kam <code>effort</code>, (6) aasaan kaam chhote tier par bhejo.</p>
+  </div>
+</details>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the cost lab</span><span class="l-hi">Coders ke liye: cost lab</span><span class="lvl">code/ch02/cost.py</span></summary>
+  <div class="inner">
+<pre>$ python code/ch02/cost.py
+English  LATIN      ~ 20 tokens
+Hindi    DEVANAGARI ~ 38 tokens
+
+10-step task on claude-sonnet-5-5
+  without caching: 156,000 input tokens  $0.3420
+  with caching:    156,000 input tokens  $0.1018
+  saving: 70%
+  claude-haiku-5-5   $    51.00 / month
+  claude-sonnet-5-5  $ 1,020.00 / month
+  claude-opus-5-5    $ 2,040.00 / month</pre>
+    <p class="l-en">Same 156,000 input tokens, 70% cheaper: caching changes the <em>price</em> of tokens, not their number. Token counts here are estimates from <code>harness/tokens.py</code>; bill from the provider's reported <code>usage</code>.</p>
+    <p class="l-hi">Wahi 156,000 input tokens, 70% sasta: caching tokens ki <em>keemat</em> badalti hai, ginti nahi. Yahan token counts <code>harness/tokens.py</code> ke andaaze hain; bill provider ke bataaye <code>usage</code> se banao.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Reading costs a little, writing costs more, and thinking counts as writing.</li><li>Every turn re-sends the whole diary, so cost grows fast with turns.</li><li>A big window isn't a perfect memory. Keep the diary small.</li><li>Caching makes the repeated part about 90% cheaper.</li><li>Measure cost per <em>successful</em> task, per language, per model.</li></ol>
+  <ol class="l-hi"><li>Padhna sasta, likhna mehenga, aur sochna bhi likhne mein ginta hai.</li><li>Har turn poori diary dobara bhejta hai, isliye turns ke saath kharch tezi se badhta hai.</li><li>Badi window perfect yaaddasht nahi. Diary chhoti rakho.</li><li>Caching dohraaye hisse ko lagbhag 90% sasta kar deti hai.</li><li>Kharch har <em>safal</em> kaam, har bhasha, har model ke hisaab se naapo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Change <code>STEP</code> in <code>cost.py</code> from 800 to 3,000 (an agent reading big files). How does the caching saving change? Why? <span class="level">coder</span></p><p class="l-hi"><code>cost.py</code> mein <code>STEP</code> ko 800 se 3,000 karo (badi files padhne wala agent). Caching ki bachat kaise badli? Kyun? <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Your support bot answers 20,000 chats a month, 30% of them in Hindi. Estimate the monthly bill on two tiers, using this chapter's numbers. <span class="level">enterprise</span></p><p class="l-hi">Aapka support bot mahine mein 20,000 chats ka jawab deta hai, 30% Hindi mein. Is chapter ke numbers se do tiers par mahine ka bill andaaza lagao. <span class="level">enterprise</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Anthropic. <em>Pricing</em> and <em>Prompt caching</em> documentation (Oct 2026).</li>
+  <li>Hsieh et al. (2024). <em>RULER: What's the Real Context Size of Your Long-Context Language Models?</em></li>
+  <li>Chroma Research (2025). <em>Context Rot: How Increasing Input Tokens Impacts LLM Performance.</em></li>
+  <li>Petrov et al. (2023). <em>Language Model Tokenizers Introduce Unfairness Between Languages.</em></li>
+</ol>
+
+<nav class="pager"><a href="ch01.html">← Ch 1</a><a href="ch03.html"><span class="l-en">Ch 3 · Haron's Bad Habits →</span><span class="l-hi">Ch 3 · Haron ki Buri Aadatein →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls;
+
+  /* Scene A: growing bill */
+  (function () {
+    var s = document.getElementById("svA"), x0 = 90, k = 0.08, R = 2000 * k;
+    var rows = [], totals = [];
+    for (var t = 1; t <= 5; t++) {
+      var y = 26 + (t - 1) * 46, g = E(s, "g", { "class": "anim" });
+      BI(g, { x: 10, y: y + 22, "font-size": 13, "font-weight": 600 }, "Turn " + t, "Turn " + t);
+      var hist = (t - 1) * 500, inp = 2000 + hist + 200;
+      var rRules = E(g, "rect", { x: x0, y: y, width: R, height: 32, rx: 3, "class": "box-sig anim" });
+      E(g, "text", { x: x0 + R / 2, y: y + 21, "text-anchor": "middle", "font-size": 11, "class": "mono" }, "rules 2,000");
+      if (hist) {
+        E(g, "rect", { x: x0 + R, y: y, width: hist * k, height: 32, rx: 3, "class": "box-plm" });
+        if (hist >= 1500) E(g, "text", { x: x0 + R + hist * k / 2, y: y + 21, "text-anchor": "middle", "font-size": 11, "class": "mono" }, "history " + hist.toLocaleString("en-US"));
+      }
+      E(g, "rect", { x: x0 + R + hist * k, y: y, width: 16, height: 32, rx: 3, "class": "box-amb" });
+      E(g, "text", { x: x0 + R + 24 + hist * k, y: y + 21, "font-size": 12, "class": "mono" }, "= " + inp.toLocaleString("en-US"));
+      rows.push({ g: g, rules: rRules });
+      totals.push(inp);
+    }
+    var sum = E(s, "g", { "class": "anim" });
+    E(sum, "rect", { x: 520, y: 40, width: 230, height: 120, rx: 8, "class": "box" });
+    BI(sum, { x: 635, y: 72, "text-anchor": "middle", "font-size": 13, "class": "muted" }, "Haron read in total", "Haron ne kul padha");
+    E(sum, "text", { x: 635, y: 108, "text-anchor": "middle", "font-size": 30, "font-weight": 700, "class": "amb" }, "16,000");
+    BI(sum, { x: 635, y: 136, "text-anchor": "middle", "font-size": 12, "class": "muted" }, "for 1,000 tokens of questions", "1,000 tokens ke sawaalon ke liye");
+    var key = E(s, "g");
+    [["box-sig", "rules (same every turn)", "niyam (har turn same)"], ["box-plm", "chat history", "purani baatein"], ["box-amb", "new question", "naya sawaal"]].forEach(function (k2, i) {
+      E(key, "rect", { x: 90 + i * 210, y: 274, width: 14, height: 14, "class": k2[0] });
+      BI(key, { x: 110 + i * 210, y: 286, "font-size": 11, "class": "muted" }, k2[1], k2[2]);
+    });
+    B.scene(document.getElementById("scA"), [
+      ["Turn 1: rules (2,000) + question (200) = 2,200 tokens.", "Turn 1: niyam (2,000) + sawaal (200) = 2,200 tokens."],
+      ["Turn 2: the rules again, plus turn 1's question and answer (500), plus the new question.", "Turn 2: niyam phir se, turn 1 ka sawaal-jawab (500), aur naya sawaal."],
+      ["Turn 3: the purple history keeps growing.", "Turn 3: purple history badhti ja rahi hai."],
+      ["Turn 4: the newest question is the smallest part of what Haron reads.", "Turn 4: naya sawaal Haron ke padhe hue ka sabse chhota hissa hai."],
+      ["Turn 5: 4,200 tokens for a 200-token question.", "Turn 5: 200 token ke sawaal ke liye 4,200 tokens."],
+      ["Total: <strong>16,000 tokens read</strong>. The rules alone were read 5 times (10,000 tokens). With caching, repeats after the first cost about 90% less.", "Total: <strong>16,000 tokens padhe</strong>. Sirf niyam 5 baar padhe gaye (10,000 tokens). Caching ke saath pehli baar ke baad ke repeats lagbhag 90% saste."]
+    ], function (i) {
+      rows.forEach(function (r, j) { show(r.g, j <= Math.min(i, 4)); r.rules.style.strokeDasharray = i === 5 && j > 0 ? "5 3" : "none"; r.rules.style.strokeWidth = i === 5 && j > 0 ? 2.5 : 1; });
+      show(sum, i === 5);
+    });
+  })();
+
+  /* Scene B: context window */
+  (function () {
+    var s = document.getElementById("svB"), X = 60, W = 600, Y = 80, H = 60;
+    E(s, "rect", { x: X, y: Y, width: W, height: H, rx: 6, "class": "box", "stroke-width": 2 });
+    BI(s, { x: X, y: Y - 14, "font-size": 12, "class": "mono muted" }, "context window: 200,000 tokens", "context window: 2,00,000 tokens");
+    var fill = E(s, "rect", { x: X, y: Y, width: 0, height: H, rx: 6, "class": "box-sig anim" });
+    fill.style.transition = "width .8s cubic-bezier(.2,.8,.2,1), fill .4s";
+    var over = E(s, "rect", { x: X + W, y: Y, width: 0, height: H, rx: 6, style: "fill:var(--c6);opacity:.8", "class": "anim" });
+    over.style.transition = "width .8s, opacity .5s";
+    var rot = E(s, "g", { "class": "anim" });
+    E(rot, "path", { d: "M" + (X + W * 0.45) + " " + (Y + H + 14) + " H" + (X + W), "class": "line-amb dash", "stroke-width": 2 });
+    BI(rot, { x: X + W * 0.72, y: Y + H + 32, "text-anchor": "middle", "font-size": 11, "class": "amb" }, "accuracy usually drops in this zone", "is zone mein accuracy aksar girti hai");
+    var pct = E(s, "text", { x: X + W / 2, y: Y + 37, "text-anchor": "middle", "font-size": 16, "font-weight": 700, "class": "mono" }, "");
+    var err = E(s, "g", { "class": "anim" });
+    E(err, "rect", { x: 470, y: 8, width: 280, height: 34, rx: 6, style: "fill:var(--c6);opacity:.15;stroke:var(--c6)" });
+    BI(err, { x: 610, y: 30, "text-anchor": "middle", "font-size": 12, "font-weight": 600 }, "Error: prompt is too long", "Error: prompt bahut lamba hai");
+    var cmp = E(s, "g", { "class": "anim" });
+    BI(cmp, { x: X, y: 205, "font-size": 12, "class": "sig" }, "Compaction: old turns → short summary (Chapter 8)", "Compaction: purane turns → chhota summary (Chapter 8)");
+    var levels = [0.12, 0.45, 0.82, 1.0, 0.3];
+    B.scene(document.getElementById("scB"), [
+      ["Start of a task: rules, tools and the question fill about 12% of the window.", "Kaam ki shuruaat: niyam, tools aur sawaal window ka lagbhag 12% bharte hain."],
+      ["Tool results pile up: files read, search results, logs. 45% full.", "Tool results jama hote hain: padhi files, search results, logs. 45% bhara."],
+      ["82% full. Haron still works, but it now misses details more often (the amber zone).", "82% bhara. Haron chal raha hai, par ab details zyaada miss karta hai (amber zone)."],
+      ["Overflow! The request no longer fits. The provider rejects it, or old content is silently cut.", "Overflow! Request ab fit nahi hoti. Provider reject karta hai, ya purana content chupchaap kat jaata hai."],
+      ["The harness compacts: old turns become a short summary, and work continues at 30%.", "Harness compact karta hai: purane turns chhota summary ban jaate hain, aur kaam 30% par chalta rehta hai."]
+    ], function (i) {
+      var v = levels[i];
+      fill.setAttribute("width", Math.min(v, 1) * W);
+      cls(fill, v >= 0.8 ? "box-amb" : "box-sig");
+      over.setAttribute("width", i === 3 ? 70 : 0);
+      over.style.opacity = i === 3 ? 0.8 : 0;
+      pct.textContent = i === 3 ? "110%" : Math.round(v * 100) + "%";
+      show(rot, i >= 2 && i <= 3); show(err, i === 3); show(cmp, i === 4);
+    });
+  })();
+
+  /* Scene C: language and tiers */
+  (function () {
+    var s = document.getElementById("svC");
+    var en = E(s, "g", { "class": "anim" }), hi = E(s, "g", { "class": "anim" });
+    BI(en, { x: 10, y: 38, "font-size": 13, "font-weight": 600 }, "English", "English");
+    BI(hi, { x: 10, y: 88, "font-size": 13, "font-weight": 600 }, "Hindi", "Hindi");
+    for (var a = 0; a < 20; a++) E(en, "rect", { x: 110 + a * 12, y: 24, width: 11, height: 20, rx: 2, "class": "box-sig" });
+    for (var b = 0; b < 38; b++) E(hi, "rect", { x: 110 + b * 12, y: 74, width: 11, height: 20, rx: 2, "class": "box-amb" });
+    E(en, "text", { x: 110 + 20 * 12 + 8, y: 40, "font-size": 13, "class": "mono" }, "20 tokens");
+    E(hi, "text", { x: 110 + 38 * 12 + 8, y: 90, "font-size": 13, "class": "mono" }, "38 tokens (1.9×)");
+    var bills = E(s, "g", { "class": "anim" });
+    BI(bills, { x: 10, y: 140, "font-size": 12, "class": "mono muted" }, "support bot · 20,000 chats/month · 6 turns each", "support bot · 20,000 chats/mahina · har chat 6 turns");
+    var tiers = [["Haiku 5.5", 51, "box-sig"], ["Sonnet 5.5", 1020, "box-amb"], ["Opus 5.5", 2040, "box-plm"]];
+    var bars = [];
+    tiers.forEach(function (t, j) {
+      var y = 158 + j * 42;
+      E(bills, "text", { x: 10, y: y + 22, "font-size": 13, "font-weight": 600 }, t[0]);
+      var r = E(bills, "rect", { x: 110, y: y, width: 0, height: 30, rx: 3, "class": t[2] });
+      r.style.transition = "width 1s cubic-bezier(.2,.8,.2,1)";
+      bars.push([r, Math.max(4, t[1] / 2040 * 470)]);
+      E(bills, "text", { x: 110 + Math.max(4, t[1] / 2040 * 470) + 10, y: y + 21, "font-size": 13, "class": "mono" }, "$" + t[1].toLocaleString("en-US") + "/mo");
+    });
+    B.scene(document.getElementById("scC"), [
+      ["“Hello, my order has not arrived yet…” in English: about 20 tokens.", "“Hello, my order has not arrived yet…” English mein: lagbhag 20 tokens."],
+      ["The same message in Hindi: about 38 tokens. Same meaning, almost double the tokens, so double the cost.", "Wahi message Hindi mein: lagbhag 38 tokens. Same matlab, lagbhag double tokens, toh double kharch."],
+      ["Same workload on three tiers: from $51 to $2,040 a month, a 40× range. Choosing the right tier per task is a big lever (Chapter 11).", "Same kaam teen tiers par: $51 se $2,040 mahina, 40 guna farak. Har kaam ke liye sahi tier chunna bada lever hai (Chapter 11)."]
+    ], function (i) {
+      show(en, true); show(hi, i >= 1); show(bills, i >= 2);
+      bars.forEach(function (b) { b[0].setAttribute("width", i >= 2 ? b[1] : 0); });
+    });
+  })();
+})();
+</script>
+</body>
+</html>

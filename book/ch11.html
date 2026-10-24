@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 11 · The Company Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part III · Chapter 11</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 11 · Haron goes to a big company</span><span class="l-hi">Chapter 11 · Haron badi company mein</span></div>
+  <h1><span class="l-en">The Company Blueprint</span><span class="l-hi">Company ka Naksha</span></h1>
+  <div class="story">
+    <p class="l-en">Haron has a new employer: <strong>Acme Global</strong>, an IT services company with 3,00,000 employees and hundreds of clients, among them a bank in Mumbai, a retailer in Germany and its own HR department. Each client has different rules: which models are allowed, where data may travel, how much may be spent. If every team builds its own harness, nobody can see the total spend and nobody can prove the rules are followed. So Acme builds <strong>one front door</strong> for all AI traffic: the <strong>AI gateway</strong>.</p>
+    <p class="l-hi">Haron ko naya employer mila: <strong>Acme Global</strong>, ek IT services company jisme 3,00,000 employees aur saikadon clients hain, jinme Mumbai ka ek bank, Germany ka ek retailer aur company ka apna HR department hai. Har client ke alag niyam hain: kaunse models allowed hain, data kahan ja sakta hai, kitna kharch ho sakta hai. Agar har team apna harness banaaye, toh na koi kul kharch dekh paayega na koi saabit kar paayega ki niyam maane gaye. Isliye Acme saare AI traffic ke liye <strong>ek main darwaaza</strong> banati hai: <strong>AI gateway</strong>.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The eight stations of a gateway</span><span class="l-hi">Gateway ke aath stations</span></li>
+    <li><b>2</b><span class="l-en">Routing each request to the right model tier</span><span class="l-hi">Har request ko sahi model tier par bhejna</span></li>
+    <li><b>3</b><span class="l-en">The full multi-tenant architecture</span><span class="l-hi">Poora multi-tenant architecture</span></li>
+    <li><b>4</b><span class="l-en">Build vs buy</span><span class="l-hi">Banaayein ya khareedein</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Eight stations at the front door</span><span class="l-hi">Main darwaaze ke aath stations</span></h2></div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 280" width="760" role="img" aria-label="A request passes eight gateway stations"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">The right model for the job</span><span class="l-hi">Kaam ke liye sahi model</span></h2></div>
+<div class="story">
+  <p class="l-en">Sending every request to the biggest model is like sending every parcel by air: fast and great, but ruinously expensive. The <strong>router</strong> looks at each request, estimates how hard it is, and picks the cheapest tier that the tenant allows and that can do the job.</p>
+  <p class="l-hi">Har request sabse bade model ko bhejna har parcel hawai jahaz se bhejne jaisa hai: tez aur badhiya, par bahut mehenga. <strong>Router</strong> har request dekhta hai, andaaza lagata hai kitni mushkil hai, aur sabse sasta tier chunta hai jo tenant allow kare aur kaam kar sake.</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 280" width="760" role="img" aria-label="Requests scored by difficulty are routed to small, medium, large or on-premises models"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">The whole building</span><span class="l-hi">Poori building</span></h2></div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 340" width="760" role="img" aria-label="Multi-tenant enterprise AI platform architecture"></svg></div></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Routing changes behaviour, not just cost</span><span class="l-hi">Routing behaviour bhi badalta hai, sirf kharch nahi</span></h4>
+  <p class="l-en">A smaller model may follow your format less reliably, refuse more, or call tools differently. A fallback from one provider to another mid-conversation can change tone and even answers. So every route (tenant × task × model) needs its own eval results (Chapter 16), and fallbacks should go to a model that has passed the same evals.</p>
+  <p class="l-hi">Chhota model aapka format kam bharose se follow kar sakta hai, zyaada mana kar sakta hai, ya tools alag tarah call kar sakta hai. Baatcheet ke beech ek provider se doosre par fallback tone aur jawab bhi badal sakta hai. Isliye har route (tenant × kaam × model) ke apne eval results chahiye (Chapter 16), aur fallback usi model par jaaye jo same evals pass kar chuka ho.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">Build or buy the gateway?</span><span class="l-hi">Gateway banaayein ya khareedein?</span></h4>
+  <p class="l-en">You don't have to write it all. Open-source proxies (for example LiteLLM), commercial AI gateways (Portkey, Kong AI Gateway and others) and cloud platforms (Amazon Bedrock, Azure AI Foundry, Google Vertex AI) cover routing, keys, rate limits and logging. Companies usually <strong>buy the plumbing and build the policy</strong>: their own tenant rules, PII handling for local laws, chargeback and evals. Whatever you choose, keep the interface your teams code against stable, so the product underneath can change.</p>
+  <p class="l-hi">Sab kuch khud likhna zaroori nahi. Open-source proxies (jaise LiteLLM), commercial AI gateways (Portkey, Kong AI Gateway aur doosre) aur cloud platforms (Amazon Bedrock, Azure AI Foundry, Google Vertex AI) routing, keys, rate limits aur logging sambhaal lete hain. Companies aksar <strong>plumbing khareedti hain aur policy khud banaati hain</strong>: apne tenant niyam, local kanoon ke hisaab se PII handling, chargeback aur evals. Jo bhi chuno, teams jis interface par code karti hain use sthir rakho, taaki neeche ka product badal sake.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: three tenants through one gateway</span><span class="l-hi">Coders ke liye: ek gateway se teen tenants</span><span class="lvl">code/harness/gateway.py</span></summary>
+  <div class="inner">
+<pre>gw = Gateway(
+    providers={"cloud": cloud_provider, "onprem": vllm_provider},
+    model_provider={"mock-small": "cloud", "mock-medium": "cloud", "mock-large": "cloud",
+                    "vllm/onprem-70b": "onprem"},
+    policies={
+        "retail": TenantPolicy("retail", region="eu", allowed_models={"mock-small", "mock-medium", "mock-large"}),
+        "bank":   TenantPolicy("bank", region="in", allowed_models={"vllm/onprem-70b"}, pii_mode="block"),
+        "hr":     TenantPolicy("hr", region="in", allowed_models={"mock-small", "mock-medium"}),
+    },
+    router=Router([Tier("mock-small", 0.35), Tier("mock-medium", 0.65), Tier("mock-large", 1.0),
+                   Tier("vllm/onprem-70b", 1.0)], fallbacks={"mock-small": ["mock-medium"], ...}),
+)</pre>
+<pre>$ python code/ch11/gateway_demo.py
+hr      OK      model=mock-medium      Classify this leave request: sick leave, 2 days
+hr      OK      model=mock-medium      Analyze why attrition rose and design a multi-st
+retail  OK      model=mock-large       Design and debug the architecture; analyze why c
+bank    OK      model=vllm/onprem-70b  Summarise this loan file
+bank    BLOCKED policy PII present (PAN) and tenant blocks PII
+
+Note: the first cloud call failed and fell back to the next model in its chain.</pre>
+    <p class="l-en">Line 1: the router chose <code>mock-small</code>, the provider failed, and the fallback chain served it on <code>mock-medium</code>. Line 2: the task was hard, but HR may not use the large tier, so it was capped at medium.</p>
+    <p class="l-hi">Line 1: router ne <code>mock-small</code> chuna, provider fail hua, aur fallback chain ne <code>mock-medium</code> par chalaaya. Line 2: kaam mushkil tha, par HR large tier use nahi kar sakta, isliye medium par roka.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>In a big company, all AI traffic goes through one front door.</li><li>The door checks identity, policy, budget and rate, then routes, falls back if needed, meters and records.</li><li>Pick the cheapest model that can do the job and that the client allows.</li><li>Buy the plumbing; build your own rules.</li></ol>
+  <ol class="l-hi"><li>Badi company mein saara AI traffic ek main darwaaze se jaata hai.</li><li>Darwaaza pehchaan, policy, budget aur rate check karta hai, phir route karta hai, zaroorat ho toh fallback, naapta hai aur record karta hai.</li><li>Sabse sasta model chuno jo kaam kar sake aur client allow kare.</li><li>Plumbing khareedo; apne niyam khud banao.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add a fourth tenant to <code>gateway_demo.py</code>: a German insurer that may only use EU-region models and blocks PII. Which requests pass? <span class="level">coder</span></p><p class="l-hi"><code>gateway_demo.py</code> mein chautha tenant jodo: German insurer jo sirf EU-region models use kar sakta hai aur PII block karta hai. Kaunsi requests pass hoti hain? <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Draw your company's gateway on one page: tenants, stations, model pool, stores. Mark which parts you would buy. <span class="level">enterprise</span></p><p class="l-hi">Apni company ka gateway ek page par banao: tenants, stations, model pool, stores. Kaunse hisse khareedoge, mark karo. <span class="level">enterprise</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Chen, Zaharia &amp; Zou (2023). <em>FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance.</em></li>
+  <li>Ong et al. (2024). <em>RouteLLM: Learning to Route LLMs with Preference Data.</em></li>
+  <li>OpenTelemetry. <em>Semantic conventions for generative AI.</em></li>
+</ol>
+
+<nav class="pager"><a href="ch10.html">← Ch 10</a><a href="ch12.html"><span class="l-en">Ch 12 · Rules &amp; Regulations →</span><span class="l-hi">Ch 12 · Niyam aur Kaanoon →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls;
+
+  /* Scene A: eight stations */
+  (function () {
+    var s = document.getElementById("svA");
+    var st = [
+      ["identity", "pehchaan", "who? which tenant, team, user", "kaun? kaunsa tenant, team, user"],
+      ["policy", "policy", "model allowed? region? PII?", "model allowed? region? PII?"],
+      ["route", "route", "pick the cheapest capable tier", "sabse sasta kaabil tier chuno"],
+      ["budget", "budget", "is any wallet over its limit?", "koi wallet limit ke paar?"],
+      ["rate", "rate", "too many requests per second?", "second mein bahut requests?"],
+      ["call", "call", "provider call, fallback on failure", "provider call, fail par fallback"],
+      ["meter", "meter", "tokens and cost to the ledger", "tokens aur kharch ledger mein"],
+      ["audit", "audit", "who, what, when, which model", "kaun, kya, kab, kaunsa model"]
+    ];
+    var boxes = [];
+    st.forEach(function (x, i) {
+      var cx = 20 + i * 92;
+      var g = B.box(s, { x: cx, y: 70, w: 80, h: 50, cls: "box", fs: 12, en: x[0], hi: x[1] });
+      boxes.push(g);
+      if (i < 7) B.arrow(s, s, cx + 80, 95, cx + 92, 95, "");
+    });
+    var note = E(s, "g", { "class": "anim" });
+    var noteT = BI(note, { x: 380, y: 170, "text-anchor": "middle", "font-size": 15, "font-weight": 600 }, "", "");
+    var dot = E(s, "circle", { cx: 0, cy: 0, r: 9, "class": "amb anim" });
+    var blocked = E(s, "g", { "class": "anim" });
+    BI(blocked, { x: 380, y: 220, "text-anchor": "middle", "font-size": 12, "class": "muted" }, "any station can stop the request with a clear reason (Blocked: stage + reason)", "koi bhi station saaf wajah ke saath request rok sakta hai (Blocked: stage + wajah)");
+    var caps = st.map(function (x, i) { return ["Station " + (i + 1) + ", <strong>" + x[0] + "</strong>: " + x[2] + ".", "Station " + (i + 1) + ", <strong>" + x[1] + "</strong>: " + x[3] + "."]; });
+    B.scene(document.getElementById("scA"), caps, function (i) {
+      boxes.forEach(function (g, k) { cls(g.firstChild, k === i ? "box-amb" : (k < i ? "box-sig" : "box")); });
+      dot.style.transform = "translate(" + (60 + i * 92) + "px,58px)";
+      noteT.childNodes[0].textContent = st[i][2]; noteT.childNodes[1].textContent = st[i][3];
+      show(note, true); show(blocked, i >= 3);
+    }, { delay: 2300 });
+  })();
+
+  /* Scene B: router */
+  (function () {
+    var s = document.getElementById("svB");
+    var lanes = [["small", "fast, cheap", "box-sig"], ["medium", "balanced", "box-amb"], ["large", "most capable", "box-plm"], ["on-prem", "data stays in India", "box"]];
+    lanes.forEach(function (l, i) {
+      var y = 30 + i * 60;
+      E(s, "rect", { x: 520, y: y, width: 230, height: 46, rx: 6, "class": l[2] });
+      E(s, "text", { x: 536, y: y + 21, "font-size": 13, "font-weight": 700, "class": "mono" }, l[0]);
+      E(s, "text", { x: 536, y: y + 38, "font-size": 11, "class": "muted" }, l[1]);
+    });
+    var reqs = [
+      ["HR: “Classify this leave request”", "HR: “Is leave request ko classify karo”", "score 0.00", 0, ""],
+      ["Retail: “Design and debug… why checkout fails”", "Retail: “Design aur debug… checkout kyun fail”", "score 0.70", 2, ""],
+      ["HR: “Analyze why attrition rose, design a plan”", "HR: “Attrition kyun badha, analyze, plan design”", "score 0.70, capped", 1, "HR may not use large"],
+      ["Bank: “Summarise this loan file”", "Bank: “Is loan file ka summary”", "policy", 3, "bank: on-prem only"]
+    ];
+    var items = reqs.map(function (r, i) {
+      var g = E(s, "g", { "class": "anim" });
+      E(g, "rect", { x: 10, y: 30 + i * 60, width: 360, height: 46, rx: 6, "class": "box" });
+      BI(g, { x: 22, y: 30 + i * 60 + 20, "font-size": 12 }, r[0], r[1]);
+      E(g, "text", { x: 22, y: 30 + i * 60 + 38, "font-size": 11, "class": "mono muted" }, r[2] + (r[4] ? " · " + r[4] : ""));
+      var a = B.arrow(s, g, 372, 53 + i * 60, 516, 53 + r[3] * 60, r[3] === 3 ? "" : ["sig", "amb", "plm"][r[3]]);
+      return g;
+    });
+    B.scene(document.getElementById("scB"), [
+      ["An easy classification scores 0.00 and goes to the <strong>small</strong> tier: about 40× cheaper than large.", "Aasaan classification ka score 0.00, <strong>small</strong> tier par jaata hai: large se lagbhag 40× sasta."],
+      ["A hard design-and-debug task scores 0.70 and goes to <strong>large</strong>.", "Mushkil design-and-debug kaam ka score 0.70, <strong>large</strong> par jaata hai."],
+      ["Another hard task, but HR's policy doesn't allow large, so it is capped at <strong>medium</strong>. Policy beats the router.", "Ek aur mushkil kaam, par HR ki policy large allow nahi karti, isliye <strong>medium</strong> par roka. Policy router se upar hai."],
+      ["The bank's policy allows only the <strong>on-prem</strong> model, whatever the difficulty.", "Bank ki policy sirf <strong>on-prem</strong> model allow karti hai, kaam chahe jitna mushkil ho."]
+    ], function (i) { items.forEach(function (g, k) { show(g, k <= i); g.style.opacity = k === i ? 1 : (k < i ? 0.5 : 0); }); });
+  })();
+
+  /* Scene C: architecture */
+  (function () {
+    var s = document.getElementById("svC");
+    var ten = [["Bank (India)", "box"], ["Retailer (EU)", "box"], ["Internal HR", "box"], ["CI / evals", "box"]].map(function (t, i) {
+      return B.box(s, { x: 10, y: 20 + i * 62, w: 150, h: 46, cls: t[1], fs: 12, en: t[0], hi: t[0] });
+    });
+    var gw = E(s, "g", { "class": "anim" });
+    E(gw, "rect", { x: 220, y: 20, width: 230, height: 232, rx: 10, "class": "box-plm", "stroke-width": 2 });
+    BI(gw, { x: 335, y: 46, "text-anchor": "middle", "font-size": 14, "font-weight": 700 }, "AI Gateway", "AI Gateway");
+    ["identity · policy", "router · fallback", "budget · rate limit", "meter · audit"].forEach(function (l, i) {
+      E(gw, "rect", { x: 236, y: 62 + i * 46, width: 198, height: 36, rx: 5, "class": "box" });
+      E(gw, "text", { x: 335, y: 85 + i * 46, "text-anchor": "middle", "font-size": 12, "class": "mono" }, l);
+    });
+    var tenArrows = E(s, "g", { "class": "anim" });
+    [0, 1, 2, 3].forEach(function (i) { B.arrow(s, tenArrows, 162, 43 + i * 62, 216, 136, ""); });
+    var pool = E(s, "g", { "class": "anim" });
+    BI(pool, { x: 520, y: 22, "font-size": 12, "font-weight": 700 }, "Model pool", "Model pool");
+    [["Claude (us · eu · in)", "box-sig"], ["GPT (us · eu)", "box-sig"], ["Gemini (us · eu)", "box-sig"], ["vLLM Llama 70B (on-prem, in)", "box-amb"]].forEach(function (m, i) {
+      E(pool, "rect", { x: 510, y: 32 + i * 52, width: 240, height: 40, rx: 6, "class": m[1] });
+      E(pool, "text", { x: 522, y: 57 + i * 52, "font-size": 12 }, m[0]);
+      B.arrow(s, pool, 452, 136, 506, 52 + i * 52, "");
+    });
+    var stores = E(s, "g", { "class": "anim" });
+    [["Policy store", "versioned rules"], ["Ledger", "spend by scope"], ["Audit store", "who, what, when"], ["Telemetry", "traces, evals"]].forEach(function (st, i) {
+      var x = 120 + i * 160;
+      E(stores, "rect", { x: x, y: 278, width: 145, height: 50, rx: 6, "class": "box" });
+      E(stores, "text", { x: x + 72, y: 300, "text-anchor": "middle", "font-size": 12, "font-weight": 700 }, st[0]);
+      E(stores, "text", { x: x + 72, y: 317, "text-anchor": "middle", "font-size": 11, "class": "muted" }, st[1]);
+      E(stores, "line", { x1: x + 72, y1: 276, x2: 335, y2: 254, "class": "line dash", "stroke-width": 1 });
+    });
+    B.scene(document.getElementById("scC"), [
+      ["Many tenants: client projects and internal teams. CI and evals get their own tenant so tests never eat customer quota.", "Kai tenants: client projects aur andaruni teams. CI aur evals ka apna tenant, taaki tests customers ka quota na khaayein."],
+      ["Every request goes through the one gateway.", "Har request ek hi gateway se jaati hai."],
+      ["Behind it, a pool of models in different regions, including a self-hosted model for data that must stay in India.", "Uske peeche alag regions mein models ka pool, jisme India mein rehne wale data ke liye self-hosted model bhi."],
+      ["Four shared stores make it governable: policies, the spend ledger, the audit log and telemetry.", "Chaar shared stores ise sambhaalne laayak banaate hain: policies, kharch ka ledger, audit log aur telemetry."]
+    ], function (i) {
+      ten.forEach(function (t) { show(t, true); }); show(tenArrows, i >= 1); show(gw, i >= 1); show(pool, i >= 2); show(stores, i >= 3);
+    });
+  })();
+})();
+</script>
+</body>
+</html>

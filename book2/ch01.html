@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 1 · What an AI Engineer Does</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 01</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 01 · Start here</span><span class="l-hi">Chapter 01 · Shuruaat</span></div>
+  <h1><span class="l-en">What an AI Engineer Does</span><span class="l-hi">AI Engineer Kya Karta Hai</span></h1>
+  <div class="story">
+    <p class="l-en">You've used ChatGPT, Claude or Gemini. Maybe you've even pasted their answers into your work. Now you want to <strong>build</strong> with them: a support bot for your company, an app that reads invoices, an agent that books meetings. The person who does that is an <strong>AI engineer</strong>. Your mentor for this book is Haron, the robot you may know from Book 1. Haron knows how models think; you'll learn how to make them useful.</p>
+    <p class="l-hi">Aapne ChatGPT, Claude ya Gemini use kiya hai. Shayad unke jawab apne kaam mein paste bhi kiye hain. Ab aap unke saath kuch <strong>banana</strong> chahte ho: company ke liye support bot, invoices padhne wali app, meetings book karne wala agent. Yeh kaam karne wala insaan hai <strong>AI engineer</strong>. Is book mein aapka mentor Haron hai, woh robot jise aap Book 1 se jaante honge. Haron jaanta hai models kaise sochte hain; aap seekhoge unhe kaam ka kaise banaana hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">What an AI engineer builds, and how it differs from ML roles</span><span class="l-hi">AI engineer kya banata hai, aur ML roles se kaise alag hai</span></li>
+    <li><b>2</b><span class="l-en">The life of one AI feature, from idea to improvement</span><span class="l-hi">Ek AI feature ki zindagi, idea se sudhaar tak</span></li>
+    <li><b>3</b><span class="l-en">The skills map, and where each chapter fits</span><span class="l-hi">Skills ka naksha, aur har chapter kahan fit hota hai</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Three jobs that sound alike</span><span class="l-hi">Teen kaam jo milte-julte lagte hain</span></h2></div>
+<div class="story">
+  <p class="l-en">Think of cars. One person designs engines, one builds the factory that makes them, and one builds a taxi service that uses the cars. All three need to understand cars, but their days look very different. AI works the same way.</p>
+  <p class="l-hi">Gaadiyon ka socho. Ek insaan engine design karta hai, ek unhe banaane wali factory banata hai, aur ek gaadiyon se taxi service banata hai. Teeno ko gaadi samajhni padti hai, par unke din bilkul alag dikhte hain. AI mein bhi aisa hi hai.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">An AI engineer mostly <strong>doesn't train models</strong>. You take a model someone else trained, and build everything around it: the instructions, the knowledge it reads, the tools it uses, the checks, the cost controls and the user experience. Good Python and good judgement matter more than advanced maths.</p>
+  <p class="l-hi">AI engineer zyaadatar <strong>models train nahi karta</strong>. Aap kisi aur ka train kiya model lete ho, aur uske aas-paas sab kuch banaate ho: instructions, jo gyaan woh padhe, jo tools woh use kare, checks, kharch ka control aur user experience. Advanced maths se zyaada achha Python aur achhi samajh kaam aati hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">The life of one AI feature</span><span class="l-hi">Ek AI feature ki zindagi</span></h2></div>
+<div class="story">
+  <p class="l-en">Your manager says: "Customers keep asking about their orders. Can AI answer them?" Here is the path that feature will travel. Each box is a chapter (or several) of this book.</p>
+  <p class="l-hi">Aapka manager kehta hai: "Customers baar-baar orders ke baare mein poochte hain. Kya AI jawab de sakta hai?" Yeh woh raasta hai jis par yeh feature chalega. Har box is book ka ek (ya kai) chapter hai.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">The loop never ends, and that's the job</span><span class="l-hi">Yeh loop kabhi khatam nahi hota, aur yahi kaam hai</span></h4>
+  <p class="l-en">The last box points back to the start. Real users ask things you never imagined, models get updated, costs change. An AI engineer's week is mostly reading failures, adding them to the test set, and improving the prompt, the data or the tools, then proving the change helped.</p>
+  <p class="l-hi">Aakhri box wapas shuruaat ki taraf jaata hai. Asli users aisi baatein poochte hain jo aapne socha bhi nahi, models update hote hain, kharch badalta hai. AI engineer ka hafta zyaadatar failures padhne, unhe test set mein jodne, aur prompt, data ya tools sudhaarne mein jaata hai, phir saabit karne mein ki badlaav ne madad ki.</p>
+</div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Your skills map</span><span class="l-hi">Aapka skills naksha</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Demos are easy; reliability is the job</span><span class="l-hi">Demo aasaan hai; bharosemandi asli kaam hai</span></h4>
+  <p class="l-en">A model can do something impressive in a five-minute demo and fail one time in ten in real use. It may make up facts, change its answer when pushed, or go off track on long tasks. Most of this book is about the gap between "it worked once" and "it works for 10,000 customers".</p>
+  <p class="l-hi">Model paanch minute ke demo mein kamaal kar sakta hai aur asli use mein das mein se ek baar fail ho sakta hai. Woh facts bana sakta hai, dabaav par jawab badal sakta hai, ya lambe kaam mein bhatak sakta hai. Yeh book zyaadatar "ek baar chal gaya" aur "10,000 customers ke liye chalta hai" ke beech ke farak ke baare mein hai.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Job titles vary; the work doesn't</span><span class="l-hi">Job titles alag, kaam wahi</span></h4>
+  <p class="l-en">You'll see "AI engineer", "LLM engineer", "GenAI developer", "applied AI engineer" and sometimes "prompt engineer". The interviews test the same things: can you build a working RAG or agent app, explain why it fails, measure it, and keep it cheap and safe. Chapter 34 turns this book into a portfolio that proves it.</p>
+  <p class="l-hi">Aapko "AI engineer", "LLM engineer", "GenAI developer", "applied AI engineer" aur kabhi "prompt engineer" dikhega. Interviews same cheezein test karte hain: kya aap chalne wali RAG ya agent app bana sakte ho, samjha sakte ho ki woh kyun fail hoti hai, use naap sakte ho, aur sasti aur surakshit rakh sakte ho. Chapter 34 is book ko aisa portfolio banata hai jo yeh saabit kare.</p>
+</div>
+
+<h2><span class="l-en">What you need before you start</span><span class="l-hi">Shuru karne se pehle kya chahiye</span></h2>
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Need</span><span class="l-hi">Zaroorat</span></th><th><span class="l-en">How much</span><span class="l-hi">Kitna</span></th></tr></thead>
+<tbody>
+<tr><td>Python</td><td><span class="l-en">Functions, lists, dicts, reading JSON, calling an HTTP API. You can learn the rest along the way.</span><span class="l-hi">Functions, lists, dicts, JSON padhna, HTTP API call karna. Baaki raaste mein seekh loge.</span></td></tr>
+<tr><td>Maths</td><td><span class="l-en">School-level. Deep-dive boxes have more, but they're optional.</span><span class="l-hi">School jitna. Gehraai-mein boxes mein zyaada hai, par woh optional hain.</span></td></tr>
+<tr><td><span class="l-en">A laptop</span><span class="l-hi">Laptop</span></td><td><span class="l-en">Any laptop with 8 GB RAM can run small models (Chapter 4). 16 GB is comfortable.</span><span class="l-hi">8 GB RAM wala koi bhi laptop chhote models chala sakta hai (Chapter 4). 16 GB aaraam se.</span></td></tr>
+<tr><td><span class="l-en">Money</span><span class="l-hi">Paisa</span></td><td><span class="l-en">Zero to start. Every lab in this book runs on free local models; paid APIs are optional.</span><span class="l-hi">Shuru karne ke liye zero. Is book ka har lab free local models par chalta hai; paid APIs optional hain.</span></td></tr>
+</tbody></table></div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>An AI engineer builds products with models; others build the models.</li><li>Every AI feature goes around a loop: prompt, knowledge, tools, test, ship, watch, improve.</li><li>The skills stack from basics up to production and product sense.</li><li>You can start today with a laptop and no money.</li></ol>
+  <ol class="l-hi"><li>AI engineer models se products banata hai; models koi aur banata hai.</li><li>Har AI feature ek loop mein ghoomta hai: prompt, gyaan, tools, test, ship, nazar, sudhaar.</li><li>Skills basics se production aur product samajh tak upar jaati hain.</li><li>Aap aaj hi laptop ke saath, bina paise ke shuru kar sakte ho.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Find three AI engineer job posts. List every skill they ask for, and mark which chapter of this book covers it. <span class="level">easy</span></p><p class="l-hi">AI engineer ki teen job posts dhoondho. Unki maangi har skill likho, aur mark karo ki is book ka kaunsa chapter use cover karta hai. <span class="level">easy</span></p></div>
+  <div class="exercise"><p class="l-en">Pick one boring task at your work or college. Draw its "life of a feature" loop the way scene 2 does. <span class="level">easy</span></p><p class="l-hi">Apne kaam ya college ka ek boring kaam chuno. Scene 2 ki tarah uska "feature ki zindagi" wala loop banao. <span class="level">easy</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>swyx (2023). <em>The Rise of the AI Engineer.</em> Latent Space.</li>
+  <li>Huyen, C. (2025). <em>AI Engineering: Building Applications with Foundation Models.</em> O'Reilly.</li>
+  <li>Anthropic (2024). <em>Building effective agents.</em></li>
+</ol>
+<nav class="pager"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><a href="ch02.html"><span class="l-en">Ch 2 · LLMs in 15 Minutes →</span><span class="l-hi">Ch 2 · 15 Minute mein LLM →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.columns("scA", [
+    { en: "ML Researcher", hi: "ML Researcher", cls: "box", items: [
+      { en: "Invents new model designs and training methods", hi: "Naye model designs aur training methods banata hai", step: 0 },
+      { en: "Heavy maths, papers, big GPU clusters", hi: "Bhaari maths, papers, bade GPU clusters", step: 0 },
+      { en: "Car analogy: designs the engine", hi: "Gaadi ki misaal: engine design karta hai", cls: "box-plm", step: 0 } ] },
+    { en: "ML Engineer", hi: "ML Engineer", cls: "box", step: 1, items: [
+      { en: "Trains, fine-tunes and serves models at scale", hi: "Models ko bade paimane par train, fine-tune aur serve karta hai", step: 1 },
+      { en: "Data pipelines, GPUs, training infrastructure", hi: "Data pipelines, GPUs, training infrastructure", step: 1 },
+      { en: "Car analogy: runs the factory", hi: "Gaadi ki misaal: factory chalaata hai", cls: "box-plm", step: 1 } ] },
+    { en: "AI Engineer", hi: "AI Engineer", cls: "box-sig", step: 2, items: [
+      { en: "Builds products on top of existing models", hi: "Maujooda models ke upar products banata hai", step: 2 },
+      { en: "Prompts, RAG, tools, agents, evals, cost, UX", hi: "Prompts, RAG, tools, agents, evals, kharch, UX", step: 2 },
+      { en: "Car analogy: runs the taxi service", hi: "Gaadi ki misaal: taxi service chalaata hai", cls: "box-plm", step: 2 } ] }
+  ], [
+    ["The <strong>ML researcher</strong> invents how models work. Few companies need many of them.", "<strong>ML researcher</strong> models ke kaam karne ka tareeka khojta hai. Kam companies ko inki zyaada zaroorat hoti hai."],
+    ["The <strong>ML engineer</strong> trains and serves models: data, GPUs, pipelines.", "<strong>ML engineer</strong> models train aur serve karta hai: data, GPUs, pipelines."],
+    ["The <strong>AI engineer</strong> takes a ready model and builds something people use. This is the fastest-growing of the three, and the one this book teaches.", "<strong>AI engineer</strong> taiyaar model lekar aisi cheez banata hai jo log use karein. Teeno mein yeh sabse tezi se badhne wala role hai, aur yahi yeh book sikhaati hai."]
+  ]);
+
+  B.flow("scB", [
+    { en: "Idea", hi: "Idea", sen: "the problem (Ch 1)", shi: "samasya (Ch 1)" },
+    { en: "Pick a model", hi: "Model chuno", sen: "Ch 3-5", shi: "Ch 3-5" },
+    { en: "Prompt it", hi: "Prompt karo", sen: "Ch 6-12", shi: "Ch 6-12" },
+    { en: "Give it knowledge", hi: "Gyaan do", sen: "RAG, memory · Ch 13-15", shi: "RAG, memory · Ch 13-15" },
+    { en: "Give it tools", hi: "Tools do", sen: "agents, MCP · Ch 16-22", shi: "agents, MCP · Ch 16-22" },
+    { en: "Test it", hi: "Test karo", sen: "evals, safety · Ch 26-27", shi: "evals, safety · Ch 26-27" },
+    { en: "Ship it", hi: "Ship karo", sen: "UI, deploy, cost · Ch 29-31", shi: "UI, deploy, kharch · Ch 29-31" },
+    { en: "Watch & improve", hi: "Nazar aur sudhaar", sen: "LLMOps · Ch 28 → back to start", shi: "LLMOps · Ch 28 → wapas shuru" }
+  ], [
+    ["<strong>Idea</strong>: “Answer order questions automatically.” First check that AI is the right tool at all.", "<strong>Idea</strong>: “Order ke sawaalon ka jawab apne aap.” Pehle check karo ki AI sahi tool hai bhi ya nahi."],
+    ["<strong>Pick a model</strong>: closed or open, big or small, cloud or laptop.", "<strong>Model chuno</strong>: closed ya open, bada ya chhota, cloud ya laptop."],
+    ["<strong>Prompt it</strong>: write clear instructions and see what the model does.", "<strong>Prompt karo</strong>: saaf instructions likho aur dekho model kya karta hai."],
+    ["<strong>Give it knowledge</strong>: your policies and FAQs, fetched when needed (RAG).", "<strong>Gyaan do</strong>: aapki policies aur FAQs, zaroorat par laaye gaye (RAG)."],
+    ["<strong>Give it tools</strong>: let it look up the actual order through an API.", "<strong>Tools do</strong>: use API se asli order dekhne do."],
+    ["<strong>Test it</strong>: 200 real questions, scored automatically, plus attack tests.", "<strong>Test karo</strong>: 200 asli sawaal, apne aap score, aur hamle wale tests."],
+    ["<strong>Ship it</strong>: a chat UI, a backend, limits on cost.", "<strong>Ship karo</strong>: chat UI, backend, kharch par limits."],
+    ["<strong>Watch and improve</strong>: read failures, fix, re-test, and go around again.", "<strong>Nazar aur sudhaar</strong>: failures padho, theek karo, dobara test, aur phir se chakkar."]
+  ], { perRow: 4, delay: 2400 });
+
+  B.stack("scC", [
+    { en: "Foundations", hi: "Neev", sen: "Python, APIs, JSON, Git, the command line", shi: "Python, APIs, JSON, Git, command line", cls: "box" },
+    { en: "Model literacy", hi: "Model ki samajh", sen: "tokens, context, limits, which model when (Ch 2-5)", shi: "tokens, context, limits, kab kaunsa model (Ch 2-5)", cls: "box-sig" },
+    { en: "Talking to models", hi: "Model se baat", sen: "prompting, structured output, reasoning, context (Ch 6-12)", shi: "prompting, structured output, reasoning, context (Ch 6-12)", cls: "box-sig" },
+    { en: "Building blocks", hi: "Building blocks", sen: "RAG, memory, tools, MCP, skills, agents (Ch 13-22)", shi: "RAG, memory, tools, MCP, skills, agents (Ch 13-22)", cls: "box-amb" },
+    { en: "Changing models", hi: "Model badalna", sen: "fine-tuning, small models, synthetic data (Ch 23-25)", shi: "fine-tuning, chhote models, synthetic data (Ch 23-25)", cls: "box-amb" },
+    { en: "Production", hi: "Production", sen: "evals, security, LLMOps, cost, UI, deploy, law (Ch 26-32)", shi: "evals, security, LLMOps, kharch, UI, deploy, kanoon (Ch 26-32)", cls: "box-plm" },
+    { en: "Product sense", hi: "Product samajh", sen: "knowing what to build, and when not to use AI (Ch 33-34)", shi: "kya banana hai, aur kab AI use nahi karna (Ch 33-34)", cls: "box-plm" }
+  ], [
+    ["The base: ordinary programming skills. If you can call an API in Python, you're ready.", "Neev: aam programming skills. Agar aap Python se API call kar sakte ho, toh taiyaar ho."],
+    ["Know what a model is and isn't: tokens, context windows, costs, strengths.", "Jaano model kya hai aur kya nahi: tokens, context windows, kharch, taakat."],
+    ["Get good at giving instructions and getting reliable output.", "Instructions dene aur bharosemand output lene mein maahir bano."],
+    ["Combine the blocks: knowledge, tools and agents.", "Blocks jodo: gyaan, tools aur agents."],
+    ["Sometimes you change the model itself. Less often than people think.", "Kabhi-kabhi model ko hi badalte ho. Logon ki soch se kam baar."],
+    ["Make it reliable, safe, cheap and legal.", "Ise bharosemand, surakshit, sasta aur kanooni banao."],
+    ["And at the top, the rarest skill: choosing the right problem.", "Aur sabse upar, sabse durlabh skill: sahi samasya chunna."]
+  ], { delay: 2200 });
+})();
+</script>
+
+</body>
+</html>

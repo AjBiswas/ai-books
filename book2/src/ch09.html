@@ -1,0 +1,134 @@
+  <div class="story">
+    <p class="l-en">Some questions need a quick reply; some need real thought. A <strong>reasoning model</strong> is a model trained to think privately before it answers: to try an approach, notice a mistake, and try again. That thinking is extra tokens, so it costs time and money. Knowing when it's worth paying for is a core AI-engineering judgement.</p>
+    <p class="l-hi">Kuch sawaalon ko jaldi jawab chahiye; kuch ko asli soch. <strong>Reasoning model</strong> aisa model hai jo jawab se pehle chupchaap sochne ke liye train hua hai: ek tareeka try karna, galti pakadna, aur phir try karna. Woh sochna extra tokens hai, isliye samay aur paisa lagta hai. Kab iska paisa dena sahi hai, yeh AI engineering ka ek mukhya faisla hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">What "thinking" is and where it comes from</span><span class="l-hi">"Thinking" kya hai aur kahan se aata hai</span></li>
+    <li><b>2</b><span class="l-en">The effort dial</span><span class="l-hi">Effort ka dial</span></li>
+    <li><b>3</b><span class="l-en">When to use a reasoning model, and when not to</span><span class="l-hi">Reasoning model kab use karein, aur kab nahi</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Blurting vs thinking</span><span class="l-hi">Jaldi bol dena vs sochna</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">Reasoning models learned to think through <strong>reinforcement learning on checkable problems</strong> (maths with known answers, code with tests): long thoughts that reached right answers were rewarded. So they shine on problems with a right answer you can check, and help less on taste, tone or creativity.</p>
+  <p class="l-hi">Reasoning models ne sochna <strong>check hone laayak sawaalon par reinforcement learning</strong> se seekha (jaane hue jawab wale maths, tests wala code): sahi jawab tak pahunchne wali lambi soch ko inaam mila. Isliye woh sahi-jawab-wale aur check hone laayak sawaalon par chamakte hain, aur pasand, tone ya creativity mein kam madad karte hain.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">The effort dial</span><span class="l-hi">Effort ka dial</span></h2></div>
+<div class="story">
+  <p class="l-en">Most providers now give you a dial instead of an on/off switch: how hard should the model think? On current Claude models it's called <code>effort</code> (low, medium, high, xhigh, max); OpenAI calls it reasoning effort. More effort means more thinking tokens, longer waits and higher cost, with better results only on genuinely hard problems. The bars below show the typical <em>shape</em>; measure your own numbers.</p>
+  <p class="l-hi">Zyaadatar providers ab on/off switch ki jagah dial dete hain: model kitna zor se soche? Current Claude models par ise <code>effort</code> kehte hain (low, medium, high, xhigh, max); OpenAI ise reasoning effort kehta hai. Zyaada effort matlab zyaada thinking tokens, lamba intezaar aur zyaada kharch, aur behtar nateeje sirf sach mein mushkil sawaalon par. Neeche ke bars aam <em>shape</em> dikhaate hain; apne numbers khud naapo.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">When is thinking worth it?</span><span class="l-hi">Sochna kab faayde ka hai?</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Overthinking is real</span><span class="l-hi">Zaroorat se zyaada sochna sach hai</span></h4>
+  <p class="l-en">On easy questions, reasoning models can spend hundreds of tokens second-guessing a one-line answer. On our laptop in Chapter 4, a one-sentence definition took 329–2,149 tokens. In agents, high effort can also mean more tool calls and longer runs. Match effort to the task: low for chat and classification, higher for multi-step coding and planning.</p>
+  <p class="l-hi">Aasaan sawaalon par reasoning models ek-line ke jawab par saikadon tokens shak karne mein kharch kar sakte hain. Chapter 4 mein hamare laptop par ek sentence ki definition ne 329–2,149 tokens liye. Agents mein high effort ka matlab zyaada tool calls aur lambe runs bhi ho sakta hai. Effort kaam ke hisaab se rakho: chat aur classification ke liye low, multi-step coding aur planning ke liye zyaada.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Prompting reasoning models is different</span><span class="l-hi">Reasoning models ko prompt karna alag hai</span></h4>
+  <p class="l-en">Don't write "think step by step"; they already do. Give the full goal, constraints and what "done" looks like up front, then let them work. Thinking tokens are billed as output tokens, and many APIs return only a summary of the thinking, or none. If you show progress to users, request the summarised display option or stream progress updates.</p>
+  <p class="l-hi">"Step by step socho" mat likho; woh pehle se sochte hain. Poora lakshya, seemaayein aur "done" kaisa dikhta hai, shuru mein hi do, phir unhe kaam karne do. Thinking tokens output tokens ki tarah bill hote hain, aur kai APIs soch ka sirf summary lautaati hain, ya kuch nahi. Users ko progress dikhaani ho toh summarised display option maango ya progress updates stream karo.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">"Test-time compute" is the 2025–26 headline</span><span class="l-hi">"Test-time compute" 2025–26 ki surkhi hai</span></h4>
+  <p class="l-en">For years, models got better mainly by training bigger. Reasoning models opened a second dial: spend more compute <em>at answer time</em>. That's why one model can be cheap for chat and brilliant for a hard proof, and why cost forecasting must include thinking tokens. Teams often route: low effort by default, high effort only when a classifier or a failed first attempt says the task is hard.</p>
+  <p class="l-hi">Saalon tak models zyaadatar bade train hokar behtar hue. Reasoning models ne doosra dial khola: <em>jawab ke waqt</em> zyaada compute lagao. Isliye ek hi model chat ke liye sasta aur mushkil proof ke liye shaandaar ho sakta hai, aur kharch ke andaaze mein thinking tokens shaamil hone chahiye. Teams aksar route karti hain: default low effort, high effort tabhi jab classifier ya fail hui pehli koshish kahe kaam mushkil hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: setting effort</span><span class="l-hi">Coders ke liye: effort set karna</span><span class="lvl">python</span></summary>
+  <div class="inner">
+<pre>resp = client.messages.create(
+    model="claude-opus-5-5",
+    max_tokens=16000,
+    thinking={"type": "adaptive", "display": "summarized"},   # show a readable summary of the reasoning
+    output_config={"effort": "high"},                          # low | medium | high | xhigh | max
+    messages=[{"role": "user", "content": "Plan a 3-step migration of our orders table with zero downtime."}],
+)
+for block in resp.content:
+    if block.type == "thinking": print("THINKING:", block.thinking)
+    elif block.type == "text":   print("ANSWER:", block.text)</pre>
+    <p class="l-en">On Claude Opus 5.5 thinking is always on and the default effort is <code>medium</code>; lower effort is how you make it faster and cheaper. Laptop models via Ollama use a <code>think</code> flag, with the caveats measured in Chapter 4.</p>
+    <p class="l-hi">Claude Opus 5.5 par thinking hamesha on hai aur default effort <code>medium</code> hai; kam effort se ise tez aur sasta banaate ho. Ollama ke laptop models <code>think</code> flag use karte hain, Chapter 4 mein naapi gayi saavdhaaniyon ke saath.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Reasoning models think before answering; thinking is billed output.</li><li>They help most on checkable, multi-step problems.</li><li>Use the effort dial: low by default, high when the task is truly hard.</li><li>Give them the whole goal up front; don't tell them how to think.</li></ol>
+  <ol class="l-hi"><li>Reasoning models jawab se pehle sochte hain; sochna output ki tarah bill hota hai.</li><li>Check hone laayak, multi-step sawaalon par sabse zyaada madad.</li><li>Effort dial use karo: default low, kaam sach mein mushkil ho toh high.</li><li>Poora lakshya shuru mein do; unhe sochna mat sikhaao.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Pick five questions: two easy facts, two logic puzzles, one creative task. Run each with thinking on and off on your laptop model. Where did thinking change the answer? <span class="level">core</span></p><p class="l-hi">Paanch sawaal chuno: do aasaan facts, do logic puzzles, ek creative kaam. Har ek ko laptop model par thinking on aur off ke saath chalao. Kahan sochne se jawab badla? <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>OpenAI (2024). <em>Learning to Reason with LLMs.</em></li>
+  <li>DeepSeek-AI (2025). <em>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.</em></li>
+  <li>Snell et al. (2024). <em>Scaling LLM Test-Time Compute Optimally Can Be More Effective than Scaling Model Parameters.</em></li>
+  <li>Anthropic. <em>Extended and adaptive thinking</em> and <em>Effort</em> documentation.</li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.chat("scA", [
+    { who: "user", en: "Three friends split a ₹2,400 dinner. Asha paid ₹1,500, Bilal ₹900, Chirag nothing. Who owes whom how much so it's equal?", hi: "Teen dost ₹2,400 ka dinner baant-te hain. Asha ne ₹1,500 diye, Bilal ne ₹900, Chirag ne kuch nahi. Barabar karne ke liye kaun kisko kitna dega?", step: 0 },
+    { who: "bad", en: "Chirag owes Asha ₹800.", hi: "Chirag Asha ko ₹800 dega.", step: 1 },
+    { who: "note", en: "[thinking, hidden] Share = 2,400 ÷ 3 = 800. Asha paid 1,500 → is owed 700. Bilal paid 900 → is owed 100. Chirag paid 0 → owes 800. So 700 to Asha, 100 to Bilal. Check: 700 + 100 = 800 ✓", hi: "[thinking, chhupi hui] Hissa = 2,400 ÷ 3 = 800. Asha ne 1,500 diye → 700 lene hain. Bilal ne 900 → 100 lene hain. Chirag ne 0 → 800 dene hain. Toh 700 Asha ko, 100 Bilal ko. Check: 700 + 100 = 800 ✓", cls: "box-plm", step: 2 },
+    { who: "good", en: "Chirag pays Asha ₹700 and Bilal ₹100. Then everyone has paid ₹800.", hi: "Chirag Asha ko ₹700 aur Bilal ko ₹100 de. Tab sabne ₹800 diye.", step: 3 }
+  ], [
+    ["A small multi-step problem.", "Ek chhota multi-step sawaal."],
+    ["A quick, fluent, wrong answer: the right total, the wrong split. (Illustrative.)", "Tez, saaf, galat jawab: sahi total, galat batwaara. (Example.)"],
+    ["A reasoning model first works it out privately, including a check.", "Reasoning model pehle chupchaap hisaab lagata hai, check samet."],
+    ["Then the answer, built on the reasoning. More tokens, more seconds, right answer.", "Phir jawab, soch par bana hua. Zyaada tokens, zyaada second, sahi jawab."]
+  ]);
+
+  B.bars("scB", [
+    { en: "effort: low", hi: "effort: low", v: 1, txt: "1× tokens · fastest", cls: "box-sig", step: 0 },
+    { en: "effort: medium", hi: "effort: medium", v: 2, txt: "~2×", cls: "box-sig", step: 1 },
+    { en: "effort: high", hi: "effort: high", v: 4, txt: "~4×", cls: "box-amb", step: 2 },
+    { en: "effort: max", hi: "effort: max", v: 8, txt: "~8× · slowest", cls: "box-plm", step: 3 }
+  ], [
+    ["Low effort: brief or no thinking. Great for chat, classification, simple extraction.", "Low effort: chhoti ya koi soch nahi. Chat, classification, seedhe extraction ke liye badhiya."],
+    ["Medium: a sensible default for most work.", "Medium: zyaadatar kaam ke liye samajhdaar default."],
+    ["High: coding, multi-step agent tasks, tricky analysis.", "High: coding, multi-step agent kaam, ulajha vishleshan."],
+    ["Max: only when correctness matters more than time or money. (Multipliers are illustrative; real ratios vary a lot by task.)", "Max: sirf jab sahi hona samay ya paise se zyaada zaroori ho. (Multipliers example hain; asli anupaat kaam ke hisaab se bahut badalte hain.)"]
+  ]);
+
+  B.columns("scC", [
+    { en: "Use reasoning / high effort", hi: "Reasoning / high effort use karo", cls: "box-sig", step: 0, items: [
+      { en: "Maths, finance calculations, logic puzzles", hi: "Maths, finance hisaab, logic puzzles", step: 0 },
+      { en: "Writing or fixing non-trivial code", hi: "Mushkil code likhna ya theek karna", step: 0 },
+      { en: "Planning multi-step agent work", hi: "Multi-step agent kaam ka planning", step: 0 },
+      { en: "Comparing long documents for contradictions", hi: "Lambe documents mein virodhabhaas dhoondhna", step: 0 } ] },
+    { en: "Skip it / low effort", hi: "Chhodo / low effort", cls: "box-amb", step: 1, items: [
+      { en: "Chit-chat, FAQs, simple support replies", hi: "Gapshap, FAQs, seedhe support jawab", step: 1 },
+      { en: "Classification and short extraction", hi: "Classification aur chhota extraction", step: 1 },
+      { en: "Real-time voice or autocomplete (latency!)", hi: "Real-time voice ya autocomplete (latency!)", step: 1 },
+      { en: "Creative writing where taste matters more than logic", hi: "Creative likhna jahan logic se zyaada pasand maayne rakhe", step: 1 } ] }
+  ], [
+    ["Pay for thinking where there's a right answer and several steps to reach it.", "Sochne ka paisa wahan do jahan sahi jawab ho aur usse tak pahunchne ke kai steps."],
+    ["Skip it where speed matters or the task is simple. Your eval decides the borderline cases.", "Jahan speed zaroori ho ya kaam seedha ho, chhodo. Beech ke cases aapka eval tay kare."]
+  ]);
+})();
+</script>

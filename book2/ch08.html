@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 8 · Structured Outputs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 08</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 08 · Talking to models</span><span class="l-hi">Chapter 08 · Model se baat</span></div>
+  <h1><span class="l-en">Structured Outputs</span><span class="l-hi">Structured Outputs</span></h1>
+  <div class="story">
+    <p class="l-en">People read paragraphs. Programs don't. When your code needs Haron's answer as data (a ticket category, an invoice total, a list of names), "please reply in JSON" works most of the time. Most of the time is not good enough for software that runs a million times. This chapter turns "most of the time" into "every time".</p>
+    <p class="l-hi">Log paragraphs padhte hain. Programs nahi. Jab aapke code ko Haron ka jawab data ki tarah chahiye (ticket category, invoice total, naamon ki list), "please JSON mein jawab do" zyaadatar kaam karta hai. Zyaadatar, das laakh baar chalne wale software ke liye kaafi nahi. Yeh chapter "zyaadatar" ko "har baar" banata hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Why "reply in JSON" breaks</span><span class="l-hi">"JSON mein jawab do" kyun tootta hai</span></li>
+    <li><b>2</b><span class="l-en">Schemas and constrained decoding</span><span class="l-hi">Schemas aur constrained decoding</span></li>
+    <li><b>3</b><span class="l-en">Real results from a laptop model</span><span class="l-hi">Laptop model ke asli nateeje</span></li>
+    <li><b>4</b><span class="l-en">Designing fields that stay stable</span><span class="l-hi">Aise fields banana jo sthir rahein</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Five ways "just JSON" breaks</span><span class="l-hi">"Bas JSON" ke tootne ke paanch tareeke</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">The guard at every token</span><span class="l-hi">Har token par guard</span></h2></div>
+<div class="story">
+  <p class="l-en">Remember the lucky wheel from Chapter 2: at every step, every token has a chance. <strong>Constrained decoding</strong> puts a guard on the wheel. Before each spin, it covers every slice that would break your schema. If the schema says <code>issue</code> must be one of four words, only those four can come out. The output is valid by construction.</p>
+  <p class="l-hi">Chapter 2 ka lucky wheel yaad karo: har step par har token ka chance hai. <strong>Constrained decoding</strong> wheel par guard lagaata hai. Har spin se pehle woh har us hisse ko dhak deta hai jo aapka schema todega. Agar schema kehta hai <code>issue</code> chaar shabdon mein se ek ho, toh sirf wahi chaar nikal sakte hain. Output bante waqt hi valid hota hai.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Tested on a laptop</span><span class="l-hi">Laptop par test kiya</span></h2></div>
+<div class="story">
+  <p class="l-en">Five real-looking tickets in English, Hinglish and Hindi-flavoured English, extracted by qwen3:4b, with and without a schema. The honest result: on these easy cases, both were 5/5 valid. The schema's value is the <strong>guarantee</strong> on the millionth messy ticket. But look closely at the urgency scores.</p>
+  <p class="l-hi">English, Hinglish aur Hindi-wali English mein paanch asli jaise tickets, qwen3:4b ne nikaale, schema ke saath aur bina. Imaandaar nateeja: in aasaan cases par dono 5/5 valid the. Schema ki keemat das-laakhve ulajhe ticket par <strong>guarantee</strong> hai. Par urgency scores dhyaan se dekho.</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Valid is not the same as correct</span><span class="l-hi">Valid hona sahi hona nahi hai</span></h4>
+  <p class="l-en">A schema guarantees the <em>shape</em>, not the <em>truth</em>. The model can still put the wrong city in a perfectly valid <code>city</code> field, or invent a value when the text doesn't contain one. Allow "unknown" (or <code>null</code>) for fields that may be missing, otherwise you force the model to make something up. And keep checking values with evals.</p>
+  <p class="l-hi">Schema <em>shape</em> ki guarantee deta hai, <em>sach</em> ki nahi. Model ab bhi bilkul valid <code>city</code> field mein galat shehar daal sakta hai, ya text mein value na ho toh bana sakta hai. Jo fields gaayab ho sakti hain unke liye "unknown" (ya <code>null</code>) allow karo, warna aap model ko kuch banaane par majboor karte ho. Aur evals se values check karte raho.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Subjective fields need a rubric</span><span class="l-hi">Subjective fields ko rubric chahiye</span></h4>
+  <p class="l-en">In the lab, "urgency" changed between runs (Suresh 3 → 5, Kavya 1 → 2) because "how urgent is this, 1–5?" is a judgement. Define the scale in the prompt: "5 = money lost or service down; 4 = deadline within 48 h; 3 = broken product; 2 = question with a mild complaint; 1 = general question". Now two runs, and two models, agree far more often.</p>
+  <p class="l-hi">Lab mein "urgency" runs ke beech badli (Suresh 3 → 5, Kavya 1 → 2) kyunki "yeh kitna urgent hai, 1–5?" ek faisla hai. Prompt mein scale define karo: "5 = paisa gaya ya service band; 4 = 48 ghante mein deadline; 3 = toota product; 2 = halki shikaayat ke saath sawaal; 1 = aam sawaal". Ab do runs, aur do models, kahin zyaada baar sahmat hote hain.</p>
+</div>
+
+<h2><span class="l-en">Where to find it</span><span class="l-hi">Yeh kahan milta hai</span></h2>
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Platform</span><span class="l-hi">Platform</span></th><th><span class="l-en">Feature</span><span class="l-hi">Feature</span></th></tr></thead>
+<tbody>
+<tr><td>Anthropic</td><td><code>output_config.format</code> (JSON schema) · <code>strict: true</code> on tools · SDK <code>messages.parse()</code></td></tr>
+<tr><td>OpenAI</td><td><span class="l-en">Structured outputs with a strict JSON schema</span><span class="l-hi">Strict JSON schema ke saath structured outputs</span></td></tr>
+<tr><td>Google Gemini</td><td><span class="l-en">Response schema / JSON mode</span><span class="l-hi">Response schema / JSON mode</span></td></tr>
+<tr><td>Ollama, vLLM, llama.cpp</td><td><code>format</code> / guided decoding / grammars</td></tr>
+<tr><td><span class="l-en">Python libraries</span><span class="l-hi">Python libraries</span></td><td>Pydantic <span class="l-en">models as schemas</span><span class="l-hi">models schemas ki tarah</span>; Instructor; Outlines</td></tr>
+</tbody></table></div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the lab</span><span class="l-hi">Coders ke liye: lab</span><span class="lvl">code2/ch08/structured.py</span></summary>
+  <div class="inner">
+<pre>SCHEMA = {"type": "object", "additionalProperties": False,
+          "required": ["name", "city", "issue", "urgency"],
+          "properties": {"name": {"type": "string"}, "city": {"type": "string"},
+                         "issue": {"type": "string", "enum": ["refund", "delivery", "login", "other"]},
+                         "urgency": {"type": "integer", "minimum": 1, "maximum": 5}}}
+body = {"model": "qwen3:4b", "think": False, "messages": [...], "format": SCHEMA}   # Ollama</pre>
+<pre>$ python code2/ch08/structured.py
+== prompt only: 'reply with only JSON' ==
+  valid   {"name": "Ananya", "city": "Pune", "issue": "delivery", "urgency": 5}
+  valid   {"name": "rahul", "city": "Indore", "issue": "login", "urgency": 5}
+  valid   {"name": "Suresh", "city": "Chennai", "issue": "refund", "urgency": 3}
+  valid   {"name": "Kavya", "city": "Kochi", "issue": "other", "urgency": 1}
+  valid   {"name": "Imran", "city": "Lucknow", "issue": "refund", "urgency": 4}
+  -> 5/5 valid
+
+== with JSON-schema constraint ==
+  valid   {"name": "Ananya", "city": "Pune", "issue": "delivery", "urgency": 5}
+  valid   {"name": "rahul", "city": "Indore", "issue": "login", "urgency": 5}
+  valid   {"name": "Suresh", "city": "Chennai", "issue": "refund", "urgency": 5}
+  valid   {"name": "Kavya", "city": "Kochi", "issue": "other", "urgency": 2}
+  valid   {"name": "Imran", "city": "Lucknow", "issue": "refund", "urgency": 4}
+  -> 5/5 valid</pre>
+    <div class="codehead"><span>Anthropic, with a Pydantic model</span><span>python</span></div>
+<pre>from pydantic import BaseModel
+from typing import Literal
+
+class Ticket(BaseModel):
+    name: str
+    city: str
+    issue: Literal["refund", "delivery", "login", "other"]
+    urgency: int
+
+resp = client.messages.parse(model="claude-opus-5-5", max_tokens=1024,
+                             messages=[{"role": "user", "content": ticket_text}],
+                             output_format=Ticket)
+ticket = resp.parsed_output          # a validated Ticket object</pre>
+    <p class="l-en">Check the SDK version you install for the exact parse helper names; the shape above follows Anthropic's Python SDK documentation.</p>
+    <p class="l-hi">Parse helper ke sateek naam ke liye apna install kiya SDK version check karo; upar ki shape Anthropic ke Python SDK documentation ke hisaab se hai.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>"Reply in JSON" works often; a schema with constrained decoding works always.</li><li>The schema guarantees shape, not truth; allow "unknown".</li><li>Give subjective fields a written scale.</li><li>Use enums, required fields and no extra properties.</li></ol>
+  <ol class="l-hi"><li>"JSON mein jawab do" aksar chalta hai; constrained decoding wala schema hamesha.</li><li>Schema shape ki guarantee hai, sach ki nahi; "unknown" allow karo.</li><li>Subjective fields ko likha hua scale do.</li><li>Enums, required fields aur koi extra property nahi.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add five messy tickets to <code>structured.py</code> (no name given, two issues at once, pure Hindi script). Which run breaks first? <span class="level">coder</span></p><p class="l-hi"><code>structured.py</code> mein paanch ulajhe tickets jodo (naam nahi, ek saath do issues, sirf Devanagari Hindi). Kaunsa run pehle tootta hai? <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Add the urgency rubric to the prompt and run it three times. Did the urgency scores become stable? <span class="level">core</span></p><p class="l-hi">Prompt mein urgency rubric jodo aur teen baar chalao. Kya urgency scores sthir hue? <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Willard &amp; Louf (2023). <em>Efficient Guided Generation for Large Language Models</em> (Outlines).</li>
+  <li>Anthropic. <em>Structured outputs</em> documentation. · OpenAI. <em>Structured Outputs</em> guide.</li>
+  <li>Ollama. <em>Structured outputs</em> (format parameter).</li>
+</ol>
+<nav class="pager"><a href="ch07.html">← Ch 7</a><a href="ch09.html"><span class="l-en">Ch 9 · Reasoning Models →</span><span class="l-hi">Ch 9 · Sochne Wale Models →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.columns("scA", [
+    { en: "What the model returned", hi: "Model ne kya lautaaya", cls: "box-amb", step: 0, items: [
+      { en: "Sure! Here's the JSON: {…}", hi: "Zaroor! Yeh raha JSON: {…}", step: 0 },
+      { en: "```json {…} ```  (markdown fences)", hi: "```json {…} ```  (markdown fences)", step: 1 },
+      { en: "{\"issue\": \"Refund request\"}  (not one of your labels)", hi: "{\"issue\": \"Refund request\"}  (aapke labels mein se nahi)", step: 2 },
+      { en: "{\"name\": \"Ananya\", \"city\": \"Pune\"  …cut off", hi: "{\"name\": \"Ananya\", \"city\": \"Pune\"  …kat gaya", step: 3 },
+      { en: "{\"urgency\": \"high\"}  (a word, not 1-5)", hi: "{\"urgency\": \"high\"}  (shabd, 1-5 nahi)", step: 4 } ] },
+    { en: "What your code does", hi: "Aapka code kya karta hai", cls: "box-plm", step: 0, items: [
+      { en: "json.loads fails on the friendly preamble", hi: "Dostana shuruaat par json.loads fail", step: 0 },
+      { en: "fails on the backticks", hi: "Backticks par fail", step: 1 },
+      { en: "parses, but your switch-case has no branch for it", hi: "Parse hota hai, par switch-case mein iska branch nahi", step: 2 },
+      { en: "fails: max_tokens hit mid-object", hi: "Fail: object ke beech max_tokens", step: 3 },
+      { en: "parses, then crashes when you compare it to 4", hi: "Parse hota hai, phir 4 se compare karte hi crash", step: 4 } ] }
+  ], [
+    ["A friendly sentence before the JSON.", "JSON se pehle ek dostana sentence."],
+    ["Markdown code fences around it.", "Uske chaaron taraf markdown code fences."],
+    ["A label you didn't ask for.", "Aisa label jo aapne maanga hi nahi."],
+    ["Cut off by the token limit.", "Token limit se kata hua."],
+    ["The wrong type. Each happens rarely, but at a million calls a day, rarely means hundreds of failures.", "Galat type. Har ek kam hota hai, par roz das laakh calls par kam ka matlab saikadon failures."]
+  ]);
+
+  B.flow("scB", [
+    { en: "{\"issue\": \"", hi: "{\"issue\": \"", sen: "schema: issue ∈ 4 labels", shi: "schema: issue ∈ 4 labels" },
+    { en: "All tokens", hi: "Saare tokens", sen: "Refund · refund · deliv · Sure · …", shi: "Refund · refund · deliv · Sure · …" },
+    { en: "Mask", hi: "Mask", sen: "keep only tokens that can start a valid label", shi: "sirf woh tokens jo valid label shuru kar sakein" },
+    { en: "Pick", hi: "Chuno", sen: "“refund”", shi: "“refund”" },
+    { en: "Next: \"", hi: "Agla: \"", sen: "only a closing quote is allowed now", shi: "ab sirf closing quote allowed" },
+    { en: "Valid JSON", hi: "Valid JSON", sen: "guaranteed by construction", shi: "bante waqt hi guarantee" }
+  ], [
+    ["The model has written <code>{\"issue\": \"</code>. The schema says only four labels may follow.", "Model ne <code>{\"issue\": \"</code> likha hai. Schema kehta hai sirf chaar labels aa sakte hain."],
+    ["Normally every token has a chance, including “Sure” or “Refund request”.", "Aam taur par har token ka chance hai, “Sure” ya “Refund request” samet."],
+    ["The guard masks every token that can't lead to a valid label.", "Guard har us token ko dhak deta hai jo valid label tak nahi le ja sakta."],
+    ["The model picks among what's left, using its own judgement.", "Model bache hue mein se apni samajh se chunta hai."],
+    ["After the label, the only legal token is the closing quote.", "Label ke baad sirf closing quote hi legal token hai."],
+    ["Repeat for every token and the result always matches the schema.", "Har token ke liye dohraao aur nateeja hamesha schema se match karta hai."]
+  ], { perRow: 3 });
+
+  B.bars("scC", [
+    { en: "Prompt only: valid JSON", hi: "Sirf prompt: valid JSON", v: 5, txt: "5 / 5", cls: "box-sig", step: 0 },
+    { en: "With schema: valid JSON", hi: "Schema ke saath: valid JSON", v: 5, txt: "5 / 5", cls: "box-sig", step: 0 },
+    { en: "Same name, city, issue", hi: "Same naam, shehar, issue", v: 5, txt: "5 / 5 agree", cls: "box-sig", step: 1 },
+    { en: "Same urgency score", hi: "Same urgency score", v: 3, txt: "3 / 5 agree", cls: "box-amb", step: 2 }
+  ], [
+    ["Both approaches produced valid JSON on all five tickets. Easy cases don't show the difference; scale does.", "Dono tareekon ne paanchon tickets par valid JSON diya. Aasaan cases farak nahi dikhaate; scale dikhaata hai."],
+    ["The factual fields were identical across runs.", "Factual fields dono runs mein bilkul same the."],
+    ["But the judgement field, urgency, matched in only 3 of 5. Structure can't fix vagueness; a rubric can.", "Par faisle wala field, urgency, 5 mein se sirf 3 mein mila. Structure dhundhlapan theek nahi kar sakta; rubric kar sakta hai."]
+  ]);
+})();
+</script>
+
+</body>
+</html>

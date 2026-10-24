@@ -1,0 +1,118 @@
+  <div class="story">
+    <p class="l-en">In 2023 everyone talked about prompt engineering: the right words. By 2025 the conversation moved to <strong>context engineering</strong>: the right <em>everything</em>. Haron only knows what's in its context window at that moment: the instructions, the tool list, the documents, the memory, the conversation, the tool results. Deciding what goes in, in what order, and what stays out is the biggest lever on quality and cost in any serious AI app.</p>
+    <p class="l-hi">2023 mein sab prompt engineering ki baat karte the: sahi shabd. 2025 tak baat <strong>context engineering</strong> par aa gayi: sahi <em>sab kuch</em>. Haron sirf wahi jaanta hai jo us pal uski context window mein hai: instructions, tools ki list, documents, memory, baatcheet, tool results. Kya andar jaaye, kis order mein, aur kya bahar rahe, yeh tay karna kisi bhi gambhir AI app mein quality aur kharch ka sabse bada lever hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Everything that fills the window</span><span class="l-hi">Window ko bharne wali har cheez</span></li>
+    <li><b>2</b><span class="l-en">Pre-loading vs fetching just in time</span><span class="l-hi">Pehle se load karna vs zaroorat par laana</span></li>
+    <li><b>3</b><span class="l-en">Context rot, and four ways to fight it</span><span class="l-hi">Context rot, aur usse ladne ke chaar tareeke</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">What's in the window?</span><span class="l-hi">Window mein kya hai?</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">The rule</span><span class="l-hi">Niyam</span></span>
+  <p class="l-en">Find the <strong>smallest set of high-signal tokens</strong> that lets Haron do the task well. Every extra token costs money, adds latency, and dilutes attention. Order from stable to changing, so the prompt cache can reuse the front (Chapter 29).</p>
+  <p class="l-hi">Aise <strong>sabse chhote, sabse kaam ke tokens</strong> dhoondho jinse Haron kaam achhe se kar sake. Har extra token paisa leta hai, der badhaata hai, aur dhyaan bikherta hai. Sthir se badalte ki taraf order karo, taaki prompt cache aage ka hissa reuse kar sake (Chapter 29).</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Pack everything, or fetch when needed?</span><span class="l-hi">Sab pack karo, ya zaroorat par laao?</span></h2></div>
+<div class="story">
+  <p class="l-en">Old approach: stuff every possibly-useful document into the prompt. New approach, used by coding agents like Claude Code: give the model <strong>tools to look things up</strong> (search, read a file, list a folder) and lightweight pointers (file names, a skill index), and let it pull in only what it needs, when it needs it. Like a person who knows where the library is instead of carrying every book.</p>
+  <p class="l-hi">Purana tareeka: har kaam aa sakne wala document prompt mein thoos do. Naya tareeka, jo Claude Code jaise coding agents use karte hain: model ko <strong>cheezein dhoondhne ke tools</strong> do (search, file padhna, folder dekhna) aur halke pointers (file names, skill index), aur use sirf wahi laane do jo chahiye, jab chahiye. Jaise insaan jo har kitaab uthaane ki jagah jaanta hai library kahan hai.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Four ways to keep the window clean</span><span class="l-hi">Window saaf rakhne ke chaar tareeke</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Context rot</span><span class="l-hi">Context rot</span></h4>
+  <p class="l-en">As the window fills, models get worse at finding and combining facts, even far below the advertised limit. They also tend to remember the start and end better than the middle. A million-token window is a capability, not a target: a 20,000-token context with the right material usually beats 500,000 tokens with everything.</p>
+  <p class="l-hi">Window bharne ke saath models facts dhoondhne aur jodne mein kharab hote jaate hain, bataayi gayi limit se bahut neeche bhi. Woh shuruaat aur ant ko beech se behtar yaad rakhte hain. Million-token window ek kaabiliyat hai, lakshya nahi: sahi saamagri wala 20,000-token context aksar sab kuch wale 500,000 tokens ko hara deta hai.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Look at the actual context</span><span class="l-hi">Asli context dekho</span></h4>
+  <p class="l-en">When an agent misbehaves, the first debugging step is to <strong>print the exact context it saw</strong> at the step where it went wrong. Nine times out of ten the cause is visible: a stale tool result, a contradictory instruction, a 40-page dump, a missing fact. Log full contexts in development (and carefully, without personal data, in production).</p>
+  <p class="l-hi">Jab agent galat kare, debug ka pehla step hai woh <strong>sateek context print karna jo usne dekha</strong> us step par jahan galti hui. Das mein se nau baar wajah dikh jaati hai: purana tool result, ulta instruction, 40 page ka dump, gaayab fact. Development mein poore contexts log karo (aur production mein dhyaan se, bina personal data ke).</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Context engineering is most of the job</span><span class="l-hi">Context engineering hi kaam ka bada hissa hai</span></h4>
+  <p class="l-en">Teams that build strong agents report spending more time on what goes into the context (tool design, retrieval quality, compaction, memory) than on the wording of the system prompt. Book 1, Chapter 8 shows a working context manager with compaction you can reuse.</p>
+  <p class="l-hi">Majboot agents banaane wali teams batati hain ki woh system prompt ke shabdon se zyaada samay context mein kya jaata hai (tool design, retrieval quality, compaction, memory) par lagaati hain. Book 1 ka Chapter 8 compaction ke saath chalne wala context manager dikhata hai jo aap reuse kar sakte ho.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Context is everything I see: instructions, tools, documents, memory, history, results.</li><li>Give me the smallest set of high-signal tokens, ordered stable to changing.</li><li>Let me fetch information just in time with tools instead of pre-loading everything.</li><li>Fight context rot with compaction, notes, sub-agents and clearing old tool results.</li></ol>
+  <ol class="l-hi"><li>Context woh sab hai jo main dekhta hoon: instructions, tools, documents, memory, history, results.</li><li>Mujhe sabse chhote, kaam ke tokens do, sthir se badalte ke order mein.</li><li>Sab pehle load karne ki jagah mujhe tools se zaroorat par jaankari laane do.</li><li>Context rot se compaction, notes, sub-agents aur purane tool results saaf karke lado.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Take any chatbot conversation you had that went wrong. Write down everything the model could see at the bad turn. What was missing? What was noise? <span class="level">core</span></p><p class="l-hi">Koi bhi chatbot baatcheet lo jo bigdi thi. Galat turn par model jo dekh sakta tha woh sab likho. Kya gaayab tha? Kya shor tha? <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Anthropic (2025). <em>Effective context engineering for AI agents.</em></li>
+  <li>Liu et al. (2023). <em>Lost in the Middle: How Language Models Use Long Contexts.</em></li>
+  <li>Chroma Research (2025). <em>Context Rot.</em></li>
+  <li>Book 1, Chapter 8: <em>Packing the Diary.</em></li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.stack("scA", [
+    { en: "System prompt", hi: "System prompt", sen: "who Haron is, rules, style · stable", shi: "Haron kaun hai, niyam, style · sthir", cls: "box-sig" },
+    { en: "Tool definitions", hi: "Tool definitions", sen: "names, descriptions, schemas · stable", shi: "naam, descriptions, schemas · sthir", cls: "box-sig" },
+    { en: "Knowledge", hi: "Gyaan", sen: "retrieved documents, skill instructions · per topic", shi: "laaye gaye documents, skill instructions · topic ke hisaab se", cls: "box-amb" },
+    { en: "Memory", hi: "Memory", sen: "what we know about this user or project · per user", shi: "is user ya project ke baare mein jaankari · har user", cls: "box-amb" },
+    { en: "Conversation & tool results", hi: "Baatcheet aur tool results", sen: "grows every turn · the usual source of bloat", shi: "har turn badhti · aksar bharaav ki jad", cls: "box-plm" },
+    { en: "The current request", hi: "Abhi ki request", sen: "today's date, the new question · changes every time", shi: "aaj ki date, naya sawaal · har baar badalta", cls: "box-plm" }
+  ], [
+    ["The <strong>system prompt</strong>: the standing brief.", "<strong>System prompt</strong>: hamesha ki briefing."],
+    ["<strong>Tool definitions</strong>: every tool's description costs tokens on every call.", "<strong>Tool definitions</strong>: har tool ka description har call par tokens leta hai."],
+    ["<strong>Knowledge</strong>: documents fetched for this question (RAG) or skills loaded on demand.", "<strong>Gyaan</strong>: is sawaal ke liye laaye gaye documents (RAG) ya zaroorat par load hui skills."],
+    ["<strong>Memory</strong>: facts saved from earlier sessions.", "<strong>Memory</strong>: pichhle sessions se save kiye facts."],
+    ["The <strong>conversation and tool results</strong>: in agents, this grows fastest and causes most problems.", "<strong>Baatcheet aur tool results</strong>: agents mein yeh sabse tez badhta hai aur zyaadatar dikkatein laata hai."],
+    ["The <strong>current request</strong> at the bottom, closest to where Haron starts writing.", "<strong>Abhi ki request</strong> sabse neeche, jahan se Haron likhna shuru karta hai uske sabse paas."]
+  ]);
+
+  B.columns("scB", [
+    { en: "Pre-load everything", hi: "Sab pehle load", cls: "box-amb", step: 0, items: [
+      { en: "Put the whole HR handbook (80 pages) in every request", hi: "Har request mein poori HR handbook (80 pages)", step: 0 },
+      { en: "≈ 60,000 tokens per question, every time", hi: "Har sawaal par ≈ 60,000 tokens, har baar", step: 0 },
+      { en: "Slow, costly, and the one relevant paragraph gets lost", hi: "Dheema, mehenga, aur ek kaam ka paragraph kho jaata hai", step: 0 } ] },
+    { en: "Just in time", hi: "Zaroorat par", cls: "box-sig", step: 1, items: [
+      { en: "Give tools: search_handbook(query), read_section(id)", hi: "Tools do: search_handbook(query), read_section(id)", step: 1 },
+      { en: "Haron searches, reads 2 sections: ≈ 3,000 tokens", hi: "Haron search karta hai, 2 sections padhta hai: ≈ 3,000 tokens", step: 1 },
+      { en: "Cheaper, faster, sharper; costs one or two extra steps", hi: "Sasta, tez, sateek; ek-do extra steps lagte hain", step: 1 } ] }
+  ], [
+    ["Pre-loading is simple, and fine when the material is small and always relevant.", "Pehle load karna seedha hai, aur theek hai jab saamagri chhoti aur hamesha kaam ki ho."],
+    ["Fetching just in time scales to big knowledge bases. The trade-off is a few extra tool calls. Many systems mix both: a small pre-loaded core plus tools for the rest.", "Zaroorat par laana bade knowledge bases tak scale hota hai. Badle mein kuch extra tool calls. Kai systems dono milaate hain: chhota pehle-load core aur baaki ke liye tools."]
+  ]);
+
+  B.flow("scC", [
+    { en: "Compaction", hi: "Compaction", sen: "summarise old turns when the window fills", shi: "window bharne par purane turns ka summary" },
+    { en: "Clear tool results", hi: "Tool results saaf karo", sen: "drop bulky old results once used", shi: "use ho chuke bhaari purane results hatao" },
+    { en: "Notes to a file", hi: "File mein notes", sen: "agent writes progress to NOTES.md, re-reads it", shi: "agent progress NOTES.md mein likhe, dobara padhe" },
+    { en: "Sub-agents", hi: "Sub-agents", sen: "a helper reads 50 files, returns 1 page", shi: "helper 50 files padhe, 1 page lautaaye" }
+  ], [
+    ["<strong>Compaction</strong>: when the window is nearly full, replace old turns with a summary. Some APIs now do this server-side.", "<strong>Compaction</strong>: window lagbhag bhar jaaye toh purane turns ki jagah summary. Kuch APIs ab yeh server par karti hain."],
+    ["<strong>Clear old tool results</strong>: a 5,000-token file listing from step 2 is rarely needed at step 30.", "<strong>Purane tool results saaf karo</strong>: step 2 ki 5,000-token file listing step 30 par shaayad hi chahiye."],
+    ["<strong>Structured notes</strong>: the agent keeps a to-do or notes file outside the window, so progress survives even a full reset.", "<strong>Structured notes</strong>: agent window ke bahar to-do ya notes file rakhta hai, taaki poore reset mein bhi progress bachi rahe."],
+    ["<strong>Sub-agents</strong>: send a helper with a fresh window to do heavy reading, and keep only its short report (Chapter 20).", "<strong>Sub-agents</strong>: bhaari padhaai ke liye nayi window wala helper bhejo, aur sirf uski chhoti report rakho (Chapter 20)."]
+  ], { perRow: 4 });
+})();
+</script>

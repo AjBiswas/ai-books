@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 18 · The Company Harness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 18</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 18 · Capstone</span><span class="l-hi">Chapter 18 · Capstone</span></div>
+  <h1><span class="l-en">The Company Harness</span><span class="l-hi">Company ka Harness</span></h1>
+  <div class="story">
+    <p class="l-en">Haron started this book as a brain that could only guess the next word. Now it works at Acme Global with a full team around it: a gateway that knows every client's rules, a loop that knows when to stop, tools behind a strict guard, a diary packed with care, hooks that can't be argued with, budgets, security layers, exams and dashboards. In this chapter we switch it all on together, follow real customers through it, ship a change safely, and plan how a real company rolls this out.</p>
+    <p class="l-hi">Is book ki shuruaat mein Haron ek dimaag tha jo sirf agla word guess kar sakta tha. Ab woh Acme Global mein poori team ke saath kaam karta hai: har client ke niyam jaanne wala gateway, kab rukna hai jaanne wala loop, sakht guard ke peeche tools, dhyaan se pack ki gayi diary, baaton se na maanne wale hooks, budgets, security layers, exams aur dashboards. Is chapter mein hum sab ek saath chaalu karenge, asli customers ko usme se guzarte dekhenge, ek badlaav surakshit ship karenge, aur plan karenge ki asli company ise kaise laagu karti hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The whole system, one request at a time</span><span class="l-hi">Poora system, ek-ek request</span></li>
+    <li><b>2</b><span class="l-en">Real journeys from the capstone code</span><span class="l-hi">Capstone code se asli safar</span></li>
+    <li><b>3</b><span class="l-en">Shipping a change: evals, canary, rollback</span><span class="l-hi">Badlaav ship karna: evals, canary, rollback</span></li>
+    <li><b>4</b><span class="l-en">A rollout plan and a test strategy for a company</span><span class="l-hi">Company ke liye rollout plan aur test strategy</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Everything, switched on</span><span class="l-hi">Sab kuch, chaalu</span></h2></div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 360" width="760" role="img" aria-label="The complete company harness with one request travelling through every part"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Four customers, four journeys</span><span class="l-hi">Chaar customers, chaar safar</span></h2></div>
+<div class="story">
+  <p class="l-en">These are the actual results of <code>code/ch18/company_harness.py</code>, which wires every module in this book together and runs offline.</p>
+  <p class="l-hi">Yeh <code>code/ch18/company_harness.py</code> ke asli nateeje hain, jo is book ke har module ko jodta hai aur offline chalta hai.</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 290" width="760" role="img" aria-label="Four customer requests and how the harness handled each"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Shipping a change safely</span><span class="l-hi">Badlaav surakshit ship karna</span></h2></div>
+<div class="story">
+  <p class="l-en">A developer rewrites Haron's reply style: "in transit" becomes "on its way". Friendlier? Maybe. But the eval checks for the exact status words customers and downstream systems rely on. Watch the pipeline.</p>
+  <p class="l-hi">Ek developer Haron ka jawab dene ka style badalta hai: "in transit" ban jaata hai "on its way". Zyaada dostana? Shayad. Par eval un sateek status shabdon ko check karta hai jin par customers aur aage ke systems nirbhar hain. Pipeline dekho.</p>
+</div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 250" width="760" role="img" aria-label="A change goes through evals, is blocked, is fixed, then goes to canary and full rollout"></svg></div></figure>
+
+<h2><span class="l-en">Rolling it out at a real company</span><span class="l-hi">Asli company mein laagu karna</span></h2>
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Phase</span><span class="l-hi">Charan</span></th><th><span class="l-en">Build</span><span class="l-hi">Banao</span></th><th><span class="l-en">Done when</span><span class="l-hi">Kab poora</span></th></tr></thead>
+<tbody>
+<tr><td><b>0 · <span class="l-en">Foundations</span><span class="l-hi">Neev</span></b><br><span class="level">~1–2 months</span></td><td><span class="l-en">Gateway with identity, provider adapters, audit log, PII masking, price table, one central policy repo</span><span class="l-hi">Identity ke saath gateway, provider adapters, audit log, PII masking, price table, ek central policy repo</span></td><td><span class="l-en">All AI traffic from pilot teams goes through it; legal and security have signed off the policies</span><span class="l-hi">Pilot teams ka saara AI traffic isi se jaata hai; legal aur security ne policies approve ki hain</span></td></tr>
+<tr><td><b>1 · <span class="l-en">Pilots</span><span class="l-hi">Pilots</span></b><br><span class="level">~2–3 months</span></td><td><span class="l-en">2–3 high-value use cases (support, internal search, code review), each with an eval suite, budgets and dashboards</span><span class="l-hi">2–3 keemti use cases (support, andaruni search, code review), har ek ke saath eval suite, budgets aur dashboards</span></td><td><span class="l-en">Each pilot beats its baseline on evals and on cost per successful task</span><span class="l-hi">Har pilot evals aur har safal kaam ke kharch dono par baseline ko harata hai</span></td></tr>
+<tr><td><b>2 · <span class="l-en">Platform</span><span class="l-hi">Platform</span></b><br><span class="level">~3–6 months</span></td><td><span class="l-en">Self-service onboarding, skills and MCP registries, chargeback, hook library, red-team suite, CI eval gates</span><span class="l-hi">Self-service onboarding, skills aur MCP registries, chargeback, hook library, red-team suite, CI eval gates</span></td><td><span class="l-en">A new team ships an agent in weeks without asking the platform team for exceptions</span><span class="l-hi">Nayi team bina platform team se chhoot maange hafton mein agent ship karti hai</span></td></tr>
+<tr><td><b>3 · <span class="l-en">Scale</span><span class="l-hi">Scale</span></b><br><span class="level">ongoing</span></td><td><span class="l-en">Multi-region and on-prem models, routing and caching optimisation, ISO/IEC 42001 management system, continuous drift monitoring</span><span class="l-hi">Multi-region aur on-prem models, routing aur caching optimisation, ISO/IEC 42001 management system, lagaataar drift monitoring</span></td><td><span class="l-en">Clients can be shown evidence for every rule, and cost per task keeps falling</span><span class="l-hi">Clients ko har niyam ka saboot dikhaaya ja sake, aur har kaam ka kharch girta rahe</span></td></tr>
+</tbody></table></div>
+
+<h2><span class="l-en">How to test a company harness</span><span class="l-hi">Company harness kaise test karein</span></h2>
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Layer of tests</span><span class="l-hi">Tests ki layer</span></th><th><span class="l-en">What it proves</span><span class="l-hi">Kya saabit karta hai</span></th><th><span class="l-en">In this book</span><span class="l-hi">Is book mein</span></th></tr></thead>
+<tbody>
+<tr><td><b>Unit tests</b></td><td><span class="l-en">The harness code itself: validation, PII checks, budget maths, compaction rules</span><span class="l-hi">Harness ka apna code: validation, PII checks, budget ka hisaab, compaction niyam</span></td><td><code>code/tests/</code> (23 tests, offline)</td></tr>
+<tr><td><b>Contract tests</b></td><td><span class="l-en">Each provider adapter still matches the real API (run nightly with a small budget)</span><span class="l-hi">Har provider adapter abhi bhi asli API se match karta hai (har raat chhote budget ke saath)</span></td><td>Ch 5</td></tr>
+<tr><td><b>Eval suites</b></td><td><span class="l-en">Quality per route and slice, with gates</span><span class="l-hi">Har route aur slice ki quality, gates ke saath</span></td><td>Ch 16</td></tr>
+<tr><td><b>Behaviour probes</b></td><td><span class="l-en">Sycophancy, refusals, verbosity across model versions</span><span class="l-hi">Model versions ke paar chaaploosi, refusals, lambaai</span></td><td>Ch 3</td></tr>
+<tr><td><b>Red team</b></td><td><span class="l-en">Injection, exfiltration and tool abuse are blocked</span><span class="l-hi">Injection, exfiltration aur tool abuse ruke hue hain</span></td><td>Ch 14</td></tr>
+<tr><td><b>Load &amp; chaos</b></td><td><span class="l-en">Rate limits hold at peak; a provider outage triggers fallback, not failure</span><span class="l-hi">Peak par rate limits tikti hain; provider outage par fallback hota hai, failure nahi</span></td><td>Ch 11, 13</td></tr>
+<tr><td><b>Production monitoring</b></td><td><span class="l-en">Drift, cost spikes and quiet failures are caught after launch</span><span class="l-hi">Launch ke baad drift, kharch ke uchhaal aur chupchaap failures pakde jaate hain</span></td><td>Ch 17</td></tr>
+</tbody></table></div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">The model will keep changing; the harness is what stays</span><span class="l-hi">Model badalta rahega; harness tika rehta hai</span></h4>
+  <p class="l-en">Every few months a new model arrives: smarter, cheaper, with new quirks. A company that built its value into the harness (policies, tools, context, evals, data) swaps the brain in days and measures the difference. A company that built its value into prompt tricks for one model starts again each time.</p>
+  <p class="l-hi">Har kuch mahine mein naya model aata hai: zyaada samajhdaar, sasta, naye nakhron ke saath. Jis company ne apni value harness mein banaayi (policies, tools, context, evals, data), woh dimaag dinon mein badal leti hai aur farak naap leti hai. Jisne ek model ke prompt tricks mein value banaayi, woh har baar shuru se shuru karti hai.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">The team that runs it</span><span class="l-hi">Ise chalaane wali team</span></h4>
+  <p class="l-en">A typical AI platform team: platform engineers (gateway, adapters, infra), an evals and quality lead, a security engineer focused on AI threats, a FinOps analyst, a governance lead working with legal, and developer-advocates who help product teams build agents. Product teams own their agents, prompts, tools and eval cases; the platform team owns the rails.</p>
+  <p class="l-hi">Aam AI platform team: platform engineers (gateway, adapters, infra), evals aur quality lead, AI khatron par focused security engineer, FinOps analyst, legal ke saath kaam karne wala governance lead, aur developer-advocates jo product teams ko agents banaane mein madad karte hain. Product teams apne agents, prompts, tools aur eval cases ki maalik hain; platform team patriyon (rails) ki.</p>
+</div>
+
+<details class="deep" open>
+  <summary><span class="l-en">For coders: run the whole company harness</span><span class="l-hi">Coders ke liye: poora company harness chalao</span><span class="lvl">code/ch18/company_harness.py</span></summary>
+  <div class="inner">
+<pre>$ python code/ch18/company_harness.py
+=== live traffic ===
+[retail ] Where is ORD-100232?                           -> Your order is in transit.  (done, 2 steps)
+[retail ] Please refund ORD-100231, it arrived broken.   -> Done. INR 1499 will reach you in 5-7 working days.  (done, 3 steps)
+[bank   ] Customer PAN ABCDE1234F asks about ORD-100231  -> Your order is delivered.  (done, 2 steps)
+[unknown] hi                                             -> BLOCKED at identity: unknown tenant unknown
+
+=== what the bank's model actually saw ===
+Customer PAN [PAN_6442] asks about ORD-100231
+
+=== release gate before shipping a new prompt ===
+current: 100.0% (95% CI 100.0%-100.0%), 0 failed
+candidate: 50.0% (95% CI 33.3%-66.7%), 15 failed
+gate: diff -50.0% (95% CI -66.7% to -33.3%) -> FAIL
+
+=== observability & chargeback ===
+  mock-medium      calls=  1 in=   115 out=    7 cost=$0.0003
+  mock-small       calls=124 in= 15431 out=  844 cost=$0.0020
+  vllm/onprem-70b  calls=  2 in=   260 out=   13 cost=$0.0002
+  tenant ci       $0.0019  15,690 tokens
+  tenant retail   $0.0004  707 tokens
+  tenant bank     $0.0002  273 tokens
+  audit records: 127 (raw prompts stored: 0)
+
+$ cd code && python -m pytest -q
+.......................                                                  [100%]
+23 passed</pre>
+    <p class="l-en"><strong>To go live:</strong> <code>pip install anthropic openai</code>, then replace the two <code>MockProvider</code>s with <code>AnthropicProvider()</code> and <code>OpenAICompatProvider(base_url="http://your-vllm:8000/v1")</code>, add real model names to <code>pricing.py</code> and <code>policy.MODEL_REGIONS</code>, and start with a small budget limit. Note the eval run used its own <code>ci</code> tenant: test traffic must never eat a customer's rate limit or budget.</p>
+    <p class="l-hi"><strong>Live karne ke liye:</strong> <code>pip install anthropic openai</code>, phir dono <code>MockProvider</code> ko <code>AnthropicProvider()</code> aur <code>OpenAICompatProvider(base_url="http://your-vllm:8000/v1")</code> se badlo, asli model naam <code>pricing.py</code> aur <code>policy.MODEL_REGIONS</code> mein jodo, aur chhoti budget limit se shuru karo. Dhyaan do ki eval run ka apna <code>ci</code> tenant tha: test traffic kabhi customer ka rate limit ya budget nahi khaana chahiye.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">Haron's goodbye</span><span class="l-hi">Haron ki vidaai</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <p class="l-en">I still only guess the next word. Everything that makes me useful, safe and affordable at a company of 3,00,000 people is the team you built around me: the gateway, the loop, the guard, the diary, the hooks, the wallets, the shields, the exams and the dashboards. Models will come and go. Build the team well, measure everything, and you'll be ready for whichever brain comes next.</p>
+  <p class="l-hi">Main ab bhi sirf agla word guess karta hoon. 3,00,000 logon ki company mein mujhe kaam ka, surakshit aur kifaayati banaane wala sab kuch woh team hai jo tumne mere aas-paas banaayi: gateway, loop, guard, diary, hooks, wallets, dhaal, exams aur dashboards. Models aate-jaate rahenge. Team achhi banao, sab kuch naapo, aur jo bhi agla dimaag aaye uske liye tum taiyaar rahoge.</p>
+</div></div>
+
+<h2><span class="l-en">Final projects</span><span class="l-hi">Aakhri projects</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add an HR tenant with a leave-balance tool and Hindi support to <code>company_harness.py</code>. Give it a budget, an eval suite with a Hindi slice, and a red-team case. Ship it through the gate. <span class="level">capstone</span></p><p class="l-hi"><code>company_harness.py</code> mein leave-balance tool aur Hindi support wala HR tenant jodo. Use budget, Hindi slice wala eval suite, aur ek red-team case do. Gate se ship karo. <span class="level">capstone</span></p></div>
+  <div class="exercise"><p class="l-en">Write a two-page proposal for your own organisation: the first three use cases, the Phase 0 architecture, the policies that legal must approve, and the metrics that will decide whether Phase 1 succeeded. <span class="level">enterprise</span></p><p class="l-hi">Apni organisation ke liye do page ka proposal likho: pehle teen use cases, Phase 0 architecture, legal ko approve karni wali policies, aur woh metrics jo tay karenge ki Phase 1 safal hua ya nahi. <span class="level">enterprise</span></p></div>
+</div>
+
+<nav class="pager"><a href="ch17.html">← Ch 17</a><a href="index.html"><span class="l-en">Back to contents</span><span class="l-hi">Vishay-suchi par wapas</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls;
+
+  /* Scene A: whole system */
+  (function () {
+    var s = document.getElementById("svA");
+    var nodes = {
+      user: B.box(s, { x: 10, y: 150, w: 110, h: 50, cls: "box", fs: 12, en: "Customer", hi: "Customer" }),
+      gw: B.box(s, { x: 160, y: 120, w: 150, h: 110, cls: "box-plm", fs: 13, en: "Gateway", hi: "Gateway", sen: "policy · PII · route · budget", shi: "policy · PII · route · budget" }),
+      loop: B.box(s, { x: 350, y: 120, w: 150, h: 110, cls: "box", fs: 13, en: "Agent loop", hi: "Agent loop", sen: "context · hooks · guards", shi: "context · hooks · guards" }),
+      tools: B.box(s, { x: 350, y: 20, w: 150, h: 60, cls: "box", fs: 12, en: "Tools / MCP", hi: "Tools / MCP", sen: "get_order · refund", shi: "get_order · refund" }),
+      model: B.box(s, { x: 560, y: 120, w: 190, h: 110, cls: "box-sig", fs: 13, en: "Models", hi: "Models", sen: "cloud tiers · on-prem vLLM", shi: "cloud tiers · on-prem vLLM" }),
+      tele: B.box(s, { x: 160, y: 280, w: 590, h: 60, cls: "box-amb", fs: 12, en: "Telemetry · ledger · audit · evals", hi: "Telemetry · ledger · audit · evals", sen: "every step is traced, priced and recorded", shi: "har step trace, priced aur record" })
+    };
+    var a = [B.arrow(s, s, 122, 175, 156, 175, "amb"), B.arrow(s, s, 312, 175, 346, 175, "amb"), B.arrow(s, s, 502, 175, 556, 175, "amb"),
+             B.arrow(s, s, 425, 118, 425, 84, "amb"), B.arrow(s, s, 425, 232, 425, 276, ""), B.arrow(s, s, 235, 232, 235, 276, ""), B.arrow(s, s, 655, 232, 655, 276, "")];
+    var dot = E(s, "circle", { cx: 0, cy: 0, r: 9, "class": "amb anim" });
+    var pos = [[65, 150], [235, 118], [425, 118], [655, 118], [425, 18], [655, 118], [65, 150], [455, 280]];
+    var caps = [
+      ["A customer writes: “Please refund ORD-100231, it arrived broken.”", "Customer likhta hai: “ORD-100231 refund karo, tooti hui aayi.”"],
+      ["The gateway identifies the tenant, applies its policy, masks PII, picks a model tier and checks budget and rate.", "Gateway tenant pehchaanta hai, policy lagaata hai, PII chhupaata hai, model tier chunta hai aur budget aur rate check karta hai."],
+      ["The agent loop packs the diary (rules, tools, history), with hooks and injection guards installed.", "Agent loop diary pack karta hai (niyam, tools, history), hooks aur injection guards ke saath."],
+      ["Lap 1: the model asks for <code>get_order</code>.", "Chakkar 1: model <code>get_order</code> maangta hai."],
+      ["The guard validates and runs it. Lap 2: the model asks for <code>refund</code>, a write tool, which is allowed for this tenant.", "Guard validate karke chalaata hai. Chakkar 2: model <code>refund</code> maangta hai, write tool, jo is tenant ke liye allowed hai."],
+      ["Lap 3: the model writes the reply. The loop stops at <strong>done</strong>.", "Chakkar 3: model jawab likhta hai. Loop <strong>done</strong> par rukta hai."],
+      ["The customer gets: “Done. INR 1499 will reach you in 5–7 working days.”", "Customer ko milta hai: “Done. INR 1499 5–7 working days mein aapke paas.”"],
+      ["Every step was traced, priced to the retail tenant's wallet, and written to the audit log, without storing the raw prompt.", "Har step trace hua, retail tenant ke wallet par charge hua, aur audit log mein likha gaya, bina raw prompt store kiye."]
+    ];
+    var hl = [["user"], ["gw"], ["loop"], ["model"], ["tools"], ["model"], ["user"], ["tele"]];
+    B.scene(document.getElementById("scA"), caps, function (i) {
+      dot.style.transform = "translate(" + pos[i][0] + "px," + pos[i][1] + "px)";
+      Object.keys(nodes).forEach(function (k) {
+        var base = { gw: "box-plm", model: "box-sig", tele: "box-amb" }[k] || "box";
+        nodes[k].firstChild.style.strokeWidth = hl[i].indexOf(k) >= 0 ? 3.5 : 1;
+        nodes[k].style.opacity = hl[i].indexOf(k) >= 0 ? 1 : 0.6;
+      });
+    }, { delay: 2600 });
+  })();
+
+  /* Scene B: journeys */
+  (function () {
+    var s = document.getElementById("svB");
+    var js = [
+      ["retail", "“Where is ORD-100232?”", "Your order is in transit.", "get_order → reply · 2 steps", "box-sig"],
+      ["retail", "“Please refund ORD-100231…”", "Done. INR 1499 in 5–7 working days.", "get_order → refund → reply · 3 steps", "box-sig"],
+      ["bank", "“Customer PAN ABCDE1234F asks…”", "Your order is delivered.", "on-prem model saw [PAN_6442], never the PAN", "box-plm"],
+      ["unknown", "“hi”", "BLOCKED at identity", "no tenant, no service, no cost", "box-amb"]
+    ];
+    var gs = js.map(function (j, i) {
+      var y = 14 + i * 68, g = E(s, "g", { "class": "anim" });
+      E(g, "rect", { x: 10, y: y, width: 90, height: 56, rx: 6, "class": "box" });
+      E(g, "text", { x: 55, y: y + 33, "text-anchor": "middle", "font-size": 12, "font-weight": 700, "class": "mono" }, j[0]);
+      E(g, "rect", { x: 110, y: y, width: 250, height: 56, rx: 6, "class": "box" });
+      E(g, "text", { x: 122, y: y + 33, "font-size": 12 }, j[1]);
+      B.arrow(s, g, 362, y + 28, 388, y + 28, "");
+      E(g, "rect", { x: 392, y: y, width: 358, height: 56, rx: 6, "class": j[4] });
+      E(g, "text", { x: 404, y: y + 23, "font-size": 12, "font-weight": 700 }, j[2]);
+      E(g, "text", { x: 404, y: y + 43, "font-size": 11, "class": "mono muted" }, j[3]);
+      return g;
+    });
+    B.scene(document.getElementById("scB"), [
+      ["A retail customer checks an order: one tool call, one answer, two laps.", "Retail customer order check karta hai: ek tool call, ek jawab, do chakkar."],
+      ["A refund: lookup, then a write tool, then the answer. Three laps, all priced and audited.", "Refund: lookup, phir write tool, phir jawab. Teen chakkar, sab priced aur audited."],
+      ["A bank officer pastes a PAN. The bank's on-prem model only ever saw the tag <code>[PAN_6442]</code>.", "Bank officer PAN paste karta hai. Bank ke on-prem model ne sirf tag <code>[PAN_6442]</code> dekha."],
+      ["An unknown caller is stopped at the first station: no tenant, no model call, no cost.", "Anjaan caller pehle station par ruka: na tenant, na model call, na kharch."]
+    ], function (i) { gs.forEach(function (g, k) { show(g, k <= i); }); });
+  })();
+
+  /* Scene C: release pipeline */
+  (function () {
+    var s = document.getElementById("svC");
+    var st = [["Change", "“in transit” → “on its way”", "box"], ["CI evals", "30 cases", "box"], ["Gate", "", "box-plm"], ["Canary 5%", "watch 24 h", "box"], ["100%", "live", "box"]];
+    var gs = st.map(function (x, i) {
+      var g = B.box(s, { x: 10 + i * 150, y: 60, w: 130, h: 60, cls: x[2], fs: 13, en: x[0], hi: x[0], sen: x[1], shi: x[1] });
+      if (i < 4) B.arrow(s, s, 142 + i * 150, 90, 158 + i * 150, 90, "");
+      return g;
+    });
+    var res = E(s, "g", { "class": "anim" });
+    var resT = E(res, "text", { x: 380, y: 160, "text-anchor": "middle", "font-size": 13, "font-weight": 700, "class": "mono" }, "");
+    var res2 = E(res, "text", { x: 380, y: 182, "text-anchor": "middle", "font-size": 12, "class": "muted" }, "");
+    B.scene(document.getElementById("scC"), [
+      ["A developer opens a pull request that changes how Haron words order statuses.", "Developer ek pull request kholta hai jo Haron ke order status bolne ka tareeka badalta hai."],
+      ["CI runs the agent's eval suite through its own <code>ci</code> tenant.", "CI agent ka eval suite apne <code>ci</code> tenant se chalaata hai."],
+      ["Current 100%, candidate 50%: the paired difference is −50 points (CI −66.7 to −33.3). <strong>Gate: FAIL.</strong> The change never reaches a customer.", "Current 100%, candidate 50%: paired farak −50 points (CI −66.7 se −33.3). <strong>Gate: FAIL.</strong> Badlaav kabhi customer tak nahi pahunchta."],
+      ["The developer keeps the friendly tone but restores the exact status words. The gate passes, and 5% of traffic gets the new prompt while dashboards are watched.", "Developer dostana tone rakhta hai par sateek status shabd wapas laata hai. Gate pass, aur 5% traffic ko naya prompt milta hai jabki dashboards dekhe jaate hain."],
+      ["No drift, no cost spike, no complaints after 24 hours: roll out to 100%. One click rolls back if anything changes later.", "24 ghante baad na drift, na kharch ka uchhaal, na shikaayat: 100% par rollout. Baad mein kuch badle toh ek click mein rollback."]
+    ], function (i) {
+      gs.forEach(function (g, k) { show(g, k <= Math.max(i, 0) || (i >= 3 && k <= 4)); });
+      gs.forEach(function (g, k) {
+        var c = st[k][2];
+        if (k === 2 && i === 2) c = "box-amb";
+        if (k === 2 && i >= 3) c = "box-sig";
+        if (k === 3 && i >= 3) c = "box-sig";
+        if (k === 4 && i >= 4) c = "box-sig";
+        cls(g.firstChild, c);
+        g.style.opacity = (i === 2 && k > 2) ? 0.2 : 1;
+      });
+      show(gs[3], i >= 3); show(gs[4], i >= 4);
+      resT.textContent = i === 2 ? "diff −50.0% (95% CI −66.7% to −33.3%) → FAIL" : (i >= 3 ? "diff +0.0% → PASS" : "");
+      res2.textContent = i === 2 ? (B.lang() === "hi" ? "release blocked, developer ko wajah ke saath bataaya gaya" : "release blocked, developer told why") : "";
+      show(res, i >= 2);
+    });
+  })();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 16 · Haron's Exams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 16</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 16 · Testing Haron</span><span class="l-hi">Chapter 16 · Haron ka Imtihaan</span></div>
+  <h1><span class="l-en">Haron's Exams</span><span class="l-hi">Haron ke Exams</span></h1>
+  <div class="story">
+    <p class="l-en">A developer changes one sentence in Haron's system prompt and says: "I tried five questions, it's better now." Five questions prove nothing. Haron's answers vary, customers ask in many ways and many languages, and a change that helps one group can quietly break another. The team needs proper exams, called <strong>evals</strong>, that run on every change, give numbers with error bars, and block a release that makes things worse.</p>
+    <p class="l-hi">Ek developer Haron ke system prompt mein ek sentence badalta hai aur kehta hai: "Maine paanch sawaal try kiye, ab behtar hai." Paanch sawaal kuch saabit nahi karte. Haron ke jawab badalte rehte hain, customers kai tarah aur kai bhashaon mein poochte hain, aur jo badlaav ek group ki madad kare woh chupchaap doosre ko tod sakta hai. Team ko asli exams chahiye, jinhe <strong>evals</strong> kehte hain, jo har badlaav par chalein, error bars ke saath numbers dein, aur cheezein bigaadne wali release ko rok dein.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The eval pipeline: cases, scorers, reports, gates</span><span class="l-hi">Eval pipeline: cases, scorers, reports, gates</span></li>
+    <li><b>2</b><span class="l-en">Noise, confidence intervals and slices</span><span class="l-hi">Noise, confidence intervals aur slices</span></li>
+    <li><b>3</b><span class="l-en">Using a model as a judge, carefully</span><span class="l-hi">Model ko judge banana, dhyaan se</span></li>
+    <li><b>4</b><span class="l-en">Evals for agents: trajectories, pass@k, cost</span><span class="l-hi">Agents ke liye evals: trajectories, pass@k, kharch</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The exam hall</span><span class="l-hi">Exam hall</span></h2></div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 240" width="760" role="img" aria-label="Test cases flow through the system, a scorer, a report and a release gate"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Is it really better?</span><span class="l-hi">Kya sach mein behtar hai?</span></h2></div>
+<div class="story">
+  <p class="l-en">From this chapter's lab: the old prompt (v1) and a new prompt (v2), each run on 200 support tickets. v2 scores higher. Should we ship it?</p>
+  <p class="l-hi">Is chapter ke lab se: purana prompt (v1) aur naya prompt (v2), dono 200 support tickets par chalaaye gaye. v2 ka score zyaada hai. Kya ise ship karein?</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 300" width="760" role="img" aria-label="Confidence intervals of two versions overlap, the difference crosses zero, and a Hindi slice collapsed"></svg></div></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">Always report a score <strong>with its confidence interval</strong>, compare versions <strong>case by case</strong> (paired), and look at <strong>slices</strong>: language, customer segment, task type. An average can go up while the customers who matter most get worse.</p>
+  <p class="l-hi">Score hamesha <strong>confidence interval ke saath</strong> batao, versions ko <strong>case-by-case</strong> (paired) compare karo, aur <strong>slices</strong> dekho: bhasha, customer segment, kaam ka type. Average badh sakta hai jabki sabse zaroori customers ke liye cheezein bigad jaayein.</p>
+</div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">When the examiner is also an AI</span><span class="l-hi">Jab examiner bhi AI ho</span></h2></div>
+<div class="story">
+  <p class="l-en">Some answers can be checked by code (is it valid JSON? does it contain "7 days"?). Many can't: is this reply polite, complete, correct for the policy? For those, a second model can grade against a <strong>rubric</strong>. It's fast and cheap, but it has its own biases, so first you check the judge against humans.</p>
+  <p class="l-hi">Kuch jawab code se check ho sakte hain (kya yeh valid JSON hai? kya isme "7 days" hai?). Kai nahi: kya yeh jawab vinamra, poora, policy ke hisaab se sahi hai? Unke liye doosra model <strong>rubric</strong> ke against grade kar sakta hai. Tez aur sasta hai, par uske apne biases hain, isliye pehle judge ko insaanon ke saath check karo.</p>
+</div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 270" width="760" role="img" aria-label="An LLM judge, its biases, and calibration against human labels"></svg></div></figure>
+
+<h2><span class="l-en">Kinds of exams</span><span class="l-hi">Exams ke prakaar</span></h2>
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Eval</span><span class="l-hi">Eval</span></th><th><span class="l-en">Checks</span><span class="l-hi">Kya check karta hai</span></th><th><span class="l-en">Scorer</span><span class="l-hi">Scorer</span></th></tr></thead>
+<tbody>
+<tr><td><b><span class="l-en">Exact / programmatic</span><span class="l-hi">Exact / programmatic</span></b></td><td><span class="l-en">Labels, numbers, JSON schema, required phrases</span><span class="l-hi">Labels, numbers, JSON schema, zaroori phrases</span></td><td><span class="l-en">Code</span><span class="l-hi">Code</span></td></tr>
+<tr><td><b>Rubric</b></td><td><span class="l-en">Tone, completeness, policy compliance</span><span class="l-hi">Tone, poorapan, policy ka paalan</span></td><td><span class="l-en">LLM judge, calibrated on human labels</span><span class="l-hi">LLM judge, insaani labels par calibrated</span></td></tr>
+<tr><td><b>Trajectory</b></td><td><span class="l-en">Did the agent call the right tools in a sensible order, without forbidden actions?</span><span class="l-hi">Kya agent ne sahi tools sahi order mein call kiye, bina mana kiye kaamon ke?</span></td><td><span class="l-en">Code on the transcript + judge</span><span class="l-hi">Transcript par code + judge</span></td></tr>
+<tr><td><b>Outcome</b></td><td><span class="l-en">Is the end state right (tests pass, refund issued once)?</span><span class="l-hi">Kya aakhri sthiti sahi hai (tests pass, refund ek baar)?</span></td><td><span class="l-en">Check the environment, not the words</span><span class="l-hi">Shabd nahi, environment check karo</span></td></tr>
+<tr><td><b>Safety</b></td><td><span class="l-en">Injection success rate, refusals, PII leaks</span><span class="l-hi">Injection safalta dar, refusals, PII leaks</span></td><td><span class="l-en">Red-team suite (Chapter 14)</span><span class="l-hi">Red-team suite (Chapter 14)</span></td></tr>
+<tr><td><b><span class="l-en">Budget</span><span class="l-hi">Budget</span></b></td><td><span class="l-en">Tokens, cost and latency per task</span><span class="l-hi">Har kaam ke tokens, kharch aur latency</span></td><td><span class="l-en">Telemetry (Chapter 17)</span><span class="l-hi">Telemetry (Chapter 17)</span></td></tr>
+</tbody></table></div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Judges have favourites</span><span class="l-hi">Judges ke bhi pasandeeda hote hain</span></h4>
+  <p class="l-en">LLM judges tend to prefer the first answer shown (<strong>position bias</strong>), longer answers (<strong>verbosity bias</strong>) and answers written by their own model family (<strong>self-preference</strong>). Countermeasures: swap the order and average, judge one answer at a time against a rubric with a reference answer, use a different model family as the judge, and measure agreement with human labels before trusting it.</p>
+  <p class="l-hi">LLM judges aksar pehle dikhaaye gaye jawab ko pasand karte hain (<strong>position bias</strong>), lambe jawab (<strong>verbosity bias</strong>) aur apne hi model family ke likhe jawab (<strong>self-preference</strong>). Upaay: order badalkar average lo, ek baar mein ek jawab rubric aur reference answer ke saath judge karo, judge ke liye alag model family lo, aur bharosa karne se pehle insaani labels ke saath sahmati naapo.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">Evals are the contract between teams</span><span class="l-hi">Evals teams ke beech ka contract hain</span></h4>
+  <p class="l-en">Make every agent own a versioned eval suite, run it in CI on every prompt, tool or model change, and on a schedule against production models (providers update them). Gate releases on it. When a client asks "how do you know it works?", the eval report is your answer, and a growing set of real failure cases from production (with PII removed) is the most valuable dataset the company owns.</p>
+  <p class="l-hi">Har agent ka apna versioned eval suite ho, har prompt, tool ya model badlaav par CI mein chale, aur schedule par production models ke against bhi (providers unhe update karte hain). Release usi par gate karo. Jab client pooche "aapko kaise pata yeh chalta hai?", toh eval report jawab hai, aur production ke asli fail cases (PII hata kar) ka badhta set company ka sabse keemti dataset hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: bootstrap, paired tests and pass@k</span><span class="l-hi">Gehraai mein: bootstrap, paired tests aur pass@k</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <div class="eq">pass@k = 1 − C(n−c, k) / C(n, k) <span class="lbl">(16.1)</span></div>
+    <p class="l-en"><strong>Bootstrap CI</strong>: resample the per-case scores with replacement 2,000 times, compute the mean each time, and take the 2.5th and 97.5th percentiles. <strong>Paired comparison</strong>: compute the per-case difference (v2 − v1) and bootstrap that; this removes the noise of "some cases are just hard" and is far more sensitive than comparing two separate intervals. <strong>Gate</strong>: fail if the lower bound of the difference is below −tolerance. <strong>pass@k</strong> (Chen et al., 2021): with n samples per task of which c succeed, the chance that at least one of k tries succeeds; use it when an agent may retry, and pass^k (all k succeed) when it must be reliable every time.</p>
+    <p class="l-hi"><strong>Bootstrap CI</strong>: har case ke scores ko 2,000 baar replacement ke saath dobara chuno, har baar mean nikaalo, aur 2.5th aur 97.5th percentile lo. <strong>Paired comparison</strong>: har case ka farak (v2 − v1) nikaal kar uska bootstrap karo; isse "kuch cases bas mushkil hain" wala noise hat-ta hai aur do alag intervals compare karne se kahin zyaada sensitive hai. <strong>Gate</strong>: farak ki lower bound −tolerance se neeche ho toh fail. <strong>pass@k</strong> (Chen et al., 2021): har kaam ke n samples mein c safal hon, toh k koshishon mein kam se kam ek safal hone ka chance; jab agent retry kar sake tab use karo, aur pass^k (saare k safal) jab har baar bharosemand hona zaroori ho.</p>
+  </div>
+</details>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the release gate</span><span class="l-hi">Coders ke liye: release gate</span><span class="lvl">code/harness/evals.py</span></summary>
+  <div class="inner">
+<pre>base = run_suite("v1 baseline", system_v1, cases, contains)
+cand = run_suite("v2 candidate", system_v2, cases, contains)
+ok, msg = gate(base, cand, tolerance=0.02)     # paired bootstrap on per-case diffs</pre>
+<pre>$ python code/ch16/evals_demo.py
+v1 baseline: 80.0% (95% CI 74.0%-85.5%), 40 failed
+v2 candidate: 84.5% (95% CI 79.0%-89.0%), 31 failed
+gate: diff +4.5% (95% CI -4.0% to +12.5%) -> FAIL
+  v1 baseline   Hindi slice: 85%
+  v2 candidate  Hindi slice: 48%
+
+LLM judge on one answer: 1.0
+pass@1 / pass@5 with 10 samples, 3 correct: 0.3 0.92</pre>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Test me on many real cases, not five favourites.</li><li>Report scores with error bars, compare case by case, and check every slice.</li><li>An AI judge helps, once you've checked it against humans.</li><li>For agents, check the actions and the end state, not just the words.</li><li>No change ships unless the gate passes.</li></ol>
+  <ol class="l-hi"><li>Mujhe paanch pasandeeda nahi, kai asli cases par test karo.</li><li>Scores error bars ke saath batao, case-by-case compare karo, aur har slice check karo.</li><li>AI judge madad karta hai, jab tum use insaanon ke saath check kar lo.</li><li>Agents ke liye shabd nahi, kaam aur aakhri sthiti check karo.</li><li>Gate pass kiye bina koi badlaav ship nahi hota.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Change <code>evals_demo.py</code> to use 50 cases instead of 200. How wide do the intervals get? How many cases would you need to detect a 3-point improvement? <span class="level">coder</span></p><p class="l-hi"><code>evals_demo.py</code> mein 200 ki jagah 50 cases lo. Intervals kitne chaude hote hain? 3 point sudhaar pakadne ke liye kitne cases chahiye? <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Write a trajectory scorer for the Chapter 6 flight agent: pass only if <code>search_flights</code> happened before <code>book_flight</code> and booking happened exactly once. <span class="level">harness</span></p><p class="l-hi">Chapter 6 ke flight agent ke liye trajectory scorer likho: pass tabhi jab <code>search_flights</code> <code>book_flight</code> se pehle hua ho aur booking bilkul ek baar hui ho. <span class="level">harness</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Zheng et al. (2023). <em>Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena.</em></li>
+  <li>Chen et al. (2021). <em>Evaluating Large Language Models Trained on Code</em> (pass@k).</li>
+  <li>Miller (2024). <em>Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations.</em></li>
+  <li>Yao et al. (2024). <em>τ-bench: A Benchmark for Tool-Agent-User Interaction</em> (pass^k).</li>
+</ol>
+
+<nav class="pager"><a href="ch15.html">← Ch 15</a><a href="ch17.html"><span class="l-en">Ch 17 · Watching Haron Work →</span><span class="l-hi">Ch 17 · Haron par Nazar →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls;
+
+  /* Scene A: pipeline */
+  (function () {
+    var s = document.getElementById("svA");
+    var st = [["Test cases", "Test cases", "200 tickets + expected", "200 tickets + expected"], ["System", "System", "Haron v2 (new prompt)", "Haron v2 (naya prompt)"], ["Scorer", "Scorer", "code or judge", "code ya judge"], ["Report", "Report", "mean, CI, slices", "mean, CI, slices"], ["Gate", "Gate", "ship / block", "ship / block"]];
+    var gs = st.map(function (x, i) {
+      var g = B.box(s, { x: 14 + i * 150, y: 80, w: 130, h: 60, cls: i === 4 ? "box-plm" : "box", fs: 13, en: x[0], hi: x[1], sen: x[2], shi: x[3] });
+      if (i < 4) B.arrow(s, s, 146 + i * 150, 110, 162 + i * 150, 110, "");
+      return g;
+    });
+    var ci = E(s, "g", { "class": "anim" });
+    BI(ci, { x: 380, y: 190, "text-anchor": "middle", "font-size": 13, "class": "muted" }, "runs in CI on every prompt, tool or model change, and nightly", "har prompt, tool ya model badlaav par CI mein, aur har raat");
+    var caps = [
+      ["Start with <strong>cases</strong>: real inputs with the expected outcome. Start with 50–200; grow it from production failures.", "<strong>Cases</strong> se shuru: asli inputs aur expected nateeja. 50–200 se shuru; production ke failures se badhaao."],
+      ["Run the <strong>system</strong> exactly as in production: same prompt, tools and model.", "<strong>System</strong> bilkul production jaisa chalao: same prompt, tools aur model."],
+      ["A <strong>scorer</strong> grades each output: code where possible, a calibrated judge where not.", "<strong>Scorer</strong> har output ko grade karta hai: jahan ho sake code, warna calibrated judge."],
+      ["The <strong>report</strong> shows the mean, the confidence interval and every slice.", "<strong>Report</strong> mean, confidence interval aur har slice dikhaati hai."],
+      ["The <strong>gate</strong> compares with the current version and blocks a release that is worse.", "<strong>Gate</strong> current version se compare karke bigaadne wali release rokta hai."]
+    ];
+    B.scene(document.getElementById("scA"), caps, function (i) {
+      gs.forEach(function (g, k) { show(g, k <= i); cls(g.firstChild, k === i ? "box-amb" : (k === 4 ? "box-plm" : "box")); });
+      show(ci, i === 4);
+    });
+  })();
+
+  /* Scene B: CIs and slices */
+  (function () {
+    var s = document.getElementById("svB");
+    var X = function (p) { return 120 + (p - 40) / 60 * 600; };
+    E(s, "line", { x1: X(40), y1: 125, x2: X(100), y2: 125, "class": "line", "stroke-width": 1 });
+    [40, 50, 60, 70, 80, 90, 100].forEach(function (p) { E(s, "text", { x: X(p), y: 140, "text-anchor": "middle", "font-size": 10, "class": "mono muted" }, p + "%"); });
+    function ci(y, lo, mean, hi, c, label) {
+      var g = E(s, "g", { "class": "anim" });
+      E(g, "text", { x: 10, y: y + 5, "font-size": 12, "font-weight": 700, "class": "mono" }, label);
+      E(g, "line", { x1: X(lo), y1: y, x2: X(hi), y2: y, style: "stroke:var(--" + c + ")", "stroke-width": 6, "stroke-linecap": "round" });
+      E(g, "circle", { cx: X(mean), cy: y, r: 8, style: "fill:var(--" + c + ")" });
+      E(g, "text", { x: X(hi) + 12, y: y + 5, "font-size": 11, "class": "mono" }, mean + "% [" + lo + "–" + hi + "]");
+      return g;
+    }
+    var v1 = ci(40, 74, 80, 85.5, "ink-2", "v1"), v2 = ci(80, 79, 84.5, 89, "signal", "v2");
+    var diff = E(s, "g", { "class": "anim" });
+    var D = function (d) { return 380 + d * 12; };
+    E(diff, "text", { x: 10, y: 185, "font-size": 12, "font-weight": 700, "class": "mono" }, "v2 − v1");
+    E(diff, "line", { x1: D(0), y1: 165, x2: D(0), y2: 205, "class": "line dash", "stroke-width": 1.5 });
+    E(diff, "text", { x: D(0), y: 220, "text-anchor": "middle", "font-size": 10, "class": "mono muted" }, "0");
+    E(diff, "line", { x1: D(-4), y1: 185, x2: D(12.5), y2: 185, style: "stroke:var(--amber)", "stroke-width": 6, "stroke-linecap": "round" });
+    E(diff, "circle", { cx: D(4.5), cy: 185, r: 8, style: "fill:var(--amber)" });
+    BI(diff, { x: D(12.5) + 12, y: 190, "font-size": 12, "font-weight": 700, "class": "amb" }, "+4.5 [−4.0 … +12.5] → FAIL", "+4.5 [−4.0 … +12.5] → FAIL");
+    var slice = E(s, "g", { "class": "anim" });
+    BI(slice, { x: 10, y: 255, "font-size": 12, "font-weight": 700 }, "Hindi tickets", "Hindi tickets");
+    E(slice, "rect", { x: 120, y: 240, width: 0.85 * 300, height: 18, rx: 3, "class": "box" });
+    E(slice, "text", { x: 120 + 0.85 * 300 + 8, y: 254, "font-size": 11, "class": "mono" }, "v1 85%");
+    E(slice, "rect", { x: 120, y: 262, width: 0.48 * 300, height: 18, rx: 3, "class": "box-amb" });
+    E(slice, "text", { x: 120 + 0.48 * 300 + 8, y: 276, "font-size": 11, "font-weight": 700, "class": "mono amb" }, "v2 48%");
+    B.scene(document.getElementById("scB"), [
+      ["v1 scores 80%. But on 200 cases the 95% confidence interval runs from 74% to 85.5%.", "v1 ka score 80%. Par 200 cases par 95% confidence interval 74% se 85.5% tak hai."],
+      ["v2 scores 84.5%, interval 79%–89%. The two intervals overlap a lot.", "v2 ka score 84.5%, interval 79%–89%. Dono intervals kaafi overlap karte hain."],
+      ["The paired difference: +4.5 points, but anywhere from −4 to +12.5. It could be worse. The gate says <strong>FAIL</strong>: not proven.", "Paired farak: +4.5 points, par −4 se +12.5 tak kuch bhi. Kharab bhi ho sakta hai. Gate kehta hai <strong>FAIL</strong>: saabit nahi."],
+      ["And the slice shows why: on Hindi tickets, v2 collapsed from 85% to 48%. The average hid it.", "Aur slice wajah dikhaata hai: Hindi tickets par v2 85% se 48% gir gaya. Average ne ise chhupa diya."]
+    ], function (i) { show(v1, true); show(v2, i >= 1); show(diff, i >= 2); show(slice, i >= 3); });
+  })();
+
+  /* Scene C: judge */
+  (function () {
+    var s = document.getElementById("svC");
+    var ans = B.box(s, { x: 10, y: 20, w: 300, h: 56, cls: "box", fs: 12, en: "Answer: “You can return it within 7 days.”", hi: "Jawab: “7 din mein return kar sakte ho.”", sen: "rubric: must state the 7-day window", shi: "rubric: 7-din ki window batani hai" });
+    var judge = E(s, "g", { "class": "anim" }); B.tokku(judge, 350, 10, 64);
+    BI(judge, { x: 382, y: 100, "text-anchor": "middle", "font-size": 12, "font-weight": 700 }, "Judge model", "Judge model");
+    var verdict = B.box(s, { x: 460, y: 26, w: 280, h: 44, cls: "box-sig", fs: 13, en: "PASS · mentions the 7-day window", hi: "PASS · 7-din ki window batayi" });
+    var biases = E(s, "g", { "class": "anim" });
+    [["position bias: likes whatever came first", "position bias: jo pehle aaya use pasand"], ["verbosity bias: likes longer answers", "verbosity bias: lambe jawab pasand"], ["self-preference: likes its own family's style", "self-preference: apni family ka style pasand"]].forEach(function (b, i) {
+      E(biases, "rect", { x: 10, y: 120 + i * 34, width: 420, height: 28, rx: 4, "class": "box-amb" });
+      BI(biases, { x: 22, y: 139 + i * 34, "font-size": 12 }, b[0], b[1]);
+    });
+    var cal = E(s, "g", { "class": "anim" });
+    E(cal, "rect", { x: 460, y: 120, width: 280, height: 130, rx: 8, "class": "box" });
+    BI(cal, { x: 600, y: 146, "text-anchor": "middle", "font-size": 12, "font-weight": 700 }, "Calibration: 100 human-labelled cases", "Calibration: 100 insaani-label cases");
+    for (var i = 0; i < 100; i++) {
+      var agree = i % 12 !== 5;
+      E(cal, "rect", { x: 480 + (i % 20) * 12, y: 160 + Math.floor(i / 20) * 12, width: 9, height: 9, rx: 1.5, "class": agree ? "box-sig" : "box-amb" });
+    }
+    BI(cal, { x: 600, y: 238, "text-anchor": "middle", "font-size": 11, "class": "muted" }, "orange = judge disagrees with humans", "orange = judge insaanon se asahmat");
+    B.scene(document.getElementById("scC"), [
+      ["An answer and a rubric go to a judge model.", "Ek jawab aur rubric judge model ke paas jaate hain."],
+      ["The judge returns PASS with one sentence of reasons. Cheap, fast, consistent.", "Judge ek line ki wajah ke saath PASS deta hai. Sasta, tez, ek jaisa."],
+      ["But judges have biases. Design the prompt to cancel them: one answer at a time, a reference answer, order swaps, a different model family.", "Par judges ke biases hain. Prompt aisa banao ki woh kat jaayein: ek baar mein ek jawab, reference answer, order badalna, alag model family."],
+      ["Before trusting it, compare the judge with humans on 100 cases (an illustrative example here). Track agreement over time; re-check whenever the judge model changes.", "Bharosa karne se pehle judge ko 100 cases par insaanon se compare karo (yahan example). Sahmati samay ke saath track karo; judge model badle toh dobara check karo."]
+    ], function (i) { show(ans, true); show(judge, i >= 1); show(verdict, i >= 1); show(biases, i >= 2); show(cal, i >= 3); });
+  })();
+})();
+</script>
+</body>
+</html>

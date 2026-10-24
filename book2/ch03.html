@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 3 · The Model Zoo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 03</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 03 · Start here</span><span class="l-hi">Chapter 03 · Shuruaat</span></div>
+  <h1><span class="l-en">The Model Zoo</span><span class="l-hi">Models ka Chidiyaghar</span></h1>
+  <div class="story">
+    <p class="l-en">Walk into the model zoo and there are hundreds of animals: giant ones that live only in the provider's cloud, medium ones anyone can download, tiny ones that fit in a phone. Some cost money per word, some are "free" in very different senses of the word. Haron gives you the tour, and a simple way to choose.</p>
+    <p class="l-hi">Model ke chidiyaghar mein jaao toh saikadon jaanwar hain: vishaal jo sirf provider ke cloud mein rehte hain, madhyam jo koi bhi download kar sakta hai, chhote jo phone mein aa jaate hain. Kuch har word ka paisa lete hain, kuch "free" hain par "free" ke bilkul alag matlab mein. Haron aapko ghumaata hai, aur chunne ka seedha tareeka batata hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Closed, open-weights and small models</span><span class="l-hi">Closed, open-weights aur chhote models</span></li>
+    <li><b>2</b><span class="l-en">What "free" and "paid" really mean</span><span class="l-hi">"Free" aur "paid" ka asli matlab</span></li>
+    <li><b>3</b><span class="l-en">A five-question way to pick a model</span><span class="l-hi">Model chunne ke paanch sawaal</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Three kinds of animals</span><span class="l-hi">Teen tarah ke jaanwar</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en"><strong>Open-weights</strong> means you can download the model's numbers and run it yourself. It doesn't always mean "open source" (training data and code are usually not released), and the licence may limit commercial use. Always read the licence.</p>
+  <p class="l-hi"><strong>Open-weights</strong> ka matlab hai aap model ke numbers download karke khud chala sakte ho. Iska matlab hamesha "open source" nahi (training data aur code aksar release nahi hote), aur licence commercial use par rok laga sakta hai. Licence hamesha padho.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">What the price tag says</span><span class="l-hi">Price tag kya kehta hai</span></h2></div>
+<div class="story">
+  <p class="l-en">Paid APIs charge per million tokens, and the gap between tiers is huge. Here are Anthropic's list prices for output tokens (October 2026) next to a model on your own laptop. Other providers follow the same pattern: a cheap fast tier, a balanced tier, and a top tier.</p>
+  <p class="l-hi">Paid APIs har million tokens ka paisa lete hain, aur tiers ke beech bahut bada farak hai. Yeh Anthropic ke output tokens ke list prices hain (October 2026), aapke laptop ke model ke saath. Doosre providers bhi isi pattern par chalte hain: sasta tez tier, santulit tier, aur top tier.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<h2><span class="l-en">Free vs paid, honestly</span><span class="l-hi">Free vs paid, imaandaari se</span></h2>
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Kind</span><span class="l-hi">Prakaar</span></th><th><span class="l-en">What you pay</span><span class="l-hi">Aap kya dete ho</span></th><th><span class="l-en">Watch out for</span><span class="l-hi">Dhyaan rakho</span></th></tr></thead>
+<tbody>
+<tr><td><b><span class="l-en">Free chat apps</span><span class="l-hi">Free chat apps</span></b></td><td><span class="l-en">Nothing, or a subscription for more</span><span class="l-hi">Kuch nahi, ya zyaada ke liye subscription</span></td><td><span class="l-en">Usage limits; your chats may be used for training unless you opt out; not for company data</span><span class="l-hi">Use ki limits; opt out na karo toh chats training mein ja sakti hain; company data ke liye nahi</span></td></tr>
+<tr><td><b><span class="l-en">Free API tiers</span><span class="l-hi">Free API tiers</span></b></td><td><span class="l-en">Nothing, up to a limit</span><span class="l-hi">Limit tak kuch nahi</span></td><td><span class="l-en">Low rate limits, may change any time, check data terms</span><span class="l-hi">Kam rate limits, kabhi bhi badal sakte hain, data terms check karo</span></td></tr>
+<tr><td><b><span class="l-en">Open-weights, self-run</span><span class="l-hi">Open-weights, khud chalao</span></b></td><td><span class="l-en">Hardware and electricity; your time</span><span class="l-hi">Hardware aur bijli; aapka samay</span></td><td><span class="l-en">Usually weaker than frontier models; you own updates, security and scaling</span><span class="l-hi">Aksar frontier se kamzor; updates, security aur scaling aapki zimmedaari</span></td></tr>
+<tr><td><b><span class="l-en">Paid API</span><span class="l-hi">Paid API</span></b></td><td><span class="l-en">Per token, no upfront cost</span><span class="l-hi">Har token ka, pehle kuch nahi</span></td><td><span class="l-en">Bills grow with traffic; data leaves your machine (read the provider's retention terms)</span><span class="l-hi">Traffic ke saath bill badhta hai; data aapki machine se bahar jaata hai (provider ki retention terms padho)</span></td></tr>
+<tr><td><b><span class="l-en">Chat subscription</span><span class="l-hi">Chat subscription</span></b></td><td><span class="l-en">Fixed monthly fee</span><span class="l-hi">Tay mahina fee</span></td><td><span class="l-en">For you as a person, not for building apps; an API key is separate and billed separately</span><span class="l-hi">Aapke apne use ke liye, apps banaane ke liye nahi; API key alag hai aur alag bill hoti hai</span></td></tr>
+</tbody></table></div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Five questions to pick a model</span><span class="l-hi">Model chunne ke paanch sawaal</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Leaderboards don't know your task</span><span class="l-hi">Leaderboards aapka kaam nahi jaante</span></h4>
+  <p class="l-en">Public rankings (benchmarks and arenas) are a useful first filter, but a model that tops a maths benchmark may be worse at your Hinglish support tickets than a cheaper one. Models are also tuned to do well on popular benchmarks. The only ranking that counts is your own eval on 50–200 of your real examples (Chapter 26).</p>
+  <p class="l-hi">Public rankings (benchmarks aur arenas) pehla filter ke roop mein kaam ke hain, par maths benchmark mein top model aapke Hinglish support tickets par ek saste model se bhi kharab ho sakta hai. Models popular benchmarks par achha karne ke liye tune bhi kiye jaate hain. Sirf ek ranking maayne rakhti hai: aapke 50–200 asli examples par aapka apna eval (Chapter 26).</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Start big, then go small</span><span class="l-hi">Bade se shuru karo, phir chhote par jao</span></h4>
+  <p class="l-en">Prototype with a top model so you learn what's <em>possible</em>. Build your eval set. Then try cheaper tiers and open models against that eval, and move each task to the cheapest model that still passes. Many teams end up using two or three models: a small one for easy, high-volume work and a big one for hard cases (routing, Chapter 29).</p>
+  <p class="l-hi">Prototype top model se banao taaki pata chale kya <em>mumkin</em> hai. Apna eval set banao. Phir us eval par saste tiers aur open models try karo, aur har kaam ko sabse saste pass hone wale model par le jao. Kai teams aakhir mein do-teen models use karti hain: aasaan, zyaada volume ke kaam ke liye chhota aur mushkil cases ke liye bada (routing, Chapter 29).</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">The landscape in late 2026 (it changes monthly)</span><span class="l-hi">Late 2026 ka nazaara (har mahine badalta hai)</span></h4>
+  <p class="l-en"><strong>Closed frontier families</strong>: Anthropic Claude (Haiku, Sonnet, Opus tiers), OpenAI GPT, Google Gemini, xAI Grok. <strong>Open-weights families</strong>: Meta Llama, Alibaba Qwen, DeepSeek, Mistral, Google Gemma, Microsoft Phi, OpenAI gpt-oss. <strong>Indian-language models</strong>: e.g. Sarvam AI and others focused on Indic languages. Names and versions change fast; learn to read a model card (context length, licence, languages, benchmarks) rather than memorising names.</p>
+  <p class="l-hi"><strong>Closed frontier families</strong>: Anthropic Claude (Haiku, Sonnet, Opus tiers), OpenAI GPT, Google Gemini, xAI Grok. <strong>Open-weights families</strong>: Meta Llama, Alibaba Qwen, DeepSeek, Mistral, Google Gemma, Microsoft Phi, OpenAI gpt-oss. <strong>Indian-bhasha models</strong>: jaise Sarvam AI aur doosre jo Indic bhashaon par focused hain. Naam aur versions tezi se badalte hain; naam ratne ki jagah model card padhna seekho (context length, licence, bhashayein, benchmarks).</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Closed models are strongest and easiest; open-weights give control; small models run anywhere.</li><li>"Free" always costs something: limits, data, hardware or your time.</li><li>Price tiers differ by 40× or more; pick per task, not per company.</li><li>Choose with five questions, then confirm with your own eval.</li></ol>
+  <ol class="l-hi"><li>Closed models sabse majboot aur aasaan; open-weights control dete hain; chhote models kahin bhi chalte hain.</li><li>"Free" ki bhi keemat hai: limits, data, hardware ya aapka samay.</li><li>Price tiers mein 40× ya zyaada farak; company nahi, har kaam ke hisaab se chuno.</li><li>Paanch sawaalon se chuno, phir apne eval se pakka karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Open the model card of one open-weights model on Hugging Face. Find: parameter count, context length, licence, and supported languages. <span class="level">easy</span></p><p class="l-hi">Hugging Face par kisi open-weights model ka model card kholo. Dhoondho: parameters, context length, licence, aur supported bhashayein. <span class="level">easy</span></p></div>
+  <div class="exercise"><p class="l-en">Run your five-question picker for three tasks: classifying support tickets, writing marketing copy, and summarising medical reports for a hospital. <span class="level">core</span></p><p class="l-hi">Teen kaamon ke liye apna paanch-sawaal picker chalao: support tickets classify karna, marketing copy likhna, aur hospital ke liye medical reports ka summary. <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Anthropic. <em>Models overview</em> and <em>Pricing</em> (Oct 2026).</li>
+  <li>LMArena (formerly Chatbot Arena). <em>Leaderboard.</em> · Artificial Analysis. <em>Model comparisons.</em></li>
+  <li>Hugging Face. <em>Model cards</em> documentation.</li>
+  <li>Open Source Initiative (2024). <em>The Open Source AI Definition.</em></li>
+</ol>
+<nav class="pager"><a href="ch02.html">← Ch 2</a><a href="ch04.html"><span class="l-en">Ch 4 · Models on Your Laptop →</span><span class="l-hi">Ch 4 · Laptop par Models →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.columns("scA", [
+    { en: "Closed (API only)", hi: "Closed (sirf API)", cls: "box-plm", step: 0, items: [
+      { en: "Lives in the provider's cloud; you call it over the internet", hi: "Provider ke cloud mein; internet se call karte ho", step: 0 },
+      { en: "Examples: Claude, GPT, Gemini", hi: "Examples: Claude, GPT, Gemini", step: 0 },
+      { en: "+ strongest quality, no hardware, always updated", hi: "+ sabse achhi quality, hardware nahi, hamesha updated", cls: "box-sig", step: 0 },
+      { en: "− pay per token; data leaves you; the model can change under you", hi: "− har token ka paisa; data bahar jaata; model badal sakta hai", cls: "box-amb", step: 0 } ] },
+    { en: "Open-weights", hi: "Open-weights", cls: "box-plm", step: 1, items: [
+      { en: "Download the weights and run them yourself, on servers or a laptop", hi: "Weights download karke khud chalao, servers ya laptop par", step: 1 },
+      { en: "Examples: Llama, Qwen, DeepSeek, Mistral, Gemma, gpt-oss", hi: "Examples: Llama, Qwen, DeepSeek, Mistral, Gemma, gpt-oss", step: 1 },
+      { en: "+ control, privacy, fine-tuning, fixed versions", hi: "+ control, privacy, fine-tuning, tay versions", cls: "box-sig", step: 1 },
+      { en: "− you run the hardware; big ones need big GPUs", hi: "− hardware aap chalaate ho; bade wale ko bade GPU chahiye", cls: "box-amb", step: 1 } ] },
+    { en: "Small / on-device", hi: "Chhote / on-device", cls: "box-plm", step: 2, items: [
+      { en: "1–8 billion parameters; runs on a laptop or phone", hi: "1–8 arab parameters; laptop ya phone par chalte hain", step: 2 },
+      { en: "Examples: Qwen3 4B, Gemma, Phi, Llama 3.2 3B", hi: "Examples: Qwen3 4B, Gemma, Phi, Llama 3.2 3B", step: 2 },
+      { en: "+ free to run, private, works offline", hi: "+ chalaana free, private, offline chalta hai", cls: "box-sig", step: 2 },
+      { en: "− weaker reasoning; slower on weak hardware", hi: "− kamzor reasoning; kamzor hardware par dheema", cls: "box-amb", step: 2 } ] }
+  ], [
+    ["<strong>Closed models</strong> live only in the provider's cloud. You rent them by the token.", "<strong>Closed models</strong> sirf provider ke cloud mein rehte hain. Aap unhe token ke hisaab se kiraaye par lete ho."],
+    ["<strong>Open-weights models</strong> can be downloaded and run anywhere you have the hardware.", "<strong>Open-weights models</strong> download karke kahin bhi chalaaye ja sakte hain jahan hardware ho."],
+    ["<strong>Small models</strong> trade some intelligence for running on almost anything, for free.", "<strong>Chhote models</strong> thodi samajh chhod kar lagbhag kisi bhi cheez par, free mein chalte hain."]
+  ]);
+
+  B.bars("scB", [
+    { en: "Laptop (qwen3:4b, Ch 4)", hi: "Laptop (qwen3:4b, Ch 4)", v: 0.3, txt: "$0 · ~17 tokens/s", cls: "box-sig", step: 0 },
+    { en: "Claude Haiku 5.5", hi: "Claude Haiku 5.5", v: 0.5, txt: "$0.50 / M output", cls: "box-sig", step: 1 },
+    { en: "Claude Sonnet 5.5", hi: "Claude Sonnet 5.5", v: 10, txt: "$10 / M output", cls: "box-amb", step: 2 },
+    { en: "Claude Opus 5.5", hi: "Claude Opus 5.5", v: 20, txt: "$20 / M output", cls: "box-plm", step: 3 },
+    { en: "Claude Fable 5.1", hi: "Claude Fable 5.1", v: 50, txt: "$50 / M output", cls: "box-plm", step: 4 }
+  ], [
+    ["On your laptop the cost per token is zero (plus electricity), but it's slow and smaller.", "Laptop par har token ka kharch zero (bijli alag), par dheema aur chhota."],
+    ["The small, fast tier: $0.50 per million output tokens. Perfect for classification and simple extraction.", "Chhota, tez tier: har million output tokens ke $0.50. Classification aur seedhe extraction ke liye perfect."],
+    ["The balanced tier: 20× the small one. The everyday workhorse for agents and coding.", "Santulit tier: chhote ka 20×. Agents aur coding ke liye roz ka ghoda."],
+    ["The top tier for hard reasoning.", "Mushkil reasoning ke liye top tier."],
+    ["The most capable model costs 100× the small one. Use it where it changes the outcome, not by default.", "Sabse kaabil model chhote ka 100× padta hai. Wahan use karo jahan nateeja badle, default mein nahi."]
+  ]);
+
+  B.flow("scC", [
+    { en: "1 · Can data leave?", hi: "1 · Data bahar ja sakta?", sen: "no → open-weights on your servers", shi: "nahi → apne servers par open-weights" },
+    { en: "2 · How hard is it?", hi: "2 · Kitna mushkil?", sen: "hard reasoning → top tier", shi: "mushkil reasoning → top tier" },
+    { en: "3 · How much volume?", hi: "3 · Kitna volume?", sen: "millions/day → small or self-hosted", shi: "roz lakhon → chhota ya self-hosted" },
+    { en: "4 · How fast?", hi: "4 · Kitna tez?", sen: "real-time voice → small, fast", shi: "real-time voice → chhota, tez" },
+    { en: "5 · Which languages?", hi: "5 · Kaunsi bhashayein?", sen: "Indic → test language quality", shi: "Indic → bhasha ki quality test karo" },
+    { en: "Shortlist 2-3", hi: "2-3 shortlist", sen: "then run YOUR eval", shi: "phir APNA eval chalao" }
+  ], [
+    ["Privacy first: if regulation or a client says data can't leave, you need a model you host.", "Pehle privacy: agar kanoon ya client kahe data bahar nahi ja sakta, toh khud host kiya model chahiye."],
+    ["Difficulty: multi-step reasoning, hard code or long documents need a strong model.", "Mushkil: multi-step reasoning, mushkil code ya lambe documents ko majboot model chahiye."],
+    ["Volume: at millions of calls a day, price per token decides everything.", "Volume: roz laakhon calls par har token ka daam sab kuch tay karta hai."],
+    ["Speed: voice and autocomplete need answers in a fraction of a second.", "Speed: voice aur autocomplete ko second ke hisse mein jawab chahiye."],
+    ["Language: quality in Hindi, Tamil or Hinglish varies a lot between models.", "Bhasha: Hindi, Tamil ya Hinglish mein quality models ke beech bahut alag hoti hai."],
+    ["Shortlist two or three, then let your own eval decide.", "Do-teen shortlist karo, phir apna eval faisla kare."]
+  ], { perRow: 3 });
+})();
+</script>
+
+</body>
+</html>

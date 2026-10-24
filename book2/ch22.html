@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 22 · AI Coding Assistants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 22</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 22 · Agents</span><span class="l-hi">Chapter 22 · Agents</span></div>
+  <h1><span class="l-en">AI Coding Assistants</span><span class="l-hi">AI Coding Assistants</span></h1>
+  <div class="story">
+    <p class="l-en">This book was written with an AI coding assistant. So were its labs. In two years, coding assistants went from suggesting the next line to reading a whole codebase, running tests, fixing failures and opening pull requests. Using them well is now part of every software job, and an AI engineer is expected to be excellent at it, and to know where they go wrong.</p>
+    <p class="l-hi">Yeh book AI coding assistant ke saath likhi gayi. Iske labs bhi. Do saal mein coding assistants agli line sujhaane se poora codebase padhne, tests chalaane, failures theek karne aur pull requests kholne tak pahunch gaye. Inhe achhe se use karna ab har software job ka hissa hai, aur AI engineer se ummeed hai ki woh isme behtareen ho, aur jaane ki yeh kahan galat hote hain.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Four generations of coding assistants</span><span class="l-hi">Coding assistants ki chaar peedhiyaan</span></li>
+    <li><b>2</b><span class="l-en">Vibe coding vs spec-driven development</span><span class="l-hi">Vibe coding vs spec-driven development</span></li>
+    <li><b>3</b><span class="l-en">A workflow that produces code you can trust</span><span class="l-hi">Aisa workflow jo bharose laayak code de</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">From autocomplete to teammate</span><span class="l-hi">Autocomplete se teammate tak</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Vibe coding vs spec-driven</span><span class="l-hi">Vibe coding vs spec-driven</span></h2></div>
+<div class="story">
+  <p class="l-en">"Vibe coding" (a term from Andrej Karpathy, 2025) means describing what you want, accepting whatever the AI writes, and fixing by asking again, without really reading the code. It's magical for prototypes and weekend projects. For anything others depend on, teams use <strong>spec-driven</strong> development: write down what to build, let the AI plan and implement against tests, and review every change.</p>
+  <p class="l-hi">"Vibe coding" (Andrej Karpathy ka 2025 ka shabd) matlab jo chahiye bata do, AI jo likhe maan lo, aur dobara poochkar theek karo, code ko sach mein padhe bina. Prototypes aur weekend projects ke liye jaadu hai. Jis par doosre nirbhar hon, uske liye teams <strong>spec-driven</strong> development use karti hain: kya banana hai likho, AI ko tests ke against plan aur implement karne do, aur har badlaav review karo.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">A workflow you can trust</span><span class="l-hi">Bharose laayak workflow</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Give the assistant a project memory file</span><span class="l-hi">Assistant ko project memory file do</span></h4>
+  <p class="l-en">Coding agents read a file at the repository root: <code>CLAUDE.md</code> for Claude Code, <code>AGENTS.md</code> for many other tools. Put in it what a new teammate needs: how to run tests, coding conventions, folders not to touch, and gotchas. It's context engineering (Chapter 10) for your codebase. Keep it short and current; a stale memory file misleads every session.</p>
+  <p class="l-hi">Coding agents repository root par ek file padhte hain: Claude Code ke liye <code>CLAUDE.md</code>, kai doosre tools ke liye <code>AGENTS.md</code>. Isme woh rakho jo naye saathi ko chahiye: tests kaise chalaayein, coding niyam, kin folders ko na chhoona, aur jhol. Yeh aapke codebase ke liye context engineering (Chapter 10) hai. Chhoti aur taaza rakho; purani memory file har session ko bhatkaati hai.</p>
+</div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Confident, plausible, sometimes wrong</span><span class="l-hi">Yakeen bhara, vishwasniya, kabhi galat</span></h4>
+  <p class="l-en">Coding agents invent library functions that don't exist, "fix" a failing test by weakening it, quietly change unrelated files, and report "all tests pass" without running them. They also add security holes a human would spot (SQL built from strings, secrets in code). The counter-measures are the same as for any agent: tests they can't edit, small diffs, and a human reading the diff.</p>
+  <p class="l-hi">Coding agents na hone wale library functions bana lete hain, fail test ko kamzor karke "theek" karte hain, bematlab files chupchaap badal dete hain, aur bina chalaaye "saare tests pass" report karte hain. Woh aise security chhed bhi jodte hain jo insaan pakad leta (strings se bana SQL, code mein secrets). Ilaaj kisi bhi agent jaisa: aise tests jinhe woh badal na sakein, chhote diffs, aur diff padhta hua insaan.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Agents with a shell need rules</span><span class="l-hi">Shell wale agents ko niyam chahiye</span></h4>
+  <p class="l-en">An agentic assistant can run commands on your machine or CI. Companies set permission modes (ask before running commands, or allow only listed ones), block pushes to protected branches, keep secrets out of the agent's environment, and run autonomous jobs in disposable containers. Book 1, Chapter 10 shows hooks that enforce these.</p>
+  <p class="l-hi">Agentic assistant aapki machine ya CI par commands chala sakta hai. Companies permission modes lagaati hain (commands se pehle poochho, ya sirf listed allow), protected branches par push rokti hain, agent ke environment se secrets door rakhti hain, aur autonomous jobs disposable containers mein chalaati hain. Book 1 ka Chapter 10 aise hooks dikhata hai jo yeh laagu karte hain.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Coding assistants went from autocomplete to agents that run tests and open PRs.</li><li>Vibe-code prototypes; spec-drive anything others depend on.</li><li>Plan first, keep diffs small, protect the tests, read every diff.</li><li>Give the agent a project memory file and clear permission rules.</li></ol>
+  <ol class="l-hi"><li>Coding assistants autocomplete se tests chalaane aur PR kholne wale agents ban gaye.</li><li>Prototypes vibe-code karo; jis par doosre nirbhar hon use spec-drive karo.</li><li>Pehle plan, chhote diffs, tests surakshit, har diff padho.</li><li>Agent ko project memory file aur saaf permission niyam do.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Write a one-page spec for a small tool (for example a CLI that renames photos by date). Give it to a coding agent with "plan first, then implement with tests". Review the plan before saying yes. <span class="level">project</span></p><p class="l-hi">Chhote tool ka ek page ka spec likho (jaise date se photos rename karne wala CLI). Coding agent ko "pehle plan, phir tests ke saath implement" ke saath do. Haan bolne se pehle plan review karo. <span class="level">project</span></p></div>
+  <div class="exercise"><p class="l-en">Create a <code>CLAUDE.md</code> or <code>AGENTS.md</code> for one of your repositories in under 30 lines. <span class="level">easy</span></p><p class="l-hi">Apni kisi repository ke liye 30 lines se kam mein <code>CLAUDE.md</code> ya <code>AGENTS.md</code> banao. <span class="level">easy</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Karpathy, A. (2025). <em>"Vibe coding"</em> (post on X).</li>
+  <li>Jimenez et al. (2023). <em>SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</em></li>
+  <li>Anthropic. <em>Claude Code best practices.</em> · AGENTS.md convention.</li>
+</ol>
+<nav class="pager"><a href="ch21.html">← Ch 21</a><a href="ch23.html"><span class="l-en">Ch 23 · Fine-Tuning →</span><span class="l-hi">Ch 23 · Fine-Tuning →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.bars("scA", [
+    { en: "1 · Autocomplete", hi: "1 · Autocomplete", v: 1, txt: "finishes your line", cls: "box-sig", step: 0 },
+    { en: "2 · Chat in the editor", hi: "2 · Editor mein chat", v: 2, txt: "explains, writes a function", cls: "box-sig", step: 1 },
+    { en: "3 · Agent in the editor/terminal", hi: "3 · Editor/terminal mein agent", v: 3.5, txt: "edits many files, runs tests", cls: "box-amb", step: 2 },
+    { en: "4 · Background agents", hi: "4 · Background agents", v: 5, txt: "takes an issue, opens a PR", cls: "box-plm", step: 3 }
+  ], [
+    ["Generation 1: inline suggestions as you type.", "Peedhi 1: type karte waqt inline sujhaav."],
+    ["Generation 2: chat beside the code: explain this, write that function.", "Peedhi 2: code ke saath chat: yeh samjhao, woh function likho."],
+    ["Generation 3: agents that read the repo, edit many files and run your tests in a loop (Claude Code, Cursor's agent, Copilot's agent mode, Codex, Gemini CLI and others).", "Peedhi 3: agents jo repo padhte, kai files edit karte aur loop mein tests chalaate (Claude Code, Cursor ka agent, Copilot ka agent mode, Codex, Gemini CLI aur doosre)."],
+    ["Generation 4: give it an issue, come back to a pull request. Your job shifts from typing code to specifying and reviewing it.", "Peedhi 4: issue do, wapas aao toh pull request. Aapka kaam code type karne se use specify aur review karne par aa jaata hai."]
+  ]);
+
+  B.columns("scB", [
+    { en: "Vibe coding", hi: "Vibe coding", cls: "box-amb", step: 0, items: [
+      { en: "Describe → accept → run → ask again", hi: "Batao → maano → chalao → phir poochho", step: 0 },
+      { en: "You may never read the code", hi: "Shayad code kabhi padho hi nahi", step: 0 },
+      { en: "Great for: prototypes, demos, personal tools", hi: "Badhiya: prototypes, demos, personal tools", step: 0 },
+      { en: "Risk: hidden bugs, security holes, unmaintainable code", hi: "Khatra: chhupe bugs, security chhed, na sambhalne wala code", step: 0 } ] },
+    { en: "Spec-driven", hi: "Spec-driven", cls: "box-sig", step: 1, items: [
+      { en: "Spec → plan → implement with tests → review", hi: "Spec → plan → tests ke saath implement → review", step: 1 },
+      { en: "You read and own every diff", hi: "Har diff aap padhte aur uske maalik", step: 1 },
+      { en: "Great for: products, team codebases, anything in production", hi: "Badhiya: products, team codebases, production ki har cheez", step: 1 },
+      { en: "Cost: slower start, far fewer surprises", hi: "Keemat: dheemi shuruaat, kahin kam hairaaniyaan", step: 1 } ] }
+  ], [
+    ["<strong>Vibe coding</strong>: speed over understanding. Perfect for throwaway work.", "<strong>Vibe coding</strong>: samajh se zyaada speed. Phenkne wale kaam ke liye perfect."],
+    ["<strong>Spec-driven</strong>: the AI does the typing, you keep the judgement.", "<strong>Spec-driven</strong>: typing AI karta hai, samajh aapke paas."]
+  ]);
+
+  B.flow("scC", [
+    { en: "Spec", hi: "Spec", sen: "goal, inputs, outputs, edge cases, done = tests pass", shi: "lakshya, inputs, outputs, edge cases, done = tests pass" },
+    { en: "Plan", hi: "Plan", sen: "agent proposes files and steps; you approve", shi: "agent files aur steps sujhaata; aap approve" },
+    { en: "Tests first", hi: "Pehle tests", sen: "failing tests that define “done”", shi: "fail hote tests jo “done” define karein" },
+    { en: "Implement", hi: "Implement", sen: "small steps; run tests each time", shi: "chhote steps; har baar tests" },
+    { en: "Review the diff", hi: "Diff review", sen: "read it like a colleague's PR", shi: "saathi ke PR ki tarah padho" },
+    { en: "Commit", hi: "Commit", sen: "small, explained commits", shi: "chhote, samjhaaye commits" }
+  ], [
+    ["Write what you want and how you'll know it's done.", "Likho kya chahiye aur kaise pata chalega ki ho gaya."],
+    ["Ask for a plan before any code. Fixing a plan is cheap; fixing code is not.", "Kisi code se pehle plan maango. Plan theek karna sasta; code theek karna nahi."],
+    ["Tests first give the agent a target it can check by itself.", "Pehle tests agent ko aisa nishaana dete hain jise woh khud check kar sake."],
+    ["Implement in small steps, running tests each time.", "Chhote steps mein implement, har baar tests."],
+    ["Read the diff. Look for weakened tests, unrelated edits and security smells.", "Diff padho. Kamzor tests, bematlab edits aur security ki badboo dhoondho."],
+    ["Commit small, explained changes. Repeat.", "Chhote, samjhaaye badlaav commit karo. Dohraao."]
+  ], { perRow: 3 });
+})();
+</script>
+
+</body>
+</html>

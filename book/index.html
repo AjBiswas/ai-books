@@ -1,0 +1,86 @@
+<title>Building the Harness</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+<style>
+  .cover-grid { display: grid; grid-template-columns: 1fr 11rem; gap: 2rem; align-items: center; }
+  .cover-grid svg { width: 11rem; height: auto; }
+  @media (max-width: 640px) { .cover-grid { grid-template-columns: 1fr; } .cover-grid svg { width: 7rem; } }
+</style>
+
+<div class="page wide">
+
+<div class="topbar">
+  <div class="crumbs"><span><span class="l-en">A storybook field manual</span><span class="l-hi">Kahani wali field manual</span></span></div>
+  <div class="langtog" role="group" aria-label="Language">
+    <button type="button" data-setlang="en" aria-pressed="true">English</button>
+    <button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button>
+  </div>
+</div>
+
+<header class="cover">
+  <div class="cover-grid">
+    <div>
+      <div class="eyebrow"><span class="l-en">With Haron the robot · Python · any AI model</span><span class="l-hi">Haron robot ke saath · Python · koi bhi AI model</span></div>
+      <h1>Building the Harness</h1>
+      <p class="lede l-en">Haron is a robot that can only guess the next word. Follow its story to learn how AI models really behave, how to build the team around them, and how a big company runs that team with its own rules and budgets. Every idea comes with a picture, an animation and a simple example.</p>
+      <p class="lede l-hi">Haron ek robot hai jo sirf agla word guess kar sakta hai. Uski kahani ke saath seekho ki AI models asal mein kaise behave karte hain, unke aas-paas ki team kaise banti hai, aur ek badi company apne niyam aur budget ke saath woh team kaise chalaati hai. Har idea ke saath picture, animation aur aasaan example hai.</p>
+    </div>
+    <svg viewBox="0 0 120 140" role="img" aria-label="Haron the robot"><use href="#tokku"/></svg>
+  </div>
+  <div class="legend">
+    <span class="lb"><span class="l-en">AI behaviour: why models act this way</span><span class="l-hi">AI behaviour: model aisa kyun karte hain</span></span>
+    <span class="lh"><span class="l-en">Harness note: what to build</span><span class="l-hi">Harness note: kya banana hai</span></span>
+    <span class="le"><span class="l-en">Enterprise: rules, cost, scale</span><span class="l-hi">Enterprise: niyam, kharch, scale</span></span>
+  </div>
+</header>
+
+<div class="parts">
+
+  <section class="part">
+    <h2><span class="pn">Part I</span><span class="l-en">How models behave</span><span class="l-hi">Model kaise behave karte hain</span></h2>
+    <ol class="chapters">
+      <li><span class="cn">01</span><a class="ct" href="ch01.html"><span class="l-en">Inside Haron's Brain</span><span class="l-hi">Haron ke Dimaag ke Andar</span><span><span class="l-en">Tokens, attention, layers, reading vs writing, sticky notes (KV cache), the lucky wheel (sampling)</span><span class="l-hi">Tokens, attention, layers, padhna vs likhna, sticky notes (KV cache), lucky wheel (sampling)</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">02</span><a class="ct" href="ch02.html"><span class="l-en">Haron's Wallet</span><span class="l-hi">Haron ka Wallet</span><span><span class="l-en">Tokens and money: pricing, context windows, caching, cost per task</span><span class="l-hi">Tokens aur paisa: pricing, context window, caching, har kaam ka kharch</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">03</span><a class="ct" href="ch03.html"><span class="l-en">Haron's Bad Habits</span><span class="l-hi">Haron ki Buri Aadatein</span><span><span class="l-en">Hallucination, sycophancy, laziness, reward hacking, drift: the behaviour atlas</span><span class="l-hi">Hallucination, chaaploosi, aalas, reward hacking, drift: behaviour atlas</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">04</span><a class="ct" href="ch04.html"><span class="l-en">How Haron Went to School</span><span class="l-hi">Haron School Kaise Gaya</span><span><span class="l-en">Pretraining, SFT, RLHF, DPO, constitutional training, reasoning RL</span><span class="l-hi">Pretraining, SFT, RLHF, DPO, constitutional training, reasoning RL</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+    </ol>
+  </section>
+
+  <section class="part">
+    <h2><span class="pn">Part II</span><span class="l-en">Building Haron's team</span><span class="l-hi">Haron ki team banana</span></h2>
+    <ol class="chapters">
+      <li><span class="cn">05</span><a class="ct" href="ch05.html"><span class="l-en">What a Harness Is</span><span class="l-hi">Harness Kya Hai</span><span><span class="l-en">One plug for every model: Claude, OpenAI, Gemini, vLLM</span><span class="l-hi">Har model ke liye ek plug: Claude, OpenAI, Gemini, vLLM</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">06</span><a class="ct" href="ch06.html"><span class="l-en">The Manager's Loop</span><span class="l-hi">Manager ka Loop</span><span><span class="l-en">ReAct, planning, reflection, stop rules, error recovery</span><span class="l-hi">ReAct, planning, reflection, rukne ke niyam, error se recovery</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">07</span><a class="ct" href="ch07.html"><span class="l-en">The Toolbox &amp; MCP</span><span class="l-hi">Auzaar ka Dabba &amp; MCP</span><span><span class="l-en">Tool schemas, structured output, sandboxing, permissions</span><span class="l-hi">Tool schema, structured output, sandbox, permissions</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">08</span><a class="ct" href="ch08.html"><span class="l-en">Packing the Diary</span><span class="l-hi">Diary Pack Karna</span><span><span class="l-en">Context engineering: prompts, RAG, compaction, memory</span><span class="l-hi">Context engineering: prompts, RAG, compaction, memory</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">09</span><a class="ct" href="ch09.html"><span class="l-en">Many Harons</span><span class="l-hi">Kai Saare Haron</span><span><span class="l-en">Multi-agent systems: boss and workers, handoffs</span><span class="l-hi">Multi-agent: boss aur workers, kaam saunpna</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">10</span><a class="ct" href="ch10.html"><span class="l-en">Hooks, Skills &amp; Policies</span><span class="l-hi">Hooks, Skills &amp; Policies</span><span><span class="l-en">How Claude Code-style harnesses are extended</span><span class="l-hi">Claude Code jaise harness kaise badhaaye jaate hain</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+    </ol>
+  </section>
+
+  <section class="part">
+    <h2><span class="pn">Part III</span><span class="l-en">Haron goes to a big company</span><span class="l-hi">Haron badi company mein</span></h2>
+    <ol class="chapters">
+      <li><span class="cn">11</span><a class="ct" href="ch11.html"><span class="l-en">The Company Blueprint</span><span class="l-hi">Company ka Naksha</span><span><span class="l-en">AI gateway, model router, policy engine, audit store</span><span class="l-hi">AI gateway, model router, policy engine, audit store</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">12</span><a class="ct" href="ch12.html"><span class="l-en">Rules &amp; Regulations</span><span class="l-hi">Niyam aur Kaanoon</span><span><span class="l-en">DPDP Act, GDPR, EU AI Act, ISO 42001, PII, data residency</span><span class="l-hi">DPDP Act, GDPR, EU AI Act, ISO 42001, PII, data residency</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">13</span><a class="ct" href="ch13.html"><span class="l-en">Budgets for Everyone</span><span class="l-hi">Sabke liye Budget</span><span><span class="l-en">Token quotas, rate limits, chargeback, model tiers</span><span class="l-hi">Token quota, rate limit, chargeback, model tiers</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">14</span><a class="ct" href="ch14.html"><span class="l-en">Guarding Haron</span><span class="l-hi">Haron ki Hifaazat</span><span><span class="l-en">Prompt injection, data leaks, jailbreaks, red-teaming</span><span class="l-hi">Prompt injection, data leak, jailbreak, red-teaming</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">15</span><a class="ct" href="ch15.html"><span class="l-en">Haron at Home</span><span class="l-hi">Ghar ka Haron</span><span><span class="l-en">Self-hosting with vLLM, GPUs, on-prem and hybrid</span><span class="l-hi">vLLM se self-hosting, GPUs, on-prem aur hybrid</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+    </ol>
+  </section>
+
+  <section class="part">
+    <h2><span class="pn">Part IV</span><span class="l-en">Testing Haron</span><span class="l-hi">Haron ka Imtihaan</span></h2>
+    <ol class="chapters">
+      <li><span class="cn">16</span><a class="ct" href="ch16.html"><span class="l-en">Haron's Exams</span><span class="l-hi">Haron ke Exams</span><span><span class="l-en">Evals, LLM-as-judge, regression gates, statistics</span><span class="l-hi">Evals, LLM-as-judge, regression gates, statistics</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">17</span><a class="ct" href="ch17.html"><span class="l-en">Watching Haron Work</span><span class="l-hi">Haron par Nazar</span><span><span class="l-en">Traces, cost dashboards, drift, incidents</span><span class="l-hi">Traces, cost dashboard, drift, incidents</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+      <li><span class="cn">18</span><a class="ct" href="ch18.html"><span class="l-en">Capstone: The Company Harness</span><span class="l-hi">Capstone: Company ka Harness</span><span><span class="l-en">Build and test the whole thing, end to end</span><span class="l-hi">Poora system shuru se aakhir tak banao aur test karo</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+    </ol>
+  </section>
+
+</div>
+</div>
+<script src="book.js"></script>

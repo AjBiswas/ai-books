@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 17 · Watching Haron Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 17</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 17 · Testing Haron</span><span class="l-hi">Chapter 17 · Haron ka Imtihaan</span></div>
+  <h1><span class="l-en">Watching Haron Work</span><span class="l-hi">Haron par Nazar</span></h1>
+  <div class="story">
+    <p class="l-en">Evals check Haron before release. But after release, real customers ask things nobody tested, providers quietly update models, and a bug in one tool makes every run take three extra laps. You find out only if you are watching. <strong>Observability</strong> means that for any run you can answer: what happened, in what order, how long it took, what it cost, and whether it is getting worse.</p>
+    <p class="l-hi">Evals release se pehle Haron ko check karte hain. Par release ke baad asli customers aisi cheezein poochte hain jo kisi ne test nahi ki, providers chupchaap models update karte hain, aur ek tool ka bug har run mein teen extra chakkar lagwa deta hai. Pata tabhi chalta hai jab aap nazar rakh rahe ho. <strong>Observability</strong> ka matlab hai ki kisi bhi run ke liye aap bata sako: kya hua, kis order mein, kitna samay laga, kitna kharch hua, aur kya cheezein bigad rahi hain.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Traces and spans for agent runs</span><span class="l-hi">Agent runs ke traces aur spans</span></li>
+    <li><b>2</b><span class="l-en">A cost and latency dashboard</span><span class="l-hi">Kharch aur latency dashboard</span></li>
+    <li><b>3</b><span class="l-en">Detecting drift</span><span class="l-hi">Drift pakadna</span></li>
+    <li><b>4</b><span class="l-en">Incident response for AI systems</span><span class="l-hi">AI systems ke liye incident response</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The trace: a run's X-ray</span><span class="l-hi">Trace: run ka X-ray</span></h2></div>
+<div class="story">
+  <p class="l-en">A <strong>trace</strong> is one run drawn as a timeline. Each step is a <strong>span</strong> with a start, an end and labels (model, tokens, cost, tool name, error). Spans nest: the agent run contains model calls and tool calls. The OpenTelemetry project has standard names for AI spans (<code>gen_ai.*</code>), so any tracing tool can read them.</p>
+  <p class="l-hi"><strong>Trace</strong> ek run ko timeline ki tarah dikhata hai. Har step ek <strong>span</strong> hai jiska start, end aur labels hote hain (model, tokens, kharch, tool naam, error). Spans ek-doosre ke andar hote hain: agent run ke andar model calls aur tool calls. OpenTelemetry project ne AI spans ke standard naam rakhe hain (<code>gen_ai.*</code>), taaki koi bhi tracing tool unhe padh sake.</p>
+</div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 300" width="760" role="img" aria-label="A trace waterfall of one agent run with model and tool spans"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Where the money and the minutes go</span><span class="l-hi">Paisa aur minute kahan jaate hain</span></h2></div>
+<div class="story">
+  <p class="l-en">Roll up thousands of spans and patterns appear. From this chapter's lab: 300 simulated runs across three Claude tiers.</p>
+  <p class="l-hi">Hazaaron spans jodo toh patterns dikhte hain. Is chapter ke lab se: teen Claude tiers par 300 simulated runs.</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 270" width="760" role="img" aria-label="Share of calls versus share of cost per model, and p95 latency"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Spotting drift</span><span class="l-hi">Drift pakadna</span></h2></div>
+<div class="story">
+  <p class="l-en">A provider updates its model behind the same name, and Haron's answers get 45% longer. No error is thrown; the bill just grows and customers scroll more. Compare this week's distribution of a signal (answer length, tool calls per run, refusal rate, judge score) with a baseline. The <strong>Population Stability Index (PSI)</strong> turns that into one number.</p>
+  <p class="l-hi">Provider usi naam ke peeche model update kar deta hai, aur Haron ke jawab 45% lambe ho jaate hain. Koi error nahi aata; bas bill badhta hai aur customers zyaada scroll karte hain. Is hafte ke kisi signal (jawab ki lambaai, har run ke tool calls, refusal rate, judge score) ke distribution ko baseline se compare karo. <strong>Population Stability Index (PSI)</strong> ise ek number mein badal deta hai.</p>
+</div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 270" width="760" role="img" aria-label="Histograms of answer length before and after a model update, with PSI values"></svg></div></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Failures are quiet</span><span class="l-hi">Failures chupchaap hote hain</span></h4>
+  <p class="l-en">Normal software crashes loudly. An AI system usually fails politely: a fluent wrong answer, an extra loop, a refusal that sounds reasonable. That's why you watch <strong>behaviour signals</strong> (refusal rate, steps per run, tool error rate, user thumbs-down, judge scores on a sample of live traffic), not just errors and latency.</p>
+  <p class="l-hi">Aam software zor se crash hota hai. AI system aksar vinamrata se fail hota hai: saaf galat jawab, ek extra chakkar, samajhdaar lagne wala inkaar. Isliye sirf errors aur latency nahi, <strong>behaviour signals</strong> dekho (refusal rate, har run ke steps, tool error rate, user ka thumbs-down, live traffic ke sample par judge scores).</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">The AI incident runbook</span><span class="l-hi">AI incident runbook</span></h4>
+  <ol class="l-en"><li><strong>Detect</strong>: alerts on cost spikes, error rates, drift, injection hits, complaint keywords.</li><li><strong>Contain</strong>: a per-agent <strong>kill switch</strong> in the gateway; switch the route to a safe model or a human queue.</li><li><strong>Roll back</strong>: prompts, tools and model pins are versioned, so go back one version.</li><li><strong>Investigate</strong>: pull the traces and audit records for affected runs.</li><li><strong>Learn</strong>: add the failing cases to the eval suite so it can't happen silently again.</li></ol>
+  <ol class="l-hi"><li><strong>Pakdo</strong>: kharch ke uchhaal, error rates, drift, injection hits, shikaayat ke keywords par alerts.</li><li><strong>Roko</strong>: gateway mein har agent ka <strong>kill switch</strong>; route ko surakshit model ya insaani queue par daalo.</li><li><strong>Wapas jao</strong>: prompts, tools aur model pins versioned hain, toh ek version peeche jao.</li><li><strong>Jaanch</strong>: prabhavit runs ke traces aur audit records nikaalo.</li><li><strong>Seekho</strong>: fail cases eval suite mein jodo taaki yeh dobara chupchaap na ho.</li></ol>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: span attributes and PSI</span><span class="l-hi">Gehraai mein: span attributes aur PSI</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <div class="eq">PSI = Σ<sub>bins</sub> (a<sub>i</sub> − e<sub>i</sub>) · ln(a<sub>i</sub> / e<sub>i</sub>) <span class="lbl">(17.1)</span></div>
+    <p class="l-en">e<sub>i</sub> and a<sub>i</sub> are the fractions of the baseline and current samples in bin i. Rules of thumb: below 0.1 stable, 0.1–0.25 watch, above 0.25 investigate. Useful span attributes: <code>gen_ai.system</code>, <code>gen_ai.request.model</code>, <code>gen_ai.response.model</code>, <code>gen_ai.usage.input_tokens</code>, <code>gen_ai.usage.output_tokens</code>, plus your own (<code>harness.tenant</code>, <code>harness.cost_usd</code>, <code>harness.policy_version</code>, <code>harness.stop_reason</code>). Don't put raw prompts in spans by default; they are telemetry, often with wider access than the audit store.</p>
+    <p class="l-hi">e<sub>i</sub> aur a<sub>i</sub> bin i mein baseline aur current samples ke hisse hain. Mota hisaab: 0.1 se kam sthir, 0.1–0.25 nazar rakho, 0.25 se upar jaanch karo. Kaam ke span attributes: <code>gen_ai.system</code>, <code>gen_ai.request.model</code>, <code>gen_ai.response.model</code>, <code>gen_ai.usage.input_tokens</code>, <code>gen_ai.usage.output_tokens</code>, aur apne (<code>harness.tenant</code>, <code>harness.cost_usd</code>, <code>harness.policy_version</code>, <code>harness.stop_reason</code>). Default roop se raw prompts spans mein mat daalo; telemetry tak aksar audit store se zyaada logon ki pahunch hoti hai.</p>
+  </div>
+</details>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: tracer and roll-up</span><span class="l-hi">Coders ke liye: tracer aur roll-up</span><span class="lvl">code/harness/telemetry.py</span></summary>
+  <div class="inner">
+<pre>with tracer.span("agent.run", **{"harness.tenant": "acme"}):
+    with tracer.span("gen_ai.chat", **{"gen_ai.request.model": model,
+                                       "gen_ai.usage.input_tokens": u.input_tokens,
+                                       "gen_ai.usage.output_tokens": u.output_tokens,
+                                       "harness.cost_usd": cost_usd(model, u)}):
+        ...
+tracer.rollup()            # per model: calls, tokens, cost, p50/p95 latency
+tracer.export_jsonl(path)  # ship to your tracing backend</pre>
+<pre>$ python code/ch17/observe_demo.py
+model              calls    in tok  out tok   cost $  p50 ms  p95 ms
+claude-haiku-5-5     184 2,914,848  187,154     0.39     762    1280
+claude-opus-5-5       32   588,630   33,733     3.03    5600    9570
+claude-sonnet-5-5     84 1,299,668   92,133     3.52    2500    4182
+
+PSI answer length, normal week:      0.065
+PSI answer length, after model update: 2.887  <- investigate</pre>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Trace every run: each model call and tool call is a span with tokens, cost and time.</li><li>Roll the spans up: a few calls can cause most of the cost or the slowest waits.</li><li>Watch behaviour signals for drift, not only errors.</li><li>Have a kill switch, a rollback, and a habit of turning incidents into eval cases.</li></ol>
+  <ol class="l-hi"><li>Har run trace karo: har model call aur tool call ek span hai jisme tokens, kharch aur samay hai.</li><li>Spans jodo: thodi si calls zyaadatar kharch ya sabse lamba intezaar paida kar sakti hain.</li><li>Drift ke liye sirf errors nahi, behaviour signals dekho.</li><li>Kill switch, rollback, aur incidents ko eval cases banaane ki aadat rakho.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add a <code>stop_reason</code> attribute to the agent span and build a daily count of runs ending in <code>stuck</code>, <code>budget</code> and <code>max_steps</code>. Which one would you alert on? <span class="level">coder</span></p><p class="l-hi">Agent span mein <code>stop_reason</code> attribute jodo aur <code>stuck</code>, <code>budget</code> aur <code>max_steps</code> par khatam hone wale runs ki rozaana ginti banao. Kis par alert lagaaoge? <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Write a one-page incident runbook for your support agent: who is paged, where the kill switch is, how to roll back. <span class="level">enterprise</span></p><p class="l-hi">Apne support agent ke liye ek page ka incident runbook likho: kise page kiya jaayega, kill switch kahan hai, rollback kaise karein. <span class="level">enterprise</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>OpenTelemetry. <em>Semantic Conventions for Generative AI systems.</em></li>
+  <li>Google SRE Book. <em>Monitoring Distributed Systems</em> and <em>Postmortem Culture.</em></li>
+  <li>Yurdakul (2018). <em>Statistical Properties of Population Stability Index.</em></li>
+</ol>
+
+<nav class="pager"><a href="ch16.html">← Ch 16</a><a href="ch18.html"><span class="l-en">Ch 18 · Capstone →</span><span class="l-hi">Ch 18 · Capstone →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls;
+
+  /* Scene A: trace waterfall */
+  (function () {
+    var s = document.getElementById("svA");
+    var T = function (t) { return 180 + t * 130; };
+    var spans = [
+      ["agent.run", 0, 4.2, 0, "box", "tenant=retail · stop=done · 3 steps · $0.0021"],
+      ["gen_ai.chat #1", 0, 1.1, 1, "box-sig", "model=mock-medium · in=310 · out=24"],
+      ["tool get_order", 1.1, 1.4, 1, "box-amb", "order=ORD-100231 · ok"],
+      ["gen_ai.chat #2", 1.4, 2.6, 1, "box-sig", "in=362 · out=19"],
+      ["tool refund", 2.6, 3.1, 1, "box-amb", "risk=write · approved · idempotency key"],
+      ["gen_ai.chat #3", 3.1, 4.2, 1, "box-sig", "in=401 · out=21 · stop=end_turn"]
+    ];
+    [0, 1, 2, 3, 4].forEach(function (t) { E(s, "text", { x: T(t), y: 20, "text-anchor": "middle", "font-size": 10, "class": "mono muted" }, t + " s"); E(s, "line", { x1: T(t), y1: 26, x2: T(t), y2: 230, "class": "line dash", "stroke-width": 0.6 }); });
+    var gs = spans.map(function (sp, i) {
+      var y = 34 + i * 32, g = E(s, "g", { "class": "anim" });
+      E(g, "text", { x: 10 + sp[3] * 16, y: y + 16, "font-size": 11.5, "class": "mono" }, sp[0]);
+      E(g, "rect", { x: T(sp[1]), y: y, width: (sp[2] - sp[1]) * 130, height: 22, rx: 3, "class": sp[4] });
+      return g;
+    });
+    var attr = E(s, "rect", { x: 10, y: 240, width: 740, height: 36, rx: 6, style: "fill:#10222c" });
+    var attrT = E(s, "text", { x: 22, y: 263, "font-size": 12, "class": "mono", style: "fill:#d7f6fa" }, "");
+    var caps = [
+      ["The root span: the whole agent run, 4.2 seconds, ending with <code>done</code>.", "Root span: poora agent run, 4.2 second, <code>done</code> par khatam."],
+      ["Model call 1: 1.1 s. Most of an agent's time is model time.", "Model call 1: 1.1 s. Agent ka zyaadatar samay model ka hota hai."],
+      ["Tool call: a quick order lookup.", "Tool call: jaldi se order lookup."],
+      ["Model call 2 decides to refund.", "Model call 2 refund ka faisla karta hai."],
+      ["The refund tool: a write action, approved, with an idempotency key recorded.", "Refund tool: write action, approved, idempotency key ke saath record."],
+      ["Model call 3 writes the reply. Any slow or failed step is now one click away.", "Model call 3 jawab likhta hai. Ab koi bhi dheema ya fail step bas ek click door hai."]
+    ];
+    B.scene(document.getElementById("scA"), caps, function (i) {
+      gs.forEach(function (g, k) { show(g, k <= i); g.style.opacity = k === i ? 1 : (k < i ? 0.6 : 0); });
+      attrT.textContent = spans[i][5];
+    }, { delay: 2400 });
+  })();
+
+  /* Scene B: dashboard */
+  (function () {
+    var s = document.getElementById("svB");
+    var rows = [["Haiku 5.5", 184, 0.39, 1280, "box-sig"], ["Sonnet 5.5", 84, 3.52, 4182, "box-amb"], ["Opus 5.5", 32, 3.03, 9570, "box-plm"]];
+    var tc = 300, tcost = 6.94;
+    BI(s, { x: 150, y: 22, "font-size": 12, "font-weight": 700 }, "share of calls", "calls ka hissa");
+    BI(s, { x: 470, y: 22, "font-size": 12, "font-weight": 700 }, "share of cost", "kharch ka hissa");
+    var gCalls = E(s, "g", { "class": "anim" }), gCost = E(s, "g", { "class": "anim" }), gLat = E(s, "g", { "class": "anim" });
+    rows.forEach(function (r, i) {
+      var y = 38 + i * 50;
+      E(s, "text", { x: 10, y: y + 20, "font-size": 12, "font-weight": 700, "class": "mono" }, r[0]);
+      E(gCalls, "rect", { x: 150, y: y, width: r[1] / tc * 280, height: 30, rx: 3, "class": r[4] });
+      E(gCalls, "text", { x: 150 + r[1] / tc * 280 + 6, y: y + 20, "font-size": 11, "class": "mono" }, Math.round(r[1] / tc * 100) + "%");
+      E(gCost, "rect", { x: 470, y: y, width: r[2] / tcost * 240, height: 30, rx: 3, "class": r[4] });
+      E(gCost, "text", { x: 470 + r[2] / tcost * 240 + 6, y: y + 20, "font-size": 11, "class": "mono" }, Math.round(r[2] / tcost * 100) + "%");
+    });
+    BI(gLat, { x: 10, y: 205, "font-size": 12, "font-weight": 700 }, "p95 latency", "p95 latency");
+    rows.forEach(function (r, i) {
+      E(gLat, "rect", { x: 150 + i * 200, y: 215, width: r[3] / 9570 * 160, height: 24, rx: 3, "class": r[4] });
+      E(gLat, "text", { x: 150 + i * 200, y: 256, "font-size": 11, "class": "mono" }, r[0] + ": " + (r[3] / 1000).toFixed(1) + " s");
+    });
+    B.scene(document.getElementById("scB"), [
+      ["Most calls (61%) go to the small, cheap tier.", "Zyaadatar calls (61%) chhote, saste tier par jaati hain."],
+      ["But cost tells a different story: Opus is 11% of calls and 44% of cost. Sonnet is 51%. Haiku, with most of the traffic, is about 6%.", "Par kharch alag kahani kehta hai: Opus 11% calls aur 44% kharch. Sonnet 51%. Haiku, sabse zyaada traffic ke saath, lagbhag 6%."],
+      ["And the slowest 5% of Opus calls take 9.6 s. Is every Opus call needed? That question is worth money.", "Aur Opus ki sabse dheemi 5% calls 9.6 s leti hain. Kya har Opus call zaroori hai? Yeh sawaal paise ka hai."]
+    ], function (i) { show(gCalls, true); show(gCost, i >= 1); show(gLat, i >= 2); });
+  })();
+
+  /* Scene C: drift */
+  (function () {
+    var s = document.getElementById("svC");
+    function gauss(mu, sd, x) { return Math.exp(-0.5 * Math.pow((x - mu) / sd, 2)); }
+    var X = function (v) { return 60 + (v - 100) / 900 * 640; };
+    E(s, "line", { x1: 60, y1: 210, x2: 700, y2: 210, "class": "line", "stroke-width": 1 });
+    [200, 400, 600, 800, 1000].forEach(function (v) { E(s, "text", { x: X(v), y: 226, "text-anchor": "middle", "font-size": 10, "class": "mono muted" }, v); });
+    BI(s, { x: 380, y: 246, "text-anchor": "middle", "font-size": 11, "class": "muted" }, "answer length (tokens)", "jawab ki lambaai (tokens)");
+    function hist(mu, sd, c, h) {
+      var g = E(s, "g", { "class": "anim" });
+      for (var v = 120; v < 1000; v += 30) {
+        var y = gauss(mu, sd, v) * h;
+        if (y < 1) continue;
+        E(g, "rect", { x: X(v), y: 210 - y, width: 640 / 30 - 2, height: y, style: "fill:var(--" + c + ");opacity:.55" });
+      }
+      return g;
+    }
+    var base = hist(420, 90, "ink-2", 150), week = hist(430, 95, "signal", 145), upd = hist(610, 140, "amber", 110);
+    var p1 = E(s, "g", { "class": "anim" }); BI(p1, { x: 520, y: 40, "font-size": 13, "font-weight": 700, "class": "sig" }, "PSI 0.065 · stable", "PSI 0.065 · sthir");
+    var p2 = E(s, "g", { "class": "anim" }); BI(p2, { x: 520, y: 40, "font-size": 13, "font-weight": 700, "class": "amb" }, "PSI 2.887 · investigate!", "PSI 2.887 · jaanch karo!");
+    B.scene(document.getElementById("scC"), [
+      ["Baseline: last month's answer lengths, centred near 420 tokens.", "Baseline: pichhle mahine ke jawabon ki lambaai, lagbhag 420 tokens ke aas-paas."],
+      ["A normal week sits right on top of it. PSI 0.065: stable.", "Ek aam hafta bilkul uske upar. PSI 0.065: sthir."],
+      ["After a silent model update, the distribution shifts right. PSI 2.887: far above 0.25. Page the owner, compare with evals, consider pinning the old model version.", "Chupchaap model update ke baad distribution daayein khisak gaya. PSI 2.887: 0.25 se bahut upar. Owner ko page karo, evals se compare karo, purana model version pin karne par socho."]
+    ], function (i) { show(base, true); show(week, i === 1); show(upd, i === 2); show(p1, i === 1); show(p2, i === 2); });
+  })();
+})();
+</script>
+</body>
+</html>

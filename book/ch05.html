@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 5 · What a Harness Is</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 05</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 05 · Building Haron's team</span><span class="l-hi">Chapter 05 · Haron ki team banana</span></div>
+  <h1><span class="l-en">What a Harness Is</span><span class="l-hi">Harness Kya Hai</span></h1>
+  <div class="story">
+    <p class="l-en">Haron has cousins: Claude, GPT, Gemini, Llama, Qwen. They are all brains of the same kind, but each speaks a slightly different <em>dialect</em> when you send it messages and tools. A company that wants freedom to switch needs one team that speaks to all of them. In Part II, we build that team in Python, one piece per chapter. The code lives in <code>code/harness/</code> and runs without any API key.</p>
+    <p class="l-hi">Haron ke cousins hain: Claude, GPT, Gemini, Llama, Qwen. Sab ek hi tarah ke dimaag hain, par messages aur tools bhejte waqt har ek thodi alag <em>boli</em> bolta hai. Jo company model badalne ki aazaadi chahti hai, use aisi team chahiye jo sabse baat kar sake. Part II mein hum woh team Python mein banaayenge, har chapter mein ek hissa. Code <code>code/harness/</code> mein hai aur bina API key ke chalta hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The layers of a harness and what each owns</span><span class="l-hi">Harness ki layers aur har ek ki zimmedaari</span></li>
+    <li><b>2</b><span class="l-en">One neutral message format, translated at the edge</span><span class="l-hi">Ek neutral message format, kinaare par translate</span></li>
+    <li><b>3</b><span class="l-en">How one request travels through the stack</span><span class="l-hi">Ek request stack mein kaise safar karti hai</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The travel adapter</span><span class="l-hi">Travel adapter</span></h2></div>
+<div class="story">
+  <p class="l-en">When you travel abroad, you don't rewire your phone charger; you carry an adapter. The harness does the same: inside, everything uses one neutral <code>Message</code> format. Only at the very edge does a small <strong>provider adapter</strong> translate it into each model's dialect.</p>
+  <p class="l-hi">Videsh jaate waqt aap phone charger ki wiring nahi badalte; adapter le jaate ho. Harness bhi yahi karta hai: andar sab kuch ek neutral <code>Message</code> format mein hai. Sirf bilkul kinaare par ek chhota <strong>provider adapter</strong> use har model ki boli mein translate karta hai.</p>
+</div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 300" width="760" role="img" aria-label="One neutral message is translated into Anthropic and OpenAI-compatible formats"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">The layers of the team</span><span class="l-hi">Team ki layers</span></h2></div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 340" width="760" role="img" aria-label="Harness layers stacked from the model up to the user interface"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">One request's journey</span><span class="l-hi">Ek request ka safar</span></h2></div>
+<div class="story">
+  <p class="l-en">Follow a single question, "What's the status of ORD-100232?", from the user down to the model and back. Every layer adds or checks something.</p>
+  <p class="l-hi">Ek sawaal, "ORD-100232 ka status kya hai?", ko user se model tak aur wapas follow karo. Har layer kuch jodti ya check karti hai.</p>
+</div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 340" width="760" role="img" aria-label="A request moves down through the layers to the model and back up"></svg></div></figure>
+
+<div class="callout harness">
+  <span class="tag">Harness note</span>
+  <h4><span class="l-en">Normalise at the edge, but keep capability flags</span><span class="l-hi">Kinaare par normalise karo, par capability flags rakho</span></h4>
+  <p class="l-en">Providers differ in more than syntax: where the system prompt goes, how parallel tool results are returned, whether <code>temperature</code> is accepted, how caching is turned on, what stop reasons mean. Translate the common core, but let each adapter declare what it supports (caching, effort, sampling knobs, vision), so the rest of the harness can choose instead of guessing.</p>
+  <p class="l-hi">Providers mein farak sirf syntax ka nahi: system prompt kahan jaata hai, parallel tool results kaise lautte hain, <code>temperature</code> accept hota hai ya nahi, caching kaise on hoti hai, stop reasons ka matlab kya hai. Common core translate karo, par har adapter batayein ki woh kya support karta hai (caching, effort, sampling knobs, vision), taaki baaki harness andaaza nahi, chunav kare.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">Freedom to switch is a negotiating position</span><span class="l-hi">Badalne ki aazaadi ek mol-bhaav ki taakat hai</span></h4>
+  <p class="l-en">A company whose agents only work with one provider has no leverage on price, region or terms. With a clean adapter layer and evals per provider (Chapter 16), you can move a workload in days. Don't chase the lowest common denominator, though: use each provider's best features behind capability flags.</p>
+  <p class="l-hi">Jis company ke agents sirf ek provider ke saath chalte hain, uske paas daam, region ya sharton par koi taakat nahi. Saaf adapter layer aur har provider ke evals (Chapter 16) ke saath aap kaam ko dinon mein shift kar sakte ho. Par sabse neeche ke common denominator ke peeche mat bhaago: har provider ki best features capability flags ke peeche use karo.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: provider differences that bite</span><span class="l-hi">Gehraai mein: providers ke farak jo kaatte hain</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <div class="tablewrap"><table>
+      <thead><tr><th></th><th>Anthropic Messages</th><th>OpenAI-compatible Chat</th></tr></thead>
+      <tbody>
+        <tr><td><span class="l-en">System prompt</span><span class="l-hi">System prompt</span></td><td><code>system</code> field</td><td><code>{"role":"system"}</code> message</td></tr>
+        <tr><td><span class="l-en">Tool schema field</span><span class="l-hi">Tool schema field</span></td><td><code>input_schema</code></td><td><code>function.parameters</code></td></tr>
+        <tr><td><span class="l-en">Tool call</span><span class="l-hi">Tool call</span></td><td><code>tool_use</code> block, <code>input</code> object</td><td><code>tool_calls[]</code>, <code>arguments</code> JSON string</td></tr>
+        <tr><td><span class="l-en">Tool result</span><span class="l-hi">Tool result</span></td><td><code>tool_result</code> blocks in one user message</td><td>one <code>{"role":"tool"}</code> message each</td></tr>
+        <tr><td><span class="l-en">Sampling knobs</span><span class="l-hi">Sampling knobs</span></td><td><span class="l-en">rejected since Oct 2026; use <code>effort</code></span><span class="l-hi">Oct 2026 se reject; <code>effort</code> use karo</span></td><td><span class="l-en">usually accepted</span><span class="l-hi">aksar accept</span></td></tr>
+        <tr><td><span class="l-en">Caching</span><span class="l-hi">Caching</span></td><td><code>cache_control</code></td><td><span class="l-en">automatic on many providers</span><span class="l-hi">kai providers par automatic</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="l-en">Gemini, vLLM, Ollama and many gateways expose an OpenAI-compatible endpoint, so one adapter covers them, with small quirks. Always parse tool-call arguments with a JSON parser; never compare raw strings.</p>
+    <p class="l-hi">Gemini, vLLM, Ollama aur kai gateways OpenAI-compatible endpoint dete hain, isliye ek adapter unhe cover karta hai, chhoti-moti alag aadaton ke saath. Tool-call arguments hamesha JSON parser se padho; kabhi raw strings compare mat karo.</p>
+  </div>
+</details>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the neutral types and the adapters</span><span class="l-hi">Coders ke liye: neutral types aur adapters</span><span class="lvl">code/harness/types.py · providers.py</span></summary>
+  <div class="inner">
+<pre>@dataclass
+class Message:
+    role: str                       # "user" | "assistant" | "tool"
+    content: str = ""
+    tool_calls: list[ToolCall] = field(default_factory=list)
+    tool_call_id: str | None = None
+    is_error: bool = False
+
+class Provider(ABC):
+    @abstractmethod
+    def complete(self, *, model, system, messages, tools=None, max_tokens=1024, **opts) -> Response: ...
+
+# MockProvider       - offline, scripted (every demo in this book)
+# AnthropicProvider  - client.messages.create(...)
+# OpenAICompatProvider(base_url=...) - OpenAI, vLLM, Ollama, Gemini-compat</pre>
+<pre>$ python code/ch05/providers_demo.py   (tool result only)
+== Anthropic Messages API ==
+ {"role": "user", "content": [{"type": "tool_result", "tool_use_id": "call_1",
+   "content": "{\"temp_c\": 24, \"sky\": \"cloudy\"}"}]}
+== OpenAI-compatible Chat Completions ==
+ {"role": "tool", "tool_call_id": "call_1",
+  "content": "{\"temp_c\": 24, \"sky\": \"cloudy\"}"}</pre>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>My cousins speak different dialects. The team uses one neutral language inside.</li><li>Small adapters translate only at the edge.</li><li>The team has layers: interface, session, loop, context, tools, policy, adapters, with budget and telemetry alongside.</li><li>Being able to switch models keeps a company free.</li></ol>
+  <ol class="l-hi"><li>Mere cousins alag boliyaan bolte hain. Team andar ek neutral bhasha use karti hai.</li><li>Chhote adapters sirf kinaare par translate karte hain.</li><li>Team ki layers hain: interface, session, loop, context, tools, policy, adapters, aur saath mein budget aur telemetry.</li><li>Model badal paana company ko aazaad rakhta hai.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add a <code>capabilities</code> dict to each provider class (<code>{"cache": True, "temperature": False, ...}</code>) and make <code>OpenAICompatProvider</code> drop <code>temperature</code> when the flag is off. <span class="level">coder</span></p><p class="l-hi">Har provider class mein <code>capabilities</code> dict jodo (<code>{"cache": True, "temperature": False, ...}</code>) aur flag off ho toh <code>OpenAICompatProvider</code> <code>temperature</code> na bheje. <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Install <code>anthropic</code>, set an API key, and run the Chapter 6 demo with <code>AnthropicProvider()</code> instead of the mock. What changed in the transcript? <span class="level">harness</span></p><p class="l-hi"><code>anthropic</code> install karo, API key set karo, aur Chapter 6 demo mock ki jagah <code>AnthropicProvider()</code> se chalao. Transcript mein kya badla? <span class="level">harness</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Anthropic. <em>Messages API</em> and <em>Tool use</em> documentation.</li>
+  <li>OpenAI. <em>Chat Completions API</em> reference. · vLLM. <em>OpenAI-Compatible Server.</em></li>
+  <li>Anthropic (2024). <em>Building effective agents.</em></li>
+</ol>
+
+<nav class="pager"><a href="ch04.html">← Ch 4</a><a href="ch06.html"><span class="l-en">Ch 6 · The Manager's Loop →</span><span class="l-hi">Ch 6 · Manager ka Loop →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls, move = B.move;
+
+  /* Scene A: adapter */
+  (function () {
+    var s = document.getElementById("svA");
+    var neutral = E(s, "g", { "class": "anim" });
+    E(neutral, "rect", { x: 10, y: 60, width: 250, height: 150, rx: 8, "class": "box-sig" });
+    BI(neutral, { x: 22, y: 84, "font-size": 12, "font-weight": 700 }, "Inside the harness", "Harness ke andar");
+    ["Message(", "  role=\"tool\",", "  tool_call_id=\"call_1\",", "  content='{\"temp_c\": 24}'", ")"].forEach(function (l, i) {
+      E(neutral, "text", { x: 22, y: 110 + i * 18, "font-size": 12, "class": "mono" }, l);
+    });
+    var plug = E(s, "g", { "class": "anim" });
+    E(plug, "rect", { x: 285, y: 115, width: 90, height: 40, rx: 8, "class": "box-amb" });
+    BI(plug, { x: 330, y: 140, "text-anchor": "middle", "font-size": 12, "font-weight": 700 }, "adapter", "adapter");
+    B.arrow(s, plug, 260, 135, 283, 135, "amb");
+    B.arrow(s, plug, 375, 135, 398, 135, "amb");
+    var out = E(s, "g", { "class": "anim" });
+    E(out, "rect", { x: 400, y: 40, width: 350, height: 190, rx: 8, style: "fill:#10222c" });
+    var title = E(out, "text", { x: 414, y: 64, "font-size": 12, "font-weight": 700, style: "fill:#ffd27a" }, "");
+    var lines = [];
+    for (var i = 0; i < 6; i++) lines.push(E(out, "text", { x: 414, y: 92 + i * 20, "font-size": 12, "class": "mono", style: "fill:#d7f6fa" }, ""));
+    var who = E(s, "g", { "class": "anim" });
+    var whoT = E(who, "text", { x: 575, y: 260, "text-anchor": "middle", "font-size": 12, "class": "muted" }, "");
+    var formats = {
+      a: ["Anthropic Messages API", ['{"role": "user",', ' "content": [{', '   "type": "tool_result",', '   "tool_use_id": "call_1",', '   "content": "{\\"temp_c\\": 24}"', ' }]}']],
+      o: ["OpenAI-compatible Chat", ['{"role": "tool",', ' "tool_call_id": "call_1",', ' "content": "{\\"temp_c\\": 24}"}', '', '', '']]
+    };
+    function setFmt(k) {
+      title.textContent = formats[k][0];
+      formats[k][1].forEach(function (l, i) { lines[i].textContent = l; });
+    }
+    B.scene(document.getElementById("scA"), [
+      ["Inside the harness, a tool result is a plain, neutral <code>Message</code>. The loop, the context manager and the logs all use this one shape.", "Harness ke andar tool result ek seedha, neutral <code>Message</code> hai. Loop, context manager aur logs sab yahi ek shape use karte hain."],
+      ["To Claude, the adapter sends it as a <code>tool_result</code> block inside a <em>user</em> message.", "Claude ko adapter ise <em>user</em> message ke andar <code>tool_result</code> block ki tarah bhejta hai."],
+      ["To OpenAI, Gemini's compatible endpoint, vLLM or Ollama, the same message becomes a separate <code>role: \"tool\"</code> message.", "OpenAI, Gemini ke compatible endpoint, vLLM ya Ollama ko wahi message alag <code>role: \"tool\"</code> message ban jaata hai."],
+      ["Change the provider, and only the adapter changes. Nothing else in the harness notices.", "Provider badlo, toh sirf adapter badalta hai. Baaki harness ko pata bhi nahi chalta."]
+    ], function (i) {
+      show(neutral, true); show(plug, i >= 1); show(out, i >= 1); show(who, i >= 1);
+      if (i === 1) { setFmt("a"); whoT.textContent = "Claude"; }
+      if (i >= 2) { setFmt("o"); whoT.textContent = "GPT · Gemini (compat) · vLLM · Ollama"; }
+    });
+  })();
+
+  /* Scene B: layers */
+  var LAYERS = [
+    ["Models", "Models", "Claude · GPT · Gemini · Llama (vLLM)", "Claude · GPT · Gemini · Llama (vLLM)", "box-sig", "Ch 1-4"],
+    ["Provider adapters", "Provider adapters", "one neutral format, translated at the edge", "ek neutral format, kinaare par translate", "box", "Ch 5"],
+    ["Agent loop", "Agent loop", "ask → act → observe → stop", "poochho → karo → dekho → ruko", "box", "Ch 6"],
+    ["Tools & MCP", "Tools & MCP", "schemas, validation, permissions", "schemas, validation, permissions", "box", "Ch 7"],
+    ["Context manager", "Context manager", "layout, retrieval, compaction, memory", "layout, retrieval, compaction, memory", "box", "Ch 8"],
+    ["Hooks & policy", "Hooks & policy", "rules the model cannot talk around", "niyam jinhe model baaton se nahi taal sakta", "box-plm", "Ch 10-14"],
+    ["Session & interface", "Session & interface", "chat UI, CLI, API, Slack", "chat UI, CLI, API, Slack", "box", "Ch 9, 18"]
+  ];
+  (function () {
+    var s = document.getElementById("svB"), gs = [];
+    LAYERS.forEach(function (L, i) {
+      var y = 290 - i * 44;
+      var g = B.box(s, { x: 110, y: y, w: 480, h: 38, cls: L[4], fs: 13, en: L[0] + " — " + L[2], hi: L[1] + " — " + L[3] });
+      E(g, "text", { x: 600, y: y + 24, "font-size": 11, "class": "mono muted" }, L[5]);
+      gs.push(g);
+    });
+    var rails = E(s, "g", { "class": "anim" });
+    E(rails, "rect", { x: 10, y: 26, width: 86, height: 302, rx: 6, "class": "box-amb" });
+    BI(rails, { x: 53, y: 172, "text-anchor": "middle", "font-size": 12, "font-weight": 700 }, "Budget", "Budget");
+    BI(rails, { x: 53, y: 190, "text-anchor": "middle", "font-size": 11, "class": "muted" }, "Ch 13", "Ch 13");
+    E(rails, "rect", { x: 664, y: 26, width: 86, height: 302, rx: 6, "class": "box-amb" });
+    BI(rails, { x: 707, y: 172, "text-anchor": "middle", "font-size": 12, "font-weight": 700 }, "Telemetry", "Telemetry");
+    BI(rails, { x: 707, y: 190, "text-anchor": "middle", "font-size": 11, "class": "muted" }, "Ch 17", "Ch 17");
+    var caps = LAYERS.map(function (L, i) {
+      return ["Layer " + (i + 1) + ": <strong>" + L[0] + "</strong>. " + L[2] + ".", "Layer " + (i + 1) + ": <strong>" + L[1] + "</strong>. " + L[3] + "."];
+    });
+    caps.push(["Two rails run alongside every layer: <strong>budget</strong> (who may spend what) and <strong>telemetry</strong> (what happened, how long, how much).", "Har layer ke saath do rails chalti hain: <strong>budget</strong> (kaun kitna kharch kar sakta hai) aur <strong>telemetry</strong> (kya hua, kitna samay, kitna kharch)."]);
+    B.scene(document.getElementById("scB"), caps, function (i) {
+      gs.forEach(function (g, k) { show(g, k <= i); });
+      show(rails, i >= LAYERS.length);
+    }, { delay: 2400 });
+  })();
+
+  /* Scene C: request journey */
+  (function () {
+    var s = document.getElementById("svC");
+    var stops = [["UI", "user asks"], ["Session", "+ history"], ["Policy hooks", "PII masked"], ["Context", "+ rules, docs"], ["Loop", "step 1 of ≤10"], ["Adapter", "→ wire format"], ["Model", "asks get_order"]];
+    var ys = stops.map(function (_, i) { return 22 + i * 44; });
+    var rects = [];
+    stops.forEach(function (st, i) {
+      rects.push(E(s, "rect", { x: 200, y: ys[i], width: 220, height: 36, rx: 6, "class": i === 6 ? "box-sig anim" : "box anim" }));
+      E(s, "text", { x: 310, y: ys[i] + 23, "text-anchor": "middle", "font-size": 13, "font-weight": 600 }, st[0]);
+    });
+    var notes = stops.map(function (st, i) { var t = E(s, "text", { x: 440, y: ys[i] + 23, "font-size": 12, "class": "mono sig anim" }, st[1]); return t; });
+    var back = E(s, "g", { "class": "anim" });
+    E(back, "path", { d: "M180 " + (ys[6] + 18) + " C 120 " + ys[6] + ", 120 " + ys[0] + ", 180 " + (ys[0] + 18), "class": "line-amb dash", "stroke-width": 2, fill: "none" });
+    BI(back, { x: 20, y: ys[3] - 6, "font-size": 12, "class": "amb", "font-weight": 600 }, "tool runs, result", "tool chala, result");
+    BI(back, { x: 20, y: ys[3] + 10, "font-size": 12, "class": "amb", "font-weight": 600 }, "goes back down;", "phir neeche gaya;");
+    BI(back, { x: 20, y: ys[3] + 26, "font-size": 12, "class": "amb", "font-weight": 600 }, "answer comes up", "jawab upar aaya");
+    var dot = E(s, "circle", { cx: 0, cy: 0, r: 8, "class": "amb anim" });
+    B.scene(document.getElementById("scC"), [
+      ["The user types the question in a chat window.", "User chat window mein sawaal likhta hai."],
+      ["The session layer adds the conversation so far.", "Session layer ab tak ki baatcheet jodti hai."],
+      ["Policy hooks check the text: any Aadhaar or PAN is masked before it travels further.", "Policy hooks text check karte hain: koi Aadhaar ya PAN aage jaane se pehle chhupa diya jaata hai."],
+      ["The context manager adds the rules and relevant documents, in cache-friendly order.", "Context manager niyam aur kaam ke documents jodta hai, cache-friendly order mein."],
+      ["The loop starts step 1 and checks the step and token limits.", "Loop step 1 shuru karta hai aur step aur token limits check karta hai."],
+      ["The adapter translates everything into the chosen model's format.", "Adapter sab kuch chune hue model ke format mein translate karta hai."],
+      ["The model replies: “call get_order(ORD-100232)”. The tool runs, its result goes back down, and the next answer travels up to the user.", "Model jawab deta hai: “get_order(ORD-100232) call karo”. Tool chalta hai, result phir neeche jaata hai, aur agla jawab upar user tak aata hai."]
+    ], function (i) {
+      dot.style.transform = "translate(" + 200 + "px," + (ys[i] + 18) + "px)";
+      rects.forEach(function (r, k) { cls(r, k === i ? "box-amb" : (k === 6 ? "box-sig" : "box")); });
+      notes.forEach(function (n, k) { n.style.opacity = k <= i ? 1 : 0; });
+      show(back, i === 6);
+    }, { delay: 2400 });
+  })();
+})();
+</script>
+</body>
+</html>

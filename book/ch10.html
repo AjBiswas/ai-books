@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 10 · Hooks, Skills and Policies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 10</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 10 · Building Haron's team</span><span class="l-hi">Chapter 10 · Haron ki team banana</span></div>
+  <h1><span class="l-en">Hooks, Skills &amp; Policies</span><span class="l-hi">Hooks, Skills &amp; Policies</span></h1>
+  <div class="story">
+    <p class="l-en">You can <em>ask</em> Haron never to force-push to the main branch. Most days it will listen. But "most days" is not good enough for a bank. A <strong>prompt is advice; a hook is a law.</strong> Hooks are small pieces of code that run at fixed moments in the loop and can watch, change or block what happens, whatever the model says.</p>
+    <p class="l-hi">Aap Haron se <em>keh</em> sakte ho ki main branch par kabhi force-push mat karna. Zyaadatar din woh maanega. Par bank ke liye "zyaadatar din" kaafi nahi. <strong>Prompt salaah hai; hook kanoon hai.</strong> Hooks chhote code ke tukde hain jo loop mein tay pal par chalte hain aur jo ho raha hai use dekh, badal ya rok sakte hain, model chahe jo bole.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The five moments where hooks run</span><span class="l-hi">Paanch pal jahan hooks chalte hain</span></li>
+    <li><b>2</b><span class="l-en">Deny, modify, and audit</span><span class="l-hi">Mana karna, badalna, aur audit</span></li>
+    <li><b>3</b><span class="l-en">Permission modes and human approval</span><span class="l-hi">Permission modes aur insaani approval</span></li>
+    <li><b>4</b><span class="l-en">Skills: packaged know-how loaded on demand</span><span class="l-hi">Skills: zaroorat par load hone wala packaged gyaan</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Five checkpoints in every lap</span><span class="l-hi">Har chakkar mein paanch checkpoints</span></h2></div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 250" width="760" role="img" aria-label="A timeline of one loop lap with five hook points"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Hooks in action</span><span class="l-hi">Hooks kaam karte hue</span></h2></div>
+<div class="story">
+  <p class="l-en">Haron is asked to "ship it". It plans three shell commands. Two hooks are installed: one denies force-pushes, one forces every deploy to be a dry run. These are the real results from this chapter's lab.</p>
+  <p class="l-hi">Haron se kaha gaya "ship it". Woh teen shell commands plan karta hai. Do hooks lage hain: ek force-push mana karta hai, ek har deploy ko dry run bana deta hai. Yeh is chapter ke lab ke asli results hain.</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 240" width="760" role="img" aria-label="Three commands pass through hooks: allowed, blocked, modified"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">How much freedom? Permission modes</span><span class="l-hi">Kitni aazaadi? Permission modes</span></h2></div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 260" width="760" role="img" aria-label="A ladder of permission modes from read-only to full autonomy"></svg></div></figure>
+
+<h2><span class="l-en">Skills: know-how in a folder</span><span class="l-hi">Skills: ek folder mein gyaan</span></h2>
+<p class="l-en">A <strong>skill</strong> is a folder with a <code>SKILL.md</code> file: a short name and description at the top (always visible to Haron), and detailed steps, scripts and templates below (read only when needed). Teams package their way of doing things, like "how we write release notes" or "how to file a GST return", once, and every agent can use it.</p>
+<p class="l-hi"><strong>Skill</strong> ek folder hai jisme <code>SKILL.md</code> file hoti hai: upar chhota naam aur description (Haron ko hamesha dikhta hai), aur neeche detailed steps, scripts aur templates (sirf zaroorat par padhe jaate hain). Teams apna kaam karne ka tareeka, jaise "hum release notes kaise likhte hain" ya "GST return kaise file karein", ek baar package karti hain, aur har agent use use kar sakta hai.</p>
+<div class="codehead"><span>skills/gst-return/SKILL.md</span><span>markdown</span></div>
+<pre>---
+name: gst-return
+description: File a monthly GST return (GSTR-3B) from the sales ledger. Use when asked about GST filing.
+---
+1. Read the ledger with the `read_sheet` tool; total taxable value by rate (5, 12, 18, 28%).
+2. Run scripts/reconcile.py to match against GSTR-2B input credit.
+3. Fill templates/gstr3b.json. Never submit; ask a human to review and file.</pre>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Haron can be talked out of a prompt rule</span><span class="l-hi">Haron ko baaton se prompt ka niyam tudwaya ja sakta hai</span></h4>
+  <p class="l-en">A long chat, an urgent-sounding user ("the CEO needs this now!") or text hidden in a document can all push Haron past an instruction in its prompt. Hooks run outside the model, so none of that reaches them. Put every rule that <em>must</em> hold in a hook; keep prompts for guidance and style.</p>
+  <p class="l-hi">Lambi chat, jaldi-wala user ("CEO ko abhi chahiye!") ya document mein chhupa text, sab Haron ko prompt ke niyam ke paar dhakel sakte hain. Hooks model ke bahar chalte hain, isliye inme se kuch unhe nahi chhoota. Jo niyam <em>har haal</em> mein maana jaana chahiye, use hook mein daalo; prompts ko salaah aur style ke liye rakho.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">Central hooks, managed settings</span><span class="l-hi">Central hooks, managed settings</span></h4>
+  <p class="l-en">In a company, hooks and permission rules should come from a central, version-controlled policy that individual users can't switch off (Claude Code, for example, supports organisation-managed settings). Typical company hooks: block secrets in prompts, block edits to production config, require a ticket ID for deploys, log every shell command to the SIEM.</p>
+  <p class="l-hi">Company mein hooks aur permission niyam ek central, version-controlled policy se aane chahiye jise koi user band na kar sake (jaise Claude Code organisation-managed settings support karta hai). Aam company hooks: prompts mein secrets rokna, production config ke edits rokna, deploy ke liye ticket ID zaroori karna, har shell command SIEM mein log karna.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the hook bus</span><span class="l-hi">Coders ke liye: hook bus</span><span class="lvl">code/harness/hooks.py</span></summary>
+  <div class="inner">
+<pre>hooks = HookBus()
+
+@hooks.on("pre_tool")
+def no_force_push(call, messages):
+    if call.name == "run_shell" and "push --force" in call.input["cmd"]:
+        return Deny("force-push to shared branches is not allowed")
+
+@hooks.on("pre_tool")
+def always_dry_run_deploys(call, messages):
+    if call.name == "run_shell" and call.input["cmd"].startswith("deploy") \
+            and "--dry-run" not in call.input["cmd"]:
+        return Modify({"cmd": call.input["cmd"] + " --dry-run"})</pre>
+<pre>$ python code/ch10/hooks_demo.py
+ok       pytest -q
+BLOCKED  git push --force origin main
+ok       deploy prod --dry-run</pre>
+    <p class="l-en">Real hooks should parse commands properly (<code>shlex</code>), not just search strings: <code>git push -f</code> and <code>git push --force-with-lease</code> are also force-pushes.</p>
+    <p class="l-hi">Asli hooks ko commands theek se parse karne chahiye (<code>shlex</code>), sirf string search nahi: <code>git push -f</code> aur <code>git push --force-with-lease</code> bhi force-push hain.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Prompts guide me; hooks bind me.</li><li>Hooks run before and after my requests and tool calls, and at the stop.</li><li>A hook can allow, deny, modify or just record.</li><li>Give me only the freedom the task needs, and ask a human for dangerous steps.</li><li>Skills let me load a team's know-how only when I need it.</li></ol>
+  <ol class="l-hi"><li>Prompts mujhe raah dikhaate hain; hooks mujhe baandhte hain.</li><li>Hooks meri requests aur tool calls se pehle aur baad mein, aur rukne par chalte hain.</li><li>Hook allow, mana, badal ya bas record kar sakta hai.</li><li>Mujhe utni hi aazaadi do jitni kaam ko chahiye, aur khatarnaak steps ke liye insaan se poochho.</li><li>Skills mujhe team ka gyaan tabhi load karne dete hain jab zaroorat ho.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Write a <code>pre_request</code> hook that blocks any message containing something that looks like an API key (e.g. <code>sk-</code> followed by 20+ characters). <span class="level">coder</span></p><p class="l-hi">Ek <code>pre_request</code> hook likho jo API key jaisi dikhne wali cheez (jaise <code>sk-</code> ke baad 20+ characters) wale har message ko rok de. <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">List five rules for your company's coding agents. For each, decide: prompt, hook, or permission mode? <span class="level">enterprise</span></p><p class="l-hi">Apni company ke coding agents ke liye paanch niyam likho. Har ek ke liye tay karo: prompt, hook, ya permission mode? <span class="level">enterprise</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Anthropic. <em>Claude Code: Hooks, Settings and Skills</em> documentation.</li>
+  <li>Anthropic (2025). <em>Equipping agents for the real world with Agent Skills.</em></li>
+  <li>OWASP (2025). <em>Top 10 for LLM Applications: Excessive Agency.</em></li>
+</ol>
+
+<nav class="pager"><a href="ch09.html">← Ch 9</a><a href="ch11.html"><span class="l-en">Ch 11 · The Company Blueprint →</span><span class="l-hi">Ch 11 · Company ka Naksha →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls;
+
+  /* Scene A: hook timeline */
+  (function () {
+    var s = document.getElementById("svA");
+    E(s, "line", { x1: 20, y1: 110, x2: 740, y2: 110, "class": "line", "stroke-width": 3 });
+    var phases = [[150, "model call", "model call", "box-sig"], [470, "tool runs", "tool chalta", "box"]];
+    phases.forEach(function (p) { B.box(s, { x: p[0] - 60, y: 92, w: 120, h: 36, cls: p[3], en: p[1], hi: p[2] }); });
+    var hooks = [
+      [60, "pre_request", "redact PII, block secrets, check budget", "PII chhupao, secrets roko, budget check"],
+      [250, "post_response", "log tokens and cost, scan output", "tokens aur kharch log, output scan"],
+      [360, "pre_tool", "deny / modify / ask a human", "mana / badlo / insaan se poochho"],
+      [580, "post_tool", "audit, taint check, truncate", "audit, taint check, chhota karo"],
+      [700, "stop", "final report, alerts", "final report, alerts"]
+    ];
+    var pins = [], notes = [];
+    hooks.forEach(function (h, i) {
+      var g = E(s, "g", { "class": "anim" });
+      E(g, "circle", { cx: h[0], cy: 110, r: 10, "class": "box-plm", "stroke-width": 2 });
+      E(g, "text", { x: h[0], y: i % 2 ? 160 : 70, "text-anchor": "middle", "font-size": 12, "font-weight": 700, "class": "mono" }, h[1]);
+      pins.push(g);
+      var n = E(s, "g", { "class": "anim" });
+      BI(n, { x: 380, y: 222, "text-anchor": "middle", "font-size": 14, "class": "plm", "font-weight": 600 }, h[2], h[3]);
+      notes.push(n);
+    });
+    var caps = hooks.map(function (h) { return ["<code>" + h[1] + "</code>: " + h[2] + ".", "<code>" + h[1] + "</code>: " + h[3] + "."]; });
+    B.scene(document.getElementById("scA"), caps, function (i) {
+      pins.forEach(function (p, k) { p.style.opacity = k === i ? 1 : 0.3; });
+      notes.forEach(function (n, k) { show(n, k === i); });
+    }, { delay: 2400 });
+  })();
+
+  /* Scene B: three commands */
+  (function () {
+    var s = document.getElementById("svB");
+    var cmds = [["pytest -q", "ok", "pytest -q", "box-sig"], ["git push --force origin main", "BLOCKED", "force-push to shared branches is not allowed", "box-amb"], ["deploy prod", "MODIFIED", "deploy prod --dry-run", "box-plm"]];
+    var rows = [];
+    cmds.forEach(function (c, i) {
+      var y = 20 + i * 70, g = E(s, "g", { "class": "anim" });
+      E(g, "rect", { x: 20, y: y, width: 260, height: 44, rx: 6, style: "fill:#10222c" });
+      E(g, "text", { x: 32, y: y + 27, "font-size": 12, "class": "mono", style: "fill:#d7f6fa" }, "$ " + c[0]);
+      var hk = E(g, "rect", { x: 310, y: y + 4, width: 110, height: 36, rx: 18, "class": "box-plm anim" });
+      E(g, "text", { x: 365, y: y + 27, "text-anchor": "middle", "font-size": 12, "font-weight": 700 }, "hooks");
+      var out = E(g, "g", { "class": "anim" });
+      E(out, "rect", { x: 450, y: y, width: 290, height: 44, rx: 6, "class": c[3] });
+      E(out, "text", { x: 462, y: y + 18, "font-size": 11, "font-weight": 700, "class": "mono" }, c[1]);
+      E(out, "text", { x: 462, y: y + 35, "font-size": 11, "class": "mono" }, c[2]);
+      B.arrow(s, g, 282, y + 22, 306, y + 22, "");
+      var a = B.arrow(s, out, 422, y + 22, 446, y + 22, "");
+      rows.push([g, out]);
+    });
+    B.scene(document.getElementById("scB"), [
+      ["Command 1, <code>pytest -q</code>: no hook objects. It runs.", "Command 1, <code>pytest -q</code>: koi hook aitraaz nahi karta. Chalta hai."],
+      ["Command 2, a force-push to main: the <code>pre_tool</code> hook returns <strong>Deny</strong>. The tool never runs; Haron reads the reason.", "Command 2, main par force-push: <code>pre_tool</code> hook <strong>Deny</strong> lautaata hai. Tool kabhi nahi chalta; Haron wajah padhta hai."],
+      ["Command 3, a deploy: the hook returns <strong>Modify</strong>, adding <code>--dry-run</code>. A real deploy would need a human (next scene).", "Command 3, deploy: hook <strong>Modify</strong> lautaata hai, <code>--dry-run</code> jodkar. Asli deploy ke liye insaan chahiye (agla scene)."]
+    ], function (i) { rows.forEach(function (r, k) { show(r[0], k <= i); show(r[1], k <= i); }); });
+  })();
+
+  /* Scene C: permission ladder */
+  (function () {
+    var s = document.getElementById("svC");
+    var rungs = [
+      ["read-only", "read tools only: search, read files", "sirf read tools: search, files padhna", "box-sig"],
+      ["default", "read + write; dangerous needs a human", "read + write; dangerous ke liye insaan", "box-amb"],
+      ["full", "everything, no questions (sandboxes only!)", "sab kuch, bina pooche (sirf sandbox mein!)", "box-plm"]
+    ];
+    var gs = [];
+    rungs.forEach(function (r, i) {
+      var y = 190 - i * 70, g = E(s, "g", { "class": "anim" });
+      E(g, "rect", { x: 120, y: y, width: 470, height: 50, rx: 6, "class": "box anim" });
+      E(g, "text", { x: 136, y: y + 31, "font-size": 15, "font-weight": 700, "class": "mono" }, r[0]);
+      BI(g, { x: 260, y: y + 31, "font-size": 12 }, r[1], r[2]);
+      gs.push([g, r[3]]);
+    });
+    E(s, "line", { x1: 100, y1: 40, x2: 100, y2: 240, "class": "line", "stroke-width": 3 });
+    E(s, "line", { x1: 610, y1: 40, x2: 610, y2: 240, "class": "line", "stroke-width": 3 });
+    BI(s, { x: 640, y: 60, "font-size": 12, "class": "amb", "font-weight": 700 }, "more risk", "zyaada khatra");
+    BI(s, { x: 640, y: 230, "font-size": 12, "class": "sig", "font-weight": 700 }, "more safety", "zyaada suraksha");
+    var human = E(s, "g", { "class": "anim" });
+    E(human, "rect", { x: 630, y: 110, width: 120, height: 60, rx: 8, "class": "box-amb" });
+    BI(human, { x: 690, y: 135, "text-anchor": "middle", "font-size": 12, "font-weight": 700 }, "Approve?", "Approve?");
+    BI(human, { x: 690, y: 155, "text-anchor": "middle", "font-size": 11 }, "[yes] [no]", "[haan] [nahi]");
+    B.scene(document.getElementById("scC"), [
+      ["<strong>read-only</strong>: Haron can look but not touch. Good for research, audits, and new agents you don't trust yet.", "<strong>read-only</strong>: Haron dekh sakta hai, chhoo nahi sakta. Research, audits, aur naye agents ke liye jin par abhi bharosa nahi."],
+      ["<strong>default</strong>: normal work is allowed; anything marked dangerous (delete, pay, deploy) stops and asks a human.", "<strong>default</strong>: aam kaam allowed; dangerous marked kuch bhi (delete, pay, deploy) ruk kar insaan se poochhta hai."],
+      ["<strong>full</strong>: no questions asked. Use only inside a sandbox with nothing valuable in it, such as a throwaway container in CI.", "<strong>full</strong>: koi sawaal nahi. Sirf aise sandbox mein jahan kuch keemti na ho, jaise CI ka throwaway container."]
+    ], function (i) {
+      gs.forEach(function (g, k) { cls(g[0].firstChild, k === i ? g[1] : "box"); g[0].style.opacity = k === i ? 1 : 0.4; });
+      show(human, i === 1);
+    });
+  })();
+})();
+</script>
+</body>
+</html>

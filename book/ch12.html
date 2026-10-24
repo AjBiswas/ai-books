@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 12 · Rules and Regulations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part III · Chapter 12</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 12 · Haron goes to a big company</span><span class="l-hi">Chapter 12 · Haron badi company mein</span></div>
+  <h1><span class="l-en">Rules &amp; Regulations</span><span class="l-hi">Niyam aur Kaanoon</span></h1>
+  <div class="story">
+    <p class="l-en">Priya writes to the bank's assistant: her email, phone number, Aadhaar, PAN and card number, all in one message. Indian law (the DPDP Act) says this personal data must be handled for a clear purpose, kept safe, and not sent where it shouldn't go. The bank's own regulator has rules too, and its European clients bring GDPR. Haron doesn't know any law. <strong>The team must make the law impossible to break by accident.</strong></p>
+    <p class="l-hi">Priya bank ke assistant ko likhti hai: uska email, phone number, Aadhaar, PAN aur card number, sab ek hi message mein. India ka kanoon (DPDP Act) kehta hai ki yeh personal data saaf maqsad ke liye use ho, surakshit rahe, aur jahan nahi jaana chahiye wahan na jaaye. Bank ke regulator ke apne niyam hain, aur European clients GDPR laate hain. Haron koi kanoon nahi jaanta. <strong>Team ko aisa banaana hai ki galti se bhi kanoon na toote.</strong></p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Mask personal data before any model sees it</span><span class="l-hi">Kisi model ke dekhne se pehle personal data chhupao</span></li>
+    <li><b>2</b><span class="l-en">Keep data inside allowed regions</span><span class="l-hi">Data ko allowed regions ke andar rakho</span></li>
+    <li><b>3</b><span class="l-en">Write rules as code, not as PDFs</span><span class="l-hi">Niyam PDF mein nahi, code mein likho</span></li>
+    <li><b>4</b><span class="l-en">The main laws and standards, and what each means for a harness</span><span class="l-hi">Mukhya kanoon aur standards, aur harness ke liye unka matlab</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The masking machine</span><span class="l-hi">Chhupaane ki machine</span></h2></div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 330" width="760" role="img" aria-label="Personal data in a message is detected and replaced by placeholders, and restored after the model answers"></svg></div></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">Pattern matching alone gives false alarms: any 12-digit number looks like an Aadhaar. Real Aadhaar numbers end in a <strong>Verhoeff check digit</strong>, and card numbers pass the <strong>Luhn check</strong>. Checking these keeps order numbers and invoice IDs intact. For names and addresses, add a named-entity model; regexes can't find them.</p>
+  <p class="l-hi">Sirf pattern matching galat alarm deta hai: koi bhi 12-digit number Aadhaar jaisa dikhta hai. Asli Aadhaar numbers <strong>Verhoeff check digit</strong> par khatam hote hain, aur card numbers <strong>Luhn check</strong> pass karte hain. Inhe check karne se order numbers aur invoice IDs bache rehte hain. Naam aur pate ke liye named-entity model jodo; regex unhe nahi dhoondh sakta.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Data stays home</span><span class="l-hi">Data ghar par rehta hai</span></h2></div>
+<div class="story">
+  <p class="l-en">Many contracts and regulators say where data may be processed. The bank's data must stay in India; the retailer's in the EU. The gateway knows which region each model endpoint runs in and refuses any route that would carry data across the line.</p>
+  <p class="l-hi">Kai contracts aur regulators batate hain ki data kahan process ho sakta hai. Bank ka data India mein rehna chahiye; retailer ka EU mein. Gateway jaanta hai ki har model endpoint kis region mein chalta hai, aur aisa koi bhi route mana karta hai jo data ko seema ke paar le jaaye.</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 270" width="760" role="img" aria-label="Tenant data may only go to model endpoints in allowed regions"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Rules as code</span><span class="l-hi">Code mein niyam</span></h2></div>
+<div class="story">
+  <p class="l-en">A rule written in a PDF is followed when someone remembers it. A rule written as code is checked on every request, versioned in Git, reviewed like software, and can be shown to an auditor. This is <strong>policy-as-code</strong>.</p>
+  <p class="l-hi">PDF mein likha niyam tab maana jaata hai jab kisi ko yaad ho. Code mein likha niyam har request par check hota hai, Git mein version hota hai, software ki tarah review hota hai, aur auditor ko dikhaaya ja sakta hai. Ise <strong>policy-as-code</strong> kehte hain.</p>
+</div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 290" width="760" role="img" aria-label="A tenant policy file and the decisions the policy engine makes for three requests"></svg></div></figure>
+
+<h2><span class="l-en">The rulebook, in one table</span><span class="l-hi">Ek table mein rulebook</span></h2>
+<p class="l-en"><em>This is an engineer's map, not legal advice. Laws and timelines change; confirm the current position with your legal team.</em></p>
+<p class="l-hi"><em>Yeh engineer ka naksha hai, kanooni salaah nahi. Kanoon aur timelines badalte hain; abhi ki sthiti apni legal team se confirm karo.</em></p>
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Law / standard</span><span class="l-hi">Kanoon / standard</span></th><th><span class="l-en">Covers</span><span class="l-hi">Kya cover karta hai</span></th><th><span class="l-en">What the harness must do</span><span class="l-hi">Harness ko kya karna hai</span></th></tr></thead>
+<tbody>
+<tr><td><b>DPDP Act 2023</b> (India) <span class="l-en">+ DPDP Rules 2025, phased in</span><span class="l-hi">+ DPDP Rules 2025, charanon mein laagu</span></td><td><span class="l-en">Digital personal data of people in India: consent, purpose, security, breach notice, rights to access and erase</span><span class="l-hi">India ke logon ka digital personal data: sahmati, maqsad, suraksha, breach ki soochna, dekhne aur mitaane ka haq</span></td><td><span class="l-en">PII masking, purpose tags per tenant, retention limits, deletion of memory on request, breach logs</span><span class="l-hi">PII masking, har tenant ke maqsad tags, retention limits, maangne par memory mitaana, breach logs</span></td></tr>
+<tr><td><b>GDPR</b> (EU)</td><td><span class="l-en">Personal data of people in the EU; transfers outside the EU</span><span class="l-hi">EU ke logon ka personal data; EU ke bahar transfer</span></td><td><span class="l-en">EU-region routing, data processing agreements with model vendors, right to erasure</span><span class="l-hi">EU-region routing, model vendors ke saath DPA, mitaane ka haq</span></td></tr>
+<tr><td><b>EU AI Act</b></td><td><span class="l-en">Risk-based rules for AI systems; duties for general-purpose AI providers; high-risk uses (hiring, credit) carry the heaviest duties, applying in stages from 2025</span><span class="l-hi">AI systems ke liye risk ke hisaab se niyam; general-purpose AI providers ki zimmedaariyaan; high-risk use (hiring, credit) par sabse bhaari, 2025 se charanon mein</span></td><td><span class="l-en">Classify each use case by risk, keep logs and human oversight for high-risk ones, tell users they're talking to AI</span><span class="l-hi">Har use case ko risk se classify karo, high-risk ke liye logs aur insaani nigraani, users ko batao ki woh AI se baat kar rahe hain</span></td></tr>
+<tr><td><b>ISO/IEC 42001</b></td><td><span class="l-en">A certifiable AI management system (like ISO 27001, for AI)</span><span class="l-hi">Certify hone laayak AI management system (AI ke liye ISO 27001 jaisa)</span></td><td><span class="l-en">Documented policies, risk assessments, evals and incident records: exactly what the gateway produces</span><span class="l-hi">Likhi policies, risk assessments, evals aur incident records: wahi jo gateway banata hai</span></td></tr>
+<tr><td><b>Sector rules</b></td><td><span class="l-en">Banking (e.g. RBI guidance on AI and outsourcing), health (HIPAA in the US), and client contracts</span><span class="l-hi">Banking (jaise AI aur outsourcing par RBI guidance), health (US mein HIPAA), aur client contracts</span></td><td><span class="l-en">Per-tenant policies: allowed vendors, on-prem models, longer audit retention</span><span class="l-hi">Har tenant ki policies: allowed vendors, on-prem models, lamba audit retention</span></td></tr>
+</tbody></table></div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Masking can confuse Haron, so tell it why</span><span class="l-hi">Masking Haron ko uljha sakti hai, isliye wajah batao</span></h4>
+  <p class="l-en">When it sees <code>[AADHAAR_4f97]</code>, Haron may think the customer forgot to give the number and ask again. Add one line to the system prompt: "Personal data is replaced by tags like [PAN_xxxx]. Treat each tag as the real value; never ask the user to repeat it."</p>
+  <p class="l-hi"><code>[AADHAAR_4f97]</code> dekhkar Haron soch sakta hai ki customer number dena bhool gaya aur dobara maang sakta hai. System prompt mein ek line jodo: "Personal data [PAN_xxxx] jaise tags se badla gaya hai. Har tag ko asli value maano; user se dobara mat maango."</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">The audit log is a product</span><span class="l-hi">Audit log bhi ek product hai</span></h4>
+  <p class="l-en">When a regulator or client asks "what did the AI do with customer X's data on 3 March?", you need an answer in hours, not weeks. Log every request with tenant, user, purpose, model version, policy version, what was masked and the outcome, and store a <strong>hash</strong> of the prompt by default rather than the raw text, unless the tenant's policy requires the full record. Set retention per tenant.</p>
+  <p class="l-hi">Jab regulator ya client pooche "3 March ko customer X ke data ke saath AI ne kya kiya?", toh jawab hafton mein nahi, ghanton mein chahiye. Har request tenant, user, maqsad, model version, policy version, kya chhupaaya gaya aur nateeje ke saath log karo, aur default roop se prompt ka raw text nahi, <strong>hash</strong> rakho, jab tak tenant ki policy poora record na maange. Retention har tenant ke hisaab se set karo.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: redaction with check digits</span><span class="l-hi">Coders ke liye: check digits ke saath redaction</span><span class="lvl">code/harness/policy.py</span></summary>
+  <div class="inner">
+<pre>("AADHAAR", re.compile(r"\b[2-9]\d{3}[ -]?\d{4}[ -]?\d{4}\b"),
+            lambda s: verhoeff_valid(re.sub(r"\D", "", s))),
+("PAN",     re.compile(r"\b[A-Z]{5}\d{4}[A-Z]\b"), None),
+("CARD",    re.compile(r"\b(?:\d[ -]?){13,19}\b"), lambda s: luhn_valid(re.sub(r"\D", "", s))),</pre>
+<pre>$ python code/ch12/pii_demo.py
+original: Hi, I'm Priya (priya.k@example.in, +91 98450 12345 -> 9845012345). Aadhaar 4987 1234 5605,
+          PAN ABCDE1234F, card 4111 1111 1111 1111. Order ref 498712345608 please.
+to model: Hi, I'm Priya ([EMAIL_06dc], [PHONE_IN_c027] -> [PHONE_IN_2c0c]). Aadhaar [AADHAAR_4f97],
+          PAN [PAN_6442], card [CARD_6a7e]. Order ref 498712345608 please.
+found:    ['AADHAAR', 'CARD', 'EMAIL', 'PAN', 'PHONE_IN']
+restored == original: True
+(the 12-digit order ref 498712345608 fails the Aadhaar checksum, so it is left alone)</pre>
+    <p class="l-en">All numbers are synthetic. Note that the name "Priya" was <em>not</em> masked: regexes can't recognise names. That is the job of a named-entity model.</p>
+    <p class="l-hi">Saare numbers banaaye hue hain. Dhyaan do ki naam "Priya" <em>nahi</em> chhupa: regex naam nahi pehchaan sakta. Yeh named-entity model ka kaam hai.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Mask personal data before I see it; restore it only for people allowed to see it.</li><li>Use check digits so you mask real IDs, not order numbers.</li><li>Route each tenant's data only to models in its allowed regions.</li><li>Write rules as versioned code and keep an audit log you can search in hours.</li></ol>
+  <ol class="l-hi"><li>Mere dekhne se pehle personal data chhupao; sirf allowed logon ke liye wapas kholo.</li><li>Check digits use karo taaki asli IDs chhupein, order numbers nahi.</li><li>Har tenant ka data sirf uske allowed regions ke models par bhejo.</li><li>Niyam versioned code mein likho aur aisa audit log rakho jo ghanton mein search ho sake.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add detectors for Indian passport numbers and GSTINs (15 characters, with a state code at the start) to <code>policy.py</code>. Write tests with valid and invalid samples. <span class="level">coder</span></p><p class="l-hi"><code>policy.py</code> mein Indian passport numbers aur GSTIN (15 characters, shuru mein state code) ke detectors jodo. Valid aur invalid samples ke saath tests likho. <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">For a hiring-assistant use case, list what the EU AI Act and DPDP would require from your harness. <span class="level">enterprise</span></p><p class="l-hi">Hiring-assistant use case ke liye likho ki EU AI Act aur DPDP aapke harness se kya maangenge. <span class="level">enterprise</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Government of India. <em>Digital Personal Data Protection Act, 2023</em> and <em>DPDP Rules, 2025.</em></li>
+  <li>European Union. <em>Regulation (EU) 2024/1689 (Artificial Intelligence Act).</em> · <em>GDPR (EU) 2016/679.</em></li>
+  <li>ISO/IEC 42001:2023. <em>Artificial intelligence: Management system.</em></li>
+  <li>NIST (2023). <em>AI Risk Management Framework (AI RMF 1.0).</em></li>
+  <li>UIDAI. <em>Aadhaar number structure</em> (Verhoeff check digit).</li>
+</ol>
+
+<nav class="pager"><a href="ch11.html">← Ch 11</a><a href="ch13.html"><span class="l-en">Ch 13 · Budgets for Everyone →</span><span class="l-hi">Ch 13 · Sabke liye Budget →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls;
+
+  /* Scene A: masking */
+  (function () {
+    var s = document.getElementById("svA");
+    var items = [
+      ["email", "priya.k@example.in", "[EMAIL_06dc]", "box-plm"],
+      ["phone", "+91 98450 12345", "[PHONE_IN_c027]", "box-plm"],
+      ["Aadhaar", "4987 1234 5605", "[AADHAAR_4f97]", "box-plm"],
+      ["PAN", "ABCDE1234F", "[PAN_6442]", "box-plm"],
+      ["card", "4111 1111 1111 1111", "[CARD_6a7e]", "box-plm"],
+      ["order ref", "498712345608", "kept: fails checksum", "box-sig"]
+    ];
+    var rows = items.map(function (it, i) {
+      var y = 20 + i * 38, g = E(s, "g", { "class": "anim" });
+      E(g, "text", { x: 20, y: y + 20, "font-size": 12, "font-weight": 700 }, it[0]);
+      E(g, "rect", { x: 110, y: y, width: 230, height: 30, rx: 4, "class": "box" });
+      E(g, "text", { x: 122, y: y + 20, "font-size": 12, "class": "mono" }, it[1]);
+      var out = E(g, "g", { "class": "anim" });
+      B.arrow(s, out, 344, y + 15, 384, y + 15, "plm");
+      E(out, "rect", { x: 388, y: y, width: 230, height: 30, rx: 4, "class": it[3] });
+      E(out, "text", { x: 400, y: y + 20, "font-size": 12, "class": "mono" }, it[2]);
+      return [g, out];
+    });
+    var scan = E(s, "rect", { x: 104, y: 14, width: 242, height: 42, rx: 6, style: "fill:none;stroke:var(--amber);stroke-width:3", "class": "anim" });
+    var model = E(s, "g", { "class": "anim" });
+    B.tokku(model, 650, 40, 80);
+    BI(model, { x: 690, y: 150, "text-anchor": "middle", "font-size": 11, "class": "muted" }, "sees only tags", "sirf tags dikhte");
+    var vault = B.box(s, { x: 388, y: 262, w: 230, h: 56, cls: "box-amb", fs: 12, en: "Vault: tag → original", hi: "Vault: tag → asli", sen: "kept inside the gateway", shi: "gateway ke andar rakha" });
+    var back = E(s, "g", { "class": "anim" });
+    BI(back, { x: 20, y: 290, "font-size": 12, "font-weight": 700, "class": "sig" }, "answer restored for the bank officer", "bank officer ke liye jawab wapas khola");
+    BI(back, { x: 20, y: 308, "font-size": 12, "class": "muted" }, "(only if the policy allows)", "(sirf agar policy allow kare)");
+    var caps = [
+      ["Priya's message contains six number-like things. The scanner checks each one.", "Priya ke message mein chhe number jaisi cheezein hain. Scanner har ek check karta hai."],
+      ["Email: found by pattern. Replaced by a tag.", "Email: pattern se mila. Tag se badla."],
+      ["Phone: an Indian mobile number, with or without +91 and spaces.", "Phone: Indian mobile number, +91 aur spaces ke saath ya bina."],
+      ["Aadhaar: 12 digits <em>and</em> a valid Verhoeff check digit.", "Aadhaar: 12 digits <em>aur</em> sahi Verhoeff check digit."],
+      ["PAN: five letters, four digits, one letter.", "PAN: paanch letters, chaar digits, ek letter."],
+      ["Card: 16 digits that pass the Luhn check.", "Card: 16 digits jo Luhn check pass karte hain."],
+      ["The order reference is also 12 digits, but it fails the Aadhaar checksum, so it is left alone and the agent can still look up the order.", "Order reference bhi 12 digits hai, par Aadhaar checksum fail karta hai, isliye chhoda gaya aur agent order dhoondh sakta hai."],
+      ["Haron sees only tags. The originals stay in a vault inside the gateway and are put back into the answer only for people the policy allows.", "Haron ko sirf tags dikhte hain. Asli values gateway ke andar vault mein rehti hain aur sirf policy-allowed logon ke liye jawab mein wapas daali jaati hain."]
+    ];
+    B.scene(document.getElementById("scA"), caps, function (i) {
+      rows.forEach(function (r, k) { show(r[0], true); show(r[1], k < i && i <= 7); r[0].style.opacity = (i >= 1 && i <= 6 && k === i - 1) || i === 0 || i === 7 ? 1 : 0.55; });
+      scan.style.transform = "translate(0px," + (Math.max(0, Math.min(i - 1, 5)) * 38) + "px)";
+      show(scan, i >= 1 && i <= 6); show(model, i === 7); show(vault, i === 7); show(back, i === 7);
+    }, { delay: 2400 });
+  })();
+
+  /* Scene B: regions */
+  (function () {
+    var s = document.getElementById("svB");
+    var zones = [["India (in)", 20, "Claude · vLLM on-prem"], ["EU (eu)", 270, "Claude · GPT · Gemini"], ["US (us)", 520, "Claude · GPT · Gemini"]];
+    zones.forEach(function (z) {
+      E(s, "rect", { x: z[1], y: 130, width: 220, height: 120, rx: 10, "class": "box", "stroke-width": 2, style: "stroke-dasharray:6 4" });
+      E(s, "text", { x: z[1] + 110, y: 160, "text-anchor": "middle", "font-size": 14, "font-weight": 700 }, z[0]);
+      E(s, "text", { x: z[1] + 110, y: 186, "text-anchor": "middle", "font-size": 11, "class": "muted" }, z[2]);
+    });
+    var bank = B.box(s, { x: 40, y: 20, w: 180, h: 44, cls: "box-amb", fs: 12, en: "Bank data · must stay in India", hi: "Bank data · India mein hi rahe" });
+    var retail = B.box(s, { x: 290, y: 20, w: 180, h: 44, cls: "box-sig", fs: 12, en: "Retailer data · EU only", hi: "Retailer data · sirf EU" });
+    var ok1 = B.arrow(s, s, 130, 66, 130, 196, "sig"), ok2 = B.arrow(s, s, 380, 66, 380, 196, "sig");
+    var bad = E(s, "g", { "class": "anim" });
+    B.arrow(s, bad, 220, 50, 600, 196, "amb", -60);
+    E(bad, "text", { x: 560, y: 90, "font-size": 30, "font-weight": 700, "class": "amb" }, "✗");
+    BI(bad, { x: 520, y: 118, "font-size": 12, "font-weight": 700, "class": "amb" }, "Blocked: region in ≠ us", "Blocked: region in ≠ us");
+    B.scene(document.getElementById("scB"), [
+      ["Each model endpoint is tagged with the region where it runs.", "Har model endpoint par tag hai ki woh kis region mein chalta hai."],
+      ["The bank's requests may only go to India-region endpoints, including the on-prem model.", "Bank ki requests sirf India-region endpoints par ja sakti hain, on-prem model samet."],
+      ["The retailer's requests stay in the EU.", "Retailer ki requests EU mein rehti hain."],
+      ["If the router or a fallback ever picks a US endpoint for the bank, the policy check blocks it before any data leaves.", "Agar router ya fallback kabhi bank ke liye US endpoint chune, toh data nikalne se pehle policy check use rok deta hai."]
+    ], function (i) {
+      show(bank, i >= 1); show(ok1, i >= 1); show(retail, i >= 2); show(ok2, i >= 2); show(bad, i === 3);
+    });
+  })();
+
+  /* Scene C: policy as code */
+  (function () {
+    var s = document.getElementById("svC");
+    var card = E(s, "g");
+    E(card, "rect", { x: 10, y: 10, width: 300, height: 260, rx: 8, style: "fill:#10222c" });
+    ["# policies/bank.yaml  (v14)", "tenant: bank", "region: in", "allowed_models:", "  - vllm/onprem-70b", "pii_mode: block", "blocked_tools: [http_post]", "max_input_tokens: 100000", "retention_days: 3650", "log_prompts: false"].forEach(function (l, i) {
+      E(card, "text", { x: 24, y: 36 + i * 23, "font-size": 12, "class": "mono", style: "fill:" + (i === 0 ? "#8fa9b3" : "#d7f6fa") }, l);
+    });
+    var reqs = [
+      ["model=vllm/onprem-70b, “Summarise loan file”", "ALLOW", "box-sig"],
+      ["model=claude-opus-5-5, “Summarise loan file”", "DENY: model not allowed", "box-amb"],
+      ["model=vllm/onprem-70b, “PAN ABCDE1234F…”", "DENY: PII and pii_mode=block", "box-amb"]
+    ];
+    var rs = reqs.map(function (r, i) {
+      var y = 30 + i * 80, g = E(s, "g", { "class": "anim" });
+      E(g, "rect", { x: 340, y: y, width: 410, height: 30, rx: 4, "class": "box" });
+      E(g, "text", { x: 352, y: y + 20, "font-size": 11.5, "class": "mono" }, r[0]);
+      E(g, "rect", { x: 340, y: y + 34, width: 410, height: 28, rx: 4, "class": r[2] });
+      E(g, "text", { x: 352, y: y + 53, "font-size": 12, "font-weight": 700, "class": "mono" }, "→ " + r[1]);
+      return g;
+    });
+    B.scene(document.getElementById("scC"), [
+      ["The bank's policy is a small, versioned file. Changing it needs a pull request and a reviewer, like any code.", "Bank ki policy ek chhoti, versioned file hai. Badalne ke liye pull request aur reviewer chahiye, kisi bhi code ki tarah."],
+      ["Request 1 uses the allowed on-prem model with no PII: allowed.", "Request 1 allowed on-prem model use karti hai, PII nahi: allow."],
+      ["Request 2 asks for a cloud model that isn't on the list: denied, with the reason.", "Request 2 list se bahar ka cloud model maangti hai: mana, wajah ke saath."],
+      ["Request 3 contains a PAN, and this tenant blocks PII rather than masking it: denied. Every decision is logged with policy version v14.", "Request 3 mein PAN hai, aur yeh tenant PII chhupaata nahi, rokta hai: mana. Har faisla policy version v14 ke saath log hota hai."]
+    ], function (i) { rs.forEach(function (g, k) { show(g, k < i); }); });
+  })();
+})();
+</script>
+</body>
+</html>

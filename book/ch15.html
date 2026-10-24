@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 15 · Haron at Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part III · Chapter 15</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 15 · Haron goes to a big company</span><span class="l-hi">Chapter 15 · Haron badi company mein</span></div>
+  <h1><span class="l-en">Haron at Home</span><span class="l-hi">Ghar ka Haron</span></h1>
+  <div class="story">
+    <p class="l-en">The bank says: "Our data never leaves our building." So Acme must run a Haron of its own, an open-weights model like Llama or Qwen, on the bank's own GPUs. Now the team owns everything a cloud provider used to hide: how much GPU memory the model needs, how many customers one server can serve, and what happens at 9 a.m. when everyone logs in.</p>
+    <p class="l-hi">Bank kehta hai: "Hamara data hamari building se bahar nahi jaata." Isliye Acme ko apna khud ka Haron chalaana padega, Llama ya Qwen jaisa open-weights model, bank ke apne GPUs par. Ab woh sab team ki zimmedaari hai jo cloud provider chhupa leta tha: model ko kitni GPU memory chahiye, ek server kitne customers sambhaal sakta hai, aur subah 9 baje kya hota hai jab sab login karte hain.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Size GPU memory: weights + KV cache + overhead</span><span class="l-hi">GPU memory ka hisaab: weights + KV cache + overhead</span></li>
+    <li><b>2</b><span class="l-en">Quantisation: smaller numbers, smaller bills</span><span class="l-hi">Quantisation: chhote numbers, chhote bill</span></li>
+    <li><b>3</b><span class="l-en">Continuous batching: why vLLM is fast</span><span class="l-hi">Continuous batching: vLLM tez kyun hai</span></li>
+    <li><b>4</b><span class="l-en">Hybrid: on-prem for sensitive work, cloud for the rest</span><span class="l-hi">Hybrid: sensitive kaam on-prem, baaki cloud</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">How many GPUs?</span><span class="l-hi">Kitne GPUs?</span></h2></div>
+<div class="story">
+  <p class="l-en">A GPU has a fixed amount of memory (80 GB on common data-centre cards). Three things must fit: the model's <strong>weights</strong>, the <strong>sticky notes</strong> (KV cache, Chapter 1) for every user being served at once, and some working space. Here are real calculations from this chapter's lab.</p>
+  <p class="l-hi">GPU ki memory tay hoti hai (aam data-centre cards par 80 GB). Teen cheezein fit honi chahiye: model ke <strong>weights</strong>, ek saath serve ho rahe har user ke <strong>sticky notes</strong> (KV cache, Chapter 1), aur kuch kaam ki jagah. Yeh is chapter ke lab ke asli hisaab hain.</p>
+</div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 270" width="760" role="img" aria-label="Stacked memory bars for different model configurations against 80 GB GPU slots"></svg></div></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en"><strong>Quantisation</strong> stores each number with fewer bits: bf16 (2 bytes) → fp8 (1 byte) → int4 (half a byte). It halves or quarters memory and often speeds things up, with a small quality loss that you must <strong>measure on your own evals</strong>, especially for maths, code and Indian languages. Long contexts make the KV cache, not the weights, the biggest cost.</p>
+  <p class="l-hi"><strong>Quantisation</strong> har number ko kam bits mein rakhta hai: bf16 (2 bytes) → fp8 (1 byte) → int4 (aadha byte). Memory aadhi ya chauthaai ho jaati hai aur aksar speed badhti hai, thode quality nuksaan ke saath jise <strong>apne evals par naapna</strong> zaroori hai, khaaskar maths, code aur Indian bhashaon ke liye. Lambe context mein weights nahi, KV cache sabse bada kharch banta hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Don't wait for the slowest</span><span class="l-hi">Sabse dheeme ka intezaar mat karo</span></h2></div>
+<div class="story">
+  <p class="l-en">A GPU is fastest when it serves many requests together (a <strong>batch</strong>). Old servers formed a batch, waited until <em>every</em> request in it finished, then started the next batch: like a bus that waits until the last passenger reaches their stop before picking anyone up. Modern servers such as vLLM use <strong>continuous batching</strong>: the moment one request finishes, a new one takes its seat.</p>
+  <p class="l-hi">GPU sabse tez tab hota hai jab woh kai requests ek saath serve kare (<strong>batch</strong>). Purane servers batch banaate, <em>har</em> request khatam hone tak rukte, phir agla batch shuru karte: jaise bus jo aakhri sawaari ke utarne tak kisi ko nahi chadhaati. vLLM jaise modern servers <strong>continuous batching</strong> use karte hain: jaise hi ek request khatam, nayi uski seat le leti hai.</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 300" width="760" role="img" aria-label="Static batching leaves GPU slots idle; continuous batching refills them immediately"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Home and cloud together</span><span class="l-hi">Ghar aur cloud saath-saath</span></h2></div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 260" width="760" role="img" aria-label="A router sends sensitive requests on-premises and others to the cloud"></svg></div></figure>
+
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Serving engine</span><span class="l-hi">Serving engine</span></th><th><span class="l-en">Good for</span><span class="l-hi">Kiske liye achha</span></th></tr></thead>
+<tbody>
+<tr><td><b>vLLM</b></td><td><span class="l-en">General-purpose production serving; PagedAttention, continuous batching, OpenAI-compatible API</span><span class="l-hi">Aam production serving; PagedAttention, continuous batching, OpenAI-compatible API</span></td></tr>
+<tr><td><b>SGLang</b></td><td><span class="l-en">High throughput with heavy prefix sharing (agents, structured output)</span><span class="l-hi">Bahut prefix sharing ke saath high throughput (agents, structured output)</span></td></tr>
+<tr><td><b>TensorRT-LLM</b></td><td><span class="l-en">Maximum speed on NVIDIA hardware, more engineering effort</span><span class="l-hi">NVIDIA hardware par sabse zyaada speed, zyaada engineering mehnat</span></td></tr>
+<tr><td><b>llama.cpp / Ollama</b></td><td><span class="l-en">Laptops, edge devices, small teams, development</span><span class="l-hi">Laptops, edge devices, chhoti teams, development</span></td></tr>
+</tbody></table></div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">An open model is not a drop-in for a frontier model</span><span class="l-hi">Open model frontier model ki seedhi jagah nahi le sakta</span></h4>
+  <p class="l-en">The same agent that works well on a frontier API may call tools less reliably, lose the format more often, or reason worse on long tasks with a smaller open model. Give the on-prem model simpler, more structured jobs (extraction, classification, summarising one document), shorter contexts and stricter output schemas, and run the full eval suite before switching any route.</p>
+  <p class="l-hi">Jo agent frontier API par achha chalta hai, woh chhote open model ke saath tools kam bharose se call kar sakta hai, format zyaada todta hai, ya lambe kaamon mein kamzor sochta hai. On-prem model ko seedhe, structured kaam do (extraction, classification, ek document ka summary), chhote contexts aur sakht output schemas, aur kisi bhi route ko badalne se pehle poora eval suite chalao.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">The true cost of "free" weights</span><span class="l-hi">"Muft" weights ki asli keemat</span></h4>
+  <p class="l-en">Open weights cost nothing to download, but GPUs, power, cooling, on-call engineers, security patching, model upgrades and idle capacity at night are all yours. Compute an internal price per million tokens = (all monthly costs) ÷ (tokens actually served), put it in the price table (Chapter 2), and compare honestly with the API. Self-hosting usually wins on data control and steady high volume, rarely on small or spiky workloads.</p>
+  <p class="l-hi">Open weights download karna muft hai, par GPUs, bijli, cooling, on-call engineers, security patching, model upgrades aur raat ki khaali capacity sab aapki hai. Andaruni daam per million tokens = (mahine ke saare kharch) ÷ (sach mein serve hue tokens) nikaalo, price table (Chapter 2) mein daalo, aur API se imaandaari se compare karo. Self-hosting aksar data control aur lagaataar bade volume par jeetta hai, chhote ya uchhalte workloads par kam.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the capacity planner and a vLLM launch</span><span class="l-hi">Coders ke liye: capacity planner aur vLLM launch</span><span class="lvl">code/ch15/capacity.py</span></summary>
+  <div class="inner">
+<pre>$ python code/ch15/capacity.py
+model           weights   KV    ctx users weights GB    KV GB  total GB 80GB GPUs
+Llama-3.1-8B       bf16 bf16  8,192    32         16       34        55         1
+Llama-3.1-70B      bf16 bf16  8,192    32        140       86       248         4
+Llama-3.1-70B       fp8  fp8  8,192    32         70       43       124         2
+Llama-3.1-70B       fp8  fp8 32,768    32         70      172       266         4
+Llama-3.1-70B      int4  fp8 32,768    64         35      344       416         8
+Qwen2.5-72B         fp8  fp8 16,384    48         72      129       221         4</pre>
+<pre># serve an OpenAI-compatible endpoint on 4 GPUs (tensor parallel)
+vllm serve meta-llama/Llama-3.1-70B-Instruct \
+  --tensor-parallel-size 4 --max-model-len 32768 \
+  --kv-cache-dtype fp8 --enable-prefix-caching
+
+# then, in the harness:
+OpenAICompatProvider(base_url="http://gpu-node:8000/v1", api_key="internal")</pre>
+    <p class="l-en">Look at the last Llama row: int4 weights are tiny (35 GB) but 64 users × 32k context need 344 GB of notes. Cap context per tenant, or the KV cache decides your hardware bill. Check flags against your installed vLLM version; they change between releases.</p>
+    <p class="l-hi">Aakhri Llama row dekho: int4 weights chhote hain (35 GB) par 64 users × 32k context ko 344 GB notes chahiye. Har tenant ka context cap karo, warna hardware bill KV cache tay karega. Flags apne install kiye vLLM version se check karo; releases ke beech badalte hain.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>At home I need memory for my weights, my sticky notes for every user, and some room to work.</li><li>Smaller numbers (fp8, int4) save memory; test that I'm still good enough.</li><li>Continuous batching keeps the GPU busy.</li><li>Keep sensitive work at home, send the rest to the cloud, and compare costs honestly.</li></ol>
+  <ol class="l-hi"><li>Ghar par mujhe weights, har user ke sticky notes, aur kaam ki jagah ke liye memory chahiye.</li><li>Chhote numbers (fp8, int4) memory bachaate hain; test karo ki main ab bhi kaafi achha hoon.</li><li>Continuous batching GPU ko vyast rakhta hai.</li><li>Sensitive kaam ghar par, baaki cloud par, aur kharch imaandaari se compare karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add a cost column to <code>capacity.py</code>: GPU-hour price × GPUs × 730 hours, divided by tokens served per month at 40% utilisation. <span class="level">coder</span></p><p class="l-hi"><code>capacity.py</code> mein cost column jodo: GPU-hour daam × GPUs × 730 ghante, 40% utilisation par mahine ke serve hue tokens se divide. <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Install Ollama on a laptop, run a small model, and point <code>OpenAICompatProvider</code> at it. Run the Chapter 6 demo. <span class="level">harness</span></p><p class="l-hi">Laptop par Ollama install karo, chhota model chalao, aur <code>OpenAICompatProvider</code> ko uski taraf point karo. Chapter 6 demo chalao. <span class="level">harness</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Kwon et al. (2023). <em>Efficient Memory Management for LLM Serving with PagedAttention</em> (vLLM).</li>
+  <li>Yu et al. (2022). <em>Orca: A Distributed Serving System for Transformer-Based Generative Models</em> (continuous batching).</li>
+  <li>Zheng et al. (2024). <em>SGLang: Efficient Execution of Structured Language Model Programs.</em></li>
+  <li>Frantar et al. (2023). <em>GPTQ.</em> · Lin et al. (2024). <em>AWQ.</em></li>
+  <li>Leviathan et al. (2023). <em>Fast Inference from Transformers via Speculative Decoding.</em></li>
+</ol>
+
+<nav class="pager"><a href="ch14.html">← Ch 14</a><a href="ch16.html"><span class="l-en">Ch 16 · Haron's Exams →</span><span class="l-hi">Ch 16 · Haron ke Exams →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls;
+
+  /* Scene A: GPU memory */
+  (function () {
+    var s = document.getElementById("svA");
+    var cfgs = [
+      ["Llama-3.1-8B · bf16 · 8k × 32", 16, 34, 55, 1],
+      ["Llama-3.1-70B · bf16 · 8k × 32", 140, 86, 248, 4],
+      ["Llama-3.1-70B · fp8 · 8k × 32", 70, 43, 124, 2],
+      ["Llama-3.1-70B · fp8 · 32k × 32", 70, 172, 266, 4],
+      ["Llama-3.1-70B · int4 + fp8 KV · 32k × 64", 35, 344, 416, 8]
+    ];
+    var k = 1.65, X0 = 20;
+    var title = E(s, "text", { x: 20, y: 30, "font-size": 14, "font-weight": 700, "class": "mono" }, "");
+    var slots = [];
+    for (var j = 0; j < 8; j++) {
+      var sr = E(s, "rect", { x: X0 + j * 88, y: 150, width: 84, height: 40, rx: 4, "class": "box anim", "stroke-width": 1.5 });
+      var st = E(s, "text", { x: X0 + j * 88 + 42, y: 175, "text-anchor": "middle", "font-size": 11, "class": "mono muted" }, "GPU " + (j + 1));
+      slots.push([sr, st]);
+    }
+    var wB = E(s, "rect", { x: X0, y: 60, width: 0, height: 40, rx: 3, "class": "box-sig anim" });
+    var kB = E(s, "rect", { x: X0, y: 60, width: 0, height: 40, rx: 3, "class": "box-amb anim" });
+    var oB = E(s, "rect", { x: X0, y: 60, width: 0, height: 40, rx: 3, "class": "box-plm anim" });
+    [wB, kB, oB].forEach(function (b) { b.style.transition = "width .8s, x .8s"; });
+    var lbl = E(s, "text", { x: 20, y: 124, "font-size": 12, "class": "mono" }, "");
+    var key = E(s, "g");
+    [["box-sig", "weights"], ["box-amb", "KV cache (sticky notes)"], ["box-plm", "overhead ~10%"]].forEach(function (q, i) {
+      E(key, "rect", { x: 20 + i * 220, y: 228, width: 14, height: 14, "class": q[0] });
+      E(key, "text", { x: 40 + i * 220, y: 240, "font-size": 11, "class": "muted" }, q[1]);
+    });
+    var scale = 704 / 640; // 8 GPUs * 80 GB = 640 GB spans 704 px
+    B.scene(document.getElementById("scA"), cfgs.map(function (c) {
+      return ["<strong>" + c[0] + "</strong>: weights " + c[1] + " GB + KV " + c[2] + " GB + overhead = " + c[3] + " GB → <strong>" + c[4] + " × 80 GB GPU" + (c[4] > 1 ? "s" : "") + "</strong>.",
+              "<strong>" + c[0] + "</strong>: weights " + c[1] + " GB + KV " + c[2] + " GB + overhead = " + c[3] + " GB → <strong>" + c[4] + " × 80 GB GPU</strong>."];
+    }), function (i) {
+      var c = cfgs[i], ov = c[3] - c[1] - c[2];
+      title.textContent = c[0];
+      wB.setAttribute("width", c[1] * scale); kB.setAttribute("x", X0 + c[1] * scale); kB.setAttribute("width", c[2] * scale);
+      oB.setAttribute("x", X0 + (c[1] + c[2]) * scale); oB.setAttribute("width", Math.max(0, ov) * scale);
+      lbl.textContent = c[3] + " GB total";
+      slots.forEach(function (sl, n) { cls(sl[0], n < c[4] ? "box-sig" : "box"); sl[0].style.opacity = n < c[4] ? 1 : 0.35; });
+    }, { delay: 3000 });
+  })();
+
+  /* Scene B: batching */
+  (function () {
+    var s = document.getElementById("svB");
+    var lens = [[5, 2, 2], [2, 5, 2], [9], [3, 3, 3]]; // per slot: request lengths, 10 requests in 9 steps
+    var U = 26, X0 = 110;
+    function lane(g, y, label, items, contin) {
+      E(g, "text", { x: 10, y: y + 18, "font-size": 11, "class": "mono muted" }, label);
+      var t = 0;
+      items.forEach(function (L, n) {
+        E(g, "rect", { x: X0 + t * U, y: y, width: L * U - 3, height: 24, rx: 3, "class": ["box-sig", "box-amb", "box-plm"][n % 3] });
+        t += L;
+      });
+      return t;
+    }
+    var stat = E(s, "g", { "class": "anim" }), cont = E(s, "g", { "class": "anim" });
+    BI(stat, { x: 10, y: 20, "font-size": 13, "font-weight": 700 }, "Static batching: wait for the longest", "Static batching: sabse lambe ka intezaar");
+    // static: first batch = first request of each lane, all wait for max (9)
+    var first = [5, 2, 9, 3];
+    first.forEach(function (L, i) {
+      var y = 34 + i * 28;
+      E(stat, "text", { x: 10, y: y + 18, "font-size": 11, "class": "mono muted" }, "slot " + (i + 1));
+      E(stat, "rect", { x: X0, y: y, width: L * U - 3, height: 24, rx: 3, "class": "box-sig" });
+      if (L < 9) E(stat, "rect", { x: X0 + L * U, y: y, width: (9 - L) * U - 3, height: 24, rx: 3, style: "fill:var(--c6);opacity:.25" });
+    });
+    BI(stat, { x: X0 + 9 * U + 10, y: 90, "font-size": 12, "class": "amb", "font-weight": 700 }, "pink = idle GPU slot", "gulaabi = khaali GPU slot");
+    BI(cont, { x: 10, y: 170, "font-size": 13, "font-weight": 700 }, "Continuous batching: refill at once", "Continuous batching: turant bharo");
+    lens.forEach(function (it, i) { lane(cont, 184 + i * 28, "slot " + (i + 1), it, true); });
+    BI(cont, { x: X0 + 9 * U + 10, y: 240, "font-size": 12, "class": "sig", "font-weight": 700 }, "same time, 3× more requests served", "utne hi samay mein 3× zyaada requests");
+    B.scene(document.getElementById("scB"), [
+      ["Static batching: four requests start together. The batch ends only when the longest one (9 steps) ends. The pink area is GPU time wasted.", "Static batching: chaar requests saath shuru. Batch tabhi khatam jab sabse lambi (9 steps) khatam. Gulaabi hissa barbaad GPU time hai."],
+      ["Continuous batching: when a request finishes, the next waiting request takes its slot immediately. In the same 9 steps, 10 requests are served instead of 4.", "Continuous batching: request khatam hote hi agli intezaar wali request turant slot le leti hai. Unhi 9 steps mein 4 ki jagah 10 requests serve."]
+    ], function (i) { show(stat, true); stat.style.opacity = i === 0 ? 1 : 0.35; show(cont, i >= 1); });
+  })();
+
+  /* Scene C: hybrid */
+  (function () {
+    var s = document.getElementById("svC");
+    var reqs = [["Loan file with PAN", "box-amb", 0], ["Marketing email draft", "box", 1], ["9 a.m. burst overflow", "box", 1]];
+    var router = B.box(s, { x: 300, y: 100, w: 140, h: 50, cls: "box-plm", en: "Router", hi: "Router", sen: "policy + load", shi: "policy + load" });
+    var onp = B.box(s, { x: 540, y: 30, w: 210, h: 60, cls: "box-sig", en: "On-prem vLLM", hi: "On-prem vLLM", sen: "bank building · India", shi: "bank building · India" });
+    var cloud = B.box(s, { x: 540, y: 160, w: 210, h: 60, cls: "box", en: "Cloud API", hi: "Cloud API", sen: "elastic · pay per token", shi: "elastic · per token daam" });
+    var items = reqs.map(function (r, i) {
+      var g = B.box(s, { x: 10, y: 30 + i * 75, w: 220, h: 44, cls: r[1], fs: 12, en: r[0], hi: r[0] });
+      B.arrow(s, g, 232, 52 + i * 75, 296, 125, "");
+      B.arrow(s, g, 442, 125, 536, r[2] ? 190 : 60, r[2] ? "" : "sig");
+      return g;
+    });
+    var cap = E(s, "g", { "class": "anim" });
+    BI(cap, { x: 380, y: 245, "text-anchor": "middle", "font-size": 12, "class": "muted" }, "burst only for tenants whose policy allows cloud", "burst sirf un tenants ke liye jinki policy cloud allow kare");
+    B.scene(document.getElementById("scC"), [
+      ["A loan file with personal data: the bank's policy allows only the on-prem model.", "Personal data wali loan file: bank ki policy sirf on-prem model allow karti hai."],
+      ["A marketing draft with no sensitive data: the cloud is cheaper and better at writing.", "Bina sensitive data ka marketing draft: cloud sasta aur likhne mein behtar."],
+      ["At 9 a.m. the on-prem GPUs are full. Overflow from tenants that allow cloud goes there, so you don't buy GPUs for one busy hour.", "Subah 9 baje on-prem GPUs bhare hain. Jo tenants cloud allow karte hain unka overflow wahan jaata hai, taaki ek vyast ghante ke liye GPUs na khareedne padein."]
+    ], function (i) { items.forEach(function (g, k) { show(g, k <= i); g.style.opacity = k === i ? 1 : (k < i ? 0.4 : 0); }); show(cap, i === 2); });
+  })();
+})();
+</script>
+</body>
+</html>

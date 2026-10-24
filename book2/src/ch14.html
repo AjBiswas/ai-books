@@ -1,0 +1,172 @@
+  <div class="story">
+    <p class="l-en">Haron doesn't know your company's leave policy, yesterday's price list or your client's contract. It was never trained on them, and they change. <strong>RAG (retrieval-augmented generation)</strong> is the fix: before Haron answers, the system fetches the most relevant passages from your documents and puts them in the context, with an instruction to answer only from them and cite them. It's the single most common pattern in company AI apps.</p>
+    <p class="l-hi">Haron aapki company ki leave policy, kal ki price list ya client ka contract nahi jaanta. Use inpar kabhi train nahi kiya gaya, aur yeh badalte rehte hain. <strong>RAG (retrieval-augmented generation)</strong> iska ilaaj hai: Haron ke jawab se pehle system aapke documents se sabse kaam ke hisse laata hai aur context mein rakhta hai, is instruction ke saath ki sirf unhi se jawab de aur cite kare. Company AI apps mein yeh sabse aam pattern hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The two halves of RAG: indexing and answering</span><span class="l-hi">RAG ke do hisse: indexing aur jawab</span></li>
+    <li><b>2</b><span class="l-en">A real local RAG run, including a surprising "I don't know"</span><span class="l-hi">Asli local RAG run, ek hairaan karne wale "nahi pata" samet</span></li>
+    <li><b>3</b><span class="l-en">Why RAG fails, and the fixes</span><span class="l-hi">RAG kyun fail hota hai, aur ilaaj</span></li>
+    <li><b>4</b><span class="l-en">Advanced RAG and how to evaluate it</span><span class="l-hi">Advanced RAG aur use kaise evaluate karein</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">An open-book exam</span><span class="l-hi">Open-book exam</span></h2></div>
+<div class="story">
+  <p class="l-en">RAG turns a closed-book exam into an open-book one. Part one happens in advance: cut your documents into chunks and index them. Part two happens on every question: find the best chunks, hand them to Haron with the question, and ask for an answer with citations.</p>
+  <p class="l-hi">RAG closed-book exam ko open-book bana deta hai. Pehla hissa pehle se hota hai: documents ko chunks mein kaat kar index karo. Doosra hissa har sawaal par: sabse achhe chunks dhoondho, sawaal ke saath Haron ko do, aur citations ke saath jawab maango.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">RAG on a laptop, for real</span><span class="l-hi">Laptop par RAG, sach mein</span></h2></div>
+<div class="story">
+  <p class="l-en">This chapter's lab runs the whole pipeline locally: an HR handbook chunked by heading, embedded with <code>all-minilm</code>, searched with hybrid ranking, answered by <code>qwen3:4b</code>. Three questions; look carefully at the first answer.</p>
+  <p class="l-hi">Is chapter ka lab poori pipeline local chalaata hai: heading se kaati gayi HR handbook, <code>all-minilm</code> se embed, hybrid ranking se search, <code>qwen3:4b</code> se jawab. Teen sawaal; pehla jawab dhyaan se dekho.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Strict grounding vs helpfulness</span><span class="l-hi">Sakht grounding vs madadgaari</span></h4>
+  <p class="l-en">The policy says business class is allowed "above 6 hours". Pune to London is about 10 hours, but that fact isn't in the documents, and the prompt said "use ONLY the documents", so the model said "I don't know". That's not a bug; it's the trade-off you chose. Fix it in the prompt: "use the documents for policy; you may use general knowledge for facts like flight times, and say when you do."</p>
+  <p class="l-hi">Policy kehti hai business class "6 ghante se zyaada" par allowed hai. Pune se London lagbhag 10 ghante hai, par yeh fact documents mein nahi, aur prompt ne kaha tha "SIRF documents use karo", isliye model ne "nahi pata" kaha. Yeh bug nahi; yeh aapka chuna hua samjhauta hai. Prompt mein theek karo: "policy ke liye documents use karo; flight time jaise facts ke liye general knowledge use kar sakte ho, aur batao kab kiya."</p>
+</div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Where RAG breaks, and the fix</span><span class="l-hi">RAG kahan tootta hai, aur ilaaj</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<h2><span class="l-en">The advanced toolkit</span><span class="l-hi">Advanced toolkit</span></h2>
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Technique</span><span class="l-hi">Technique</span></th><th><span class="l-en">What it does</span><span class="l-hi">Kya karta hai</span></th></tr></thead>
+<tbody>
+<tr><td><b>Hybrid search</b></td><td><span class="l-en">Combines vector and keyword (BM25) rankings, e.g. with reciprocal rank fusion. Catches both meaning and exact IDs.</span><span class="l-hi">Vector aur keyword (BM25) rankings jodta hai, jaise reciprocal rank fusion se. Matlab aur sateek IDs dono pakadta hai.</span></td></tr>
+<tr><td><b>Reranking</b></td><td><span class="l-en">A cross-encoder model re-scores the top 20–50 hits; keep the best 3–5.</span><span class="l-hi">Cross-encoder model top 20–50 ko dobara score karta hai; best 3–5 rakho.</span></td></tr>
+<tr><td><b>Contextual chunks</b></td><td><span class="l-en">Prefix each chunk with a line saying where it comes from ("Travel policy, section on flights:") before embedding.</span><span class="l-hi">Embed karne se pehle har chunk ke aage ek line jodo ki woh kahan se hai ("Travel policy, flights wala section:").</span></td></tr>
+<tr><td><b>Query rewriting</b></td><td><span class="l-en">Turn a chatty follow-up ("and for London?") into a standalone search query.</span><span class="l-hi">Baatcheet wale follow-up ("aur London ke liye?") ko akeli search query banao.</span></td></tr>
+<tr><td><b>Agentic RAG</b></td><td><span class="l-en">Give the model a search tool and let it decide what and how often to search.</span><span class="l-hi">Model ko search tool do aur use tay karne do kya aur kitni baar search kare.</span></td></tr>
+<tr><td><b>GraphRAG</b></td><td><span class="l-en">Build a knowledge graph of entities and relations for questions that span many documents.</span><span class="l-hi">Kai documents ko chhoone wale sawaalon ke liye entities aur rishton ka knowledge graph banao.</span></td></tr>
+</tbody></table></div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Evaluate retrieval and answers separately</span><span class="l-hi">Retrieval aur jawab alag-alag evaluate karo</span></h4>
+  <p class="l-en">When a RAG answer is wrong, first ask: <strong>was the right chunk retrieved?</strong> (recall@k). If not, fix chunking, embeddings or search. If yes, the problem is generation: is the answer <strong>faithful</strong> to the chunks, and does it <strong>answer the question</strong>? Tools like RAGAS automate these metrics; a 50-question labelled set is enough to start.</p>
+  <p class="l-hi">Jab RAG jawab galat ho, pehle poochho: <strong>kya sahi chunk aaya tha?</strong> (recall@k). Nahi, toh chunking, embeddings ya search theek karo. Haan, toh dikkat generation mein hai: kya jawab chunks ke prati <strong>wafaadaar</strong> hai, aur kya <strong>sawaal ka jawab</strong> deta hai? RAGAS jaise tools yeh metrics automate karte hain; shuru karne ke liye 50 sawaalon ka labelled set kaafi hai.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Permissions are part of retrieval</span><span class="l-hi">Permissions retrieval ka hissa hain</span></h4>
+  <p class="l-en">If the index contains salary sheets and board minutes, a clever question from an intern can pull them in. Store each chunk's access rights and filter by the asking user's permissions <em>before</em> ranking. Keep the index in sync when documents change or are deleted, especially personal data that someone asked you to erase.</p>
+  <p class="l-hi">Agar index mein salary sheets aur board minutes hain, toh intern ka chalaak sawaal unhe kheench sakta hai. Har chunk ke access rights store karo aur ranking se <em>pehle</em> poochne wale user ki permissions se filter karo. Documents badalne ya delete hone par index sync rakho, khaaskar woh personal data jise kisi ne mitaane ko kaha.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the complete local pipeline</span><span class="l-hi">Coders ke liye: poori local pipeline</span><span class="lvl">code2/ch14/rag_local.py</span></summary>
+  <div class="inner">
+<pre>chunks = [{"id": title, "text": f"{title}: {body}"} for title, body in sections(DOC)]   # 1 chunk by heading
+vectors = embed([c["text"] for c in chunks])                                         # 2 embed once
+
+def retrieve(q, k=2):
+    vec = [cos(embed([q])[0], v) for v in vectors]                                   # 3a meaning
+    kw  = [keyword_score(q, c["text"]) for c in chunks]                              # 3b exact words
+    fused = sorted(range(len(chunks)), key=lambda i: -(1/(60+rank(vec)[i]) + 1/(60+rank(kw)[i])))
+    return [chunks[i] for i in fused[:k]]                                            # 3c RRF
+
+prompt = ("Answer using ONLY the documents. Cite the doc id in square brackets. "
+          "If the documents don't contain the answer, say \"I don't know\".\n\n"
+          + "\n".join(f'&lt;doc id="{c["id"]}"&gt;{c["text"]}&lt;/doc&gt;' for c in hits)
+          + f"\n\nQuestion: {q}")                                                     # 4 grounded prompt</pre>
+<pre>$ python code2/ch14/rag_local.py
+Q: Can I fly business class to London?
+   retrieved: Travel (0.57), Leave (0.12)
+   A (61s): I don't know
+Q: How much can I spend on food when travelling?
+   retrieved: Expenses (0.53), Leave (0.14)
+   A (25s): INR 1,500 per day [Expenses]
+Q: What is the dress code?
+   retrieved: Leave (0.10), Travel (0.16)
+   A (21s): I don't know</pre>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>RAG = fetch the right passages, then answer from them with citations.</li><li>Index once (chunk, embed, store); retrieve on every question.</li><li>Most failures are retrieval failures; measure recall first.</li><li>Use hybrid search, reranking and permission filters in production.</li></ol>
+  <ol class="l-hi"><li>RAG = sahi hisse laao, phir unse citations ke saath jawab do.</li><li>Ek baar index karo (chunk, embed, store); har sawaal par retrieve.</li><li>Zyaadatar failures retrieval ke hain; pehle recall naapo.</li><li>Production mein hybrid search, reranking aur permission filters use karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Change the prompt in <code>rag_local.py</code> to allow general knowledge for non-policy facts. Does the London question get a correct, cited answer now? <span class="level">coder</span></p><p class="l-hi"><code>rag_local.py</code> ka prompt badlo taaki policy ke alawa facts ke liye general knowledge allowed ho. Kya ab London wale sawaal ko sahi, cited jawab mila? <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Build a RAG over your college notes or a public PDF. Write 20 questions with the correct section for each and measure recall@2. <span class="level">project</span></p><p class="l-hi">Apne college notes ya kisi public PDF par RAG banao. 20 sawaal unke sahi section ke saath likho aur recall@2 naapo. <span class="level">project</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Lewis et al. (2020). <em>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.</em></li>
+  <li>Cormack et al. (2009). <em>Reciprocal Rank Fusion outperforms Condorcet and individual rank learning methods.</em></li>
+  <li>Anthropic (2024). <em>Introducing Contextual Retrieval.</em></li>
+  <li>Es et al. (2023). <em>RAGAS: Automated Evaluation of Retrieval Augmented Generation.</em> · Edge et al. (2024). <em>From Local to Global: A GraphRAG Approach.</em></li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.flow("scA", [
+    { en: "Documents", hi: "Documents", sen: "handbook, FAQs, contracts", shi: "handbook, FAQs, contracts" },
+    { en: "Chunk", hi: "Chunk", sen: "by heading, ~200-800 tokens", shi: "heading se, ~200-800 tokens" },
+    { en: "Embed + index", hi: "Embed + index", sen: "vectors + keywords + access rights", shi: "vectors + keywords + access rights" },
+    { en: "Question", hi: "Sawaal", sen: "“food allowance when travelling?”", shi: "“travel mein khaane ka allowance?”" },
+    { en: "Retrieve", hi: "Retrieve", sen: "hybrid search → top 2-5 chunks", shi: "hybrid search → top 2-5 chunks" },
+    { en: "Answer + cite", hi: "Jawab + cite", sen: "“INR 1,500 per day [Expenses]”", shi: "“INR 1,500 per day [Expenses]”" }
+  ], [
+    ["Start with your documents.", "Apne documents se shuru."],
+    ["Cut them into chunks along natural boundaries such as headings.", "Unhe headings jaisi natural seemaon par chunks mein kaato."],
+    ["Embed and index each chunk, with its source and permissions. (This half runs ahead of time.)", "Har chunk ko uske source aur permissions ke saath embed aur index karo. (Yeh hissa pehle se chalta hai.)"],
+    ["A question arrives. (This half runs on every question.)", "Sawaal aata hai. (Yeh hissa har sawaal par chalta hai.)"],
+    ["Find the best chunks.", "Sabse achhe chunks dhoondho."],
+    ["Haron answers from them and cites the source, so people can check.", "Haron unse jawab deta hai aur source cite karta hai, taaki log check kar sakein."]
+  ], { perRow: 3 });
+
+  B.chat("scB", [
+    { who: "user", en: "Can I fly business class to London?", hi: "Kya main London business class jaa sakta hoon?", step: 0 },
+    { who: "tool", en: "retrieved: Travel (0.57), Leave (0.12)", hi: "retrieved: Travel (0.57), Leave (0.12)", step: 0 },
+    { who: "bad", en: "I don't know", hi: "I don't know", step: 1 },
+    { who: "user", en: "How much can I spend on food when travelling?", hi: "Travel mein khaane par kitna kharch kar sakta hoon?", step: 2 },
+    { who: "tool", en: "retrieved: Expenses (0.53), Leave (0.14)", hi: "retrieved: Expenses (0.53), Leave (0.14)", step: 2 },
+    { who: "good", en: "INR 1,500 per day [Expenses]", hi: "INR 1,500 per day [Expenses]", step: 3 },
+    { who: "user", en: "What is the dress code?", hi: "Dress code kya hai?", step: 4 },
+    { who: "good", en: "I don't know", hi: "I don't know", step: 5 }
+  ], [
+    ["Question 1. Retrieval found the right chunk: Travel scored highest.", "Sawaal 1. Retrieval ne sahi chunk dhoondha: Travel ka score sabse zyaada."],
+    ["But the answer is “I don't know”. The rule depends on flight length, which isn't in the documents, and the prompt forbade outside knowledge.", "Par jawab “nahi pata” hai. Niyam flight ki lambaai par depend karta hai, jo documents mein nahi, aur prompt ne bahar ka gyaan mana kiya tha."],
+    ["Question 2. Retrieval finds Expenses.", "Sawaal 2. Retrieval Expenses dhoondhta hai."],
+    ["A correct, cited answer, in 25 seconds on a laptop.", "Sahi, cited jawab, laptop par 25 second mein."],
+    ["Question 3: the handbook has no dress code.", "Sawaal 3: handbook mein dress code nahi hai."],
+    ["“I don't know” is exactly right here: no hallucinated dress code.", "“Nahi pata” yahan bilkul sahi hai: koi banaaya hua dress code nahi."]
+  ]);
+
+  B.columns("scC", [
+    { en: "Symptom", hi: "Lakshan", cls: "box-amb", step: 0, items: [
+      { en: "Right answer exists, but wrong chunks come back", hi: "Sahi jawab hai, par galat chunks aate hain", step: 0 },
+      { en: "Chunk cut in half: the key sentence is split", hi: "Chunk aadha kata: zaroori sentence toot gaya", step: 1 },
+      { en: "Exact codes and IDs not found", hi: "Sateek codes aur IDs nahi milte", step: 2 },
+      { en: "Right chunk retrieved, answer still wrong", hi: "Sahi chunk aaya, phir bhi jawab galat", step: 3 },
+      { en: "Outdated answer after a policy change", hi: "Policy badalne ke baad purana jawab", step: 4 } ] },
+    { en: "Fix", hi: "Ilaaj", cls: "box-sig", step: 0, items: [
+      { en: "Better embedding model; query rewriting; reranker", hi: "Behtar embedding model; query rewriting; reranker", step: 0 },
+      { en: "Chunk by structure, with overlap and a context line", hi: "Structure se chunk, overlap aur context line ke saath", step: 1 },
+      { en: "Hybrid search: add keyword (BM25)", hi: "Hybrid search: keyword (BM25) jodo", step: 2 },
+      { en: "Fewer, better chunks; quote-then-answer prompt", hi: "Kam, behtar chunks; pehle-quote-phir-jawab prompt", step: 3 },
+      { en: "Re-index on change; store dates; prefer newest", hi: "Badlaav par re-index; dates store karo; naya pehle", step: 4 } ] }
+  ], [
+    ["Retrieval misses: the model can only answer from what it's given.", "Retrieval miss: model sirf diye gaye se jawab de sakta hai."],
+    ["Bad chunking splits the answer across two chunks.", "Kharab chunking jawab ko do chunks mein baant deti hai."],
+    ["Embeddings blur exact strings; keyword search catches them.", "Embeddings sateek strings dhundhla deti hain; keyword search pakad leta hai."],
+    ["Too much or noisy context confuses generation.", "Zyaada ya shor wala context generation ko uljhaata hai."],
+    ["Stale indexes give confident, outdated answers.", "Purane indexes yakeen bhare, purane jawab dete hain."]
+  ]);
+})();
+</script>

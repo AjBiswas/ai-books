@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 9 · Many Harons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 09</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 09 · Building Haron's team</span><span class="l-hi">Chapter 09 · Haron ki team banana</span></div>
+  <h1><span class="l-en">Many Harons</span><span class="l-hi">Kai Saare Haron</span></h1>
+  <div class="story">
+    <p class="l-en">Some jobs are too big for one diary. "Research our three competitors" means reading dozens of pages about each. If one Haron reads everything, its diary overflows and it forgets the first competitor by the time it reaches the third. So a <strong>lead</strong> Haron splits the job and sends <strong>workers</strong>, each with a fresh, empty diary. This is powerful, and expensive, and easy to overuse.</p>
+    <p class="l-hi">Kuch kaam ek diary ke liye bahut bade hain. "Hamare teen competitors par research karo" matlab har ek ke baare mein darjanon pages padhna. Agar ek hi Haron sab padhe, toh diary overflow ho jaayegi aur teesre tak pahunchte-pahunchte pehla bhool jaayega. Isliye ek <strong>lead</strong> Haron kaam baant kar <strong>workers</strong> bhejta hai, har ek ki nayi, khaali diary ke saath. Yeh taakatwar hai, mehenga hai, aur iska zaroorat se zyaada use aasaan hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The orchestrator–worker pattern</span><span class="l-hi">Orchestrator–worker pattern</span></li>
+    <li><b>2</b><span class="l-en">The real costs: tokens and lost details</span><span class="l-hi">Asli kharch: tokens aur khoyi details</span></li>
+    <li><b>3</b><span class="l-en">Handoffs between specialist agents</span><span class="l-hi">Specialist agents ke beech handoff</span></li>
+    <li><b>4</b><span class="l-en">When one agent is the better choice</span><span class="l-hi">Kab ek hi agent behtar hai</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The lead and the workers</span><span class="l-hi">Lead aur workers</span></h2></div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 330" width="760" role="img" aria-label="A lead agent splits a task into three subtasks for worker agents and combines their results"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">The price of a team</span><span class="l-hi">Team ki keemat</span></h2></div>
+<div class="story">
+  <p class="l-en">Every worker re-reads its own instructions, does its own searching and writes its own report, and the lead reads all the reports. Anthropic reported that in their research system, single agents used about 4× the tokens of a chat, and multi-agent runs about 15×. Details can also get lost: each summary is a chance to drop the one fact that mattered, like a game of telephone.</p>
+  <p class="l-hi">Har worker apne instructions dobara padhta hai, apni search karta hai, apni report likhta hai, aur lead saari reports padhta hai. Anthropic ne bataaya ki unke research system mein ek agent chat se lagbhag 4× tokens use karta tha, aur multi-agent runs lagbhag 15×. Details bhi kho sakti hain: har summary ek mauka hai woh ek fact girane ka jo zaroori tha, "chinese whispers" khel jaisa.</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 270" width="760" role="img" aria-label="Token use of chat, single agent and multi-agent; a fact is lost through summaries"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Passing the customer on (handoff)</span><span class="l-hi">Customer ko aage bhejna (handoff)</span></h2></div>
+<div class="story">
+  <p class="l-en">A different shape: specialists in a line. A front-desk Haron sorts the request and hands the customer to the billing Haron, which has billing tools and billing rules. The key is the <strong>handoff note</strong>: what the next agent must know, so the customer never repeats themselves.</p>
+  <p class="l-hi">Ek alag shape: line mein specialists. Front-desk Haron request ko chhaant kar customer ko billing Haron ke paas bhejta hai, jiske paas billing tools aur billing niyam hain. Asli cheez hai <strong>handoff note</strong>: agle agent ko kya jaanna zaroori hai, taaki customer ko apni baat dobara na kehni pade.</p>
+</div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 240" width="760" role="img" aria-label="A triage agent hands a customer to a billing agent with a handoff note"></svg></div></figure>
+
+<h2><span class="l-en">One Haron or many?</span><span class="l-hi">Ek Haron ya kai?</span></h2>
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Use many when…</span><span class="l-hi">Kai tab use karo jab…</span></th><th><span class="l-en">Stay with one when…</span><span class="l-hi">Ek tab rakho jab…</span></th></tr></thead>
+<tbody>
+<tr><td><span class="l-en">Work splits into independent parts (research N things)</span><span class="l-hi">Kaam alag-alag hisson mein bant jaaye (N cheezon ki research)</span></td><td><span class="l-en">Steps depend tightly on each other (writing one program)</span><span class="l-hi">Steps ek-doosre par kas ke depend hon (ek program likhna)</span></td></tr>
+<tr><td><span class="l-en">Total reading won't fit one context window</span><span class="l-hi">Kul padhaai ek context window mein na aaye</span></td><td><span class="l-en">Everything fits comfortably</span><span class="l-hi">Sab aaraam se fit ho jaaye</span></td></tr>
+<tr><td><span class="l-en">Parallel speed matters more than tokens</span><span class="l-hi">Tokens se zyaada parallel speed zaroori ho</span></td><td><span class="l-en">Cost is tight</span><span class="l-hi">Budget tight ho</span></td></tr>
+<tr><td><span class="l-en">Specialists need different tools or permissions</span><span class="l-hi">Specialists ko alag tools ya permissions chahiye</span></td><td><span class="l-en">One toolset covers the job</span><span class="l-hi">Ek toolset se kaam ho jaaye</span></td></tr>
+</tbody></table></div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Workers overdo, duplicate and drift</span><span class="l-hi">Workers zyaada karte hain, dohraate hain, aur bhatakte hain</span></h4>
+  <p class="l-en">Given a vague subtask ("research pricing"), workers often search the same sources as each other, go far beyond what was needed, or answer a slightly different question. The fix is in the lead's instructions: each subtask needs a goal, a boundary ("only Q3 2026, only India"), an output format, and an effort hint ("5 searches at most").</p>
+  <p class="l-hi">Dhundhla subtask ("pricing research karo") milne par workers aksar ek-doosre jaise hi sources search karte hain, zaroorat se bahut aage chale jaate hain, ya thoda alag sawaal ka jawab dete hain. Ilaaj lead ke instructions mein hai: har subtask mein lakshya, seema ("sirf Q3 2026, sirf India"), output format, aur mehnat ka ishaara ("zyaada se zyaada 5 searches") ho.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">Budget and permissions per worker</span><span class="l-hi">Har worker ka budget aur permissions</span></h4>
+  <p class="l-en">A team of agents multiplies spend and blast radius. Give each worker its own token budget and its own tool permissions (a research worker needs read-only web access; it never needs the refund tool). Use a cheaper model for workers and the stronger model for the lead. Trace the whole tree as one run so finance can see the total (Chapter 17).</p>
+  <p class="l-hi">Agents ki team kharch aur nuksaan ka daayra dono badhaati hai. Har worker ko apna token budget aur apni tool permissions do (research worker ko sirf read-only web chahiye; refund tool kabhi nahi). Workers ke liye sasta model aur lead ke liye majboot model use karo. Poore tree ko ek run ki tarah trace karo taaki finance kul kharch dekh sake (Chapter 17).</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the orchestrator</span><span class="l-hi">Coders ke liye: orchestrator</span><span class="lvl">code/harness/multi.py</span></summary>
+  <div class="inner">
+<pre>plan = json.loads(lead.complete(system="Split the task into at most 4 independent subtasks. "
+                                       "Reply with only a JSON array of strings.", ...).text)
+with ThreadPoolExecutor(max_workers=4) as ex:              # workers run in parallel
+    results = list(ex.map(lambda sub: Agent(provider, worker_tools,
+                     AgentConfig(model=worker_model, max_steps=6)).run(sub), plan))   # fresh context each
+answer = lead.complete(system="Combine the worker results into one answer...", ...)</pre>
+<pre>$ python code/ch09/team_demo.py
+worker 1: Research competitor pricing              -> Rival A cut prices 12%.
+worker 2: Research competitor hiring               -> Rival B is hiring 300 AI engineers in Hyderabad.
+worker 3: Research competitor product launches     -> Rival C launched a Kannada voice assistant.
+
+lead: Market brief: Rival A cut prices 12%. Rival B is hiring 300 AI engineers in Hyderabad. Rival C launched a Kannada voice assistant.
+total tokens 271</pre>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>A lead can split big, independent work across workers with fresh diaries.</li><li>Teams cost many times more tokens and can lose details in summaries.</li><li>Handoffs need a good note so nobody repeats themselves.</li><li>Use one agent unless the job truly splits.</li></ol>
+  <ol class="l-hi"><li>Lead bade, alag-alag kaam ko nayi diaries wale workers mein baant sakta hai.</li><li>Teams kai guna zyaada tokens leti hain aur summaries mein details kho sakti hain.</li><li>Handoff ke liye achha note chahiye taaki kisi ko baat dohraani na pade.</li><li>Jab tak kaam sach mein na bate, ek agent use karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Give each worker in <code>multi.py</code> its own <code>token_budget</code>, and make the lead mention which workers ran out. <span class="level">coder</span></p><p class="l-hi"><code>multi.py</code> mein har worker ko apna <code>token_budget</code> do, aur lead bataaye kaunse workers ka budget khatam hua. <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Design a handoff note format (fields) for a bank: from KYC agent to loans agent. What must never be in it? <span class="level">enterprise</span></p><p class="l-hi">Bank ke liye handoff note ka format (fields) design karo: KYC agent se loans agent tak. Isme kya kabhi nahi hona chahiye? <span class="level">enterprise</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Anthropic (2025). <em>How we built our multi-agent research system.</em></li>
+  <li>Cognition (2025). <em>Don't Build Multi-Agents.</em></li>
+  <li>Wu et al. (2023). <em>AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation.</em></li>
+  <li>OpenAI (2025). <em>Agents SDK: handoffs.</em></li>
+</ol>
+
+<nav class="pager"><a href="ch08.html">← Ch 8</a><a href="ch10.html"><span class="l-en">Ch 10 · Hooks, Skills &amp; Policies →</span><span class="l-hi">Ch 10 · Hooks, Skills &amp; Policies →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls, move = B.move;
+
+  /* Scene A: lead and workers */
+  (function () {
+    var s = document.getElementById("svA");
+    var lead = E(s, "g"); B.tokku(lead, 340, 4, 70);
+    BI(lead, { x: 430, y: 40, "font-size": 12, "font-weight": 700 }, "Lead (strong model)", "Lead (majboot model)");
+    var task = B.box(s, { x: 20, y: 14, w: 300, h: 40, cls: "box-amb", fs: 12, en: "“Competitor brief for Q3”", hi: "“Q3 ke liye competitor brief”" });
+    var subs = [["pricing", "Rival A cut prices 12%."], ["hiring", "Rival B: 300 AI hires, Hyderabad."], ["launches", "Rival C: Kannada voice assistant."]];
+    var subG = [], wG = [], resG = [], lines = [];
+    subs.forEach(function (sb, i) {
+      var x = 30 + i * 245;
+      subG.push(B.box(s, { x: x, y: 100, w: 210, h: 34, cls: "box-plm", fs: 12, en: "Research " + sb[0], hi: sb[0] + " ki research" }));
+      lines.push(B.arrow(s, s, 375, 86, x + 105, 98, "plm"));
+      var w = E(s, "g", { "class": "anim" });
+      B.tokku(w, x + 10, 146, 46);
+      E(w, "rect", { x: x + 66, y: 152, width: 140, height: 46, rx: 4, "class": "box" });
+      BI(w, { x: x + 74, y: 172, "font-size": 11, "class": "muted" }, "own fresh diary", "apni nayi diary");
+      BI(w, { x: x + 74, y: 188, "font-size": 11, "class": "muted" }, "cheap model", "sasta model");
+      wG.push(w);
+      resG.push(B.box(s, { x: x, y: 214, w: 210, h: 34, cls: "box-sig", fs: 11, en: sb[1], hi: sb[1] }));
+    });
+    var brief = B.box(s, { x: 130, y: 280, w: 500, h: 40, cls: "box-sig", fs: 12, en: "Lead combines: one-paragraph market brief", hi: "Lead jodta hai: ek paragraph ka market brief" });
+    B.scene(document.getElementById("scA"), [
+      ["The lead gets a big task.", "Lead ko bada kaam milta hai."],
+      ["It splits the task into three independent subtasks (as a JSON list).", "Woh kaam ko teen alag subtasks mein baantta hai (JSON list ki tarah)."],
+      ["Three workers start <strong>in parallel</strong>, each with a fresh, empty diary and a cheaper model. None of them sees the others' reading.", "Teen workers <strong>saath-saath</strong> shuru, har ek ki nayi khaali diary aur sasta model. Koi doosre ki padhaai nahi dekhta."],
+      ["Each worker returns only a short result, not everything it read.", "Har worker sirf chhota result lautaata hai, sab padha hua nahi."],
+      ["The lead's diary stays small: it reads three short reports and writes the brief.", "Lead ki diary chhoti rehti hai: woh teen chhoti reports padhkar brief likhta hai."]
+    ], function (i) {
+      show(task, true);
+      subG.forEach(function (g) { show(g, i >= 1); }); lines.forEach(function (g) { show(g, i >= 1); });
+      wG.forEach(function (g) { show(g, i >= 2); }); resG.forEach(function (g) { show(g, i >= 3); }); show(brief, i >= 4);
+    });
+  })();
+
+  /* Scene B: cost & telephone */
+  (function () {
+    var s = document.getElementById("svB");
+    var rows = [["Chat", 1, "box"], ["Single agent", 4, "box-sig"], ["Multi-agent", 15, "box-amb"]];
+    var bars = [];
+    rows.forEach(function (r, i) {
+      var y = 30 + i * 44;
+      BI(s, { x: 20, y: y + 20, "font-size": 13, "font-weight": 600 }, r[0], r[0]);
+      var b = E(s, "rect", { x: 150, y: y, width: 0, height: 30, rx: 3, "class": r[2] });
+      b.style.transition = "width 1s cubic-bezier(.2,.8,.2,1)";
+      var t = E(s, "text", { x: 160 + r[1] * 30, y: y + 20, "font-size": 13, "font-weight": 700, "class": "mono anim" }, "≈" + r[1] + "× tokens");
+      bars.push([b, r[1] * 30, t]);
+    });
+    BI(s, { x: 150, y: 172, "font-size": 11, "class": "muted" }, "relative token use reported by Anthropic (2025)", "Anthropic (2025) ka bataaya relative token use");
+    var tel = E(s, "g", { "class": "anim" });
+    var chain = [["worker read:", "“Rival C launched a Kannada voice assistant, Android only, ₹99/month”"], ["worker summary:", "“Rival C launched a voice assistant”"], ["lead brief:", "“Rival C is active in AI”"]];
+    chain.forEach(function (c, i) {
+      E(tel, "text", { x: 20, y: 200 + i * 22, "font-size": 12, "font-weight": 700, "class": "mono" }, c[0]);
+      E(tel, "text", { x: 160, y: 200 + i * 22, "font-size": 12, "class": i === 2 ? "amb" : "" }, c[1]);
+    });
+    B.scene(document.getElementById("scB"), [
+      ["A plain chat answer: the baseline.", "Seedha chat jawab: baseline."],
+      ["One agent with tools: about 4× the tokens, because of the loop re-sending the diary.", "Tools wala ek agent: lagbhag 4× tokens, kyunki loop diary dobara bhejta hai."],
+      ["A multi-agent team: about 15×. Worth it only when the job is worth it.", "Multi-agent team: lagbhag 15×. Tabhi theek jab kaam itna keemti ho."],
+      ["And the telephone game: each summary drops details. “Kannada, Android only, ₹99” becomes “active in AI”. Ask workers for facts with sources, not prose.", "Aur chinese whispers: har summary details girati hai. “Kannada, sirf Android, ₹99” ban gaya “AI mein active”. Workers se source ke saath facts maango, kahani nahi."]
+    ], function (i) {
+      bars.forEach(function (b, k) { b[0].setAttribute("width", k <= Math.min(i, 2) ? b[1] : 0); show(b[2], k <= Math.min(i, 2)); });
+      show(tel, i === 3);
+    });
+  })();
+
+  /* Scene C: handoff */
+  (function () {
+    var s = document.getElementById("svC");
+    var cust = B.box(s, { x: 10, y: 20, w: 200, h: 56, cls: "box", fs: 12, en: "“I was charged twice", hi: "“Mujhse do baar paisa", sen: "for ORD-100231”", shi: "ORD-100231 ke liye kata”" });
+    var tri = E(s, "g", { "class": "anim" }); B.tokku(tri, 250, 10, 60);
+    BI(tri, { x: 280, y: 100, "text-anchor": "middle", "font-size": 12, "font-weight": 700 }, "Front desk", "Front desk");
+    var bill = E(s, "g", { "class": "anim" }); B.tokku(bill, 560, 10, 60);
+    BI(bill, { x: 590, y: 100, "text-anchor": "middle", "font-size": 12, "font-weight": 700 }, "Billing", "Billing");
+    BI(bill, { x: 590, y: 116, "text-anchor": "middle", "font-size": 11, "class": "muted" }, "refund tool allowed", "refund tool allowed");
+    var note = E(s, "g", { "class": "anim" });
+    E(note, "rect", { x: 330, y: 130, width: 300, height: 92, rx: 6, "class": "box-plm" });
+    BI(note, { x: 342, y: 150, "font-size": 12, "font-weight": 700 }, "Handoff note", "Handoff note");
+    ["intent: duplicate charge", "order: ORD-100231", "verified: yes (OTP)", "customer mood: upset; apologise"].forEach(function (l, i) {
+      E(note, "text", { x: 342, y: 170 + i * 16, "font-size": 11, "class": "mono" }, l);
+    });
+    var a1 = B.arrow(s, s, 212, 48, 246, 48, ""), a2 = B.arrow(s, s, 315, 50, 555, 50, "plm");
+    var done = B.box(s, { x: 650, y: 150, w: 100, h: 50, cls: "box-sig", fs: 12, en: "Refunded", hi: "Refund ho gaya" });
+    B.scene(document.getElementById("scC"), [
+      ["A customer writes in.", "Customer likhta hai."],
+      ["The front-desk agent works out the intent and verifies the customer. It has no refund tool.", "Front-desk agent iraada samajhta hai aur customer verify karta hai. Uske paas refund tool nahi."],
+      ["It hands off to Billing with a short, structured note, not the whole chat.", "Woh Billing ko chhota, structured note deta hai, poori chat nahi."],
+      ["Billing acts immediately. The customer never repeats themselves.", "Billing turant kaam karta hai. Customer ko kuch dohraana nahi padta."]
+    ], function (i) {
+      show(cust, true); show(a1, i >= 1); show(tri, i >= 1); show(note, i >= 2); show(a2, i >= 2); show(bill, i >= 2); show(done, i >= 3);
+    });
+  })();
+})();
+</script>
+</body>
+</html>

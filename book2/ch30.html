@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 30 · Front-End for AI Apps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part VI · Chapter 30</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 30 · Production</span><span class="l-hi">Chapter 30 · Production</span></div>
+  <h1><span class="l-en">Front-End for AI Apps</span><span class="l-hi">AI Apps ka Front-End</span></h1>
+  <div class="story">
+    <p class="l-en">Users never see your prompts, retrieval or agent loop. They see a screen. A brilliant agent behind a confusing interface feels broken; an average model behind a thoughtful interface feels magical. AI front-ends have their own patterns: text that streams in, answers that cite sources, a stop button, approval cards before risky actions, and sometimes interfaces the model builds on the fly.</p>
+    <p class="l-hi">Users aapke prompts, retrieval ya agent loop kabhi nahi dekhte. Woh screen dekhte hain. Uljhe interface ke peeche shaandaar agent toota lagta hai; soch-samajh kar bane interface ke peeche aam model jaadu lagta hai. AI front-ends ke apne patterns hain: dheere-dheere aata text, sources cite karte jawab, stop button, risky kaam se pehle approval cards, aur kabhi model ka turant banaaya interface.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">How streaming reaches the browser</span><span class="l-hi">Streaming browser tak kaise pahunchti hai</span></li>
+    <li><b>2</b><span class="l-en">Chat UX patterns that build trust</span><span class="l-hi">Bharosa banaane wale chat UX patterns</span></li>
+    <li><b>3</b><span class="l-en">Generative UI and human-in-the-loop cards</span><span class="l-hi">Generative UI aur human-in-the-loop cards</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">From model to screen, token by token</span><span class="l-hi">Model se screen tak, token dar token</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">Never call a model API directly from the browser with your API key: anyone can read it in the page source. The browser talks to <strong>your backend</strong>, which holds the key, checks the user, applies limits and streams the answer back.</p>
+  <p class="l-hi">Browser se seedhe apni API key ke saath model API kabhi call mat karo: koi bhi page source mein padh sakta hai. Browser <strong>aapke backend</strong> se baat karta hai, jiske paas key hai, jo user check karta hai, limits lagaata hai aur jawab wapas stream karta hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Chat UX that earns trust</span><span class="l-hi">Bharosa kamaane wala chat UX</span></h2></div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">When the answer is an interface</span><span class="l-hi">Jab jawab hi interface ho</span></h2></div>
+<div class="story">
+  <p class="l-en">Not every answer should be a paragraph. With <strong>generative UI</strong>, the model calls a "show component" tool, and your front-end renders a real component (a flight card, a chart, a form) with the data. And before a risky action, the agent shows an <strong>approval card</strong> instead of acting: the human stays in the loop.</p>
+  <p class="l-hi">Har jawab paragraph nahi hona chahiye. <strong>Generative UI</strong> mein model "component dikhao" tool call karta hai, aur aapka front-end data ke saath asli component render karta hai (flight card, chart, form). Aur risky kaam se pehle agent kaam karne ki jagah <strong>approval card</strong> dikhata hai: insaan loop mein rehta hai.</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Markdown, links and images from the model are untrusted</span><span class="l-hi">Model ka markdown, links aur images anjaan hain</span></h4>
+  <p class="l-en">Models write markdown, and the page renders it. A prompt-injected model can write an image link whose URL carries private data to an attacker's server the moment the page loads it, or a link that looks harmless but isn't. Sanitise model output, don't auto-load images from unknown domains, and never render raw HTML from the model.</p>
+  <p class="l-hi">Models markdown likhte hain, aur page use render karta hai. Prompt-injected model aisa image link likh sakta hai jiska URL page load karte hi private data hamlawar ke server tak le jaaye, ya aisa link jo bekhatar lage par ho nahi. Model output sanitise karo, anjaan domains ki images auto-load mat karo, aur model ka raw HTML kabhi render mat karo.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Tools for building AI front-ends</span><span class="l-hi">AI front-ends banaane ke tools</span></h4>
+  <p class="l-en">For prototypes and internal tools: <strong>Streamlit</strong>, <strong>Gradio</strong> or <strong>Chainlit</strong> give you a chat UI in a few lines of Python. For production web apps: frameworks like the <strong>Vercel AI SDK</strong> or <strong>assistant-ui</strong> handle streaming, tool-call rendering and message state in React. Under the hood it's usually Server-Sent Events from your backend.</p>
+  <p class="l-hi">Prototypes aur internal tools ke liye: <strong>Streamlit</strong>, <strong>Gradio</strong> ya <strong>Chainlit</strong> Python ki kuch lines mein chat UI dete hain. Production web apps ke liye: <strong>Vercel AI SDK</strong> ya <strong>assistant-ui</strong> jaise frameworks React mein streaming, tool-call rendering aur message state sambhaalte hain. Andar se aksar aapke backend se Server-Sent Events hote hain.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Design for India's networks and languages</span><span class="l-hi">India ke networks aur bhashaon ke liye design</span></h4>
+  <p class="l-en">Many users are on mid-range phones and patchy 4G. Keep the page light, stream text (not heavy widgets), handle dropped connections by resuming, offer voice input, and let users switch language easily. Always label AI-generated content and give an easy way to reach a human.</p>
+  <p class="l-hi">Kai users mid-range phones aur kamzor 4G par hain. Page halka rakho, text stream karo (bhaari widgets nahi), toote connections ko resume karke sambhaalo, voice input do, aur bhasha aasaani se badalne do. AI-generated content ko hamesha label karo aur insaan tak pahunchne ka aasaan raasta do.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: a streaming endpoint</span><span class="l-hi">Coders ke liye: streaming endpoint</span><span class="lvl">python · FastAPI</span></summary>
+  <div class="inner">
+<pre>from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+import anthropic, json
+
+app = FastAPI()
+client = anthropic.Anthropic()          # key lives on the server only
+
+@app.post("/chat")
+def chat(body: dict):
+    def events():
+        with client.messages.stream(model="claude-opus-5-5", max_tokens=1024,
+                                    messages=body["messages"]) as stream:
+            for text in stream.text_stream:
+                yield f"data: {json.dumps({'text': text})}\n\n"     # Server-Sent Events
+        yield "data: [DONE]\n\n"
+    return StreamingResponse(events(), media_type="text/event-stream")</pre>
+    <p class="l-en">Add authentication, per-user rate limits and input checks before the stream starts; in the browser, read the stream with <code>fetch</code> and append each chunk to the message.</p>
+    <p class="l-hi">Stream shuru hone se pehle authentication, har user ki rate limits aur input checks jodo; browser mein <code>fetch</code> se stream padho aur har tukda message mein jodo.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Browser → your backend → model; the key never reaches the browser.</li><li>Stream text, show progress, offer stop, retry and feedback.</li><li>Cite sources, label AI content, and make the human route easy.</li><li>Render rich components and approval cards; sanitise everything the model writes.</li></ol>
+  <ol class="l-hi"><li>Browser → aapka backend → model; key kabhi browser tak nahi pahunchti.</li><li>Text stream karo, progress dikhao, stop, retry aur feedback do.</li><li>Sources cite karo, AI content label karo, aur insaan tak pahunchna aasaan banao.</li><li>Rich components aur approval cards render karo; model ka likha sab sanitise karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Build a Streamlit or Gradio chat for the Chapter 14 RAG lab that shows citations as clickable chips under each answer. <span class="level">project</span></p><p class="l-hi">Chapter 14 ke RAG lab ke liye Streamlit ya Gradio chat banao jo har jawab ke neeche citations clickable chips ki tarah dikhaaye. <span class="level">project</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Vercel. <em>AI SDK</em> documentation. · assistant-ui.</li>
+  <li>Streamlit, Gradio and Chainlit documentation.</li>
+  <li>Google PAIR. <em>People + AI Guidebook.</em></li>
+</ol>
+<nav class="pager"><a href="ch29.html">← Ch 29</a><a href="ch31.html"><span class="l-en">Ch 31 · Shipping to Production →</span><span class="l-hi">Ch 31 · Production mein Bhejna →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.flow("scA", [
+    { en: "Browser", hi: "Browser", sen: "user sends a message", shi: "user message bhejta" },
+    { en: "Your backend", hi: "Aapka backend", sen: "auth · limits · PII check · holds the API key", shi: "auth · limits · PII check · API key yahin" },
+    { en: "Model API", hi: "Model API", sen: "stream=true", shi: "stream=true" },
+    { en: "Tokens flow back", hi: "Tokens wapas", sen: "Server-Sent Events, chunk by chunk", shi: "Server-Sent Events, tukda dar tukda" },
+    { en: "UI appends", hi: "UI jodta", sen: "first words in < 1 s", shi: "pehle words < 1 s mein" }
+  ], [
+    ["The user types in the browser.", "User browser mein type karta hai."],
+    ["Your backend authenticates them, checks limits and input, and holds the secret key.", "Aapka backend unhe authenticate karta hai, limits aur input check karta hai, aur secret key rakhta hai."],
+    ["The backend calls the model with streaming on.", "Backend streaming on karke model call karta hai."],
+    ["Tokens flow back as they're generated, usually as Server-Sent Events.", "Tokens bante hi wapas aate hain, aksar Server-Sent Events ki tarah."],
+    ["The UI appends each chunk, so the user starts reading almost immediately.", "UI har tukda jodta hai, toh user lagbhag turant padhna shuru kar deta hai."]
+  ], { perRow: 5 });
+
+  B.columns("scB", [
+    { en: "While waiting", hi: "Intezaar mein", cls: "box-sig", step: 0, items: [
+      { en: "Stream text as it arrives", hi: "Text aate hi stream karo", step: 0 },
+      { en: "Show progress during tools: “Checking your order…”", hi: "Tools ke dauraan progress: “Aapka order check kar raha hoon…”", step: 0 },
+      { en: "A Stop button that really stops (and stops billing)", hi: "Stop button jo sach mein roke (aur billing bhi)", step: 0 } ] },
+    { en: "The answer", hi: "Jawab", cls: "box-amb", step: 1, items: [
+      { en: "Citations the user can open", hi: "Citations jo user khol sake", step: 1 },
+      { en: "“AI-generated” label; honest about limits", hi: "“AI-generated” label; seemaon ke baare mein imaandaar", step: 1 },
+      { en: "Copy, retry, edit-and-resend", hi: "Copy, retry, edit karke dobara bhejo", step: 1 } ] },
+    { en: "After", hi: "Baad mein", cls: "box-plm", step: 2, items: [
+      { en: "Thumbs up/down with an optional reason", hi: "Thumbs up/down, optional wajah ke saath", step: 2 },
+      { en: "“Talk to a human” always visible", hi: "“Insaan se baat karo” hamesha dikhe", step: 2 },
+      { en: "Clear errors: what failed, what to do", hi: "Saaf errors: kya fail hua, kya karein", step: 2 } ] }
+  ], [
+    ["<strong>While waiting</strong>: make speed visible and give control.", "<strong>Intezaar mein</strong>: speed dikhao aur control do."],
+    ["<strong>The answer</strong>: make it checkable and honest.", "<strong>Jawab</strong>: check hone laayak aur imaandaar banao."],
+    ["<strong>After</strong>: collect feedback (your future eval cases) and keep a way out.", "<strong>Baad mein</strong>: feedback jama karo (aapke aage ke eval cases) aur bahar ka raasta rakho."]
+  ]);
+
+  B.chat("scC", [
+    { who: "user", en: "Book me the cheapest flight to Bengaluru tomorrow morning.", hi: "Kal subah Bengaluru ki sabse sasti flight book karo.", step: 0 },
+    { who: "tool", label: "UI component: FlightCard", en: "[ 6E-512 · Pune 07:10 → BLR 08:40 · ₹4,890 ]   [ AI-803 · 09:45 → 11:20 · ₹5,620 ]", hi: "[ 6E-512 · Pune 07:10 → BLR 08:40 · ₹4,890 ]   [ AI-803 · 09:45 → 11:20 · ₹5,620 ]", step: 1 },
+    { who: "sys", label: "approval card", en: "Book 6E-512 for ₹4,890 on your company card?   [ Approve ]   [ Change ]   [ Cancel ]", hi: "Company card par ₹4,890 mein 6E-512 book karein?   [ Approve ]   [ Badlo ]   [ Cancel ]", step: 2 },
+    { who: "good", en: "Booked. PNR Q7XK2P. I've added it to your calendar.", hi: "Book ho gaya. PNR Q7XK2P. Aapke calendar mein jod diya.", step: 3 }
+  ], [
+    ["A request that ends in spending money.", "Aisi request jiska ant paisa kharch karne mein hai."],
+    ["Instead of a paragraph, the model calls a UI tool and the app renders real flight cards: easier to scan and compare.", "Paragraph ki jagah model UI tool call karta hai aur app asli flight cards render karti hai: dekhne aur compare karne mein aasaan."],
+    ["Before paying, the agent shows an approval card. Nothing happens until the human clicks.", "Pay karne se pehle agent approval card dikhata hai. Insaan ke click tak kuch nahi hota."],
+    ["After approval, the action runs and the result is confirmed.", "Approval ke baad kaam chalta hai aur nateeja confirm hota hai."]
+  ]);
+})();
+</script>
+
+</body>
+</html>

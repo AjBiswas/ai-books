@@ -1,0 +1,165 @@
+  <div class="story">
+    <p class="l-en">Haron learned to use tools in Chapter 16. But every app that wanted Haron to use GitHub, Google Drive, Slack or your company database had to write its own connector, again and again. The <strong>Model Context Protocol (MCP)</strong> fixes that, the way USB-C fixed chargers: a tool provider writes one <strong>MCP server</strong>, and every AI app that speaks MCP (Claude, ChatGPT, Cursor, VS Code, your own agent) can plug it in.</p>
+    <p class="l-hi">Haron ne Chapter 16 mein tools use karna seekha. Par har app jo chahti thi ki Haron GitHub, Google Drive, Slack ya company database use kare, use apna connector baar-baar likhna padta tha. <strong>Model Context Protocol (MCP)</strong> ise theek karta hai, jaise USB-C ne chargers theek kiye: tool banane wala ek <strong>MCP server</strong> likhta hai, aur MCP bolne wali har AI app (Claude, ChatGPT, Cursor, VS Code, aapka apna agent) use laga sakti hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">What MCP is, and life without it</span><span class="l-hi">MCP kya hai, aur iske bina zindagi</span></li>
+    <li><b>2</b><span class="l-en">The protocol, message by message (real run)</span><span class="l-hi">Protocol, message dar message (asli run)</span></li>
+    <li><b>3</b><span class="l-en">Building and plugging in your own server</span><span class="l-hi">Apna server banana aur lagaana</span></li>
+    <li><b>4</b><span class="l-en">Security: trusting a server</span><span class="l-hi">Security: server par bharosa</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">With and without MCP</span><span class="l-hi">MCP ke saath aur bina</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="analogy">
+  <div><span class="k"><span class="l-en">Everyday</span><span class="l-hi">Roz ki baat</span></span><span class="l-en">USB-C port on your laptop</span><span class="l-hi">Laptop ka USB-C port</span></div>
+  <div><span class="k"><span class="l-en">MCP</span><span class="l-hi">MCP</span></span><span class="l-en"><strong>MCP client</strong> inside the AI app</span><span class="l-hi">AI app ke andar <strong>MCP client</strong></span></div>
+  <div><span class="k"><span class="l-en">Everyday</span><span class="l-hi">Roz ki baat</span></span><span class="l-en">A USB-C device: drive, keyboard, screen</span><span class="l-hi">USB-C device: drive, keyboard, screen</span></div>
+  <div><span class="k"><span class="l-en">MCP</span><span class="l-hi">MCP</span></span><span class="l-en"><strong>MCP server</strong>: GitHub, Postgres, Slack, your HR system</span><span class="l-hi"><strong>MCP server</strong>: GitHub, Postgres, Slack, aapka HR system</span></div>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">The conversation between client and server</span><span class="l-hi">Client aur server ki baatcheet</span></h2></div>
+<div class="story">
+  <p class="l-en">Under the hood MCP is simple: JSON messages (JSON-RPC 2.0), one per line, over standard input/output for local servers or HTTP for remote ones. This chapter's lab is a complete server in 60 lines of plain Python, so you can see every message. These are the real messages from running it.</p>
+  <p class="l-hi">Andar se MCP seedha hai: JSON messages (JSON-RPC 2.0), ek line mein ek, local servers ke liye standard input/output par ya remote ke liye HTTP par. Is chapter ka lab seedhe Python ki 60 lines mein poora server hai, taaki aap har message dekh sako. Yeh use chalaane ke asli messages hain.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">What the user experiences</span><span class="l-hi">User ko kya dikhta hai</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<h2><span class="l-en">What a server can offer</span><span class="l-hi">Server kya de sakta hai</span></h2>
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Primitive</span><span class="l-hi">Primitive</span></th><th><span class="l-en">What it is</span><span class="l-hi">Kya hai</span></th><th><span class="l-en">Example</span><span class="l-hi">Example</span></th></tr></thead>
+<tbody>
+<tr><td><b>Tools</b></td><td><span class="l-en">Actions the model can call</span><span class="l-hi">Kaam jo model call kar sake</span></td><td><code>leave_balance</code>, <code>create_issue</code>, <code>run_sql</code></td></tr>
+<tr><td><b>Resources</b></td><td><span class="l-en">Data the app can read and attach as context</span><span class="l-hi">Data jo app padhkar context mein jod sake</span></td><td><span class="l-en">a file, a table schema, a document</span><span class="l-hi">file, table schema, document</span></td></tr>
+<tr><td><b>Prompts</b></td><td><span class="l-en">Ready-made templates the user can pick</span><span class="l-hi">Taiyaar templates jo user chun sake</span></td><td><span class="l-en">"Summarise this PR", "Draft a leave request"</span><span class="l-hi">"Is PR ka summary", "Leave request draft karo"</span></td></tr>
+</tbody></table></div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Too many servers make Haron worse</span><span class="l-hi">Zyaada servers Haron ko kharab banaate hain</span></h4>
+  <p class="l-en">Each connected server adds its tool descriptions to every request. Connect ten servers with 15 tools each and Haron sees 150 tools: thousands of tokens, slower answers, and more wrong-tool choices. Connect only what the task needs, or use tool search (load tool definitions on demand) when there are many.</p>
+  <p class="l-hi">Har juda server har request mein apne tool descriptions jodta hai. 15 tools wale das servers jodo toh Haron 150 tools dekhta hai: hazaaron tokens, dheeme jawab, aur zyaada galat-tool chunav. Sirf wahi jodo jo kaam ko chahiye, ya bahut hon toh tool search use karo (tool definitions zaroorat par load).</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">An MCP server is third-party code with your keys</span><span class="l-hi">MCP server aapki keys ke saath teesre ka code hai</span></h4>
+  <p class="l-en">Risks: a malicious server can return text that hijacks the model (prompt injection), change its tool descriptions after you approved it, or simply exfiltrate the data you send it. Use servers from trusted publishers, pin versions, give each its own least-privilege credentials (remote servers use OAuth), log every call, and keep a company allowlist. If you skip MCP and hard-code integrations, you avoid this supply chain but rebuild every connector yourself.</p>
+  <p class="l-hi">Khatre: bura server aisa text lauta sakta hai jo model ko bhatkaaye (prompt injection), aapke approve karne ke baad apne tool descriptions badal sakta hai, ya bas bheja gaya data chura sakta hai. Bharosemand publishers ke servers lo, versions pin karo, har ek ko apne kam-se-kam permission wale credentials do (remote servers OAuth use karte hain), har call log karo, aur company allowlist rakho. MCP chhod kar integrations hard-code karo toh yeh supply chain bachti hai par har connector khud dobara banana padta hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the from-scratch server, the SDK version, and plugging it in</span><span class="l-hi">Coders ke liye: shuru se server, SDK version, aur lagaana</span><span class="lvl">code2/ch18/</span></summary>
+  <div class="inner">
+<pre>$ python code2/ch18/mini_mcp_client.py
+>> {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2025-06-18", ...}}
+<< {"jsonrpc": "2.0", "id": 1, "result": {"protocolVersion": "2025-06-18", "capabilities": {"tools": {}},
+    "serverInfo": {"name": "leave-server", "version": "0.1.0"}}}
+>> {"jsonrpc": "2.0", "method": "notifications/initialized"}
+>> {"jsonrpc": "2.0", "id": 2, "method": "tools/list"}
+<< {"jsonrpc": "2.0", "id": 2, "result": {"tools": [{"name": "leave_balance", "description": "Get the remaining
+    paid-leave days for an employee ID like E100.", "inputSchema": {...}}]}}
+>> {"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "leave_balance", "arguments": {"employee_id": "E100"}}}
+<< {"jsonrpc": "2.0", "id": 3, "result": {"content": [{"type": "text", "text": "E100 has 12 leave days left"}], "isError": false}}</pre>
+    <div class="codehead"><span>The same server with the official Python SDK  ·  pip install mcp</span><span>python</span></div>
+<pre>from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("leave-server")
+LEAVE = {"E100": 12, "E200": 3}
+
+@mcp.tool()
+def leave_balance(employee_id: str) -> str:
+    """Get the remaining paid-leave days for an employee ID like E100."""
+    return f"{employee_id} has {LEAVE.get(employee_id, 0)} leave days left"
+
+if __name__ == "__main__":
+    mcp.run()          # stdio by default</pre>
+    <div class="codehead"><span>Plug it into an MCP client (e.g. Claude Desktop's config)</span><span>json</span></div>
+<pre>{
+  "mcpServers": {
+    "leave": { "command": "python", "args": ["C:/path/to/leave_server.py"] }
+  }
+}</pre>
+    <p class="l-en">The SDK writes the protocol for you; the from-scratch version shows what it's doing. Check the current SDK docs for transports (stdio, Streamable HTTP) and auth.</p>
+    <p class="l-hi">SDK protocol aapke liye likhta hai; shuru-se wala version dikhaata hai ki woh kya kar raha hai. Transports (stdio, Streamable HTTP) aur auth ke liye current SDK docs check karo.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>MCP is a standard plug between AI apps (clients) and tools or data (servers).</li><li>Without it, every app rebuilds every connector: N × M instead of N + M.</li><li>Under the hood: JSON-RPC messages for initialize, list tools, call tools.</li><li>Connect only what you need, and treat every server like a vendor with your keys.</li></ol>
+  <ol class="l-hi"><li>MCP AI apps (clients) aur tools ya data (servers) ke beech standard plug hai.</li><li>Iske bina har app har connector dobara banati hai: N + M ki jagah N × M.</li><li>Andar se: initialize, tools list, tools call ke JSON-RPC messages.</li><li>Sirf zaroori jodo, aur har server ko aapki keys wale vendor ki tarah dekho.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add a second tool, <code>apply_leave(employee_id, days)</code>, to <code>mini_mcp_server.py</code> and call it from the client. Return an error if days exceed the balance. <span class="level">coder</span></p><p class="l-hi"><code>mini_mcp_server.py</code> mein doosra tool <code>apply_leave(employee_id, days)</code> jodo aur client se call karo. Days balance se zyaada ho toh error lautao. <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Install the official SDK, rewrite the server with FastMCP, and connect it to an MCP-capable app you use. <span class="level">project</span></p><p class="l-hi">Official SDK install karo, server ko FastMCP se dobara likho, aur apni use ki MCP-capable app se jodo. <span class="level">project</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Model Context Protocol. <em>Specification</em> and <em>Python SDK</em> (modelcontextprotocol.io).</li>
+  <li>Anthropic (2024). <em>Introducing the Model Context Protocol.</em></li>
+  <li>JSON-RPC 2.0 Specification.</li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.columns("scA", [
+    { en: "Without MCP", hi: "MCP ke bina", cls: "box-amb", step: 0, items: [
+      { en: "4 AI apps × 5 systems = 20 custom connectors", hi: "4 AI apps × 5 systems = 20 alag connectors", step: 0 },
+      { en: "Each app re-writes tool descriptions and auth for GitHub, Slack, DB…", hi: "Har app GitHub, Slack, DB… ke tool descriptions aur auth dobara likhti", step: 0 },
+      { en: "Switch AI app → rebuild every integration", hi: "AI app badlo → har integration dobara", step: 0 },
+      { en: "But: no third-party servers to trust", hi: "Par: kisi teesre server par bharosa nahi", step: 0 } ] },
+    { en: "With MCP", hi: "MCP ke saath", cls: "box-sig", step: 1, items: [
+      { en: "4 clients + 5 servers = 9 pieces, all compatible", hi: "4 clients + 5 servers = 9 hisse, sab compatible", step: 1 },
+      { en: "Each system writes its server once", hi: "Har system apna server ek baar likhta", step: 1 },
+      { en: "Switch AI app → same servers keep working", hi: "AI app badlo → same servers chalte rehte", step: 1 },
+      { en: "But: you must vet each server (security)", hi: "Par: har server jaanchna padta hai (security)", step: 1 } ] }
+  ], [
+    ["Without a standard, connections multiply: every app × every system.", "Standard ke bina connections guna hote hain: har app × har system."],
+    ["With MCP, each side implements the protocol once and everything connects. The new cost is trust: vet what you plug in.", "MCP ke saath har taraf protocol ek baar banta hai aur sab jud jaata hai. Naya kharch bharosa hai: jo lagaao use jaancho."]
+  ]);
+
+  B.chat("scB", [
+    { who: "user", label: "client → server", en: "initialize · protocolVersion 2025-06-18 · clientInfo: book-client", hi: "initialize · protocolVersion 2025-06-18 · clientInfo: book-client", step: 0 },
+    { who: "ai", label: "server → client", en: "capabilities: tools · serverInfo: leave-server 0.1.0", hi: "capabilities: tools · serverInfo: leave-server 0.1.0", step: 0 },
+    { who: "user", label: "client → server", en: "tools/list", hi: "tools/list", step: 1 },
+    { who: "ai", label: "server → client", en: "leave_balance(employee_id): \u201cGet the remaining paid-leave days for an employee ID like E100.\u201d", hi: "leave_balance(employee_id): \u201cGet the remaining paid-leave days for an employee ID like E100.\u201d", step: 1 },
+    { who: "user", label: "client → server", en: "tools/call leave_balance {employee_id: E100}", hi: "tools/call leave_balance {employee_id: E100}", step: 2 },
+    { who: "good", label: "server → client", en: "\u201cE100 has 12 leave days left\u201d · isError: false", hi: "\u201cE100 has 12 leave days left\u201d · isError: false", step: 2 },
+    { who: "user", label: "client → server", en: "tools/call leave_balance {employee_id: E999}", hi: "tools/call leave_balance {employee_id: E999}", step: 3 },
+    { who: "bad", label: "server → client", en: "\u201cNo employee E999\u201d · isError: true", hi: "\u201cNo employee E999\u201d · isError: true", step: 3 }
+  ], [
+    ["Handshake: the client says which protocol version it speaks; the server says what it offers.", "Haath milaana: client batata hai kaunsa protocol version bolta hai; server batata hai kya deta hai."],
+    ["The client asks for the tool list. These descriptions are what the model will see.", "Client tools ki list maangta hai. Yahi descriptions model dekhega."],
+    ["When the model wants the tool, the client sends tools/call and gets a result.", "Jab model ko tool chahiye, client tools/call bhejta hai aur result paata hai."],
+    ["Errors come back as results with isError, so the model can recover. Real messages from <code>mini_mcp_client.py</code>.", "Errors isError ke saath result ki tarah aate hain, taaki model sambhal sake. <code>mini_mcp_client.py</code> ke asli messages."]
+  ]);
+
+  B.flow("scC", [
+    { en: "User asks", hi: "User poochta", sen: "\u201cHow many leave days do I have?\u201d", shi: "\u201cMeri kitni chhuttiyaan bachi?\u201d" },
+    { en: "App adds tools", hi: "App tools jodti", sen: "from connected MCP servers", shi: "jude MCP servers se" },
+    { en: "Model picks", hi: "Model chunta", sen: "leave_balance(E100)", shi: "leave_balance(E100)" },
+    { en: "Client calls server", hi: "Client server ko call", sen: "tools/call over stdio or HTTP", shi: "stdio ya HTTP par tools/call" },
+    { en: "Server answers", hi: "Server jawab", sen: "\u201c12 days left\u201d", shi: "\u201c12 din bache\u201d" },
+    { en: "Model replies", hi: "Model jawab", sen: "\u201cYou have 12 paid-leave days.\u201d", shi: "\u201cAapki 12 chhuttiyaan bachi hain.\u201d" }
+  ], [
+    ["The user asks a normal question in the chat app.", "User chat app mein aam sawaal poochta hai."],
+    ["The app (MCP client) has already loaded tool lists from its connected servers and gives them to the model.", "App (MCP client) ne jude servers se tools ki lists pehle hi load ki hain aur model ko deti hai."],
+    ["The model decides to call the leave tool.", "Model leave tool call karne ka faisla karta hai."],
+    ["The app forwards the call to the right server.", "App call ko sahi server tak bhejti hai."],
+    ["The server runs it against the HR system.", "Server ise HR system par chalaata hai."],
+    ["The model turns the result into an answer. The user never sees the protocol.", "Model result ko jawab banata hai. User ko protocol kabhi nahi dikhta."]
+  ], { perRow: 3 });
+})();
+</script>

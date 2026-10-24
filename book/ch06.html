@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 6 · The Manager's Loop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 06</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 06 · Building Haron's team</span><span class="l-hi">Chapter 06 · Haron ki team banana</span></div>
+  <h1><span class="l-en">The Manager's Loop</span><span class="l-hi">Manager ka Loop</span></h1>
+  <div class="story">
+    <p class="l-en">Haron can only answer once. To <em>do</em> a job, like booking a flight, someone must keep asking: "What next?", run what Haron asks for, show it the result, and decide when to stop. That someone is the <strong>Manager</strong>, and the pattern is called the <strong>agent loop</strong>. It is the heart of every agent harness, and it is surprisingly small.</p>
+    <p class="l-hi">Haron sirf ek baar jawab de sakta hai. Koi <em>kaam</em> karne ke liye, jaise flight book karna, kisi ko baar-baar poochna padta hai: "Ab kya?", Haron jo maange woh chalaana padta hai, result dikhaana padta hai, aur tay karna padta hai ki kab rukna hai. Woh koi hai <strong>Manager</strong>, aur is pattern ko <strong>agent loop</strong> kehte hain. Yeh har agent harness ka dil hai, aur hairat ki baat hai ki bahut chhota hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The think → act → observe cycle</span><span class="l-hi">Socho → karo → dekho ka chakra</span></li>
+    <li><b>2</b><span class="l-en">Six reasons to stop, and why each matters</span><span class="l-hi">Rukne ki chhe wajahein, aur har ek kyun zaroori</span></li>
+    <li><b>3</b><span class="l-en">ReAct, plan-and-execute, and reflection</span><span class="l-hi">ReAct, plan-and-execute, aur reflection</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Booking a flight, one lap at a time</span><span class="l-hi">Flight booking, ek-ek chakkar</span></h2></div>
+<div class="story">
+  <p class="l-en">The task: "Book the cheapest Pune → Bengaluru flight tomorrow." Each lap of the loop is one call to Haron. These are the real steps from this chapter's lab.</p>
+  <p class="l-hi">Kaam: "Kal ki sabse sasti Pune → Bengaluru flight book karo." Loop ka har chakkar Haron ko ek call hai. Yeh is chapter ke lab ke asli steps hain.</p>
+</div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 330" width="760" role="img" aria-label="The agent loop cycles between the model, a tool and the transcript"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Six doors out of the loop</span><span class="l-hi">Loop se bahar ke chhe darwaaze</span></h2></div>
+<div class="story">
+  <p class="l-en">A loop with only one exit ("Haron says it's done") will one day run forever and burn money. A good Manager has six doors, and every run must leave through one of them, with the reason written down.</p>
+  <p class="l-hi">Jis loop ka sirf ek darwaaza ho ("Haron bole ho gaya"), woh ek din hamesha chalta rahega aur paisa jalaayega. Achhe Manager ke chhe darwaaze hote hain, aur har run inme se kisi ek se nikalta hai, wajah likhkar.</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 270" width="760" role="img" aria-label="Six exit doors: done, max steps, budget, stuck, refusal, max tokens"></svg></div></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Agents declare victory early, and agents wander</span><span class="l-hi">Agents jaldi jeet ka elaan karte hain, aur bhatakte bhi hain</span></h4>
+  <p class="l-en">Two opposite failures. Sometimes Haron stops at the first plausible result ("Booked!" when the booking tool actually failed). Sometimes it keeps exploring, re-reading files and re-running searches, long after it has enough. The first is fixed by <strong>checking the outcome with code</strong> before accepting "done"; the second by step and token limits plus the repeat detector.</p>
+  <p class="l-hi">Do ulti galtiyaan. Kabhi Haron pehle vishwasniya result par ruk jaata hai ("Book ho gaya!" jabki booking tool fail hua tha). Kabhi woh khojta rehta hai, files dobara padhta hai, search dobara chalaata hai, jabki kaafi jaankari mil chuki hai. Pehli ka ilaaj: "done" maanne se pehle <strong>result code se check karo</strong>; doosri ka: step aur token limits aur repeat detector.</p>
+</div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Three ways to run the loop</span><span class="l-hi">Loop chalaane ke teen tareeke</span></h2></div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 260" width="760" role="img" aria-label="Three agent patterns: ReAct, plan and execute, reflection"></svg></div></figure>
+
+<div class="callout harness">
+  <span class="tag">Harness note</span>
+  <h4><span class="l-en">Start with the simplest loop that works</span><span class="l-hi">Sabse seedhe loop se shuru karo jo chal jaaye</span></h4>
+  <p class="l-en">Most production agents are plain ReAct loops with good tools, a clear system prompt and strong stop rules. Add a planner when tasks are long and steps are predictable; add reflection when quality matters more than latency and you have a way to critique (tests, a rubric). Each extra pattern adds cost and new ways to fail.</p>
+  <p class="l-hi">Zyaadatar production agents seedhe ReAct loops hain, achhe tools, saaf system prompt aur majboot rukne ke niyam ke saath. Planner tab jodo jab kaam lambe hon aur steps pehle se pata hon; reflection tab jodo jab quality latency se zyaada zaroori ho aur critique ka tareeka ho (tests, rubric). Har extra pattern kharch aur fail hone ke naye raaste jodta hai.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">Loops crash; bookings must not happen twice</span><span class="l-hi">Loops crash hote hain; booking do baar nahi honi chahiye</span></h4>
+  <p class="l-en">In production, a server can restart mid-run. Save the transcript after every step so the run can <strong>resume</strong>, and give every write action an <strong>idempotency key</strong> (for example a hash of run ID + step), so retrying "book_flight" never books two seats. Workflow engines like Temporal are often used to make agent runs durable.</p>
+  <p class="l-hi">Production mein server run ke beech restart ho sakta hai. Har step ke baad transcript save karo taaki run <strong>wahin se shuru</strong> ho sake, aur har write action ko <strong>idempotency key</strong> do (jaise run ID + step ka hash), taaki "book_flight" dobara chalne par do seat book na ho. Agent runs ko tikaau banane ke liye aksar Temporal jaise workflow engines use hote hain.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the whole loop</span><span class="l-hi">Coders ke liye: poora loop</span><span class="lvl">code/harness/loop.py</span></summary>
+  <div class="inner">
+<pre>for step in range(1, cfg.max_steps + 1):
+    if cfg.token_budget is not None and usage.total >= cfg.token_budget:
+        return result("budget", step - 1)
+    resp = self.provider.complete(model=cfg.model, system=cfg.system,
+                                  messages=self.context.prepare(messages), tools=self.tools.specs())
+    usage = usage + resp.usage
+    messages.append(Message("assistant", resp.text, tool_calls=resp.tool_calls))
+    if resp.stop_reason in ("refusal", "max_tokens") and not resp.tool_calls:
+        return result(resp.stop_reason, step)
+    if not resp.tool_calls:
+        return result("done", step)
+    for call in resp.tool_calls:
+        if repeated(call) >= cfg.repeat_limit:
+            return result("stuck", step)
+        deny = first Deny from hooks.emit("pre_tool", call=call)
+        content, err = (f"Blocked by policy: {deny.reason}", True) if deny \
+                       else self.tools.execute(call, cfg.permission_mode, self.approver)
+        messages.append(Message("tool", content, tool_call_id=call.id, is_error=err))
+return result("max_steps", cfg.max_steps)</pre>
+<pre>$ python code/ch06/loop_demo.py
+step 1: model says "I'll search flights first." -> calls search_flights
+        tool search_flights returned [{"dep": "07:10", "flight": "6E-512", "price_inr": 4890}, {"...
+step 2: model says 'Cheapest is 6E-512. Booking it.' -> calls book_flight
+        tool book_flight returned {"flight": "6E-512", "pnr": "Q7XK2P"}...
+step 3: model says 'Booked! PNR Q7XK2P.'
+stop=done steps=3 tokens=529 cost=$0.00139
+
+Failure modes the loop must catch:
+  repeating the same call  -> stuck
+  never finishing          -> max_steps
+  overspending             -> budget</pre>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>I think, the team acts, I see the result, and we repeat.</li><li>Every run must leave by a named door: done, max steps, budget, stuck, refusal or max tokens.</li><li>Don't trust my "done"; check the result.</li><li>Keep the loop simple; save progress; never do a write action twice.</li></ol>
+  <ol class="l-hi"><li>Main sochta hoon, team karti hai, main result dekhta hoon, aur phir se.</li><li>Har run naam wale darwaaze se nikle: done, max steps, budget, stuck, refusal ya max tokens.</li><li>Mere "done" par bharosa mat karo; result check karo.</li><li>Loop seedha rakho; progress save karo; write action kabhi do baar mat karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Make <code>book_flight</code> fail once with an exception. Does the scripted model notice the error in the transcript? Change the script so it retries exactly once. <span class="level">coder</span></p><p class="l-hi"><code>book_flight</code> ko ek baar exception ke saath fail karao. Kya scripted model transcript mein error dekhta hai? Script badlo taaki woh bilkul ek baar retry kare. <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Add a <code>verify</code> callback to <code>Agent.run</code> that must return True before a run can stop with "done". <span class="level">harness</span></p><p class="l-hi"><code>Agent.run</code> mein ek <code>verify</code> callback jodo jo True lautaaye tabhi run "done" se ruk sake. <span class="level">harness</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Yao et al. (2022). <em>ReAct: Synergizing Reasoning and Acting in Language Models.</em></li>
+  <li>Shinn et al. (2023). <em>Reflexion: Language Agents with Verbal Reinforcement Learning.</em></li>
+  <li>Wang et al. (2023). <em>Plan-and-Solve Prompting.</em></li>
+  <li>Anthropic (2024). <em>Building effective agents.</em></li>
+</ol>
+
+<nav class="pager"><a href="ch05.html">← Ch 5</a><a href="ch07.html"><span class="l-en">Ch 7 · The Toolbox &amp; MCP →</span><span class="l-hi">Ch 7 · Auzaar ka Dabba &amp; MCP →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls, move = B.move;
+
+  /* Scene A: loop cycle */
+  (function () {
+    var s = document.getElementById("svA");
+    var st = { m: [380, 60], t: [610, 210], d: [150, 210] };
+    var mBox = B.box(s, { x: 300, y: 30, w: 160, h: 56, cls: "box-sig", en: "Haron thinks", hi: "Haron sochta hai", sen: "one model call", shi: "ek model call" });
+    var tBox = B.box(s, { x: 530, y: 182, w: 170, h: 56, cls: "box", en: "Tool runs", hi: "Tool chalta hai", sen: "search / book", shi: "search / book" });
+    var dBox = B.box(s, { x: 60, y: 182, w: 180, h: 56, cls: "box", en: "Result → diary", hi: "Result → diary", sen: "transcript grows", shi: "transcript badhta hai" });
+    B.arrow(s, s, 462, 66, 600, 178, "", -40);
+    B.arrow(s, s, 528, 222, 244, 222, "");
+    B.arrow(s, s, 150, 180, 298, 66, "", -40);
+    var counter = E(s, "text", { x: 380, y: 152, "text-anchor": "middle", "font-size": 22, "font-weight": 700, "class": "mono" }, "");
+    BI(s, { x: 380, y: 172, "text-anchor": "middle", "font-size": 11, "class": "muted" }, "steps (limit 10)", "steps (limit 10)");
+    var say = E(s, "g", { "class": "anim" });
+    E(say, "rect", { x: 60, y: 262, width: 640, height: 54, rx: 10, "class": "box" });
+    var l1 = E(say, "text", { x: 76, y: 284, "font-size": 12, "class": "mono" }, "");
+    var l2 = E(say, "text", { x: 76, y: 304, "font-size": 12, "class": "mono muted" }, "");
+    var door = E(s, "g", { "class": "anim" });
+    E(door, "rect", { x: 610, y: 30, width: 130, height: 56, rx: 6, "class": "box-sig", "stroke-width": 2 });
+    BI(door, { x: 675, y: 63, "text-anchor": "middle", "font-size": 14, "font-weight": 700 }, "EXIT: done", "EXIT: done");
+    var steps = [
+      [0, "m", "Task: book the cheapest Pune → Bengaluru flight tomorrow.", ""],
+      [1, "m", "Haron: “I'll search flights first.” → search_flights(Pune, Bengaluru, 25 Oct)", "the Manager sees a tool call, so it does not stop"],
+      [1, "t", "tool: [6E-512 07:10 ₹4,890], [AI-803 09:45 ₹5,620]", "the Manager runs the tool and checks its input"],
+      [1, "d", "result added to the transcript", "Haron forgets everything, so the result must be in the diary"],
+      [2, "m", "Haron: “Cheapest is 6E-512. Booking it.” → book_flight(6E-512)", "a WRITE tool: the permission mode allows it"],
+      [2, "t", "tool: {pnr: Q7XK2P, flight: 6E-512}", ""],
+      [3, "m", "Haron: “Booked! PNR Q7XK2P.” (no tool call)", "no tool call means Haron thinks it's finished"]
+    ];
+    var hi = [
+      ["Kaam: kal ki sabse sasti Pune → Bengaluru flight book karo.", ""],
+      ["Haron: “Pehle flights search karta hoon.” → search_flights(Pune, Bengaluru, 25 Oct)", "Manager ko tool call dikha, isliye woh nahi rukta"],
+      ["tool: [6E-512 07:10 ₹4,890], [AI-803 09:45 ₹5,620]", "Manager tool chalaata hai aur uska input check karta hai"],
+      ["result transcript mein juda", "Haron sab bhoolta hai, isliye result diary mein hona chahiye"],
+      ["Haron: “Sabse sasti 6E-512. Book kar raha hoon.” → book_flight(6E-512)", "WRITE tool: permission mode allow karta hai"],
+      ["tool: {pnr: Q7XK2P, flight: 6E-512}", ""],
+      ["Haron: “Book ho gaya! PNR Q7XK2P.” (koi tool call nahi)", "tool call nahi, matlab Haron ko lagta hai kaam khatam"]
+    ];
+    var caps = [
+      ["The task arrives. The Manager sends it to Haron with the list of tools.", "Kaam aaya. Manager use tools ki list ke saath Haron ko bhejta hai."],
+      ["Lap 1: Haron asks for <code>search_flights</code>.", "Chakkar 1: Haron <code>search_flights</code> maangta hai."],
+      ["The Manager runs the tool. Two flights come back.", "Manager tool chalaata hai. Do flights aayin."],
+      ["The result goes into the transcript (the diary) for the next lap.", "Result agle chakkar ke liye transcript (diary) mein jaata hai."],
+      ["Lap 2: Haron picks the cheapest and asks for <code>book_flight</code>.", "Chakkar 2: Haron sabse sasti chunta hai aur <code>book_flight</code> maangta hai."],
+      ["Booked. The PNR comes back into the diary.", "Book ho gaya. PNR diary mein aaya."],
+      ["Lap 3: no tool call, just an answer. The Manager leaves through the <strong>done</strong> door. Total: 3 laps, 529 tokens, $0.00139.", "Chakkar 3: koi tool call nahi, sirf jawab. Manager <strong>done</strong> darwaaze se nikalta hai. Kul: 3 chakkar, 529 tokens, $0.00139."]
+    ];
+    B.scene(document.getElementById("scA"), caps, function (i) {
+      var S = steps[i], h = B.lang() === "hi";
+      counter.textContent = S[0] + " / 10";
+      cls(mBox.firstChild, S[1] === "m" ? "box-amb" : "box-sig");
+      cls(tBox.firstChild, S[1] === "t" ? "box-amb" : "box");
+      cls(dBox.firstChild, S[1] === "d" ? "box-amb" : "box");
+      l1.textContent = h ? hi[i][0] : S[2]; l2.textContent = h ? hi[i][1] : S[3];
+      show(say, true); show(door, i === 6);
+    }, { delay: 3000 });
+  })();
+
+  /* Scene B: doors */
+  (function () {
+    var s = document.getElementById("svB");
+    var doors = [["done", "no more tool calls", "aur tool call nahi", "box-sig"], ["max_steps", "10 laps used", "10 chakkar pure", "box-amb"],
+                 ["budget", "token budget spent", "token budget khatam", "box-amb"], ["stuck", "same call 3 times", "same call 3 baar", "box-amb"],
+                 ["refusal", "model declined", "model ne mana kiya", "box-plm"], ["max_tokens", "answer cut off", "jawab kat gaya", "box-plm"]];
+    var gs = [];
+    doors.forEach(function (d, i) {
+      var x = 14 + i * 124, g = E(s, "g", { "class": "anim" });
+      E(g, "rect", { x: x, y: 40, width: 110, height: 150, rx: 6, "class": "box anim", "stroke-width": 2 });
+      E(g, "circle", { cx: x + 92, cy: 120, r: 4, "class": "muted" });
+      E(g, "text", { x: x + 55, y: 76, "text-anchor": "middle", "font-size": 13, "font-weight": 700, "class": "mono" }, d[0]);
+      BI(g, { x: x + 55, y: 214, "text-anchor": "middle", "font-size": 11, "class": "muted" }, d[1], d[2]);
+      gs.push([g, d[3]]);
+    });
+    var caps = [
+      ["<strong>done</strong>: Haron answered without asking for a tool. The happy door. (Still verify the result!)", "<strong>done</strong>: Haron ne bina tool maange jawab diya. Khushi ka darwaaza. (Phir bhi result verify karo!)"],
+      ["<strong>max_steps</strong>: a hard cap on laps. Stops endless wandering.", "<strong>max_steps</strong>: chakkaron ki pakki limit. Bina ant bhatakna rokta hai."],
+      ["<strong>budget</strong>: the run has used its token allowance. Stops runaway cost.", "<strong>budget</strong>: run ne apna token hissa kharch kar diya. Bhaagta kharch rokta hai."],
+      ["<strong>stuck</strong>: the same tool call with the same input, three times. Nothing new is being learned.", "<strong>stuck</strong>: same tool call same input ke saath teen baar. Kuch naya nahi seekha ja raha."],
+      ["<strong>refusal</strong>: the model declined for safety reasons. Report it; don't silently retry with a reworded prompt.", "<strong>refusal</strong>: model ne safety ki wajah se mana kiya. Report karo; chupchaap prompt badalkar retry mat karo."],
+      ["<strong>max_tokens</strong>: the answer was cut off. Raise the limit or ask for a shorter format.", "<strong>max_tokens</strong>: jawab kat gaya. Limit badhao ya chhota format maango."]
+    ];
+    B.scene(document.getElementById("scB"), caps, function (i) {
+      gs.forEach(function (g, k) { cls(g[0].firstChild, k === i ? g[1] : "box"); g[0].style.opacity = k === i ? 1 : 0.45; });
+    }, { delay: 2600 });
+  })();
+
+  /* Scene C: patterns */
+  (function () {
+    var s = document.getElementById("svC");
+    function chips(g, y, items, c) {
+      var x = 20;
+      items.forEach(function (it, i) {
+        var w = 14 + it.length * 7.4;
+        E(g, "rect", { x: x, y: y, width: w, height: 30, rx: 15, "class": c[i] });
+        E(g, "text", { x: x + w / 2, y: y + 20, "text-anchor": "middle", "font-size": 12 }, it);
+        if (i < items.length - 1) B.arrow(s, g, x + w + 2, y + 15, x + w + 16, y + 15, "");
+        x += w + 18;
+      });
+    }
+    var react = E(s, "g", { "class": "anim" }), plan = E(s, "g", { "class": "anim" }), refl = E(s, "g", { "class": "anim" });
+    BI(react, { x: 20, y: 30, "font-weight": 700, "font-size": 14 }, "ReAct: think and act in turns", "ReAct: baari-baari sochna aur karna");
+    chips(react, 44, ["think", "act", "observe", "think", "act", "observe", "answer"], ["box-sig", "box-amb", "box", "box-sig", "box-amb", "box", "box-sig"]);
+    BI(plan, { x: 20, y: 110, "font-weight": 700, "font-size": 14 }, "Plan-and-execute: plan first, then run the list", "Plan-and-execute: pehle plan, phir list chalao");
+    chips(plan, 124, ["plan: 1·2·3", "do 1", "do 2", "do 3", "re-plan?", "answer"], ["box-plm", "box-amb", "box-amb", "box-amb", "box-plm", "box-sig"]);
+    BI(refl, { x: 20, y: 190, "font-weight": 700, "font-size": 14 }, "Reflection: draft, critique, revise", "Reflection: draft, critique, sudhaar");
+    chips(refl, 204, ["draft", "run tests", "critique", "revise", "run tests", "answer"], ["box-sig", "box", "box-plm", "box-sig", "box", "box-sig"]);
+    B.scene(document.getElementById("scC"), [
+      ["<strong>ReAct</strong>: reason a little, take one action, look at the result, repeat. Flexible; the default for most agents.", "<strong>ReAct</strong>: thoda socho, ek kaam karo, result dekho, dohraao. Lachila; zyaadatar agents ka default."],
+      ["<strong>Plan-and-execute</strong>: write the whole plan, then run it step by step, re-planning only if something breaks. Cheaper on long, predictable tasks; a smaller model can run the steps.", "<strong>Plan-and-execute</strong>: poora plan likho, phir step-by-step chalao, kuch toote tabhi dobara plan. Lambe, pehle se pata kaamon par sasta; steps chhota model chala sakta hai."],
+      ["<strong>Reflection</strong>: produce a draft, check it against something real (tests, a rubric), critique, revise. Higher quality, more tokens.", "<strong>Reflection</strong>: draft banao, kisi asli cheez se check karo (tests, rubric), critique, sudhaar. Zyaada quality, zyaada tokens."]
+    ], function (i) { show(react, i === 0); show(plan, i === 1); show(refl, i === 2); react.style.opacity = i === 0 ? 1 : 0.2; plan.style.opacity = i === 1 ? 1 : 0.2; refl.style.opacity = i === 2 ? 1 : 0.2; });
+  })();
+})();
+</script>
+</body>
+</html>

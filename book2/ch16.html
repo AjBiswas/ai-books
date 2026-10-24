@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 16 · Tool Calling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 16</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 16 · Agents</span><span class="l-hi">Chapter 16 · Agents</span></div>
+  <h1><span class="l-en">Tool Calling</span><span class="l-hi">Tool Calling</span></h1>
+  <div class="story">
+    <p class="l-en">Haron can't check an order, convert a currency or send an email. It has no hands. What it can do is write a precise request: "please run <code>get_order</code> with <code>ORD-100232</code>." Your code runs it and hands back the result. This is <strong>tool calling</strong> (also called function calling), and it's the bridge from a model that talks to an app that does things.</p>
+    <p class="l-hi">Haron order check nahi kar sakta, currency convert nahi kar sakta, email nahi bhej sakta. Uske haath nahi. Woh jo kar sakta hai: sateek request likhna: "kripya <code>ORD-100232</code> ke saath <code>get_order</code> chalao." Aapka code use chalaata hai aur result wapas deta hai. Ise <strong>tool calling</strong> (ya function calling) kehte hain, aur yeh baat karne wale model se kaam karne wali app tak ka pul hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The tool-call round trip</span><span class="l-hi">Tool call ka aana-jaana</span></li>
+    <li><b>2</b><span class="l-en">A real tool-using agent on a laptop</span><span class="l-hi">Laptop par asli tool-using agent</span></li>
+    <li><b>3</b><span class="l-en">Designing tools models use well</span><span class="l-hi">Aise tools banana jo model achhe se use kare</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The round trip</span><span class="l-hi">Aana-jaana</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">The model <strong>never runs anything</strong>. It only asks. Your code decides whether to run the tool, checks the arguments, runs it, and sends back the result (or an error). That's where all your control and safety lives.</p>
+  <p class="l-hi">Model <strong>kabhi kuch nahi chalaata</strong>. Woh sirf maangta hai. Aapka code tay karta hai tool chalaana hai ya nahi, arguments check karta hai, chalaata hai, aur result (ya error) wapas bhejta hai. Aapka saara control aur suraksha wahin hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">A laptop agent, measured</span><span class="l-hi">Laptop agent, naap kar</span></h2></div>
+<div class="story">
+  <p class="l-en">This chapter's lab gives <code>qwen3:4b</code> two tools: <code>get_order</code> and <code>convert_inr</code>. Ask how much an order cost in dollars, and the model has to chain them: first look up the order, then convert. Here's the real transcript.</p>
+  <p class="l-hi">Is chapter ka lab <code>qwen3:4b</code> ko do tools deta hai: <code>get_order</code> aur <code>convert_inr</code>. Poochho ek order dollar mein kitne ka tha, toh model ko unhe jodna padta hai: pehle order dekho, phir convert karo. Yeh asli transcript hai.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Good tools vs confusing tools</span><span class="l-hi">Achhe tools vs uljhe tools</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Models invent tools and arguments</span><span class="l-hi">Models tools aur arguments bana lete hain</span></h4>
+  <p class="l-en">A model may call <code>lookup_order</code> when your tool is <code>get_order</code>, pass "100232" without the prefix, or add a field you never defined. Validate every call against the schema and send back a clear error ("Unknown tool. Available: get_order, convert_inr"): models usually correct themselves on the next step. Book 1, Chapter 7 has a full validating tool registry.</p>
+  <p class="l-hi">Model <code>get_order</code> ki jagah <code>lookup_order</code> call kar sakta hai, prefix ke bina "100232" de sakta hai, ya aisa field jod sakta hai jo aapne banaaya hi nahi. Har call ko schema se validate karo aur saaf error wapas bhejo ("Unknown tool. Available: get_order, convert_inr"): models aksar agle step mein khud sudhaar lete hain. Book 1 ke Chapter 7 mein poori validating tool registry hai.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Parallel calls and errors</span><span class="l-hi">Parallel calls aur errors</span></h4>
+  <p class="l-en">Models can ask for several tools at once (look up three orders in one step). Run them concurrently and return all results together in one message. If a tool fails, return the failure as the result (with <code>is_error</code>); never just drop it, or the model will wait for a result that never comes or assume success.</p>
+  <p class="l-hi">Models ek saath kai tools maang sakte hain (ek step mein teen orders dekho). Unhe saath-saath chalao aur saare results ek message mein lautao. Agar tool fail ho, failure ko result ki tarah lautao (<code>is_error</code> ke saath); kabhi bas chhod mat do, warna model kabhi na aane wale result ka intezaar karega ya safalta maan lega.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Read tools and write tools</span><span class="l-hi">Read tools aur write tools</span></h4>
+  <p class="l-en">Label every tool by risk. <strong>Read</strong> tools (look up an order) can run freely. <strong>Write</strong> tools (issue a refund, send an email) need limits and idempotency keys so a retry doesn't refund twice. <strong>Dangerous</strong> tools (delete an account, move money) need a human to approve. This one habit prevents most agent disasters.</p>
+  <p class="l-hi">Har tool ko risk se label karo. <strong>Read</strong> tools (order dekhna) aazaadi se chal sakte hain. <strong>Write</strong> tools (refund dena, email bhejna) ko limits aur idempotency keys chahiye taaki retry do baar refund na kare. <strong>Dangerous</strong> tools (account delete, paisa bhejna) ko insaan ka approval chahiye. Yeh ek aadat zyaadatar agent haadson ko rokti hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the lab</span><span class="l-hi">Coders ke liye: lab</span><span class="lvl">code2/ch16/local_agent.py</span></summary>
+  <div class="inner">
+<pre>SPECS = [{"type": "function", "function": {
+    "name": "get_order", "description": "Look up an order by ID like ORD-100231",
+    "parameters": {"type": "object", "properties": {"order_id": {"type": "string"}}, "required": ["order_id"]}}}, ...]
+
+for step in range(1, max_steps + 1):
+    msg = chat(messages)                       # model replies: text, or tool_calls
+    messages.append(msg)
+    if not msg.get("tool_calls"):
+        print("answer:", msg["content"]); break
+    for c in msg["tool_calls"]:
+        result = TOOLS[c["function"]["name"]](**c["function"]["arguments"])
+        messages.append({"role": "tool", "tool_name": c["function"]["name"], "content": json.dumps(result)})</pre>
+<pre>$ python code2/ch16/local_agent.py
+Task: Where is my order ORD-100232?
+  step 1: get_order({"order_id": "ORD-100232"}) -> {"status": "in transit", "eta": "2 days"}
+  step 2: answer -> Your order ORD-100232 is in transit (ETA: 2 days).
+  (60s on this laptop, $0)
+Task: I paid for ORD-100231. How much is that in USD?
+  step 1: get_order({"order_id": "ORD-100231"}) -> {"status": "delivered", "amount_inr": 1499}
+  step 2: convert_inr({"amount_inr": 1499, "to": "USD"}) -> {"amount": 17.99, "currency": "USD"}
+  step 3: answer -> The payment for ORD-100231 (1499 INR) converts to **$17.99 USD**.
+  (125s on this laptop, $0)</pre>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>I ask for tools; your code runs them.</li><li>I can chain tools: one result feeds the next request.</li><li>Clear names, descriptions and strict schemas make me use tools well.</li><li>Validate everything, return errors as results, and gate risky tools.</li></ol>
+  <ol class="l-hi"><li>Main tools maangta hoon; aapka code chalaata hai.</li><li>Main tools jod sakta hoon: ek result agli request ko khilaata hai.</li><li>Saaf naam, descriptions aur sakht schemas se main tools achhe se use karta hoon.</li><li>Sab validate karo, errors result ki tarah lautao, aur risky tools par pehra lagao.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add a <code>cancel_order</code> tool to <code>local_agent.py</code> that asks for confirmation (input from the terminal) before it runs. <span class="level">coder</span></p><p class="l-hi"><code>local_agent.py</code> mein <code>cancel_order</code> tool jodo jo chalne se pehle confirmation maange (terminal se input). <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Rename <code>get_order</code> to <code>go</code> with the description "tool". Does the model still use it correctly? What does that teach you? <span class="level">core</span></p><p class="l-hi"><code>get_order</code> ka naam <code>go</code> aur description "tool" kar do. Kya model ab bhi sahi use karta hai? Isse kya seekh mili? <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Schick et al. (2023). <em>Toolformer.</em> · Patil et al. (2023). <em>Gorilla.</em></li>
+  <li>Anthropic. <em>Tool use</em> documentation. · OpenAI. <em>Function calling</em> guide.</li>
+  <li>Ollama. <em>Tool support.</em></li>
+</ol>
+<nav class="pager"><a href="ch15.html">← Ch 15</a><a href="ch17.html"><span class="l-en">Ch 17 · Building Agents →</span><span class="l-hi">Ch 17 · Agents Banana →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.flow("scA", [
+    { en: "You define tools", hi: "Aap tools define karo", sen: "name · description · JSON schema", shi: "naam · description · JSON schema" },
+    { en: "Model asks", hi: "Model maangta hai", sen: "get_order(\"ORD-100232\")", shi: "get_order(\"ORD-100232\")" },
+    { en: "Your code checks", hi: "Code check karta hai", sen: "valid? allowed? within limits?", shi: "valid? allowed? limit mein?" },
+    { en: "Your code runs it", hi: "Code chalaata hai", sen: "calls your API / database", shi: "aapki API / database call" },
+    { en: "Result goes back", hi: "Result wapas", sen: "{\"status\": \"in transit\"}", shi: "{\"status\": \"in transit\"}" },
+    { en: "Model answers", hi: "Model jawab deta hai", sen: "or asks for another tool", shi: "ya doosra tool maangta hai" }
+  ], [
+    ["You describe each tool: what it does, when to use it, and the exact arguments (a JSON schema).", "Aap har tool batate ho: kya karta hai, kab use karna hai, aur sateek arguments (JSON schema)."],
+    ["The model replies with a structured request instead of text.", "Model text ki jagah structured request ke saath jawab deta hai."],
+    ["Your code validates it. This is where you enforce permissions.", "Aapka code validate karta hai. Yahin permissions laagu karte ho."],
+    ["Your code runs the real function.", "Aapka code asli function chalaata hai."],
+    ["The result is sent back as a tool-result message.", "Result tool-result message ki tarah wapas jaata hai."],
+    ["The model reads it and either answers or asks for another tool. Repeat until done (Chapter 17).", "Model padhta hai aur ya toh jawab deta hai ya doosra tool maangta hai. Kaam khatam hone tak dohraao (Chapter 17)."]
+  ], { perRow: 3 });
+
+  B.chat("scB", [
+    { who: "user", en: "I paid for ORD-100231. How much is that in USD?", hi: "Maine ORD-100231 ke liye pay kiya. USD mein kitna hua?", step: 0 },
+    { who: "tool", label: "step 1", en: "get_order({\"order_id\": \"ORD-100231\"}) → {\"status\": \"delivered\", \"amount_inr\": 1499}", hi: "get_order({\"order_id\": \"ORD-100231\"}) → {\"status\": \"delivered\", \"amount_inr\": 1499}", step: 1 },
+    { who: "tool", label: "step 2", en: "convert_inr({\"amount_inr\": 1499, \"to\": \"USD\"}) → {\"amount\": 17.99, \"currency\": \"USD\"}", hi: "convert_inr({\"amount_inr\": 1499, \"to\": \"USD\"}) → {\"amount\": 17.99, \"currency\": \"USD\"}", step: 2 },
+    { who: "good", en: "The payment for ORD-100231 (1499 INR) converts to $17.99 USD.", hi: "ORD-100231 ka payment (1499 INR) $17.99 USD hota hai.", step: 3 }
+  ], [
+    ["A question that needs two facts the model doesn't have.", "Aisa sawaal jisme do facts chahiye jo model ke paas nahi."],
+    ["Step 1: the model asks for the order. Your code returns the amount.", "Step 1: model order maangta hai. Aapka code amount lautaata hai."],
+    ["Step 2: it feeds that amount into the second tool. That's chaining.", "Step 2: woh amount doosre tool mein daalta hai. Yahi chaining hai."],
+    ["Step 3: the final answer. On this laptop: 125 seconds, $0. Real output of <code>local_agent.py</code>.", "Step 3: aakhri jawab. Is laptop par: 125 second, $0. <code>local_agent.py</code> ka asli output."]
+  ]);
+
+  B.columns("scC", [
+    { en: "Confusing", hi: "Uljha hua", cls: "box-amb", step: 0, items: [
+      { en: "name: “process” · description: “handles stuff”", hi: "naam: “process” · description: “cheezein sambhaalta hai”", step: 0 },
+      { en: "One tool with 15 optional arguments", hi: "15 optional arguments wala ek tool", step: 0 },
+      { en: "Returns a 5 MB JSON dump", hi: "5 MB ka JSON dump lautaata hai", step: 0 },
+      { en: "Crashes with a stack trace on bad input", hi: "Galat input par stack trace ke saath crash", step: 0 } ] },
+    { en: "Clear", hi: "Saaf", cls: "box-sig", step: 1, items: [
+      { en: "name: “get_order” · “Look up one order by ID like ORD-100231. Use when the customer mentions an order.”", hi: "naam: “get_order” · “ORD-100231 jaise ID se ek order dekho. Jab customer order ka zikr kare tab use karo.”", step: 1 },
+      { en: "Small, focused tools with required fields and enums", hi: "Chhote, focused tools, required fields aur enums ke saath", step: 1 },
+      { en: "Returns only what the next step needs", hi: "Sirf wahi lautaata hai jo agle step ko chahiye", step: 1 },
+      { en: "Returns a clear error the model can fix", hi: "Saaf error lautaata hai jise model theek kar sake", step: 1 } ] }
+  ], [
+    ["Vague names, huge arguments, huge outputs and crashes confuse the model and waste tokens.", "Dhundhle naam, bade arguments, bade outputs aur crashes model ko uljhaate aur tokens barbaad karte hain."],
+    ["Tool names and descriptions are prompts too. Write them for a smart reader who has never seen your system.", "Tool ke naam aur descriptions bhi prompts hain. Aise hoshiyaar paathak ke liye likho jisne aapka system kabhi nahi dekha."]
+  ]);
+})();
+</script>
+
+</body>
+</html>

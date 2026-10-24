@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 2 · LLMs in 15 Minutes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 02</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 02 · Start here</span><span class="l-hi">Chapter 02 · Shuruaat</span></div>
+  <h1><span class="l-en">LLMs in 15 Minutes</span><span class="l-hi">15 Minute mein LLM</span></h1>
+  <div class="story">
+    <p class="l-en">Before you build with a model, you need a mental picture of what it is. Not the maths, just the picture. Haron explains itself in fifteen minutes. (If you read Book 1, this is the short version; skip ahead if you like.)</p>
+    <p class="l-hi">Model ke saath kuch banaane se pehle uski ek tasveer dimaag mein honi chahiye. Maths nahi, bas tasveer. Haron pandrah minute mein khud ko samjhaata hai. (Agar aapne Book 1 padhi hai, toh yeh chhota version hai; chaaho toh aage badh jao.)</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">How a model turns text into the next word</span><span class="l-hi">Model text ko agle word mein kaise badalta hai</span></li>
+    <li><b>2</b><span class="l-en">Why it has no memory, and what a context window is</span><span class="l-hi">Uski memory kyun nahi, aur context window kya hai</span></li>
+    <li><b>3</b><span class="l-en">Temperature, and why answers change every time</span><span class="l-hi">Temperature, aur jawab har baar kyun badalte hain</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">One word at a time</span><span class="l-hi">Ek baar mein ek word</span></h2></div>
+<div class="story">
+  <p class="l-en">A large language model (LLM) does exactly one thing: given some text, it predicts the next small piece of text, called a <strong>token</strong>. To write a paragraph, it predicts one token, adds it to the text, and predicts again, hundreds of times.</p>
+  <p class="l-hi">Large language model (LLM) bilkul ek kaam karta hai: kuch text diya jaaye toh agla chhota tukda predict karta hai, jise <strong>token</strong> kehte hain. Paragraph likhne ke liye woh ek token predict karta hai, text mein jodta hai, aur phir predict karta hai, saikadon baar.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="analogy">
+  <div><span class="k"><span class="l-en">Everyday</span><span class="l-hi">Roz ki baat</span></span><span class="l-en">Phone keyboard suggesting the next word</span><span class="l-hi">Phone keyboard jo agla word sujhaata hai</span></div>
+  <div><span class="k"><span class="l-en">LLM</span><span class="l-hi">LLM</span></span><span class="l-en">The same idea, trained on trillions of words, with billions of settings</span><span class="l-hi">Wahi idea, kharbon words par train, arbon settings ke saath</span></div>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Haron has no memory</span><span class="l-hi">Haron ki koi memory nahi</span></h2></div>
+<div class="story">
+  <p class="l-en">This surprises everyone: the model remembers nothing between requests. Chat apps <em>feel</em> like they remember because the app re-sends the whole conversation every time. Everything the model can see at once is the <strong>context window</strong>, measured in tokens.</p>
+  <p class="l-hi">Yeh sabko hairaan karta hai: model do requests ke beech kuch yaad nahi rakhta. Chat apps ko <em>lagta</em> hai ki woh yaad rakhti hain kyunki app har baar poori baatcheet dobara bhejti hai. Model ek baar mein jo kuch dekh sakta hai woh hai <strong>context window</strong>, tokens mein naapi jaati hai.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">Rule of thumb for English: <strong>1 token ≈ 4 characters ≈ ¾ of a word</strong>. Hindi and other Indian languages usually need more tokens for the same meaning. You pay per token, both for what you send (input) and for what the model writes (output, usually several times pricier).</p>
+  <p class="l-hi">English ke liye mota hisaab: <strong>1 token ≈ 4 characters ≈ ¾ word</strong>. Hindi aur doosri Indian bhashaon mein same matlab ke liye aksar zyaada tokens lagte hain. Aap har token ka paisa dete ho, jo bhejte ho (input) aur jo model likhta hai (output, aksar kai guna mehenga), dono ka.</p>
+</div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Chances, not answers</span><span class="l-hi">Jawab nahi, chances</span></h2></div>
+<div class="story">
+  <p class="l-en">For the next token, the model actually produces a <strong>chance for every possible token</strong>. Then a dice-roll picks one. <strong>Temperature</strong> controls how adventurous that roll is: low means "almost always pick the favourite", high means "give the long shots a chance". That's why the same question can get different answers.</p>
+  <p class="l-hi">Agle token ke liye model asal mein <strong>har mumkin token ka chance</strong> banata hai. Phir ek paasa ek ko chunta hai. <strong>Temperature</strong> tay karta hai paasa kitna himmatwala ho: kam matlab "lagbhag hamesha pasandeeda chuno", zyaada matlab "kamzor options ko bhi mauka do". Isliye same sawaal ke alag jawab aa sakte hain.</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Fluent is not the same as true</span><span class="l-hi">Saaf bolna sach bolna nahi hai</span></h4>
+  <p class="l-en">The model picks likely-sounding tokens. When it knows the answer, likely and true line up. When it doesn't, it still produces something likely-sounding, in the same confident voice. This is <strong>hallucination</strong>, and it's why much of AI engineering is about giving the model real facts (Chapter 14) and checking its output (Chapter 26).</p>
+  <p class="l-hi">Model vishwasniya lagne wale tokens chunta hai. Jab use jawab pata ho, vishwasniya aur sach ek ho jaate hain. Jab na pata ho, tab bhi woh vishwasniya lagne wala kuch bolta hai, usi yakeen bhari awaaz mein. Ise <strong>hallucination</strong> kehte hain, aur isi wajah se AI engineering ka bada hissa model ko asli facts dene (Chapter 14) aur uska output check karne (Chapter 26) ke baare mein hai.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Three numbers to check for any model</span><span class="l-hi">Kisi bhi model ke teen numbers check karo</span></h4>
+  <p class="l-en">(1) <strong>Context window</strong>: how much it can read at once (8K to 1M+ tokens today). (2) <strong>Price</strong> per million input and output tokens. (3) <strong>Speed</strong>: time to first token and tokens per second. Chapter 3 adds quality and licence to this list.</p>
+  <p class="l-hi">(1) <strong>Context window</strong>: ek baar mein kitna padh sakta hai (aaj 8K se 1M+ tokens). (2) Har million input aur output tokens ka <strong>daam</strong>. (3) <strong>Speed</strong>: pehla token aane ka samay aur tokens per second. Chapter 3 is list mein quality aur licence jodta hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: what's inside (one paragraph)</span><span class="l-hi">Gehraai mein: andar kya hai (ek paragraph)</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <p class="l-en">Text is split into tokens by a tokenizer; each token becomes a vector (a list of a few thousand numbers). These vectors pass through dozens of <strong>transformer layers</strong>. In each layer, <strong>attention</strong> lets every token gather information from earlier tokens, and an MLP transforms it. The final layer outputs a score (logit) for every token in the vocabulary; softmax turns scores into probabilities; the sampler picks one. Generation is autoregressive: the chosen token is appended and the process repeats, with a <strong>KV cache</strong> so earlier work isn't redone. Book 1, Chapter 1 animates every step.</p>
+    <p class="l-hi">Tokenizer text ko tokens mein kaatta hai; har token ek vector ban jaata hai (kuch hazaar numbers ki list). Yeh vectors darjanon <strong>transformer layers</strong> se guzarte hain. Har layer mein <strong>attention</strong> har token ko pehle ke tokens se jaankari lene deta hai, aur ek MLP use badalta hai. Aakhri layer vocabulary ke har token ka score (logit) deti hai; softmax scores ko probabilities banata hai; sampler ek chunta hai. Generation autoregressive hai: chuna hua token joda jaata hai aur process dohraaya jaata hai, <strong>KV cache</strong> ke saath taaki pehle ka kaam dobara na ho. Book 1 ka Chapter 1 har step animate karta hai.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>I predict one token at a time, then repeat.</li><li>I remember nothing; the app re-sends the conversation, and you pay for it each time.</li><li>I give chances, and a dice-roll picks; temperature sets how bold the roll is.</li><li>I sound sure even when I'm wrong. Give me facts and check me.</li></ol>
+  <ol class="l-hi"><li>Main ek baar mein ek token predict karta hoon, phir dohraata hoon.</li><li>Mujhe kuch yaad nahi; app baatcheet dobara bhejti hai, aur har baar aap paisa dete ho.</li><li>Main chances deta hoon, aur paasa chunta hai; temperature tay karta hai paasa kitna himmatwala ho.</li><li>Galat hone par bhi main pakka lagta hoon. Mujhe facts do aur check karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Paste a paragraph into any online tokenizer (e.g. OpenAI's tokenizer page). Then paste the same meaning in Hindi. Count both. <span class="level">easy</span></p><p class="l-hi">Kisi bhi online tokenizer mein ek paragraph paste karo (jaise OpenAI ka tokenizer page). Phir wahi matlab Hindi mein paste karo. Dono gino. <span class="level">easy</span></p></div>
+  <div class="exercise"><p class="l-en">Ask a chatbot the same creative question three times in new chats. Note how answers differ, then ask a maths question three times. Why is one more stable? <span class="level">easy</span></p><p class="l-hi">Kisi chatbot se ek hi creative sawaal teen nayi chats mein poochho. Jawabon ka farak dekho, phir maths ka sawaal teen baar poochho. Ek zyaada sthir kyun hai? <span class="level">easy</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Vaswani et al. (2017). <em>Attention Is All You Need.</em></li>
+  <li>Karpathy, A. (2023). <em>Intro to Large Language Models</em> (video lecture).</li>
+  <li>Book 1, <em>Building the Harness</em>, Chapter 1: <em>Inside Haron's Brain.</em></li>
+</ol>
+<nav class="pager"><a href="ch01.html">← Ch 1</a><a href="ch03.html"><span class="l-en">Ch 3 · The Model Zoo →</span><span class="l-hi">Ch 3 · Models ka Chidiyaghar →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.flow("scA", [
+    { en: "Your text", hi: "Aapka text", sen: "“The capital of France is”", shi: "“The capital of France is”" },
+    { en: "Tokens", hi: "Tokens", sen: "The · capital · of · France · is", shi: "The · capital · of · France · is" },
+    { en: "Numbers", hi: "Numbers", sen: "each token → a list of numbers", shi: "har token → numbers ki list" },
+    { en: "The brain", hi: "Dimaag", sen: "dozens of layers mix the meaning", shi: "darjanon layers matlab milaati hain" },
+    { en: "Chances", hi: "Chances", sen: "Paris 86% · Lyon 5% · …", shi: "Paris 86% · Lyon 5% · …" },
+    { en: "Pick one", hi: "Ek chuno", sen: "dice-roll → “Paris”", shi: "paasa → “Paris”" },
+    { en: "Append", hi: "Jodo", sen: "“…France is Paris”", shi: "“…France is Paris”" },
+    { en: "Repeat", hi: "Dohraao", sen: "until a stop token", shi: "stop token tak" }
+  ], [
+    ["You send some text.", "Aap kuch text bhejte ho."],
+    ["It's chopped into tokens: words or pieces of words.", "Use tokens mein kaata jaata hai: words ya words ke tukde."],
+    ["Each token becomes a list of numbers that captures its meaning.", "Har token numbers ki ek list ban jaata hai jo uska matlab pakadti hai."],
+    ["The numbers flow through the model's layers, where words “look at” each other.", "Numbers model ki layers se guzarte hain, jahan words ek-doosre ko “dekhte” hain."],
+    ["Out comes a chance for every possible next token.", "Har mumkin agle token ka chance nikalta hai."],
+    ["One token is picked, usually a likely one.", "Ek token chuna jaata hai, aksar likely wala."],
+    ["It's added to the text.", "Use text mein joda jaata hai."],
+    ["And the whole thing runs again for the next token. A 300-word answer is about 400 rounds.", "Aur agle token ke liye sab phir se chalta hai. 300 words ka jawab lagbhag 400 round hai."]
+  ], { perRow: 4, delay: 2300 });
+
+  B.chat("scB", [
+    { who: "sys", en: "What the app sends on turn 1: [rules] + “My name is Riya.”", hi: "Turn 1 par app kya bhejti hai: [niyam] + “Mera naam Riya hai.”", step: 0 },
+    { who: "ai", en: "Nice to meet you, Riya!", hi: "Aapse milkar khushi hui, Riya!", step: 0 },
+    { who: "sys", en: "Turn 2, if the app sends ONLY the new message: [rules] + “What's my name?”", hi: "Turn 2, agar app SIRF naya message bheje: [niyam] + “Mera naam kya hai?”", step: 1 },
+    { who: "bad", en: "I don't know your name. Could you tell me?", hi: "Mujhe aapka naam nahi pata. Bata sakte ho?", step: 1 },
+    { who: "sys", en: "Turn 2, done right: [rules] + “My name is Riya.” + “Nice to meet you, Riya!” + “What's my name?”", hi: "Turn 2, sahi tareeke se: [niyam] + “Mera naam Riya hai.” + “Aapse milkar khushi hui, Riya!” + “Mera naam kya hai?”", step: 2 },
+    { who: "good", en: "Your name is Riya.", hi: "Aapka naam Riya hai.", step: 2 }
+  ], [
+    ["Turn 1: the app sends the rules plus your message. Haron replies.", "Turn 1: app niyam aur aapka message bhejti hai. Haron jawab deta hai."],
+    ["If turn 2 sends only the new message, Haron has no idea who you are. It truly remembers nothing.", "Agar turn 2 sirf naya message bheje, Haron ko pata hi nahi aap kaun ho. Use sach mein kuch yaad nahi."],
+    ["Chat apps re-send the whole history each turn. That's the “memory”, and it's why long chats cost more and eventually hit the context-window limit.", "Chat apps har turn poori history dobara bhejti hain. Yahi “memory” hai, aur isi wajah se lambi chats mehengi hoti hain aur aakhir context-window ki limit tak pahunchti hain."]
+  ]);
+
+  var low = [86, 5, 4, 3, 2], high = [52, 14, 13, 11, 10];
+  B.bars("scC", [
+    { en: "Paris", hi: "Paris", v: 86, txt: "86%", cls: "box-sig", step: 0 },
+    { en: "Lyon", hi: "Lyon", v: 5, txt: "5%", cls: "box-amb", step: 0 },
+    { en: "the", hi: "the", v: 4, txt: "4%", cls: "box-amb", step: 0 },
+    { en: "France", hi: "France", v: 3, txt: "3%", cls: "box-amb", step: 0 },
+    { en: "a", hi: "a", v: 2, txt: "2%", cls: "box-amb", step: 0 },
+    { en: "Temperature 0: always “Paris”", hi: "Temperature 0: hamesha “Paris”", v: 100, txt: "same every time", cls: "box-plm", step: 1 },
+    { en: "Temperature 1.5: long shots grow", hi: "Temperature 1.5: kamzor options badhte", v: 52, txt: "Paris only ~52%", cls: "box-plm", step: 2 }
+  ], [
+    ["The model's chances for the word after “The capital of France is” (illustrative numbers).", "“The capital of France is” ke baad ke word ke liye model ke chances (example numbers)."],
+    ["At temperature 0 the favourite always wins: repeatable, good for extraction and code.", "Temperature 0 par pasandeeda hamesha jeetta hai: dohraane laayak, extraction aur code ke liye achha."],
+    ["At high temperature the long shots get real chances: more variety, more risk. Good for brainstorming, bad for facts. (Some hosted APIs now hide this knob and use an “effort” setting instead.)", "Zyaada temperature par kamzor options ko asli mauka milta hai: zyaada variety, zyaada risk. Brainstorming ke liye achha, facts ke liye bura. (Kuch hosted APIs ab yeh knob chhupa kar “effort” setting dete hain.)"]
+  ]);
+})();
+</script>
+
+</body>
+</html>

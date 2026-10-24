@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 7 · The Toolbox and MCP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 07</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 07 · Building Haron's team</span><span class="l-hi">Chapter 07 · Haron ki team banana</span></div>
+  <h1><span class="l-en">The Toolbox &amp; MCP</span><span class="l-hi">Auzaar ka Dabba &amp; MCP</span></h1>
+  <div class="story">
+    <p class="l-en">Haron has no hands. It can't search, book, refund or read a file. What it <em>can</em> do is write a neat request slip: "Please run <code>refund</code> with order ORD-123456 and amount 499." The team keeps a <strong>toolbox</strong>, and a strict <strong>guard</strong> checks every slip before any tool runs. This chapter is about that guard, and about MCP, the standard plug that lets any toolbox connect to any harness.</p>
+    <p class="l-hi">Haron ke haath nahi hain. Woh search, booking, refund ya file padhna nahi kar sakta. Woh jo <em>kar</em> sakta hai, woh hai ek saaf request parchi likhna: "Kripya <code>refund</code> chalao, order ORD-123456, amount 499." Team ke paas ek <strong>auzaar ka dabba</strong> hai, aur ek sakht <strong>guard</strong> kisi bhi tool ke chalne se pehle har parchi check karta hai. Yeh chapter us guard ke baare mein hai, aur MCP ke baare mein, woh standard plug jo kisi bhi toolbox ko kisi bhi harness se jodta hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">What a tool definition is: name, description, schema</span><span class="l-hi">Tool definition kya hai: naam, description, schema</span></li>
+    <li><b>2</b><span class="l-en">The four checks before any tool runs</span><span class="l-hi">Tool chalne se pehle ke chaar checks</span></li>
+    <li><b>3</b><span class="l-en">Why errors go back to the model as text</span><span class="l-hi">Errors model ko text ki tarah wapas kyun jaate hain</span></li>
+    <li><b>4</b><span class="l-en">MCP: tools, resources and prompts over one protocol</span><span class="l-hi">MCP: ek protocol par tools, resources aur prompts</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The guard at the toolbox</span><span class="l-hi">Toolbox ka guard</span></h2></div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 300" width="760" role="img" aria-label="A tool request passes four checks before the tool runs"></svg></div></figure>
+
+<div class="analogy">
+  <div><span class="k"><span class="l-en">Toolbox</span><span class="l-hi">Toolbox</span></span><span class="l-en">Instruction card on each tool</span><span class="l-hi">Har tool par instruction card</span></div>
+  <div><span class="k"><span class="l-en">Real name</span><span class="l-hi">Asli naam</span></span><strong>name + description + JSON Schema</strong></div>
+  <div><span class="k"><span class="l-en">Toolbox</span><span class="l-hi">Toolbox</span></span><span class="l-en">Request slip</span><span class="l-hi">Request parchi</span></div>
+  <div><span class="k"><span class="l-en">Real name</span><span class="l-hi">Asli naam</span></span><strong>tool call</strong> (<code>tool_use</code> / <code>tool_calls</code>)</div>
+  <div><span class="k"><span class="l-en">Toolbox</span><span class="l-hi">Toolbox</span></span><span class="l-en">Guard's reply</span><span class="l-hi">Guard ka jawab</span></div>
+  <div><span class="k"><span class="l-en">Real name</span><span class="l-hi">Asli naam</span></span><strong>tool result</strong> (<code>is_error</code>)</div>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Five slips, five replies</span><span class="l-hi">Paanch parchiyaan, paanch jawab</span></h2></div>
+<div class="story">
+  <p class="l-en">Here are five real calls from this chapter's lab. The important idea: when a call is wrong, the guard <strong>doesn't crash</strong>. It writes a clear reply that Haron can read and fix, just like a good error message for a human.</p>
+  <p class="l-hi">Yeh is chapter ke lab ki paanch asli calls hain. Zaroori baat: jab call galat ho, guard <strong>crash nahi</strong> hota. Woh saaf jawab likhta hai jo Haron padhkar theek kar sake, bilkul insaan ke liye achhe error message jaisa.</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 250" width="760" role="img" aria-label="Five tool calls and the guard's reply to each"></svg></div></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Haron invents tools and arguments</span><span class="l-hi">Haron tools aur arguments bana leta hai</span></h4>
+  <p class="l-en">Models have seen thousands of APIs, so they sometimes call <code>issue_refund</code> when your tool is called <code>refund</code>, or add a field like <code>"note"</code> that you never defined. Returning a precise error ("Unknown tool. Available tools: …") usually gets a correct retry on the next lap. Strict schemas (<code>additionalProperties: false</code>, enums, patterns) catch the rest.</p>
+  <p class="l-hi">Models ne hazaaron APIs dekhi hain, isliye kabhi aapka tool <code>refund</code> ho aur woh <code>issue_refund</code> call kar dete hain, ya <code>"note"</code> jaisa field jod dete hain jo aapne kabhi banaaya hi nahi. Saaf error lautaana ("Unknown tool. Available tools: …") aksar agle chakkar mein sahi retry dilwa deta hai. Sakht schemas (<code>additionalProperties: false</code>, enums, patterns) baaki pakad lete hain.</p>
+</div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">MCP: one plug for every toolbox</span><span class="l-hi">MCP: har toolbox ke liye ek plug</span></h2></div>
+<div class="story">
+  <p class="l-en">Before USB-C, every phone had its own charger. Before MCP (the <strong>Model Context Protocol</strong>), every harness wrote its own connector for GitHub, Jira, databases and Slack. MCP is an open standard: a tool provider writes one <strong>MCP server</strong>, and any harness that speaks MCP (Claude Code, Cursor, ChatGPT, VS Code, your own) can use it.</p>
+  <p class="l-hi">USB-C se pehle har phone ka apna charger hota tha. MCP (<strong>Model Context Protocol</strong>) se pehle har harness GitHub, Jira, databases aur Slack ke liye apna connector likhta tha. MCP ek khula standard hai: tool banane wala ek <strong>MCP server</strong> likhta hai, aur MCP bolne wala koi bhi harness (Claude Code, Cursor, ChatGPT, VS Code, aapka apna) use use kar sakta hai.</p>
+</div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 300" width="760" role="img" aria-label="Many harnesses and tools wired individually, then connected through MCP"></svg></div></figure>
+
+<div class="callout harness">
+  <span class="tag">Harness note</span>
+  <h4><span class="l-en">Designing tools Haron uses well</span><span class="l-hi">Aise tools banao jo Haron achhe se use kare</span></h4>
+  <ul class="l-en"><li><strong>Few and focused.</strong> Ten clear tools beat fifty overlapping ones. Every tool definition costs context tokens on every turn.</li><li><strong>Names and descriptions are prompts.</strong> Say when to use the tool and when not to.</li><li><strong>Return what the next step needs</strong>, not a 5 MB JSON dump. Truncate with a note.</li><li><strong>Make writes idempotent</strong> and label risk: read, write, dangerous.</li><li><strong>Errors are instructions:</strong> say what was wrong and what is allowed.</li></ul>
+  <ul class="l-hi"><li><strong>Kam aur focused.</strong> Das saaf tools pachaas ulajhe hue tools se behtar. Har tool definition har turn context tokens khaati hai.</li><li><strong>Naam aur description bhi prompt hain.</strong> Batao tool kab use karna hai aur kab nahi.</li><li><strong>Wahi lautao jo agle step ko chahiye</strong>, 5 MB ka JSON nahi. Note ke saath kaat do.</li><li><strong>Write actions idempotent rakho</strong> aur risk label karo: read, write, dangerous.</li><li><strong>Errors instructions hain:</strong> batao kya galat tha aur kya allowed hai.</li></ul>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">An MCP server is third-party code with your data</span><span class="l-hi">MCP server aapke data ke saath teesre ka code hai</span></h4>
+  <p class="l-en">Treat every MCP server like a new vendor: review its code or publisher, pin its version, run it with least privilege (its own credentials, scoped tokens), and log every call. A malicious or compromised server can return text that tries to hijack the model (Chapter 14) or can change its tool descriptions after you approved it. Keep an internal <strong>allowlist registry</strong> of approved servers.</p>
+  <p class="l-hi">Har MCP server ko naye vendor ki tarah dekho: uska code ya publisher review karo, version pin karo, kam se kam permission ke saath chalao (apne credentials, scoped tokens), aur har call log karo. Bura ya hack hua server aisa text lauta sakta hai jo model ko bhatkaaye (Chapter 14), ya approve hone ke baad apne tool descriptions badal sakta hai. Approved servers ki ek andaruni <strong>allowlist registry</strong> rakho.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: registry, validation, permissions</span><span class="l-hi">Coders ke liye: registry, validation, permissions</span><span class="lvl">code/harness/tools.py</span></summary>
+  <div class="inner">
+<pre>reg = ToolRegistry()
+
+@reg.tool("refund", "Refund an order", {"type": "object", "additionalProperties": False,
+          "required": ["order_id", "amount_inr"],
+          "properties": {"order_id": {"type": "string", "pattern": "^ORD-\\d{6}$"},
+                         "amount_inr": {"type": "integer", "minimum": 1, "maximum": 50000}}},
+          risk="write")
+def refund(order_id, amount_inr): ...
+
+content, is_error = reg.execute(call, mode="default", approver=ask_a_human)</pre>
+<pre>$ python code/ch07/tools_demo.py
+good call      ok    {"ok": true, "order_id": "ORD-123456", "refunded": 499}
+made-up tool   ERROR Unknown tool 'issue_refund'. Available tools: delete_account, refund, slow_report
+bad arguments  ERROR Invalid input: $.order_id: does not match ^ORD-\d{6}$; $.amount_inr: 90000 > maximum 50000; $.note: unexpected field
+hangs          ERROR Tool slow_report timed out after 0.2s
+dangerous      ERROR Permission denied: delete_account is a dangerous tool and mode is 'default'</pre>
+    <p class="l-en">With Claude you can also set <code>strict: true</code> on a tool so the API guarantees schema-valid input; keep your own validation anyway, because other providers and MCP servers may not.</p>
+    <p class="l-hi">Claude ke saath tool par <code>strict: true</code> lagakar API se schema-valid input ki guarantee le sakte ho; phir bhi apna validation rakho, kyunki doosre providers aur MCP servers aisa nahi bhi kar sakte.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>I write request slips; the team runs the tools.</li><li>The guard checks: does the tool exist, is the input valid, is it allowed, does it finish in time?</li><li>When I'm wrong, tell me clearly and I'll usually fix it.</li><li>MCP lets any toolbox plug into any harness. Vet every server like a vendor.</li></ol>
+  <ol class="l-hi"><li>Main request parchi likhta hoon; team tools chalaati hai.</li><li>Guard check karta hai: tool hai kya, input sahi hai, allowed hai, time par khatam hoga?</li><li>Main galat hoon toh saaf batao, main aksar theek kar leta hoon.</li><li>MCP kisi bhi toolbox ko kisi bhi harness mein lagaane deta hai. Har server ko vendor ki tarah jaancho.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Write a <code>get_leave_balance(employee_id)</code> tool with a strict schema, then call it with three wrong inputs. Are the error messages clear enough for a model to fix? <span class="level">coder</span></p><p class="l-hi">Sakht schema ke saath <code>get_leave_balance(employee_id)</code> tool likho, phir teen galat inputs se call karo. Kya error messages itne saaf hain ki model theek kar sake? <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Draft your company's checklist for approving a new MCP server (owner, code review, scopes, logging, update policy). <span class="level">enterprise</span></p><p class="l-hi">Naye MCP server ko approve karne ke liye apni company ki checklist banao (owner, code review, scopes, logging, update policy). <span class="level">enterprise</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Model Context Protocol. <em>Specification</em> (modelcontextprotocol.io).</li>
+  <li>Schick et al. (2023). <em>Toolformer: Language Models Can Teach Themselves to Use Tools.</em></li>
+  <li>Patil et al. (2023). <em>Gorilla: Large Language Model Connected with Massive APIs.</em></li>
+  <li>Anthropic (2025). <em>Writing effective tools for agents.</em></li>
+</ol>
+
+<nav class="pager"><a href="ch06.html">← Ch 6</a><a href="ch08.html"><span class="l-en">Ch 8 · Packing the Diary →</span><span class="l-hi">Ch 8 · Diary Pack Karna →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls, move = B.move;
+
+  /* Scene A: guard */
+  (function () {
+    var s = document.getElementById("svA");
+    B.tokku(s, 10, 40, 80);
+    var slip = E(s, "g", { "class": "anim" });
+    E(slip, "rect", { x: 100, y: 40, width: 200, height: 90, rx: 6, style: "fill:#10222c" });
+    ['{"tool": "refund",', ' "order_id": "ORD-123456",', ' "amount_inr": 499}'].forEach(function (l, i) {
+      E(slip, "text", { x: 112, y: 68 + i * 20, "font-size": 11.5, "class": "mono", style: "fill:#d7f6fa" }, l);
+    });
+    var checks = [["1 · tool exists?", "1 · tool hai?"], ["2 · input matches schema?", "2 · input schema se match?"], ["3 · allowed in this mode?", "3 · is mode mein allowed?"], ["4 · finishes in 10 s?", "4 · 10 s mein khatam?"]];
+    var cg = [];
+    checks.forEach(function (c, i) {
+      var g = B.box(s, { x: 340, y: 20 + i * 48, w: 210, h: 40, cls: "box", fs: 12, en: c[0], hi: c[1] });
+      cg.push(g);
+    });
+    BI(s, { x: 445, y: 222, "text-anchor": "middle", "font-size": 12, "font-weight": 700, "class": "plm" }, "THE GUARD", "GUARD");
+    var tool = B.box(s, { x: 590, y: 60, w: 160, h: 56, cls: "box-sig", en: "refund()", hi: "refund()", sen: "runs for real", shi: "sach mein chalta hai", mono: true });
+    var res = E(s, "g", { "class": "anim" });
+    E(res, "rect", { x: 100, y: 240, width: 650, height: 40, rx: 6, "class": "box-sig" });
+    E(res, "text", { x: 116, y: 265, "font-size": 12, "class": "mono" }, 'tool_result: {"ok": true, "order_id": "ORD-123456", "refunded": 499}');
+    var a1 = B.arrow(s, s, 302, 85, 336, 85, "amb"), a2 = B.arrow(s, s, 552, 85, 586, 88, "sig"), a3 = B.arrow(s, s, 670, 118, 600, 236, "sig");
+    B.scene(document.getElementById("scA"), [
+      ["Haron writes a request slip: tool name plus arguments, as JSON.", "Haron request parchi likhta hai: tool ka naam aur arguments, JSON mein."],
+      ["Check 1: is there a tool called <code>refund</code>? Yes.", "Check 1: kya <code>refund</code> naam ka tool hai? Haan."],
+      ["Check 2: does the input match the schema? Order ID matches <code>ORD-######</code>, amount is between 1 and 50,000. Yes.", "Check 2: kya input schema se match karta hai? Order ID <code>ORD-######</code> jaisa, amount 1 se 50,000 ke beech. Haan."],
+      ["Check 3: <code>refund</code> is a <em>write</em> tool. The current mode allows writes. Yes.", "Check 3: <code>refund</code> ek <em>write</em> tool hai. Current mode writes allow karta hai. Haan."],
+      ["Check 4: run it with a timeout, so a hung tool can't freeze the agent.", "Check 4: timeout ke saath chalao, taaki atka hua tool agent ko na rok de."],
+      ["The tool runs, and its result goes back into Haron's diary for the next lap.", "Tool chalta hai, aur uska result agle chakkar ke liye Haron ki diary mein jaata hai."]
+    ], function (i) {
+      show(slip, true); show(a1, i >= 1);
+      cg.forEach(function (g, k) { show(g, k < i); cls(g.firstChild, k < i ? "box-sig" : "box"); });
+      show(tool, i >= 4); show(a2, i >= 4); show(res, i >= 5); show(a3, i >= 5);
+    });
+  })();
+
+  /* Scene B: five calls */
+  (function () {
+    var s = document.getElementById("svB");
+    var calls = [
+      ["refund(ORD-123456, 499)", "ok", '{"ok": true, "refunded": 499}', "box-sig"],
+      ["issue_refund(ORD-123456)", "ERROR", "Unknown tool 'issue_refund'. Available: delete_account, refund, slow_report", "box-amb"],
+      ["refund(\"123\", 90000, note=\"vip\")", "ERROR", "order_id must match ^ORD-\\d{6}$; 90000 > max 50000; note: unexpected", "box-amb"],
+      ["slow_report()", "ERROR", "Tool slow_report timed out after 0.2s", "box-amb"],
+      ["delete_account(\"C-9\")", "ERROR", "Permission denied: dangerous tool, mode 'default'", "box-plm"]
+    ];
+    var slip = E(s, "g", { "class": "anim" });
+    E(slip, "rect", { x: 20, y: 30, width: 720, height: 50, rx: 6, style: "fill:#10222c" });
+    var slipT = E(slip, "text", { x: 36, y: 61, "font-size": 14, "class": "mono", style: "fill:#d7f6fa" }, "");
+    var reply = E(s, "rect", { x: 20, y: 120, width: 720, height: 70, rx: 6, "class": "box anim" });
+    var tag = E(s, "text", { x: 36, y: 146, "font-size": 13, "font-weight": 700, "class": "mono" }, "");
+    var msg = E(s, "text", { x: 36, y: 172, "font-size": 12, "class": "mono" }, "");
+    BI(s, { x: 20, y: 22, "font-size": 11, "class": "mono muted" }, "Haron's slip", "Haron ki parchi");
+    BI(s, { x: 20, y: 112, "font-size": 11, "class": "mono muted" }, "guard's reply (goes back to Haron)", "guard ka jawab (Haron ko wapas)");
+    var counter = E(s, "text", { x: 740, y: 225, "text-anchor": "end", "font-size": 12, "class": "mono muted" }, "");
+    B.scene(document.getElementById("scB"), [
+      ["A correct call. The tool runs and returns data.", "Sahi call. Tool chalta hai aur data lautaata hai."],
+      ["A made-up tool name. The reply lists the real tools, so the next lap can pick <code>refund</code>.", "Banaaya hua tool naam. Jawab asli tools ki list deta hai, taaki agla chakkar <code>refund</code> chun sake."],
+      ["Three mistakes at once. The reply names every one: wrong ID format, amount too high, unknown field.", "Ek saath teen galtiyaan. Jawab har ek ka naam leta hai: galat ID format, amount bahut zyaada, anjaan field."],
+      ["The tool hangs. The guard's timeout stops it after 0.2 s and says so.", "Tool atak gaya. Guard ka timeout 0.2 s baad rokta hai aur batata hai."],
+      ["A dangerous tool in default mode. No human approved it, so it is refused.", "Default mode mein dangerous tool. Kisi insaan ne approve nahi kiya, isliye mana."]
+    ], function (i) {
+      var c = calls[i];
+      slipT.textContent = c[0]; tag.textContent = c[1]; msg.textContent = c[2];
+      cls(reply, c[3]); show(slip, true);
+      counter.textContent = "call " + (i + 1) + " / 5";
+    });
+  })();
+
+  /* Scene C: MCP */
+  (function () {
+    var s = document.getElementById("svC");
+    var hs = ["Claude Code", "Cursor", "Your harness"], ts = ["GitHub", "Postgres", "Slack", "Jira"];
+    var H = hs.map(function (h, i) { return B.box(s, { x: 20, y: 40 + i * 80, w: 150, h: 44, cls: "box-sig", en: h, hi: h }); });
+    var T = ts.map(function (t, i) { return B.box(s, { x: 590, y: 24 + i * 66, w: 150, h: 44, cls: "box", en: t, hi: t }); });
+    var mess = E(s, "g", { "class": "anim" });
+    hs.forEach(function (_, i) { ts.forEach(function (_, j) { E(mess, "line", { x1: 170, y1: 62 + i * 80, x2: 590, y2: 46 + j * 66, "class": "line-amb", "stroke-width": 1.2 }); }); });
+    var messLbl = E(s, "g", { "class": "anim" });
+    BI(messLbl, { x: 380, y: 290, "text-anchor": "middle", "font-size": 12, "font-weight": 700, "class": "amb" }, "3 × 4 = 12 custom connectors", "3 × 4 = 12 alag connectors");
+    var hub = E(s, "g", { "class": "anim" });
+    E(hub, "rect", { x: 330, y: 110, width: 100, height: 70, rx: 35, "class": "box-plm", "stroke-width": 2 });
+    E(hub, "text", { x: 380, y: 150, "text-anchor": "middle", "font-size": 18, "font-weight": 700 }, "MCP");
+    hs.forEach(function (_, i) { E(hub, "line", { x1: 170, y1: 62 + i * 80, x2: 332, y2: 145, "class": "line-sig", "stroke-width": 2 }); });
+    ts.forEach(function (_, j) { E(hub, "line", { x1: 428, y1: 145, x2: 590, y2: 46 + j * 66, "class": "line-sig", "stroke-width": 2 }); });
+    BI(hub, { x: 380, y: 290, "text-anchor": "middle", "font-size": 12, "font-weight": 700, "class": "sig" }, "3 clients + 4 servers = 7 pieces", "3 clients + 4 servers = 7 hisse");
+    var prim = E(s, "g", { "class": "anim" });
+    E(prim, "rect", { x: 290, y: 196, width: 180, height: 70, rx: 6, "class": "box" });
+    BI(prim, { x: 300, y: 216, "font-size": 11, "class": "mono" }, "tools: actions to run", "tools: chalaane ke kaam");
+    BI(prim, { x: 300, y: 236, "font-size": 11, "class": "mono" }, "resources: data to read", "resources: padhne ka data");
+    BI(prim, { x: 300, y: 256, "font-size": 11, "class": "mono" }, "prompts: templates", "prompts: templates");
+    B.scene(document.getElementById("scC"), [
+      ["Without a standard, every harness writes a connector for every system: 3 harnesses × 4 systems = 12 integrations to build and maintain.", "Standard ke bina har harness har system ke liye connector likhta hai: 3 harness × 4 systems = 12 integrations banaana aur sambhaalna."],
+      ["With MCP, each harness is an MCP <strong>client</strong> and each system ships one MCP <strong>server</strong>. 7 pieces instead of 12, and every new piece works with all the others.", "MCP ke saath har harness ek MCP <strong>client</strong> hai aur har system ek MCP <strong>server</strong> deta hai. 12 ki jagah 7 hisse, aur har naya hissa baaki sabke saath chalta hai."],
+      ["A server can offer three things: <strong>tools</strong> (actions), <strong>resources</strong> (data to read) and <strong>prompts</strong> (ready-made templates). It runs locally (stdio) or remotely (HTTP).", "Server teen cheezein de sakta hai: <strong>tools</strong> (kaam), <strong>resources</strong> (padhne ka data) aur <strong>prompts</strong> (taiyaar templates). Yeh local (stdio) ya remote (HTTP) chal sakta hai."]
+    ], function (i) {
+      show(mess, i === 0); show(messLbl, i === 0); show(hub, i >= 1); show(prim, i === 2);
+    });
+  })();
+})();
+</script>
+</body>
+</html>

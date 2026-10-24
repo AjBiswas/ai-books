@@ -1,0 +1,156 @@
+  <div class="story">
+    <p class="l-en">A customer types "I forgot my login credentials". Your help centre has an article titled "How do I reset my password?". Not a single word matches, yet a human sees instantly they're the same thing. <strong>Embeddings</strong> let a computer see it too: they turn any text into a list of numbers, a point on a meaning map, where similar meanings sit close together.</p>
+    <p class="l-hi">Customer likhta hai "I forgot my login credentials". Aapke help centre mein article hai "How do I reset my password?". Ek bhi shabd match nahi karta, phir bhi insaan turant samajh jaata hai ki dono ek hi baat hain. <strong>Embeddings</strong> computer ko bhi yeh dikhaati hain: woh kisi bhi text ko numbers ki list banaati hain, meaning map par ek bindu, jahan milte-julte matlab paas-paas baithte hain.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">What an embedding is, and cosine similarity</span><span class="l-hi">Embedding kya hai, aur cosine similarity</span></li>
+    <li><b>2</b><span class="l-en">Real results from a laptop embedding model</span><span class="l-hi">Laptop embedding model ke asli nateeje</span></li>
+    <li><b>3</b><span class="l-en">Vector databases and fast search</span><span class="l-hi">Vector databases aur tez search</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The meaning map</span><span class="l-hi">Matlab ka naksha</span></h2></div>
+<div class="story">
+  <p class="l-en">An embedding model reads a sentence and outputs a fixed-length list of numbers (384 for the model below, often 768–3,072). Think of each list as GPS coordinates on a map with hundreds of directions instead of two. To compare two texts, measure the angle between their arrows: <strong>cosine similarity</strong>, from about −1 (opposite) through 0 (unrelated) to 1 (same meaning).</p>
+  <p class="l-hi">Embedding model ek sentence padhkar tay lambaai ki numbers ki list deta hai (neeche ke model mein 384, aksar 768–3,072). Har list ko aise naksha ke GPS coordinates socho jisme do nahi, saikadon dishayein hain. Do texts compare karne ke liye unke teeron ke beech ka kon naapo: <strong>cosine similarity</strong>, lagbhag −1 (ulta) se 0 (bematlab) se 1 (same matlab) tak.</p>
+</div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 330" width="760" role="img" aria-label="Sentences plotted on a two-dimensional meaning map, with similar sentences close together"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Measured on a laptop</span><span class="l-hi">Laptop par naapa</span></h2></div>
+<div class="story">
+  <p class="l-en">We embedded five sentences with <code>all-minilm</code> (a 46 MB model running in Ollama) and compared each to "How do I reset my password?". The English paraphrase scores high. The Hinglish one, with the same meaning, scores much lower, because this small model was trained mostly on English. That one result is a whole lesson.</p>
+  <p class="l-hi">Humne paanch sentences ko <code>all-minilm</code> (Ollama mein chalne wala 46 MB ka model) se embed kiya aur har ek ko "How do I reset my password?" se compare kiya. English paraphrase ka score zyaada hai. Same matlab wala Hinglish sentence kahin kam score karta hai, kyunki yeh chhota model zyaadatar English par train hua tha. Yeh ek nateeja poora sabak hai.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">Pick an embedding model for <strong>your languages and your domain</strong>. For Indian languages and Hinglish, use a multilingual model (for example bge-m3, multilingual-e5, or a provider's multilingual embedding API) and test it on your real queries. Embeddings from different models are not compatible: if you switch models, re-embed everything.</p>
+  <p class="l-hi">Embedding model <strong>apni bhashaon aur apne domain</strong> ke liye chuno. Indian bhashaon aur Hinglish ke liye multilingual model lo (jaise bge-m3, multilingual-e5, ya provider ki multilingual embedding API) aur apni asli queries par test karo. Alag models ki embeddings compatible nahi hoti: model badlo toh sab dobara embed karo.</p>
+</div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Searching a million points fast</span><span class="l-hi">Das laakh bindu tezi se search karna</span></h2></div>
+<div class="story">
+  <p class="l-en">Comparing a query against every stored vector works for thousands of items. For millions, a <strong>vector database</strong> builds an index (often HNSW, a "small-world" graph) that finds the nearest neighbours in milliseconds by hopping between close points, trading a tiny bit of accuracy for huge speed.</p>
+  <p class="l-hi">Query ko har stored vector se compare karna hazaaron items tak chalta hai. Laakhon ke liye <strong>vector database</strong> ek index banata hai (aksar HNSW, ek "small-world" graph) jo paas ke bindu par kood-kood kar milliseconds mein sabse kareeb padosi dhoondhta hai, thodi si accuracy ke badle bahut speed.</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Option</span><span class="l-hi">Option</span></th><th><span class="l-en">When it fits</span><span class="l-hi">Kab fit hai</span></th></tr></thead>
+<tbody>
+<tr><td><b>pgvector</b> (Postgres)</td><td><span class="l-en">You already use Postgres; up to millions of vectors; keep data and vectors together</span><span class="l-hi">Pehle se Postgres; laakhon vectors tak; data aur vectors saath</span></td></tr>
+<tr><td><b>Qdrant, Weaviate, Milvus</b></td><td><span class="l-en">Dedicated, open-source vector DBs with filtering and hybrid search at scale</span><span class="l-hi">Dedicated, open-source vector DBs, filtering aur hybrid search bade paimane par</span></td></tr>
+<tr><td><b>Pinecone</b> <span class="l-en">and cloud services</span><span class="l-hi">aur cloud services</span></td><td><span class="l-en">Fully managed; you don't run servers</span><span class="l-hi">Poori tarah managed; servers aap nahi chalaate</span></td></tr>
+<tr><td><b>Chroma, LanceDB, FAISS</b></td><td><span class="l-en">Local prototypes, notebooks, embedded use</span><span class="l-hi">Local prototypes, notebooks, embedded use</span></td></tr>
+</tbody></table></div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Embeddings miss exact things</span><span class="l-hi">Embeddings sateek cheezein miss karti hain</span></h4>
+  <p class="l-en">Embeddings are great at meaning, weak at exact strings: an order ID, an error code, a product SKU, a person's name. "ERR-4031" and "ERR-4013" look almost identical to an embedding model. That's why real systems combine vector search with keyword search (<strong>hybrid search</strong>, Chapter 14).</p>
+  <p class="l-hi">Embeddings matlab mein shaandaar, sateek strings mein kamzor: order ID, error code, product SKU, kisi ka naam. Embedding model ko "ERR-4031" aur "ERR-4013" lagbhag ek jaise dikhte hain. Isliye asli systems vector search ko keyword search ke saath milaate hain (<strong>hybrid search</strong>, Chapter 14).</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: embeddings on your laptop</span><span class="l-hi">Coders ke liye: laptop par embeddings</span><span class="lvl">code2/ch13/embeddings.py</span></summary>
+  <div class="inner">
+    <div class="eq">cos(a, b) = (a · b) / (‖a‖ ‖b‖)</div>
+<pre>ollama pull all-minilm
+python code2/ch13/embeddings.py all-minilm
+
+model=all-minilm  dimensions=384
+query: "How do I reset my password?"
+  0.678  I forgot my login credentials
+  0.408  Mera password bhool gaya, kya karun?
+  0.097  What is the refund policy for damaged items?
+  -0.047  The cricket match was exciting yesterday</pre>
+    <p class="l-en">A chat model is not an embedding model: asking <code>qwen3:4b</code> for embeddings returned HTTP 501 (not implemented). Use a dedicated embedding model.</p>
+    <p class="l-hi">Chat model embedding model nahi hai: <code>qwen3:4b</code> se embeddings maangne par HTTP 501 (not implemented) aaya. Dedicated embedding model use karo.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>An embedding is a point on a meaning map; cosine similarity measures closeness.</li><li>Choose an embedding model that knows your languages, and test it.</li><li>Vector databases use indexes like HNSW to search millions of points fast.</li><li>Embeddings miss exact IDs and codes, so pair them with keyword search.</li></ol>
+  <ol class="l-hi"><li>Embedding matlab ke naksha par ek bindu hai; cosine similarity nazdeeki naapti hai.</li><li>Aisa embedding model chuno jo aapki bhashayein jaane, aur test karo.</li><li>Vector databases HNSW jaise indexes se laakhon bindu tezi se search karte hain.</li><li>Embeddings sateek IDs aur codes miss karti hain, isliye keyword search ke saath jodo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add ten of your own sentences (some Hinglish) to <code>embeddings.py</code>. Then pull a multilingual embedding model and compare the scores. <span class="level">coder</span></p><p class="l-hi"><code>embeddings.py</code> mein apne das sentences jodo (kuch Hinglish). Phir multilingual embedding model pull karke scores compare karo. <span class="level">coder</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Reimers &amp; Gurevych (2019). <em>Sentence-BERT.</em></li>
+  <li>Malkov &amp; Yashunin (2016). <em>Efficient and robust approximate nearest neighbor search using HNSW graphs.</em></li>
+  <li>Chen et al. (2024). <em>BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity.</em></li>
+  <li>MTEB. <em>Massive Text Embedding Benchmark</em> leaderboard.</li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show;
+  var s = document.getElementById("svA");
+  E(s, "rect", { x: 20, y: 10, width: 720, height: 290, rx: 10, "class": "box", "stroke-width": 1 });
+  BI(s, { x: 34, y: 32, "font-size": 11, "class": "mono muted" }, "meaning map (384 dimensions squeezed into 2 for the picture)", "matlab ka naksha (tasveer ke liye 384 dimensions 2 mein dabaaye)");
+  var pts = [
+    [210, 120, "How do I reset my password?", "box-sig"],
+    [265, 150, "I forgot my login credentials", "box-sig"],
+    [180, 200, "OTP nahi aa raha", "box-sig"],
+    [520, 110, "Refund for a damaged item", "box-amb"],
+    [580, 150, "Paisa wapas kab aayega?", "box-amb"],
+    [500, 255, "Cricket match was exciting", "box-plm"]
+  ];
+  var gs = pts.map(function (p) {
+    var g = E(s, "g", { "class": "anim" });
+    E(g, "circle", { cx: p[0], cy: p[1], r: 8, "class": p[3], "stroke-width": 2 });
+    E(g, "text", { x: p[0] + 14, y: p[1] + 4, "font-size": 12 }, p[2]);
+    return g;
+  });
+  var q = E(s, "g", { "class": "anim" });
+  E(q, "circle", { cx: 240, cy: 95, r: 9, style: "fill:var(--c6)" });
+  E(q, "text", { x: 254, y: 90, "font-size": 12, "font-weight": 700 }, "query: “can't log in”");
+  var ring = E(s, "circle", { cx: 240, cy: 95, r: 0, style: "fill:none;stroke:var(--c6);stroke-width:2;stroke-dasharray:5 4", "class": "anim" });
+  ring.style.transition = "r .8s";
+  B.scene(document.getElementById("scA"), [
+    ["Every sentence becomes a point. Password and login questions land in one neighbourhood.", "Har sentence ek bindu ban jaata hai. Password aur login ke sawaal ek mohalle mein aate hain."],
+    ["Refund questions, in English or Hinglish, form another neighbourhood.", "Refund ke sawaal, English ya Hinglish mein, doosra mohalla banaate hain."],
+    ["Unrelated text sits far away.", "Bematlab text door baithta hai."],
+    ["A new query is embedded the same way, and its nearest neighbours are the answers to fetch, even with zero shared words.", "Nayi query bhi aise hi embed hoti hai, aur uske sabse kareeb padosi wahi hain jo laane hain, chahe ek bhi shabd na mile."]
+  ], function (i) {
+    gs.forEach(function (g, k) { show(g, (k < 3) || (k < 5 && i >= 1) || i >= 2); });
+    show(q, i === 3); ring.setAttribute("r", i === 3 ? 75 : 0); show(ring, i === 3);
+  });
+
+  B.bars("scB", [
+    { en: "I forgot my login credentials", hi: "I forgot my login credentials", v: 0.678, txt: "0.678", cls: "box-sig", step: 0 },
+    { en: "Mera password bhool gaya, kya karun?", hi: "Mera password bhool gaya, kya karun?", v: 0.408, txt: "0.408", cls: "box-amb", step: 1 },
+    { en: "Refund policy for damaged items", hi: "Refund policy for damaged items", v: 0.097, txt: "0.097", cls: "box-plm", step: 2 },
+    { en: "The cricket match was exciting", hi: "The cricket match was exciting", v: 0.01, txt: "−0.047", cls: "box-plm", step: 2 }
+  ], [
+    ["Same meaning in different English words: 0.678. Embeddings see through wording.", "Alag English shabdon mein same matlab: 0.678. Embeddings shabdon ke paar dekhti hain."],
+    ["Same meaning in Hinglish: only 0.408, because this small model is mostly English-trained. A multilingual model would close this gap.", "Hinglish mein same matlab: sirf 0.408, kyunki yeh chhota model zyaadatar English par train hai. Multilingual model yeh farak kam karega."],
+    ["Different topics score near zero. Real numbers from <code>code2/ch13/embeddings.py</code>.", "Alag vishay zero ke paas. Asli numbers <code>code2/ch13/embeddings.py</code> se."]
+  ]);
+
+  B.flow("scC", [
+    { en: "Your documents", hi: "Aapke documents", sen: "split into chunks", shi: "chunks mein kaate" },
+    { en: "Embed each", hi: "Har ek embed", sen: "once, at index time", shi: "ek baar, index ke waqt" },
+    { en: "Store + index", hi: "Store + index", sen: "vector DB builds HNSW graph", shi: "vector DB HNSW graph banata hai" },
+    { en: "Query", hi: "Query", sen: "embed the question", shi: "sawaal embed karo" },
+    { en: "Nearest k", hi: "Sabse kareeb k", sen: "hop through the graph: ms", shi: "graph mein kood: ms mein" },
+    { en: "Filter", hi: "Filter", sen: "by user access, date, language", shi: "user access, date, bhasha se" }
+  ], [
+    ["Split documents into passages.", "Documents ko hisson mein kaato."],
+    ["Embed each passage once.", "Har hisse ko ek baar embed karo."],
+    ["Store vectors with their text and metadata; the database builds an index.", "Vectors ko text aur metadata ke saath store karo; database index banata hai."],
+    ["At question time, embed the question with the same model.", "Sawaal ke waqt sawaal ko same model se embed karo."],
+    ["The index finds the k nearest vectors in milliseconds.", "Index milliseconds mein k sabse kareeb vectors dhoondhta hai."],
+    ["Filter by metadata, especially access rights: never return a document the user isn't allowed to see.", "Metadata se filter karo, khaaskar access rights: aisa document kabhi mat lautao jo user dekh nahi sakta."]
+  ], { perRow: 3 });
+})();
+</script>

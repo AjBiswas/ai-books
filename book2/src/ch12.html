@@ -1,0 +1,143 @@
+  <div class="story">
+    <p class="l-en">Haron used to be text-only. Now it can look at a photo of a broken parcel, read a scanned invoice, listen to a customer on the phone, talk back in a natural voice, and even draw. Models that handle more than text are called <strong>multimodal</strong>. The trick to understanding them: every kind of input is turned into tokens, so everything you learned about tokens, context and cost still applies.</p>
+    <p class="l-hi">Haron pehle sirf text samajhta tha. Ab woh toote parcel ki photo dekh sakta hai, scanned invoice padh sakta hai, phone par customer ko sun sakta hai, natural awaaz mein jawab de sakta hai, aur draw bhi kar sakta hai. Text se zyaada sambhaalne wale models <strong>multimodal</strong> kehlaate hain. Unhe samajhne ki chaabi: har tarah ka input tokens mein badalta hai, isliye tokens, context aur kharch ke baare mein seekha sab kuch ab bhi laagu hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">How images and documents become tokens</span><span class="l-hi">Images aur documents tokens kaise bante hain</span></li>
+    <li><b>2</b><span class="l-en">Voice agents: two designs</span><span class="l-hi">Voice agents: do design</span></li>
+    <li><b>3</b><span class="l-en">Generating images and video</span><span class="l-hi">Images aur video banana</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">A picture is worth ~1,600 tokens</span><span class="l-hi">Ek tasveer ≈ 1,600 tokens</span></h2></div>
+<div class="story">
+  <p class="l-en">A vision model cuts an image into small square patches, turns each patch into a token-like vector, and reads them alongside your text. On Claude, an image costs roughly <strong>(width × height) ÷ 750</strong> tokens, so a 1,092 × 1,092 photo is about 1,600 tokens. Bigger images are resized down. Every image is input you pay for.</p>
+  <p class="l-hi">Vision model image ko chhote chaukor patches mein kaatta hai, har patch ko token jaisa vector banata hai, aur aapke text ke saath padhta hai. Claude par ek image lagbhag <strong>(width × height) ÷ 750</strong> tokens leti hai, toh 1,092 × 1,092 photo lagbhag 1,600 tokens. Badi images chhoti ki jaati hain. Har image input hai jiska paisa lagta hai.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Vision models misread small details</span><span class="l-hi">Vision models chhoti details galat padhte hain</span></h4>
+  <p class="l-en">They're excellent at "what's in this picture?" and good at reading clear documents, but they can misread small digits, count objects wrongly, and confuse left and right. For invoices and IDs, extract into a schema (Chapter 8), then validate numbers with code (does the total equal the sum of the lines? is the GSTIN checksum valid?).</p>
+  <p class="l-hi">"Is tasveer mein kya hai?" mein shaandaar aur saaf documents padhne mein achhe, par chhote digits galat padh sakte hain, cheezein galat gin sakte hain, aur left-right mein confuse ho sakte hain. Invoices aur IDs ke liye schema mein nikaalo (Chapter 8), phir numbers code se validate karo (kya total lines ke jod ke barabar hai? kya GSTIN checksum sahi hai?).</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Talking to Haron: two designs</span><span class="l-hi">Haron se baat: do design</span></h2></div>
+<div class="story">
+  <p class="l-en">A voice agent can be a <strong>pipeline</strong> of three models (speech-to-text → LLM → text-to-speech), or one <strong>speech-to-speech</strong> model that hears and speaks directly. The pipeline is easier to control and debug; speech-to-speech feels more natural and responds faster. Either way, a human expects a reply within about a second.</p>
+  <p class="l-hi">Voice agent teen models ki <strong>pipeline</strong> ho sakta hai (speech-to-text → LLM → text-to-speech), ya ek <strong>speech-to-speech</strong> model jo seedhe sunta aur bolta hai. Pipeline control aur debug karna aasaan; speech-to-speech zyaada natural lagta aur jaldi jawab deta hai. Dono mein insaan lagbhag ek second mein jawab ki ummeed karta hai.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">What multimodal is good for</span><span class="l-hi">Multimodal kis kaam ka hai</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Documents: try the model before building an OCR pipeline</span><span class="l-hi">Documents: OCR pipeline banaane se pehle model try karo</span></h4>
+  <p class="l-en">Many APIs accept PDFs directly and read both the text and the page images, including tables and charts. For clean documents this often beats a traditional OCR pipeline with far less code. For thousands of pages a day, compare cost: dedicated OCR plus a small text model can be much cheaper than sending page images to a large model.</p>
+  <p class="l-hi">Kai APIs seedhe PDFs leti hain aur text aur page images dono padhti hain, tables aur charts samet. Saaf documents ke liye yeh aksar purani OCR pipeline ko kahin kam code mein hara deta hai. Roz hazaaron pages ke liye kharch compare karo: dedicated OCR aur chhota text model, bade model ko page images bhejne se kahin sasta ho sakta hai.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Voice in India</span><span class="l-hi">India mein voice</span></h4>
+  <p class="l-en">For many Indian users, speaking is easier than typing, especially in their own language. Voice agents for banks, telecom and government services are a fast-growing area. Test speech recognition on real accents, code-mixed Hinglish and noisy phone lines; Indic-focused speech models (for example from AI4Bharat and Sarvam) often beat global ones here. Always disclose that callers are talking to an AI.</p>
+  <p class="l-hi">Kai Indian users ke liye bolna type karne se aasaan hai, khaaskar apni bhasha mein. Banks, telecom aur sarkari sevaon ke voice agents tezi se badhta kshetra hai. Speech recognition ko asli lehjon, code-mixed Hinglish aur shor wali phone lines par test karo; Indic-focused speech models (jaise AI4Bharat aur Sarvam ke) yahan aksar global models ko harate hain. Hamesha batao ki caller AI se baat kar raha hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: sending an image</span><span class="l-hi">Coders ke liye: image bhejna</span><span class="lvl">python</span></summary>
+  <div class="inner">
+<pre>import base64, anthropic
+img = base64.standard_b64encode(open("parcel.jpg", "rb").read()).decode()
+client = anthropic.Anthropic()
+resp = client.messages.create(model="claude-opus-5-5", max_tokens=1024, messages=[{
+    "role": "user",
+    "content": [
+        {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": img}},
+        {"type": "text", "text": "Is this parcel damaged? Reply DAMAGED or OK, then one sentence of evidence."},
+    ]}])</pre>
+    <p class="l-en">Put the image before the question. Locally, Ollama runs vision models too (e.g. <code>ollama pull qwen2.5vl</code> or <code>gemma3</code>), with images passed in the message's <code>images</code> field.</p>
+    <p class="l-hi">Image sawaal se pehle rakho. Local mein Ollama vision models bhi chalaata hai (jaise <code>ollama pull qwen2.5vl</code> ya <code>gemma3</code>), images message ke <code>images</code> field mein.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Images, PDFs and audio all become tokens; they cost context and money.</li><li>Check small details from images with code.</li><li>Voice agents: pipeline for control, speech-to-speech for natural speed.</li><li>Test on real accents and languages, and always disclose AI.</li></ol>
+  <ol class="l-hi"><li>Images, PDFs aur audio sab tokens bante hain; context aur paisa lete hain.</li><li>Images ki chhoti details code se check karo.</li><li>Voice agents: control ke liye pipeline, natural speed ke liye speech-to-speech.</li><li>Asli lehjon aur bhashaon par test karo, aur hamesha batao ki AI hai.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Photograph a printed bill and ask a vision model to extract the items and the total. Check the total with a calculator. <span class="level">easy</span></p><p class="l-hi">Chhapi hui bill ki photo lo aur vision model se items aur total nikaalwao. Calculator se total check karo. <span class="level">easy</span></p></div>
+  <div class="exercise"><p class="l-en">Design a Hindi voice agent for railway enquiry: which three models, what's the latency budget for each step? <span class="level">core</span></p><p class="l-hi">Railway enquiry ke liye Hindi voice agent design karo: kaunse teen models, har step ka latency budget kya? <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Dosovitskiy et al. (2020). <em>An Image is Worth 16x16 Words</em> (Vision Transformer).</li>
+  <li>Radford et al. (2022). <em>Robust Speech Recognition via Large-Scale Weak Supervision</em> (Whisper).</li>
+  <li>Ho, Jain &amp; Abbeel (2020). <em>Denoising Diffusion Probabilistic Models.</em></li>
+  <li>Anthropic. <em>Vision</em> and <em>PDF support</em> documentation.</li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.flow("scA", [
+    { en: "Photo", hi: "Photo", sen: "a parcel, 1092 × 1092 px", shi: "ek parcel, 1092 × 1092 px" },
+    { en: "Patches", hi: "Patches", sen: "cut into small squares", shi: "chhote chaukor tukde" },
+    { en: "Vectors", hi: "Vectors", sen: "each patch → numbers", shi: "har patch → numbers" },
+    { en: "+ your text", hi: "+ aapka text", sen: "“Is it damaged?”", shi: "“Kya yeh toota hai?”" },
+    { en: "Same brain", hi: "Wahi dimaag", sen: "attention over image + text", shi: "image + text par attention" },
+    { en: "Answer", hi: "Jawab", sen: "“DAMAGED: torn corner” · ~1,600 input tokens", shi: "“DAMAGED: kona phata” · ~1,600 input tokens" }
+  ], [
+    ["A customer uploads a photo of their parcel.", "Customer parcel ki photo upload karta hai."],
+    ["The model cuts it into small patches.", "Model use chhote patches mein kaatta hai."],
+    ["Each patch becomes a vector, just like a word token.", "Har patch ek vector ban jaata hai, bilkul word token jaisa."],
+    ["Your question is added as normal text tokens.", "Aapka sawaal aam text tokens ki tarah judta hai."],
+    ["The same transformer attends across image patches and words together.", "Wahi transformer image patches aur words dono par ek saath attention lagaata hai."],
+    ["It answers in text. That one photo cost about as much as 1,200 words of input.", "Woh text mein jawab deta hai. Us ek photo ka kharch lagbhag 1,200 words ke input jitna."]
+  ], { perRow: 3 });
+
+  B.columns("scB", [
+    { en: "Pipeline (3 models)", hi: "Pipeline (3 models)", cls: "box-sig", step: 0, items: [
+      { en: "1 · Speech-to-text: audio → “mera order kab aayega?”", hi: "1 · Speech-to-text: audio → “mera order kab aayega?”", step: 0 },
+      { en: "2 · LLM + tools: looks up the order, writes a reply", hi: "2 · LLM + tools: order dekhta hai, jawab likhta hai", step: 0 },
+      { en: "3 · Text-to-speech: reply → natural voice", hi: "3 · Text-to-speech: jawab → natural awaaz", step: 0 },
+      { en: "+ easy to log, test and swap parts · − slower, loses tone", hi: "+ log, test aur hisse badalna aasaan · − dheema, tone kho jaata", cls: "box-plm", step: 0 } ] },
+    { en: "Speech-to-speech (1 model)", hi: "Speech-to-speech (1 model)", cls: "box-amb", step: 1, items: [
+      { en: "One realtime model hears audio and speaks audio", hi: "Ek realtime model audio sunta aur audio bolta hai", step: 1 },
+      { en: "Hears tone, can be interrupted mid-sentence", hi: "Tone sunta hai, beech sentence mein roka ja sakta hai", step: 1 },
+      { en: "Still calls tools for facts", hi: "Facts ke liye ab bhi tools call karta hai", step: 1 },
+      { en: "+ fast, natural · − harder to control, test and audit", hi: "+ tez, natural · − control, test aur audit mushkil", cls: "box-plm", step: 1 } ] }
+  ], [
+    ["The <strong>pipeline</strong>: three specialists in a row. Every step produces text you can log and check.", "<strong>Pipeline</strong>: line mein teen specialists. Har step text deta hai jise log aur check kar sakte ho."],
+    ["<strong>Speech-to-speech</strong>: one model does it all in real time. Choose based on how much control vs naturalness you need.", "<strong>Speech-to-speech</strong>: ek model real time mein sab karta hai. Kitna control vs naturalness chahiye, uske hisaab se chuno."]
+  ]);
+
+  B.columns("scC", [
+    { en: "Understand", hi: "Samjho", cls: "box-sig", step: 0, items: [
+      { en: "Damage photos, KYC documents, invoices, forms", hi: "Nuksaan ki photos, KYC documents, invoices, forms", step: 0 },
+      { en: "Screenshots for computer-use agents (Ch 21)", hi: "Computer-use agents ke liye screenshots (Ch 21)", step: 0 },
+      { en: "Charts and dashboards to explain", hi: "Samjhaane ke liye charts aur dashboards", step: 0 } ] },
+    { en: "Listen & speak", hi: "Suno aur bolo", cls: "box-amb", step: 1, items: [
+      { en: "Call-centre voice agents", hi: "Call-centre voice agents", step: 1 },
+      { en: "Meeting transcription and summaries", hi: "Meeting transcription aur summaries", step: 1 },
+      { en: "Reading answers aloud for low-literacy users", hi: "Kam padhe-likhe users ke liye jawab bolkar sunaana", step: 1 } ] },
+    { en: "Create", hi: "Banao", cls: "box-plm", step: 2, items: [
+      { en: "Product images and ad variants (diffusion models)", hi: "Product images aur ad variants (diffusion models)", step: 2 },
+      { en: "Short video clips from text or an image", hi: "Text ya image se chhote video clips", step: 2 },
+      { en: "Watch for copyright, likeness rights and deepfake rules", hi: "Copyright, chehre ke haq aur deepfake niyamon ka dhyaan", step: 2 } ] }
+  ], [
+    ["<strong>Understanding</strong>: the most common business use today.", "<strong>Samajhna</strong>: aaj sabse aam business use."],
+    ["<strong>Listening and speaking</strong>: voice opens AI to people who don't type.", "<strong>Sunna aur bolna</strong>: voice AI ko un logon tak le jaata hai jo type nahi karte."],
+    ["<strong>Creating</strong> images and video uses different models (diffusion), with their own legal and ethical rules (Chapter 32).", "Images aur video <strong>banaana</strong> alag models (diffusion) se hota hai, apne kanooni aur naitik niyamon ke saath (Chapter 32)."]
+  ]);
+})();
+</script>

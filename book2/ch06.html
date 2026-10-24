@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 6 · Prompt Engineering Basics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 06</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 06 · Talking to models</span><span class="l-hi">Chapter 06 · Model se baat</span></div>
+  <h1><span class="l-en">Prompt Engineering Basics</span><span class="l-hi">Prompt Engineering ki Buniyaad</span></h1>
+  <div class="story">
+    <p class="l-en">Imagine a brilliant new colleague on their first day. They know a lot about everything, but nothing about <em>your</em> company, your customers or what you meant. If you say "write something about our product", you'll get something generic. If you brief them properly, you'll get exactly what you need. Haron is that colleague, and a <strong>prompt</strong> is your briefing.</p>
+    <p class="l-hi">Socho pehle din ka ek hoshiyaar naya saathi. Use har cheez ke baare mein bahut pata hai, par <em>aapki</em> company, customers ya aapke matlab ke baare mein kuch nahi. Agar aap kaho "product ke baare mein kuch likho", toh kuch aam sa milega. Agar theek se samjhao, toh bilkul wahi milega jo chahiye. Haron woh saathi hai, aur <strong>prompt</strong> aapki briefing.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The difference a clear brief makes</span><span class="l-hi">Saaf briefing ka farak</span></li>
+    <li><b>2</b><span class="l-en">The six parts of a strong prompt</span><span class="l-hi">Majboot prompt ke chhe hisse</span></li>
+    <li><b>3</b><span class="l-en">Say what to do, not only what to avoid</span><span class="l-hi">Kya karna hai batao, sirf kya nahi karna nahi</span></li>
+    <li><b>4</b><span class="l-en">Separating instructions from data</span><span class="l-hi">Instructions ko data se alag rakhna</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Vague in, vague out</span><span class="l-hi">Dhundhla andar, dhundhla bahar</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">The golden test</span><span class="l-hi">Sunehra test</span></span>
+  <p class="l-en">Show your prompt to a colleague who knows nothing about the task. If they'd have to ask you questions before starting, Haron would too, except Haron won't ask; it will guess. Every question they'd ask is something missing from your prompt.</p>
+  <p class="l-hi">Apna prompt kisi aise saathi ko dikhao jise kaam ke baare mein kuch nahi pata. Agar unhe shuru karne se pehle aapse sawaal poochne padein, toh Haron ko bhi padte, bas Haron poochega nahi; andaaza lagayega. Har woh sawaal jo woh poochte, aapke prompt se gaayab cheez hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">The six parts of a strong prompt</span><span class="l-hi">Majboot prompt ke chhe hisse</span></h2></div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">"Don't" is weaker than "do"</span><span class="l-hi">"Mat karo" se "karo" zyaada majboot</span></h2></div>
+<div class="story">
+  <p class="l-en">Telling a model only what <em>not</em> to do leaves it guessing what you <em>do</em> want, and naming the forbidden thing can even put it in its mind. Describe the target instead, and explain why: the reason helps Haron generalise to cases you didn't list.</p>
+  <p class="l-hi">Model ko sirf kya <em>nahi</em> karna batane se use andaaza lagana padta hai ki aap <em>kya</em> chahte ho, aur mana ki gayi cheez ka naam lene se woh uske dimaag mein aa bhi sakti hai. Iske badle nishaana batao, aur wajah bhi: wajah Haron ko un cases mein bhi madad karti hai jo aapne list nahi kiye.</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Wrap data in tags</span><span class="l-hi">Data ko tags mein lapeto</span></h4>
+  <p class="l-en">When a prompt contains documents, emails or user text, put each inside clear tags such as <code>&lt;email&gt;…&lt;/email&gt;</code> or <code>&lt;document id="2"&gt;</code>. The model can then tell your instructions from the material, you can refer to parts by name ("quote from document 2"), and it's harder for text inside the data to pretend to be an instruction (Chapter 27).</p>
+  <p class="l-hi">Jab prompt mein documents, emails ya user ka text ho, har ek ko saaf tags mein rakho jaise <code>&lt;email&gt;…&lt;/email&gt;</code> ya <code>&lt;document id="2"&gt;</code>. Tab model aapke instructions ko saamagri se alag pehchaan sakta hai, aap hisson ko naam se bula sakte ho ("document 2 se quote karo"), aur data ke andar ke text ke liye instruction hone ka naatak karna mushkil hota hai (Chapter 27).</p>
+</div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Newer models follow instructions literally</span><span class="l-hi">Naye models instructions ko shabdshah maante hain</span></h4>
+  <p class="l-en">Older models needed SHOUTING ("YOU MUST ALWAYS…") to pay attention. Current models follow instructions closely, so shouting makes them over-apply a rule everywhere. Write calmly and precisely, like a good brief to a professional. If you want extra effort ("go beyond the basics"), say so; models no longer assume it.</p>
+  <p class="l-hi">Purane models ko dhyaan dene ke liye CHILLAANA padta tha ("YOU MUST ALWAYS…"). Aaj ke models instructions ko kareeb se maante hain, isliye chillaane se woh niyam ko har jagah zaroorat se zyaada laagu karte hain. Shaanti aur sateekta se likho, jaise kisi professional ko achhi briefing. Agar extra mehnat chahiye ("basics se aage jao"), toh kaho; models ab khud nahi maante.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Prompts are code</span><span class="l-hi">Prompts bhi code hain</span></h4>
+  <p class="l-en">In a product, a prompt is a piece of software: keep it in version control, review changes, give it an owner, and test every change against an eval set before shipping (Chapters 26 and 28). A one-word change can shift results for thousands of users.</p>
+  <p class="l-hi">Product mein prompt software ka tukda hai: use version control mein rakho, badlaav review karo, uska owner banao, aur ship karne se pehle har badlaav ko eval set par test karo (Chapter 26 aur 28). Ek word ka badlaav hazaaron users ke nateeje badal sakta hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: a reusable prompt template</span><span class="l-hi">Coders ke liye: dobara use hone wala prompt template</span><span class="lvl">python</span></summary>
+  <div class="inner">
+<pre>SYSTEM = """You are the support assistant for Acme, an online electronics shop in India.
+Customers write in English, Hindi or Hinglish; reply in the language they used.
+
+Your goal: resolve the customer's issue in as few messages as possible.
+- Use only facts from &lt;policy&gt; and &lt;order&gt;. If something isn't there, say you'll
+  connect them to a human, because a wrong promise costs us more than a handover.
+- Keep replies under 80 words: customers read on phones.
+- End with one clear next step."""
+
+def build_user_turn(policy: str, order: dict, message: str) -> str:
+    return (f"&lt;policy&gt;\n{policy}\n&lt;/policy&gt;\n"
+            f"&lt;order&gt;\n{json.dumps(order, ensure_ascii=False)}\n&lt;/order&gt;\n"
+            f"&lt;customer_message&gt;\n{message}\n&lt;/customer_message&gt;")</pre>
+    <p class="l-en">Stable instructions go in the system prompt; per-request data goes in the user turn, wrapped in tags. This also keeps the system prompt identical across requests, which makes prompt caching work (Chapter 29).</p>
+    <p class="l-hi">Sthir instructions system prompt mein; har request ka data user turn mein, tags mein lipta hua. Isse system prompt har request mein same rehta hai, jisse prompt caching kaam karti hai (Chapter 29).</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Brief me like a smart new colleague: who, what, why, for whom, how long.</li><li>A strong prompt has role and context, task, data in tags, rules with reasons, examples, and an output format.</li><li>Tell me what to do and why, not just what to avoid.</li><li>Treat prompts like code: versioned, reviewed, tested.</li></ol>
+  <ol class="l-hi"><li>Mujhe hoshiyaar naye saathi ki tarah samjhao: kaun, kya, kyun, kiske liye, kitna lamba.</li><li>Majboot prompt mein role aur context, kaam, tags mein data, wajah ke saath niyam, examples, aur output format.</li><li>Mujhe batao kya karna hai aur kyun, sirf kya nahi karna nahi.</li><li>Prompts ko code ki tarah rakho: versioned, reviewed, tested.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Take a one-line prompt you've used before. Rewrite it with all six parts. Run both on your laptop model and compare. <span class="level">easy</span></p><p class="l-hi">Pehle use kiya koi ek-line prompt lo. Use chhe hisson ke saath dobara likho. Dono apne laptop model par chalao aur compare karo. <span class="level">easy</span></p></div>
+  <div class="exercise"><p class="l-en">Find three "don't" rules in a prompt and rewrite each as a positive instruction with a reason. <span class="level">core</span></p><p class="l-hi">Kisi prompt mein teen "mat karo" niyam dhoondho aur har ek ko wajah ke saath positive instruction mein badlo. <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Anthropic. <em>Prompt engineering overview</em> and <em>Prompting best practices.</em></li>
+  <li>OpenAI. <em>Prompt engineering guide.</em></li>
+  <li>Google. <em>Prompting strategies for Gemini.</em></li>
+</ol>
+<nav class="pager"><a href="ch05.html">← Ch 5</a><a href="ch07.html"><span class="l-en">Ch 7 · Advanced Prompting →</span><span class="l-hi">Ch 7 · Advanced Prompting →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.chat("scA", [
+    { who: "user", en: "Write about our product.", hi: "Hamare product ke baare mein likho.", step: 0 },
+    { who: "bad", en: "Introducing our innovative product, designed to transform the way you work! With cutting-edge features and seamless integration, it's the perfect solution for…", hi: "Pesh hai hamara innovative product, jo aapke kaam karne ka tareeka badal dega! Cutting-edge features aur seamless integration ke saath, yeh perfect solution hai…", step: 1 },
+    { who: "user", en: "Write a 60-word WhatsApp message for shopkeepers in Pune announcing that our billing app now works offline. They're busy and not technical. Mention: works without internet, syncs when back online, free update. End with: reply UPDATE to get it.", hi: "Pune ke dukaandaaron ke liye 60 words ka WhatsApp message likho ki hamari billing app ab offline chalti hai. Woh vyast hain aur technical nahi. Batao: bina internet chalti hai, internet aane par sync, free update. Aakhir mein: UPDATE reply karo.", step: 2 },
+    { who: "good", en: "Namaste! Good news: your billing app now works even when the internet is down. Keep billing as usual; everything syncs automatically once you're back online. The update is free. Reply UPDATE and we'll send it right away.", hi: "Namaste! Achhi khabar: aapki billing app ab internet band hone par bhi chalti hai. Billing pehle jaisi karte raho; internet aate hi sab apne aap sync ho jaayega. Update free hai. UPDATE reply karo, hum turant bhej denge.", step: 3 }
+  ], [
+    ["A vague request.", "Ek dhundhli request."],
+    ["Haron fills every gap with generic marketing words. Not wrong, just useless. (Illustrative example.)", "Haron har khaali jagah aam marketing shabdon se bharta hai. Galat nahi, bas bekaar. (Example.)"],
+    ["The same request with a real brief: channel, audience, length, the facts, and the call to action.", "Wahi request asli briefing ke saath: channel, audience, lambaai, facts, aur call to action."],
+    ["Now the output is specific, the right length, and ready to send.", "Ab output specific hai, sahi lambaai ka, aur bhejne ke liye taiyaar."]
+  ]);
+
+  B.stack("scB", [
+    { en: "1 · Role & context", hi: "1 · Role aur context", sen: "who Haron is here, who the users are, why the task exists", shi: "yahan Haron kaun hai, users kaun hain, kaam kyun hai", cls: "box-sig" },
+    { en: "2 · The task", hi: "2 · Kaam", sen: "one clear sentence: what to produce", shi: "ek saaf sentence: kya banana hai", cls: "box-sig" },
+    { en: "3 · Inputs, in tags", hi: "3 · Inputs, tags mein", sen: "<document>, <email>, <order>: data kept apart from instructions", shi: "<document>, <email>, <order>: data instructions se alag", cls: "box-amb" },
+    { en: "4 · Rules, with reasons", hi: "4 · Niyam, wajah ke saath", sen: "“under 80 words, because customers read on phones”", shi: "“80 words se kam, kyunki customers phone par padhte hain”", cls: "box-amb" },
+    { en: "5 · Examples", hi: "5 · Examples", sen: "one to three samples of a great answer (Chapter 7)", shi: "behtareen jawab ke ek se teen namune (Chapter 7)", cls: "box-plm" },
+    { en: "6 · Output format", hi: "6 · Output format", sen: "bullets? JSON? which language? how long?", shi: "bullets? JSON? kaunsi bhasha? kitna lamba?", cls: "box-plm" }
+  ], [
+    ["Start with <strong>role and context</strong>: the background a colleague would need.", "<strong>Role aur context</strong> se shuru: woh background jo saathi ko chahiye."],
+    ["State the <strong>task</strong> in one clear sentence.", "<strong>Kaam</strong> ek saaf sentence mein batao."],
+    ["Give the <strong>inputs</strong>, each wrapped in its own tag.", "<strong>Inputs</strong> do, har ek apne tag mein."],
+    ["Add <strong>rules</strong>, each with its reason.", "<strong>Niyam</strong> jodo, har ek ki wajah ke saath."],
+    ["Show <strong>examples</strong> when the style or format is hard to describe.", "Jab style ya format samjhaana mushkil ho, <strong>examples</strong> dikhao."],
+    ["Finish with the exact <strong>output format</strong>.", "Sateek <strong>output format</strong> se khatam karo."]
+  ]);
+
+  B.chat("scC", [
+    { who: "user", en: "Explain inflation. Don't use jargon. Don't be long.", hi: "Mehngaai samjhao. Jargon mat use karo. Lamba mat karo.", step: 0 },
+    { who: "bad", en: "Inflation is a sustained increase in the general price level, reducing purchasing power; central banks manage it via monetary policy…", hi: "Inflation general price level mein lagaataar badhotri hai, jo purchasing power ghataati hai; central banks monetary policy se ise manage karte hain…", step: 1 },
+    { who: "user", en: "Explain inflation to a 12-year-old in India, in three short sentences, using an example from a kirana shop. They'll read it in a school magazine.", hi: "India ke 12 saal ke bachche ko teen chhote sentences mein mehngaai samjhao, kirana dukaan ka example dekar. Woh ise school magazine mein padhenge.", step: 2 },
+    { who: "good", en: "Last year ₹100 bought you 10 packets of biscuits at the kirana shop. This year the same ₹100 buys only 9. When prices slowly go up like this and your money buys less, that's inflation.", hi: "Pichhle saal kirana dukaan par ₹100 mein biscuit ke 10 packet aate the. Is saal wahi ₹100 mein sirf 9 aate hain. Jab daam aise dheere-dheere badhte hain aur paise mein kam aata hai, use mehngaai kehte hain.", step: 3 }
+  ], [
+    ["Only “don'ts”: what level? how short? for whom?", "Sirf “mat karo”: kis level par? kitna chhota? kiske liye?"],
+    ["Haron still drifts to textbook words, because “no jargon” is relative. (Illustrative.)", "Haron phir bhi textbook shabdon par chala jaata hai, kyunki “jargon nahi” sapeksh hai. (Example.)"],
+    ["Describe the target instead: audience, length, an example to use, and where it will appear.", "Iske badle nishaana batao: audience, lambaai, use karne ka example, aur kahan chhapega."],
+    ["Simple words appear on their own, because Haron now knows who it's talking to.", "Seedhe shabd apne aap aate hain, kyunki ab Haron jaanta hai woh kisse baat kar raha hai."]
+  ]);
+})();
+</script>
+
+</body>
+</html>

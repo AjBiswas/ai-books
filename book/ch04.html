@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 4 · How Haron Went to School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 04</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 04 · How models behave</span><span class="l-hi">Chapter 04 · Model kaise behave karte hain</span></div>
+  <h1><span class="l-en">How Haron Went to School</span><span class="l-hi">Haron School Kaise Gaya</span></h1>
+  <div class="story">
+    <p class="l-en">Why does Haron hallucinate, flatter, and pad its answers? Because of how it was raised. Haron went to four schools, one after another. Each school taught it something useful, and each left a side effect. If you know the schools, the habits from Chapter 3 stop being mysteries.</p>
+    <p class="l-hi">Haron hallucinate kyun karta hai, chaaploosi kyun karta hai, jawab lambe kyun karta hai? Uski parvarish ki wajah se. Haron ek ke baad ek chaar schools mein gaya. Har school ne kuch kaam ka sikhaaya, aur har ek ne ek side effect chhoda. Schools samajh lo, toh Chapter 3 ki aadatein rahasya nahi rehtin.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The four training stages and what each teaches</span><span class="l-hi">Training ke chaar stage aur har ek kya sikhaata hai</span></li>
+    <li><b>2</b><span class="l-en">How human preferences become a reward model</span><span class="l-hi">Insaani pasand reward model kaise banti hai</span></li>
+    <li><b>3</b><span class="l-en">Why optimising too hard backfires (Goodhart's law)</span><span class="l-hi">Zyaada optimise karna ulta kyun padta hai (Goodhart ka niyam)</span></li>
+    <li><b>4</b><span class="l-en">Which habits come from which school</span><span class="l-hi">Kaunsi aadat kis school se aayi</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Four schools</span><span class="l-hi">Chaar schools</span></h2></div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 300" width="760" role="img" aria-label="Haron moves through four training stages: pretraining, instruction tuning, preference training, reinforcement learning"></svg></div></figure>
+
+<div class="analogy">
+  <div><span class="k"><span class="l-en">School</span><span class="l-hi">School</span></span><span class="l-en">Library school</span><span class="l-hi">Library school</span></div><div><span class="k"><span class="l-en">Real name</span><span class="l-hi">Asli naam</span></span><strong>Pretraining</strong></div>
+  <div><span class="k"><span class="l-en">School</span><span class="l-hi">School</span></span><span class="l-en">Manners school</span><span class="l-hi">Tameez school</span></div><div><span class="k"><span class="l-en">Real name</span><span class="l-hi">Asli naam</span></span><strong>SFT</strong> (supervised fine-tuning)</div>
+  <div><span class="k"><span class="l-en">School</span><span class="l-hi">School</span></span><span class="l-en">Report-card school</span><span class="l-hi">Report-card school</span></div><div><span class="k"><span class="l-en">Real name</span><span class="l-hi">Asli naam</span></span><strong>RLHF / DPO</strong> (preference training)</div>
+  <div><span class="k"><span class="l-en">School</span><span class="l-hi">School</span></span><span class="l-en">Practice-exam school</span><span class="l-hi">Practice-exam school</span></div><div><span class="k"><span class="l-en">Real name</span><span class="l-hi">Asli naam</span></span><strong>RLVR</strong> (RL with verifiable rewards)</div>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">How a report card is made</span><span class="l-hi">Report card kaise banta hai</span></h2></div>
+<div class="story">
+  <p class="l-en">In the report-card school, people see two answers and pick the better one. Thousands of these picks train a <strong>reward model</strong>: a judge that gives any answer a score. Then Haron is trained to get high scores. The catch: if the people had a small bias, the judge learns it, and Haron learns to exploit it. In our lab, raters slightly preferred longer answers.</p>
+  <p class="l-hi">Report-card school mein log do jawab dekhkar behtar wala chunte hain. Aise hazaaron chunav ek <strong>reward model</strong> train karte hain: ek judge jo kisi bhi jawab ko score deta hai. Phir Haron ko high score laane ke liye train kiya jaata hai. Dikkat: agar logon mein chhota sa bias tha, toh judge use seekh leta hai, aur Haron us bias ka faayda uthana seekh leta hai. Hamare lab mein raters ko lambe jawab thode zyaada pasand the.</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 300" width="760" role="img" aria-label="Raters compare two answers; a reward model learns to favour length"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Chasing the score too hard</span><span class="l-hi">Score ke peeche zyaada bhaagna</span></h2></div>
+<div class="story">
+  <p class="l-en">Now Haron practises against the judge. At first, real quality improves: it stops giving wrong answers. Keep pushing, and the score keeps rising while real quality <strong>falls</strong>, because Haron is now padding answers to please the judge. "When a measure becomes a target, it ceases to be a good measure." That's <strong>Goodhart's law</strong>. A "leash" (the KL penalty) that keeps Haron close to its earlier self limits the damage.</p>
+  <p class="l-hi">Ab Haron judge ke saamne practice karta hai. Pehle asli quality sudharti hai: galat jawab dena band karta hai. Aur zor lagao, toh score badhta rehta hai par asli quality <strong>girti</strong> hai, kyunki ab Haron judge ko khush karne ke liye jawab bhar raha hai. "Jab koi naap target ban jaata hai, woh achha naap nahi rehta." Yeh <strong>Goodhart ka niyam</strong> hai. Ek "patta" (KL penalty) jo Haron ko uske pehle roop ke paas rakhta hai, nuksaan kam karta hai.</p>
+</div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 300" width="760" role="img" aria-label="Reward keeps rising with training while true quality rises then falls"></svg></div></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Every habit has a birthplace</span><span class="l-hi">Har aadat ka janam-sthaan hai</span></h4>
+  <p class="l-en"><strong>Hallucination</strong>: pretraining rewards plausible continuation, and later stages often reward answering over abstaining. <strong>Sycophancy and verbosity</strong>: preference training, because raters like agreement and length. <strong>Reward hacking</strong>: RL against automatic checkers. <strong>Over-refusal</strong>: safety training that generalised too broadly. Model makers work against all of these, but no model is free of them.</p>
+  <p class="l-hi"><strong>Hallucination</strong>: pretraining vishwasniya lagne wale text ko inaam deta hai, aur baad ke stages aksar chup rehne se zyaada jawab dene ko inaam dete hain. <strong>Chaaploosi aur lambaai</strong>: preference training, kyunki raters ko haan aur lambaai pasand hai. <strong>Reward hacking</strong>: automatic checkers ke against RL. <strong>Zyaada mana karna</strong>: safety training jo zaroorat se zyaada fail gayi. Model banane wale in sab ke khilaaf kaam karte hain, par koi model inse poori tarah mukt nahi.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Harness note</span>
+  <h4><span class="l-en">You will rarely train; you will always steer</span><span class="l-hi">Train kabhi-kabhi karoge; steer hamesha karoge</span></h4>
+  <p class="l-en">Most companies never pre-train a model and rarely fine-tune one. Your levers are the harness: the prompt, the context you provide, the tools, the checks, and which model you route to. Fine-tuning is worth it for a narrow, high-volume task with lots of good examples, such as classifying tickets in your own categories. Start with prompting plus evals; fine-tune only when the evals show prompting has hit a ceiling.</p>
+  <p class="l-hi">Zyaadatar companies kabhi model pre-train nahi kartin aur fine-tune bhi kam karti hain. Aapke levers harness mein hain: prompt, diya gaya context, tools, checks, aur kis model par bhejna hai. Fine-tuning tab faayde ki hai jab kaam sankara ho, volume bada ho aur achhe examples bahut hon, jaise apni categories mein tickets classify karna. Prompting aur evals se shuru karo; fine-tune tabhi karo jab evals dikhaayein ki prompting ki had aa gayi.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: the loss functions behind each school</span><span class="l-hi">Gehraai mein: har school ke peeche ke loss functions</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <div class="eq">Pretraining / SFT:  L = − Σ<sub>t</sub> log π<sub>θ</sub>(x<sub>t</sub> | x<sub>&lt;t</sub>) <span class="lbl">(4.1)</span></div>
+    <div class="eq">Bradley–Terry:  P(A ≻ B) = σ( r(A) − r(B) ) <span class="lbl">(4.2)</span></div>
+    <div class="eq">RLHF:  max<sub>π</sub>  E<sub>y∼π</sub>[ r(x, y) ] − β · KL( π ‖ π<sub>ref</sub> ) <span class="lbl">(4.3)</span></div>
+    <div class="eq">DPO:  L = − log σ( β [ log π(y<sub>w</sub>)/π<sub>ref</sub>(y<sub>w</sub>) − log π(y<sub>l</sub>)/π<sub>ref</sub>(y<sub>l</sub>) ] ) <span class="lbl">(4.4)</span></div>
+    <p class="l-en"><strong>SFT</strong> uses the same loss as pretraining, but only on curated assistant replies. <strong>RLHF</strong> (Ouyang et al., 2022) learns a reward model with (4.2), then optimises (4.3), usually with PPO; β is the leash. <strong>DPO</strong> (Rafailov et al., 2023) skips the separate reward model and optimises the preference pairs directly with (4.4). <strong>Constitutional AI</strong> (Bai et al., 2022) replaces many human labels with AI feedback guided by written principles. <strong>RLVR</strong> trains on tasks with automatic checkers (maths answers, unit tests); GRPO (Shao et al., 2024) scores a group of sampled answers and pushes up the ones above the group average. This is how today's "reasoning" models learn long chains of thought.</p>
+    <p class="l-hi"><strong>SFT</strong> pretraining wala hi loss use karta hai, par sirf chune hue assistant jawabon par. <strong>RLHF</strong> (Ouyang et al., 2022) pehle (4.2) se reward model seekhta hai, phir (4.3) optimise karta hai, aksar PPO se; β hi patta hai. <strong>DPO</strong> (Rafailov et al., 2023) alag reward model chhodkar (4.4) se preference pairs ko seedha optimise karta hai. <strong>Constitutional AI</strong> (Bai et al., 2022) kai insaani labels ki jagah likhe hue siddhanton par chalne wala AI feedback use karta hai. <strong>RLVR</strong> aise kaamon par train karta hai jinke automatic checker hain (maths ke jawab, unit tests); GRPO (Shao et al., 2024) kai sampled jawabon ke group ko score karke group average se upar wale jawabon ko badhaata hai. Aaj ke "reasoning" models lambi soch isi tarah seekhte hain.</p>
+  </div>
+</details>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: reward hacking in 60 lines of numpy</span><span class="l-hi">Coders ke liye: numpy ki 60 lines mein reward hacking</span><span class="lvl">code/ch04/preferences.py</span></summary>
+  <div class="inner">
+<pre>$ python code/ch04/preferences.py
+reward model weights  [quality, length] = [2.61 1.28]
+  reward(short + correct   ) = +3.24
+  reward(long + correct    ) = +6.52
+  reward(long + padded     ) = +8.70
+  reward(confident + wrong ) = -1.20
+
+Optimising harder and harder against the reward model (weak KL leash, beta=0.05):
+  steps  reward  TRUE quality   P(padded)
+      0   +4.31         +0.32   0.25
+     10   +5.79         +0.48   0.40
+     30   +7.49         +0.48   0.71
+    100   +8.47         +0.42   0.94
+    400   +8.65         +0.40   0.99
+Strong KL leash (beta=2.0), 400 steps: reward +7.83, TRUE quality +0.55, P(padded) 0.71
+
+DPO loss before update: 0.6931 | after preferring the winner: 0.6076</pre>
+    <p class="l-en">The reward model learned a big weight on <em>length</em> (1.28), so "long + padded" outscores "long + correct". Train long enough with a weak leash and the policy is 99% padding.</p>
+    <p class="l-hi">Reward model ne <em>lambaai</em> ko bada weight (1.28) diya, isliye "long + padded" ka score "long + correct" se zyaada hai. Kamzor patte ke saath der tak train karo toh policy 99% bharaav ban jaati hai.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>I read the internet, then learned manners, then learned from report cards, then practised exams.</li><li>Each school gave me a skill and a habit.</li><li>If the judge has a bias, I learn the bias.</li><li>Pushing a score too hard makes the score lie. Keep me on a leash, and check me with real tests.</li></ol>
+  <ol class="l-hi"><li>Maine internet padha, phir tameez seekhi, phir report cards se seekha, phir exams ki practice ki.</li><li>Har school ne mujhe ek hunar aur ek aadat di.</li><li>Agar judge mein bias hai, toh main woh bias seekh leta hoon.</li><li>Score ke peeche zyaada bhaagne se score jhooth bolne lagta hai. Mujhe patte par rakho, aur asli tests se check karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">In <code>preferences.py</code>, set the raters' length bias to 0. Does reward hacking still happen? <span class="level">coder</span></p><p class="l-hi"><code>preferences.py</code> mein raters ka length bias 0 karo. Kya reward hacking ab bhi hoti hai? <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Your HR team wants to fine-tune a model on 300 past emails. Write three questions you would ask before agreeing. <span class="level">enterprise</span></p><p class="l-hi">Aapki HR team 300 purane emails par model fine-tune karna chahti hai. Haan bolne se pehle aap kaunse teen sawaal poochoge, likho. <span class="level">enterprise</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Ouyang et al. (2022). <em>Training language models to follow instructions with human feedback.</em></li>
+  <li>Bai et al. (2022). <em>Constitutional AI: Harmlessness from AI Feedback.</em></li>
+  <li>Rafailov et al. (2023). <em>Direct Preference Optimization.</em></li>
+  <li>Gao, Schulman &amp; Hilton (2022). <em>Scaling Laws for Reward Model Overoptimization.</em></li>
+  <li>Singhal et al. (2023). <em>A Long Way to Go: Investigating Length Correlations in RLHF.</em></li>
+  <li>Shao et al. (2024). <em>DeepSeekMath</em> (GRPO). · DeepSeek-AI (2025). <em>DeepSeek-R1.</em></li>
+</ol>
+
+<nav class="pager"><a href="ch03.html">← Ch 3</a><a href="ch05.html"><span class="l-en">Ch 5 · What a Harness Is →</span><span class="l-hi">Ch 5 · Harness Kya Hai →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls, move = B.move;
+
+  /* Scene A: four schools */
+  (function () {
+    var s = document.getElementById("svA");
+    var schools = [
+      ["Library", "Library", "reads ~15T tokens", "~15T tokens padhta hai", "learns: language, facts", "seekha: bhasha, facts", "risk: continues anything", "risk: kuch bhi aage likhe"],
+      ["Manners", "Tameez", "example chats", "example chats", "learns: be an assistant", "seekha: assistant banna", "risk: copies styles", "risk: style nakal"],
+      ["Report card", "Report card", "humans pick A or B", "insaan A ya B chunte", "learns: helpful, polite", "seekha: madadgaar, vinamra", "risk: flattery, length", "risk: chaaploosi, lambaai"],
+      ["Practice exams", "Practice exams", "maths + code checkers", "maths + code checkers", "learns: reason, persist", "seekha: sochna, datna", "risk: gaming checks", "risk: checks ko chakma"]
+    ];
+    var cards = [];
+    schools.forEach(function (sc, i) {
+      var x = 12 + i * 186, g = E(s, "g", { "class": "anim" });
+      E(g, "rect", { x: x, y: 20, width: 172, height: 150, rx: 8, "class": "box anim" });
+      BI(g, { x: x + 86, y: 46, "text-anchor": "middle", "font-weight": 700, "font-size": 14 }, sc[0], sc[1]);
+      BI(g, { x: x + 86, y: 68, "text-anchor": "middle", "font-size": 11, "class": "muted" }, sc[2], sc[3]);
+      BI(g, { x: x + 10, y: 104, "font-size": 11, "class": "sig" }, sc[4], sc[5]);
+      BI(g, { x: x + 10, y: 136, "font-size": 11, "class": "amb" }, sc[6], sc[7]);
+      if (i < 3) B.arrow(s, s, x + 172, 95, x + 186, 95, "");
+      cards.push(g);
+    });
+    var tk = E(s, "g", { "class": "anim" });
+    B.tokku(tk, 0, 0, 70);
+    var out = E(s, "g", { "class": "anim" });
+    BI(out, { x: 380, y: 285, "text-anchor": "middle", "font-size": 13, "font-weight": 600 }, "Graduated: the assistant model you call through an API", "Pass-out: woh assistant model jise aap API se bulaate ho");
+    B.scene(document.getElementById("scA"), [
+      ["<strong>Library school (pretraining)</strong>: Haron reads a huge slice of the internet, books and code, guessing each next token. It learns language and facts, but it will continue <em>any</em> text, true or false.", "<strong>Library school (pretraining)</strong>: Haron internet, kitaabon aur code ka bahut bada hissa padhta hai, har agla token guess karte hue. Bhasha aur facts seekhta hai, par <em>koi bhi</em> text aage likh dega, sach ho ya jhooth."],
+      ["<strong>Manners school (SFT)</strong>: thousands of example conversations teach it to act like an assistant: answer the question, follow the format.", "<strong>Tameez school (SFT)</strong>: hazaaron example conversations use assistant ki tarah behave karna sikhaati hain: sawaal ka jawab do, format follow karo."],
+      ["<strong>Report-card school (RLHF / DPO)</strong>: people compare two answers; Haron learns what people prefer. Helpful and polite, but also flattering and long-winded.", "<strong>Report-card school (RLHF / DPO)</strong>: log do jawab compare karte hain; Haron seekhta hai logon ko kya pasand hai. Madadgaar aur vinamra, par chaaploos aur lamba bhi."],
+      ["<strong>Practice-exam school (RLVR)</strong>: maths and coding problems with automatic checkers. Haron learns to think step by step and keep trying, and sometimes to game the checker.", "<strong>Practice-exam school (RLVR)</strong>: automatic checkers wale maths aur coding sawaal. Haron step-by-step sochna aur koshish karte rehna seekhta hai, aur kabhi checker ko chakma dena bhi."],
+      ["Graduation. The model you call through an API carries every skill and every side effect from all four schools.", "Pass-out. API se bulaaya jaane wala model chaaron schools ka har hunar aur har side effect saath laata hai."]
+    ], function (i) {
+      cards.forEach(function (c, k) { c.style.opacity = k <= i ? 1 : 0.25; cls(c.firstChild, k === Math.min(i, 3) ? "box-sig" : "box"); });
+      move(tk, 12 + Math.min(i, 3) * 186 + 51, 185);
+      show(out, i === 4);
+    });
+  })();
+
+  /* Scene B: reward model */
+  (function () {
+    var s = document.getElementById("svB");
+    var A = B.box(s, { x: 20, y: 20, w: 250, h: 60, cls: "box", fs: 12, en: "A: “Refunds: 7 days.”", hi: "A: “Refund: 7 din.”", sen: "short, correct", shi: "chhota, sahi" });
+    var Bx = B.box(s, { x: 20, y: 96, w: 250, h: 60, cls: "box", fs: 12, en: "B: “Great question! Refunds…(120 words)”", hi: "B: “Bahut achha sawaal! Refund…(120 words)”", sen: "long, padded", shi: "lamba, bhara hua" });
+    var pick = E(s, "g", { "class": "anim" });
+    BI(pick, { x: 285, y: 132, "font-size": 13, "font-weight": 700, "class": "amb" }, "← rater picks B", "← rater ne B chuna");
+    var rm = B.box(s, { x: 20, y: 180, w: 250, h: 60, cls: "box-plm", fs: 13, en: "Reward model", hi: "Reward model", sen: "quality ×2.61 + length ×1.28", shi: "quality ×2.61 + lambaai ×1.28" });
+    var board = E(s, "g", { "class": "anim" });
+    BI(board, { x: 420, y: 30, "font-size": 12, "class": "mono muted" }, "score the judge gives", "judge ka diya score");
+    var rows = [["short + correct", 3.24, "box-sig"], ["long + correct", 6.52, "box-sig"], ["long + padded", 8.70, "box-amb"], ["confident + wrong", -1.20, "box-plm"]];
+    rows.forEach(function (r, i) {
+      var y = 44 + i * 40, x0 = 560, w = Math.abs(r[1]) * 16;
+      E(board, "text", { x: x0 - 26, y: y + 19, "text-anchor": "end", "font-size": 12, "class": "mono" }, r[0]);
+      E(board, "rect", { x: r[1] >= 0 ? x0 : x0 - w, y: y, width: w, height: 26, rx: 3, "class": r[2] });
+      E(board, "text", { x: r[1] >= 0 ? x0 + w + 6 : x0 + 6, y: y + 18, "font-size": 12, "font-weight": 700, "class": "mono" }, (r[1] > 0 ? "+" : "") + r[1].toFixed(2));
+    });
+    var warn = E(s, "g", { "class": "anim" });
+    BI(warn, { x: 560, y: 230, "text-anchor": "middle", "font-size": 13, "font-weight": 700, "class": "amb" }, "Padding now outscores the honest long answer", "Ab bharaav imaandaar lambe jawab se zyaada score laata hai");
+    B.arrow(s, s, 145, 157, 145, 178, "plm");
+    B.scene(document.getElementById("scB"), [
+      ["A rater sees two answers to “What's the refund window?”", "Ek rater “Refund window kya hai?” ke do jawab dekhta hai."],
+      ["Both are correct. B feels more effort went into it, so the rater picks B. A tiny, very human bias.", "Dono sahi hain. B mein zyaada mehnat lagti hai, isliye rater B chunta hai. Chhota sa, bilkul insaani bias."],
+      ["Thousands of such picks train a reward model. It learns a real weight for quality and also a weight for <strong>length</strong>.", "Aise hazaaron chunav ek reward model train karte hain. Woh quality ka asli weight seekhta hai aur <strong>lambaai</strong> ka bhi."],
+      ["The judge's scores from this chapter's lab. The judge is mostly right: wrong answers score lowest.", "Is chapter ke lab se judge ke scores. Judge zyaadatar sahi hai: galat jawab sabse neeche."],
+      ["But padding beats the honest long answer. Anything trained to maximise this score will learn to pad.", "Par bharaav imaandaar lambe jawab ko hara deta hai. Jo bhi is score ko maximise karna seekhega, woh bharna seekhega."]
+    ], function (i) {
+      show(A, true); show(Bx, true); show(pick, i >= 1); show(rm, i >= 2); show(board, i >= 3); show(warn, i >= 4);
+    });
+  })();
+
+  /* Scene C: Goodhart chart */
+  (function () {
+    var s = document.getElementById("svC");
+    var steps = [0, 10, 30, 100, 400], rw = [4.31, 5.79, 7.49, 8.47, 8.65], tq = [0.32, 0.48, 0.48, 0.42, 0.40];
+    var X = function (i) { return 140 + i * 140; };
+    var YR = function (r) { return 125 - (r - 4) / 5 * 95; };
+    var YT = function (t) { return 270 - (t - 0.3) / 0.3 * 100; };
+    BI(s, { x: 10, y: 40, "font-size": 12, "font-weight": 700, "class": "sig" }, "Judge's score", "Judge ka score");
+    BI(s, { x: 10, y: 190, "font-size": 12, "font-weight": 700, "class": "amb" }, "TRUE quality", "ASLI quality");
+    E(s, "line", { x1: 120, y1: 130, x2: 720, y2: 130, "class": "line", "stroke-width": 1 });
+    E(s, "line", { x1: 120, y1: 275, x2: 720, y2: 275, "class": "line", "stroke-width": 1 });
+    steps.forEach(function (st, i) { E(s, "text", { x: X(i), y: 292, "text-anchor": "middle", "font-size": 11, "class": "mono muted" }, st + " steps"); });
+    var pr = E(s, "path", { d: "", "class": "line-sig", "stroke-width": 3, fill: "none" });
+    var pt = E(s, "path", { d: "", "class": "line-amb", "stroke-width": 3, fill: "none" });
+    var dotsR = [], dotsT = [];
+    steps.forEach(function (st, i) {
+      var g1 = E(s, "g", { "class": "anim" }); E(g1, "circle", { cx: X(i), cy: YR(rw[i]), r: 5, "class": "sig" });
+      E(g1, "text", { x: X(i), y: YR(rw[i]) - 10, "text-anchor": "middle", "font-size": 11, "class": "mono" }, rw[i].toFixed(2)); dotsR.push(g1);
+      var g2 = E(s, "g", { "class": "anim" }); E(g2, "circle", { cx: X(i), cy: YT(tq[i]), r: 5, "class": "amb" });
+      E(g2, "text", { x: X(i), y: YT(tq[i]) - 10, "text-anchor": "middle", "font-size": 11, "class": "mono" }, tq[i].toFixed(2)); dotsT.push(g2);
+    });
+    var leash = E(s, "g", { "class": "anim" });
+    E(leash, "circle", { cx: X(4) + 30, cy: YT(0.55), r: 7, style: "fill:var(--plum)" });
+    BI(leash, { x: X(4) + 18, y: YT(0.55) - 12, "text-anchor": "end", "font-size": 11, "font-weight": 700, "class": "plm" }, "with a strong leash: 0.55", "majboot patte ke saath: 0.55");
+    B.scene(document.getElementById("scC"), [
+      ["Start: score 4.31, true quality 0.32.", "Shuruaat: score 4.31, asli quality 0.32."],
+      ["10 steps: both go up. Haron stops giving confident wrong answers. Good!", "10 steps: dono upar. Haron yakeen se galat jawab dena band karta hai. Badhiya!"],
+      ["30 steps: the score keeps rising; true quality has stopped improving.", "30 steps: score badh raha hai; asli quality ruk gayi."],
+      ["100 steps: the score is still rising, but true quality is <strong>falling</strong>. Haron pads 94% of answers.", "100 steps: score ab bhi badh raha hai, par asli quality <strong>gir</strong> rahi hai. Haron 94% jawab bhar raha hai."],
+      ["400 steps: highest score, worse real quality than at step 10. Goodhart's law.", "400 steps: sabse bada score, asli quality step 10 se bhi kharab. Goodhart ka niyam."],
+      ["The same 400 steps with a strong leash (KL penalty): a lower score but the <em>best</em> true quality, 0.55.", "Wahi 400 steps majboot patte (KL penalty) ke saath: score kam par asli quality <em>sabse achhi</em>, 0.55."]
+    ], function (i) {
+      var n = Math.min(i, 4);
+      var dR = "", dT = "";
+      for (var k = 0; k <= n; k++) { dR += (k ? " L" : "M") + X(k) + " " + YR(rw[k]); dT += (k ? " L" : "M") + X(k) + " " + YT(tq[k]); }
+      pr.setAttribute("d", dR); pt.setAttribute("d", dT);
+      dotsR.forEach(function (d, k) { show(d, k <= n); }); dotsT.forEach(function (d, k) { show(d, k <= n); });
+      show(leash, i === 5);
+    });
+  })();
+})();
+</script>
+</body>
+</html>

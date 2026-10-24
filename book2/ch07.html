@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 7 · Advanced Prompting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 07</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 07 · Talking to models</span><span class="l-hi">Chapter 07 · Model se baat</span></div>
+  <h1><span class="l-en">Advanced Prompting</span><span class="l-hi">Advanced Prompting</span></h1>
+  <div class="story">
+    <p class="l-en">Clear briefs get you most of the way. For the rest, prompt engineers use a handful of techniques with fancy names. Each one is a simple idea a good teacher already uses: show examples, ask the student to work step by step, split a big job into small ones, ask for a second check, and take a vote when unsure.</p>
+    <p class="l-hi">Saaf briefing se zyaadatar kaam ho jaata hai. Baaki ke liye prompt engineers kuch techniques use karte hain jinke naam bhaari hain. Har ek ek seedha idea hai jo achha teacher pehle se use karta hai: examples dikhao, step by step kaam karwao, bade kaam ko chhote kaamon mein baanto, doosra check maango, aur shak ho toh vote lo.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Few-shot examples</span><span class="l-hi">Few-shot examples</span></li>
+    <li><b>2</b><span class="l-en">Step-by-step thinking, and when reasoning models make it unnecessary</span><span class="l-hi">Step-by-step sochna, aur kab reasoning models ise bekaar banaate hain</span></li>
+    <li><b>3</b><span class="l-en">Prompt chaining and self-checks</span><span class="l-hi">Prompt chaining aur self-checks</span></li>
+    <li><b>4</b><span class="l-en">Voting, and asking the model to write prompts</span><span class="l-hi">Voting, aur model se prompts likhwaana</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Show, don't tell (few-shot)</span><span class="l-hi">Batao nahi, dikhao (few-shot)</span></h2></div>
+<div class="story">
+  <p class="l-en">Some things are easier to show than to describe: a tone, a label set, an exact format. Put two to five examples of input → ideal output in the prompt, and the model copies the pattern. Vary the examples so it learns the pattern, not one surface detail.</p>
+  <p class="l-hi">Kuch cheezein samjhaane se zyaada dikhaana aasaan hai: tone, labels ka set, sateek format. Prompt mein input → behtareen output ke do se paanch examples rakho, aur model pattern copy karta hai. Examples alag-alag rakho taaki woh pattern seekhe, ek upari detail nahi.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Think first, then answer</span><span class="l-hi">Pehle socho, phir jawab do</span></h2></div>
+<div class="story">
+  <p class="l-en">Haron writes one token at a time, and it can't take back a token. If it blurts the answer first, the answer is a guess. If it writes out the steps first, each step becomes part of its context, and the final answer is built on them. This is <strong>chain-of-thought</strong> prompting. Today's <strong>reasoning models</strong> (Chapter 9) do this internally, so for them you mostly just ask the question clearly.</p>
+  <p class="l-hi">Haron ek baar mein ek token likhta hai, aur token wapas nahi le sakta. Agar woh jawab pehle bol de, toh jawab andaaza hai. Agar pehle steps likhe, toh har step uske context ka hissa ban jaata hai, aur aakhri jawab un par bana hota hai. Ise <strong>chain-of-thought</strong> prompting kehte hain. Aaj ke <strong>reasoning models</strong> (Chapter 9) yeh andar hi karte hain, isliye unke liye aksar bas sawaal saaf poochna kaafi hai.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">An assembly line of prompts (chaining)</span><span class="l-hi">Prompts ki assembly line (chaining)</span></h2></div>
+<div class="story">
+  <p class="l-en">One giant prompt that does everything is hard to debug. Split the job into steps, each with its own small prompt, and pass the output of one as the input to the next. Every step can be tested, cached, retried, and even given to a cheaper model.</p>
+  <p class="l-hi">Sab kuch karne wala ek vishaal prompt debug karna mushkil hai. Kaam ko steps mein baanto, har ek ka apna chhota prompt, aur ek ka output agle ka input banao. Har step test, cache, retry ho sakta hai, aur sasta model bhi use kar sakta hai.</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">When unsure, take a vote (self-consistency)</span><span class="l-hi">Shak ho toh vote lo (self-consistency)</span></h2></div>
+<div class="story">
+  <p class="l-en">Ask the same question five times with some randomness, and pick the most common answer. Mistakes tend to scatter; correct reasoning tends to agree. It costs five times as much, so use it for important, checkable answers like maths, classification and extraction.</p>
+  <p class="l-hi">Same sawaal thodi randomness ke saath paanch baar poochho, aur sabse aam jawab chuno. Galtiyaan bikhar jaati hain; sahi reasoning aksar ek jaisi hoti hai. Paanch guna kharch hai, isliye zaroori, check hone laayak jawabon ke liye use karo jaise maths, classification aur extraction.</p>
+</div>
+<figure class="scene" id="scD"></figure>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Let the model write the first draft of your prompt</span><span class="l-hi">Prompt ka pehla draft model se likhwao</span></h4>
+  <p class="l-en"><strong>Meta-prompting</strong>: describe your task, users and failure cases to a strong model and ask it to write a system prompt, including examples. Then test that prompt on your eval set and edit by hand. Provider consoles have prompt generators and improvers built in. It's a draft, not a finished product.</p>
+  <p class="l-hi"><strong>Meta-prompting</strong>: majboot model ko apna kaam, users aur failure cases batao aur use system prompt likhne ko kaho, examples samet. Phir us prompt ko apne eval set par test karo aur haath se edit karo. Provider consoles mein prompt generators aur improvers bane hote hain. Yeh draft hai, taiyaar product nahi.</p>
+</div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Examples are copied very faithfully</span><span class="l-hi">Examples bahut wafaadaari se copy hote hain</span></h4>
+  <p class="l-en">If all your examples are about laptops, Haron may assume every ticket is about laptops. If all are short, every answer becomes short. Models copy length, tone, vocabulary and even mistakes in examples. Vary them on purpose, and check that they don't contain anything you don't want repeated.</p>
+  <p class="l-hi">Agar aapke saare examples laptops ke baare mein hain, Haron maan sakta hai ki har ticket laptop ka hai. Agar sab chhote hain, har jawab chhota ho jaata hai. Models examples ki lambaai, tone, shabd aur galtiyaan tak copy karte hain. Jaan-boojh kar unhe alag rakho, aur check karo ki unme kuch aisa na ho jo aap dohraana nahi chahte.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Old tricks that stopped mattering</span><span class="l-hi">Purane tricks jo ab kaam ke nahi</span></h4>
+  <p class="l-en">"I'll tip you $200", "my job depends on this", "take a deep breath": these had small effects on old models and are mostly noise now. Assistant-message <strong>prefill</strong> (starting the model's reply for it) is no longer accepted by current Claude models; use structured outputs instead (Chapter 8). What lasts: clarity, context, examples, decomposition and evaluation.</p>
+  <p class="l-hi">"Main $200 tip doonga", "meri naukri iss par tiki hai", "lambi saans lo": purane models par inka chhota asar tha aur ab zyaadatar shor hai. Assistant-message <strong>prefill</strong> (model ka jawab uske liye shuru karna) ab current Claude models accept nahi karte; iske badle structured outputs use karo (Chapter 8). Jo tikta hai: saaf baat, context, examples, kaam ko todna aur evaluation.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Show me 2–5 varied examples when the pattern is hard to describe.</li><li>Let me write my steps before my answer, unless I'm a reasoning model that does it inside.</li><li>Chain small prompts instead of one giant one.</li><li>Vote across several answers when it matters; let me draft your prompts, then test them.</li></ol>
+  <ol class="l-hi"><li>Jab pattern samjhaana mushkil ho, mujhe 2–5 alag examples dikhao.</li><li>Jawab se pehle mujhe steps likhne do, jab tak main andar sochne wala reasoning model na hoon.</li><li>Ek vishaal prompt ki jagah chhote prompts ki chain banao.</li><li>Zaroori ho toh kai jawabon par vote lo; apne prompts ka draft mujhse likhwao, phir test karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Classify 20 customer messages into four categories with zero examples, then with three examples. Count how many labels changed. <span class="level">core</span></p><p class="l-hi">20 customer messages ko chaar categories mein bina examples ke classify karo, phir teen examples ke saath. Gino kitne labels badle. <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Turn one big "read this contract and write a summary email" prompt into a three-step chain. What can you now test that you couldn't before? <span class="level">core</span></p><p class="l-hi">Ek bade "yeh contract padho aur summary email likho" prompt ko teen-step chain mein badlo. Ab aap kya test kar sakte ho jo pehle nahi kar sakte the? <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Brown et al. (2020). <em>Language Models are Few-Shot Learners.</em></li>
+  <li>Wei et al. (2022). <em>Chain-of-Thought Prompting Elicits Reasoning in Large Language Models.</em></li>
+  <li>Wang et al. (2022). <em>Self-Consistency Improves Chain of Thought Reasoning.</em></li>
+  <li>Anthropic. <em>Chain complex prompts</em> and <em>Prompt generator</em> documentation.</li>
+</ol>
+<nav class="pager"><a href="ch06.html">← Ch 6</a><a href="ch08.html"><span class="l-en">Ch 8 · Structured Outputs →</span><span class="l-hi">Ch 8 · Structured Outputs →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.chat("scA", [
+    { who: "user", en: "Classify: “paisa kat gaya par order nahi aaya”", hi: "Classify karo: “paisa kat gaya par order nahi aaya”", step: 0 },
+    { who: "bad", en: "This appears to be a customer complaint regarding a payment and delivery issue, possibly requiring escalation.", hi: "Yeh payment aur delivery issue ke baare mein customer ki shikaayat lagti hai, shayad escalation chahiye.", step: 1 },
+    { who: "sys", en: "Examples →  “OTP nahi aa raha” → LOGIN  ·  “box toota hua tha” → DAMAGED  ·  “when will it ship?” → DELIVERY. Reply with the label only.", hi: "Examples →  “OTP nahi aa raha” → LOGIN  ·  “box toota hua tha” → DAMAGED  ·  “when will it ship?” → DELIVERY. Sirf label lautao.", step: 2 },
+    { who: "good", en: "DELIVERY", hi: "DELIVERY", step: 3 }
+  ], [
+    ["A Hinglish ticket, no examples.", "Ek Hinglish ticket, bina examples."],
+    ["Haron answers helpfully, but not in the form your code needs. (Illustrative.)", "Haron madadgaar jawab deta hai, par us roop mein nahi jo aapke code ko chahiye. (Example.)"],
+    ["Add three varied examples: different languages, different labels, one exact output format.", "Teen alag examples jodo: alag bhashayein, alag labels, ek sateek output format."],
+    ["Now the output is one label from your set, in the format you showed.", "Ab output aapke set ka ek label hai, usi format mein jo aapne dikhaaya."]
+  ]);
+
+  B.chat("scB", [
+    { who: "user", en: "A train leaves Pune at 07:10 and takes 3 h 55 min. Is it in Mumbai before 11:00? Answer yes or no.", hi: "Train Pune se 07:10 par chalti hai aur 3 ghante 55 minute leti hai. Kya 11:00 se pehle Mumbai pahunchegi? Haan ya na.", step: 0 },
+    { who: "bad", en: "Yes.", hi: "Haan.", step: 1 },
+    { who: "user", en: "Same question. First work it out step by step inside <thinking> tags, then give the final answer inside <answer> tags.", hi: "Wahi sawaal. Pehle <thinking> tags mein step by step nikaalo, phir <answer> tags mein aakhri jawab.", step: 2 },
+    { who: "good", en: "<thinking> 07:10 + 3 h = 10:10. 10:10 + 55 min = 11:05. 11:05 is after 11:00. </thinking> <answer>No</answer>", hi: "<thinking> 07:10 + 3 h = 10:10. 10:10 + 55 min = 11:05. 11:05, 11:00 ke baad hai. </thinking> <answer>Na</answer>", step: 3 }
+  ], [
+    ["A small arithmetic question, with a forced one-word answer.", "Chhota hisaab ka sawaal, zabardasti ek-word jawab ke saath."],
+    ["Without room to think, a model can blurt a plausible guess. (Illustrative; strong models often get this right anyway.)", "Sochne ki jagah na ho toh model vishwasniya andaaza bol sakta hai. (Example; majboot models aksar phir bhi sahi karte hain.)"],
+    ["Give it space: thinking in one tag, the answer in another, so your code can read just the answer.", "Use jagah do: sochna ek tag mein, jawab doosre mein, taaki aapka code sirf jawab padhe."],
+    ["The written steps catch the mistake: 11:05 is after 11:00.", "Likhe hue steps galti pakad lete hain: 11:05, 11:00 ke baad hai."]
+  ]);
+
+  B.flow("scC", [
+    { en: "1 · Extract", hi: "1 · Nikaalo", sen: "pull parties, dates, amounts from the contract → JSON", shi: "contract se parties, dates, amounts → JSON" },
+    { en: "2 · Check", hi: "2 · Check", sen: "code validates the JSON; missing fields → retry step 1", shi: "code JSON validate kare; kami → step 1 retry" },
+    { en: "3 · Analyse", hi: "3 · Vishleshan", sen: "flag risky clauses against our policy", shi: "policy ke against risky clauses flag karo" },
+    { en: "4 · Draft", hi: "4 · Draft", sen: "write the summary email from steps 1 and 3", shi: "step 1 aur 3 se summary email likho" },
+    { en: "5 · Review", hi: "5 · Review", sen: "a second prompt checks the email against the JSON", shi: "doosra prompt email ko JSON se check kare" }
+  ], [
+    ["Step 1 only extracts facts into a fixed structure.", "Step 1 sirf facts tay structure mein nikaalta hai."],
+    ["Step 2 is plain code: validation is free, fast and reliable.", "Step 2 seedha code hai: validation free, tez aur bharosemand."],
+    ["Step 3 analyses, using the clean facts rather than the whole contract.", "Step 3 poore contract ki jagah saaf facts se vishleshan karta hai."],
+    ["Step 4 writes, using only the outputs of earlier steps.", "Step 4 sirf pichhle steps ke outputs se likhta hai."],
+    ["Step 5 is a self-check: does every number in the email match the extracted facts? Each step can be tested on its own.", "Step 5 self-check hai: kya email ka har number nikaale gaye facts se milta hai? Har step alag se test ho sakta hai."]
+  ], { perRow: 3 });
+
+  B.bars("scD", [
+    { en: "Sample 1", hi: "Sample 1", v: 1, txt: "₹4,890", cls: "box-sig", step: 0 },
+    { en: "Sample 2", hi: "Sample 2", v: 1, txt: "₹4,890", cls: "box-sig", step: 0 },
+    { en: "Sample 3", hi: "Sample 3", v: 1, txt: "₹5,620", cls: "box-amb", step: 0 },
+    { en: "Sample 4", hi: "Sample 4", v: 1, txt: "₹4,890", cls: "box-sig", step: 0 },
+    { en: "Sample 5", hi: "Sample 5", v: 1, txt: "₹4,980", cls: "box-amb", step: 0 },
+    { en: "Majority vote", hi: "Bahumat", v: 1, txt: "₹4,890 (3 of 5)", cls: "box-plm", step: 1 }
+  ], [
+    ["Five independent answers to “what's the cheapest fare in this table?” Two of them made different mistakes.", "“Is table mein sabse sasta kiraaya kya hai?” ke paanch alag jawab. Do ne alag-alag galtiyaan ki."],
+    ["The majority (3 of 5) agrees on ₹4,890. Wrong answers scatter; right ones cluster. Agreement can also be your confidence score.", "Bahumat (5 mein 3) ₹4,890 par sahmat. Galat jawab bikharte hain; sahi ek jagah jamte hain. Sahmati aapka confidence score bhi ban sakti hai."]
+  ]);
+})();
+</script>
+
+</body>
+</html>

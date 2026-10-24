@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 13 · Budgets for Everyone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part III · Chapter 13</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 13 · Haron goes to a big company</span><span class="l-hi">Chapter 13 · Haron badi company mein</span></div>
+  <h1><span class="l-en">Budgets for Everyone</span><span class="l-hi">Sabke liye Budget</span></h1>
+  <div class="story">
+    <p class="l-en">At Acme Global, the monthly AI bill arrives as one big number. The CFO asks three questions: <em>Who spent it? Was it worth it? Can we stop a runaway agent before it spends next month's money tonight?</em> Answering them is called <strong>FinOps for AI</strong>, and it is built from three simple things: nested wallets, a rate limiter, and a ledger.</p>
+    <p class="l-hi">Acme Global mein mahine ka AI bill ek bade number ki tarah aata hai. CFO teen sawaal poochte hain: <em>Kisne kharch kiya? Kya yeh faayde ka tha? Kya hum bhaagte hue agent ko aaj raat agle mahine ka paisa kharch karne se pehle rok sakte hain?</em> In sawaalon ka jawab dena <strong>AI ke liye FinOps</strong> kehlaata hai, aur yeh teen seedhi cheezon se banta hai: nested wallets, rate limiter, aur ledger.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Nested budgets: company → client → team → user</span><span class="l-hi">Nested budgets: company → client → team → user</span></li>
+    <li><b>2</b><span class="l-en">Soft and hard limits, and what happens at each</span><span class="l-hi">Soft aur hard limits, aur har ek par kya hota hai</span></li>
+    <li><b>3</b><span class="l-en">Rate limits with a token bucket</span><span class="l-hi">Token bucket se rate limits</span></li>
+    <li><b>4</b><span class="l-en">Chargeback and the cost levers</span><span class="l-hi">Chargeback aur kharch ke levers</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Wallets inside wallets</span><span class="l-hi">Wallets ke andar wallets</span></h2></div>
+<div class="story">
+  <p class="l-en">Every scope has a monthly wallet: the company, each client project, each team, and even a single bot. A request is charged to <strong>every wallet above it</strong>, and it is stopped if <strong>any</strong> of them is empty. Here is one simulated month from this chapter's lab.</p>
+  <p class="l-hi">Har scope ka mahine ka wallet hai: company, har client project, har team, aur ek akela bot bhi. Request <strong>apne upar ke har wallet</strong> se charge hoti hai, aur <strong>koi bhi</strong> khaali ho toh ruk jaati hai. Yeh is chapter ke lab ka ek simulated mahina hai.</p>
+</div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 320" width="760" role="img" aria-label="Nested budgets fill over a month; the HR chatbot warns then is blocked"></svg></div></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">A <strong>soft limit</strong> (80%) sends an alert and can switch the scope to a cheaper model tier. A <strong>hard limit</strong> (100%) blocks new requests with a clear message and a way to ask for more. Never let a budget silently cut an agent off in the middle of a write action; check the budget <em>before</em> each step.</p>
+  <p class="l-hi"><strong>Soft limit</strong> (80%) alert bhejta hai aur scope ko saste model tier par daal sakta hai. <strong>Hard limit</strong> (100%) nayi requests saaf message aur aur maangne ke raaste ke saath rokta hai. Budget ko kabhi bhi agent ko write action ke beech chupchaap rokne mat do; har step se <em>pehle</em> budget check karo.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">The coin bucket (rate limits)</span><span class="l-hi">Sikkon ki baalti (rate limits)</span></h2></div>
+<div class="story">
+  <p class="l-en">Budgets protect the month; rate limits protect the minute. A buggy script can send 10,000 requests in a minute and hit the provider's limits for the whole company. Each tenant gets a <strong>bucket of coins</strong>: every request takes a coin, and coins drip back in at a fixed rate. A full bucket allows a short burst; an empty one says "try again in a moment" (HTTP 429).</p>
+  <p class="l-hi">Budget mahine ki raksha karta hai; rate limit minute ki. Ek bugwala script minute mein 10,000 requests bhej kar poori company ke liye provider ki limits khatam kar sakta hai. Har tenant ko <strong>sikkon ki baalti</strong> milti hai: har request ek sikka leti hai, aur sikke ek tay raftaar se wapas tapakte hain. Bhari baalti chhota burst allow karti hai; khaali baalti kehti hai "thodi der mein try karo" (HTTP 429).</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 260" width="760" role="img" aria-label="A token bucket with five coins serves five of eight requests, then refills"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Where the savings come from</span><span class="l-hi">Bachat kahan se aati hai</span></h2></div>
+<div class="story">
+  <p class="l-en">An illustrative example: a team's ₹8,00,000 monthly bill, and the levers applied one after another, cheapest first. Your numbers will differ; measure each lever on your own traffic and check that quality holds.</p>
+  <p class="l-hi">Ek example: ek team ka ₹8,00,000 ka mahine ka bill, aur ek ke baad ek levers, sabse saste pehle. Aapke numbers alag honge; har lever apne traffic par naapo aur check karo ki quality bani rahe.</p>
+</div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 280" width="760" role="img" aria-label="A waterfall chart of a monthly AI bill reduced by caching, routing, output caps and batching"></svg></div></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Haron doesn't know the budget unless you tell it</span><span class="l-hi">Haron ko budget tab tak nahi pata jab tak aap na batao</span></h4>
+  <p class="l-en">A model has no sense of cost. It will read a 400-page PDF to answer a yes/no question. Tell it the budget in the prompt or with the provider's task-budget feature, give it cheap tools first (search before read), and stop it from outside when the limit is reached.</p>
+  <p class="l-hi">Model ko kharch ka koi ehsaas nahi. Haan/na ke sawaal ke liye bhi 400 page ka PDF padh lega. Prompt mein ya provider ke task-budget feature se use budget batao, pehle saste tools do (padhne se pehle search), aur limit aane par bahar se roko.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">Chargeback turns AI from a cost into a product</span><span class="l-hi">Chargeback AI ko kharch se product banata hai</span></h4>
+  <p class="l-en">When each client project and team sees its own AI line on the monthly report, three good things happen: teams optimise their own usage, finance can price AI into client contracts, and leaders can compare cost with value per use case. Report <strong>cost per successful task</strong> next to cost, so cheap-but-useless bots don't look like winners.</p>
+  <p class="l-hi">Jab har client project aur team mahine ki report mein apni AI line dekhti hai, teen achhi cheezein hoti hain: teams apna use khud optimise karti hain, finance AI ko client contracts mein jod sakta hai, aur leaders har use case ka kharch aur faayda compare kar sakte hain. Kharch ke saath <strong>har safal kaam ka kharch</strong> bhi dikhaao, taaki saste-par-bekaar bots jeetne wale na lagein.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: ledger, limits and the month simulation</span><span class="l-hi">Coders ke liye: ledger, limits aur mahine ka simulation</span><span class="lvl">code/harness/budget.py</span></summary>
+  <div class="inner">
+<pre>led = Ledger()
+led.set_limit("acme", 5000)                       # USD per month
+led.set_limit("acme/internal-hr", 300)
+led.set_limit("acme/internal-hr/chatbot", 120)
+
+chk = led.check("acme/internal-hr/chatbot", estimated_usd)   # walks every ancestor
+if not chk.ok:   raise Blocked("budget", f"{chk.scope} limit reached")
+if chk.level == "warn": route_to_cheaper_tier()
+led.record(path, actual_usd, tokens)              # charged to every ancestor</pre>
+<pre>$ python code/ch13/budget_demo.py
+day 19: WARN  acme/internal-hr/chatbot passed 80% of budget
+day 23: BLOCK acme/internal-hr/chatbot (acme/internal-hr/chatbot limit reached) -> route to cheaper tier / ask owner
+day 24: BLOCK acme/internal-hr/chatbot (acme/internal-hr/chatbot limit reached) -> route to cheaper tier / ask owner
+day 25: WARN  acme/retail-client passed 80% of budget
+...
+Chargeback (month):
+  acme/banking-client      $ 2,129.70     319.5M tokens
+  acme/retail-client       $ 1,409.87     211.5M tokens
+  acme/internal-hr         $   119.87      18.0M tokens
+
+Rate limit, 8 requests at once (burst 5, 2/s): YYYYYnnn</pre>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Every scope has a wallet; I'm charged to all the wallets above me.</li><li>At 80% the team warns and may switch me to a cheaper tier; at 100% it stops me cleanly.</li><li>A coin bucket stops floods of requests.</li><li>Caching, routing, short answers and batching are the big savings. Measure cost per successful task.</li></ol>
+  <ol class="l-hi"><li>Har scope ka wallet hai; mera kharch mere upar ke saare wallets se katta hai.</li><li>80% par team chetaavni deti hai aur mujhe saste tier par daal sakti hai; 100% par saaf tareeke se rokti hai.</li><li>Sikkon ki baalti requests ki baadh rokti hai.</li><li>Caching, routing, chhote jawab aur batching badi bachat hain. Har safal kaam ka kharch naapo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Change the simulation so a WARN switches that scope to a tier that costs 20% as much. How much of the month does the HR chatbot now survive? <span class="level">coder</span></p><p class="l-hi">Simulation badlo taaki WARN us scope ko 20% kharch wale tier par daal de. Ab HR chatbot mahine ke kitne din chalta hai? <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Design the monthly AI cost report for your leadership: which five columns, and which one chart? <span class="level">enterprise</span></p><p class="l-hi">Leadership ke liye mahine ki AI cost report design karo: kaunse paanch columns, aur kaunsa ek chart? <span class="level">enterprise</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>FinOps Foundation. <em>FinOps for AI</em> working group papers.</li>
+  <li>Anthropic. <em>Message Batches</em>, <em>Prompt caching</em> and <em>Task budgets</em> documentation.</li>
+  <li>Chen, Zaharia &amp; Zou (2023). <em>FrugalGPT.</em></li>
+</ol>
+
+<nav class="pager"><a href="ch12.html">← Ch 12</a><a href="ch14.html"><span class="l-en">Ch 14 · Guarding Haron →</span><span class="l-hi">Ch 14 · Haron ki Hifaazat →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls;
+
+  /* Scene A: nested wallets */
+  (function () {
+    var s = document.getElementById("svA");
+    var nodes = [
+      ["acme", "Acme (company)", 5000, 20, 20],
+      ["bank", "banking-client", 2500, 20, 110],
+      ["retail", "retail-client", 1500, 270, 110],
+      ["hr", "internal-hr", 300, 520, 110],
+      ["bot", "hr chatbot", 120, 520, 200]
+    ];
+    var fills = {
+      0: { acme: 0, bank: 0, retail: 0, hr: 0, bot: 0 },
+      1: { acme: 0.24, bank: 0.28, retail: 0.30, hr: 0.17, bot: 0.42 },
+      2: { acme: 0.46, bank: 0.53, retail: 0.57, hr: 0.32, bot: 0.80 },
+      3: { acme: 0.55, bank: 0.64, retail: 0.69, hr: 0.40, bot: 1.0 },
+      4: { acme: 0.73, bank: 0.85, retail: 0.94, hr: 0.40, bot: 1.0 }
+    };
+    var bars = {}, texts = {};
+    nodes.forEach(function (n) {
+      var x = n[3], y = n[4], w = 230;
+      E(s, "text", { x: x, y: y + 14, "font-size": 12, "font-weight": 700, "class": "mono" }, n[1]);
+      E(s, "text", { x: x + w, y: y + 14, "text-anchor": "end", "font-size": 11, "class": "mono muted" }, "$" + n[2].toLocaleString("en-US") + "/mo");
+      E(s, "rect", { x: x, y: y + 22, width: w, height: 24, rx: 4, "class": "box" });
+      var b = E(s, "rect", { x: x, y: y + 22, width: 0, height: 24, rx: 4, "class": "box-sig anim" });
+      b.style.transition = "width .8s cubic-bezier(.2,.8,.2,1), fill .4s";
+      bars[n[0]] = [b, w];
+      texts[n[0]] = E(s, "text", { x: x + 8, y: y + 39, "font-size": 11, "font-weight": 700, "class": "mono" }, "");
+      E(s, "line", { x1: x + w * 0.8, y1: y + 18, x2: x + w * 0.8, y2: y + 50, "class": "line-amb dash", "stroke-width": 1.5 });
+    });
+    E(s, "line", { x1: 135, y1: 70, x2: 135, y2: 128, "class": "line", "stroke-width": 1 });
+    E(s, "path", { d: "M135 100 H635 V128 M385 100 V128", "class": "line", "stroke-width": 1, fill: "none" });
+    E(s, "line", { x1: 635, y1: 160, x2: 635, y2: 218, "class": "line", "stroke-width": 1 });
+    var dayT = E(s, "text", { x: 20, y: 300, "font-size": 16, "font-weight": 700, "class": "mono" }, "");
+    var evt = E(s, "text", { x: 140, y: 300, "font-size": 13, "font-weight": 700 }, "");
+    var days = ["day 1", "day 10", "day 19", "day 23", "day 30"];
+    var ev = [["", ""], ["", ""], ["WARN: hr chatbot passed 80%", "WARN: hr chatbot 80% ke paar"], ["BLOCK: hr chatbot at 100%; the owner is asked to approve more", "BLOCK: hr chatbot 100% par; owner se aur approval maanga"], ["Month end: banking $2,129.70 · retail $1,409.87 · HR $119.87", "Mahine ka ant: banking $2,129.70 · retail $1,409.87 · HR $119.87"]];
+    B.scene(document.getElementById("scA"), [
+      ["Five wallets: the company, three client/team scopes, and one bot. The dashed line on each is the 80% soft limit.", "Paanch wallets: company, teen client/team scopes, aur ek bot. Har ek par dashed line 80% soft limit hai."],
+      ["Day 10: spending flows in. Every rupee the chatbot spends also counts against HR and the company.", "Din 10: kharch aa raha hai. Chatbot ka har rupaya HR aur company ke khaate mein bhi judta hai."],
+      ["Day 19: the chatbot passes 80%. Its owner gets an alert; the router can move it to a cheaper tier.", "Din 19: chatbot 80% paar. Owner ko alert; router use saste tier par le ja sakta hai."],
+      ["Day 23: the chatbot's wallet is empty. New requests are blocked with a clear message. Other teams are unaffected.", "Din 23: chatbot ka wallet khaali. Nayi requests saaf message ke saath band. Baaki teams par asar nahi."],
+      ["Month end: the ledger produces the chargeback report. Retail is at 94%: worth a conversation before next month.", "Mahine ka ant: ledger chargeback report banata hai. Retail 94% par: agle mahine se pehle baat karne laayak."]
+    ], function (i) {
+      var f = fills[i];
+      Object.keys(bars).forEach(function (k) {
+        var v = f[k];
+        bars[k][0].setAttribute("width", v * bars[k][1]);
+        cls(bars[k][0], v >= 1 ? "box-plm" : (v >= 0.8 ? "box-amb" : "box-sig"));
+        texts[k].textContent = v ? Math.round(v * 100) + "%" : "";
+      });
+      dayT.textContent = days[i];
+      evt.textContent = B.lang() === "hi" ? ev[i][1] : ev[i][0];
+      evt.setAttribute("class", i === 3 ? "plm" : "amb");
+    });
+  })();
+
+  /* Scene B: token bucket */
+  (function () {
+    var s = document.getElementById("svB");
+    E(s, "path", { d: "M60 60 L80 200 H200 L220 60", "class": "line", "stroke-width": 3, fill: "none" });
+    BI(s, { x: 140, y: 230, "text-anchor": "middle", "font-size": 12, "class": "muted" }, "bucket: 5 coins, +2 per second", "baalti: 5 sikke, +2 har second");
+    var coins = [];
+    for (var c = 0; c < 5; c++) {
+      var g = E(s, "g", { "class": "anim" });
+      E(g, "circle", { cx: 140, cy: 180 - c * 26, r: 11, style: "fill:var(--amber);stroke:var(--ink-2)" });
+      coins.push(g);
+    }
+    var reqs = [];
+    for (var r = 0; r < 8; r++) {
+      var y = 20 + r * 28, g2 = E(s, "g", { "class": "anim" });
+      var rr = E(g2, "rect", { x: 300, y: y, width: 150, height: 22, rx: 4, "class": "box anim" });
+      E(g2, "text", { x: 312, y: y + 16, "font-size": 11, "class": "mono" }, "request " + (r + 1));
+      var res = E(g2, "text", { x: 462, y: y + 16, "font-size": 11, "font-weight": 700, "class": "mono" }, "");
+      reqs.push([g2, rr, res]);
+    }
+    var note = E(s, "g", { "class": "anim" });
+    BI(note, { x: 560, y: 150, "font-size": 12, "class": "amb", "font-weight": 600 }, "429: retry after 0.5 s", "429: 0.5 s baad retry");
+    B.scene(document.getElementById("scB"), [
+      ["A full bucket: 5 coins.", "Bhari baalti: 5 sikke."],
+      ["Eight requests arrive in the same instant. The first five each take a coin and go through.", "Ek hi pal mein aath requests aati hain. Pehli paanch ek-ek sikka lekar aage jaati hain."],
+      ["The bucket is empty. Requests 6 to 8 get HTTP 429 with a retry-after hint. The provider and the other tenants are protected.", "Baalti khaali. Requests 6 se 8 ko HTTP 429 aur retry-after ishaara milta hai. Provider aur baaki tenants surakshit."],
+      ["One second later, two coins have dripped back in, so two retries succeed.", "Ek second baad do sikke wapas aa gaye, toh do retries safal."]
+    ], function (i) {
+      var left = i === 0 ? 5 : (i === 3 ? 0 : 0);
+      coins.forEach(function (c2, k) { show(c2, i === 0 ? true : (i === 3 ? false : false)); });
+      if (i === 3) { show(coins[0], false); }
+      reqs.forEach(function (q, k) {
+        show(q[0], i >= 1);
+        var okNow = k < 5 || (i === 3 && k < 7);
+        q[2].textContent = i >= 1 ? (okNow ? "✓ served" : (i >= 2 ? "✗ 429" : "")) : "";
+        cls(q[1], i >= 1 ? (okNow ? "box-sig" : (i >= 2 ? "box-amb" : "box")) : "box");
+      });
+      show(note, i === 2);
+    });
+  })();
+
+  /* Scene C: waterfall (illustrative) */
+  (function () {
+    var s = document.getElementById("svC");
+    var steps = [["Start", 800, 0], ["Prompt caching", -240, 1], ["Route easy work to small tier", -180, 2], ["Shorter outputs", -60, 3], ["Batch overnight jobs", -50, 4], ["Result", 270, 5]];
+    var X = function (i) { return 30 + i * 122; }, Y = function (v) { return 230 - v * 0.25; };
+    E(s, "line", { x1: 20, y1: 230, x2: 750, y2: 230, "class": "line", "stroke-width": 1 });
+    var level = 0, gs = [];
+    steps.forEach(function (st, i) {
+      var g = E(s, "g", { "class": "anim" });
+      var top, h, c;
+      if (i === 0 || i === 5) { top = Y(st[1]); h = 230 - top; c = i === 0 ? "box-amb" : "box-sig"; level = st[1]; }
+      else { top = Y(level); h = -st[1] * 0.25; c = "box-plm"; level += st[1]; }
+      E(g, "rect", { x: X(i), y: top, width: 92, height: h, rx: 3, "class": c });
+      E(g, "text", { x: X(i) + 46, y: top - 6, "text-anchor": "middle", "font-size": 12, "font-weight": 700, "class": "mono" }, (i === 0 || i === 5 ? "₹" : "−₹") + Math.abs(st[1]) + "k");
+      var words = st[0].split(" "), line = "", lines = [];
+      words.forEach(function (w) { if ((line + " " + w).trim().length > 14) { lines.push(line.trim()); line = w; } else line += " " + w; });
+      lines.push(line.trim());
+      lines.forEach(function (l, k) { E(g, "text", { x: X(i) + 46, y: 248 + k * 14, "text-anchor": "middle", "font-size": 11 }, l); });
+      gs.push(g);
+    });
+    B.scene(document.getElementById("scC"), [
+      ["Starting bill: ₹8,00,000 a month (illustrative).", "Shuruaati bill: ₹8,00,000 mahina (example)."],
+      ["Prompt caching on the stable prefix: the biggest, cheapest win.", "Stable prefix par prompt caching: sabse badi, sabse sasti jeet."],
+      ["Routing easy tasks to the small tier.", "Aasaan kaam small tier par bhejna."],
+      ["Asking for shorter answers and capping output tokens.", "Chhote jawab maangna aur output tokens ki limit."],
+      ["Moving overnight reports to the batch API (about half price).", "Raat ki reports batch API par (lagbhag aadha daam)."],
+      ["Result: ₹2,70,000, about a third of the original, with quality checked by evals at every step.", "Nateeja: ₹2,70,000, shuruaat ka lagbhag ek-tihaai, har step par evals se quality check ke saath."]
+    ], function (i) { gs.forEach(function (g, k) { show(g, k <= i); }); });
+  })();
+})();
+</script>
+</body>
+</html>

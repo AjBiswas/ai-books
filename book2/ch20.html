@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 20 · Multi-Agent Systems & A2A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 20</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 20 · Agents</span><span class="l-hi">Chapter 20 · Agents</span></div>
+  <h1><span class="l-en">Multi-Agent Systems &amp; A2A</span><span class="l-hi">Multi-Agent Systems aur A2A</span></h1>
+  <div class="story">
+    <p class="l-en">Some jobs are too big or too varied for one Haron. A research task across 20 sources, a company where the HR agent needs to ask the IT agent something, a team of specialists reviewing a contract from different angles. <strong>Multi-agent systems</strong> split work across several agents. And when those agents belong to different teams or companies, they need a common language to talk: that's what the <strong>A2A (Agent2Agent) protocol</strong> provides.</p>
+    <p class="l-hi">Kuch kaam ek Haron ke liye bahut bade ya bahut alag hain. 20 sources mein research, ek company jahan HR agent ko IT agent se kuch poochna ho, specialists ki team jo contract alag nazariye se review kare. <strong>Multi-agent systems</strong> kaam kai agents mein baant-te hain. Aur jab woh agents alag teams ya companies ke hon, unhe baat karne ke liye common bhasha chahiye: yahi <strong>A2A (Agent2Agent) protocol</strong> deta hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Three team shapes: orchestrator, handoff, debate</span><span class="l-hi">Team ki teen shapes: orchestrator, handoff, debate</span></li>
+    <li><b>2</b><span class="l-en">MCP vs A2A: tools vs peers</span><span class="l-hi">MCP vs A2A: tools vs saathi</span></li>
+    <li><b>3</b><span class="l-en">The costs, and when one agent is better</span><span class="l-hi">Kharch, aur kab ek agent behtar hai</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Three team shapes</span><span class="l-hi">Team ki teen shapes</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">MCP connects tools; A2A connects agents</span><span class="l-hi">MCP tools jodta hai; A2A agents jodta hai</span></h2></div>
+<div class="story">
+  <p class="l-en">MCP (Chapter 18) lets an agent use a <em>tool</em>: something passive that does one thing when called. A2A lets an agent delegate to another <em>agent</em>: something that has its own model, plans its own steps, may take hours, and reports back. Each A2A agent publishes an <strong>Agent Card</strong> (a JSON file describing what it can do and how to reach it), and work is exchanged as <strong>tasks</strong> with states like submitted, working, input-required and completed.</p>
+  <p class="l-hi">MCP (Chapter 18) agent ko <em>tool</em> use karne deta hai: kuch passive jo call hone par ek kaam karta hai. A2A agent ko doosre <em>agent</em> ko kaam saunpne deta hai: jiska apna model ho, jo apne steps khud plan kare, ghanton le sakta hai, aur report wapas kare. Har A2A agent ek <strong>Agent Card</strong> publish karta hai (JSON file jo batati hai woh kya kar sakta hai aur kaise pahunchein), aur kaam <strong>tasks</strong> ki tarah badla jaata hai jinki states hoti hain jaise submitted, working, input-required aur completed.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">The bill for a team</span><span class="l-hi">Team ka bill</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">The telephone game</span><span class="l-hi">Chinese whispers</span></h4>
+  <p class="l-en">Every hand-off between agents is a summary, and every summary can drop a detail. "Kannada voice assistant, Android only, ₹99/month" becomes "launched a voice assistant" becomes "active in AI". Ask agents to pass structured facts with sources, not prose, and give the final agent access to the original evidence when accuracy matters.</p>
+  <p class="l-hi">Agents ke beech har handoff ek summary hai, aur har summary detail gira sakti hai. "Kannada voice assistant, sirf Android, ₹99/mahina" ban jaata hai "voice assistant launch kiya" ban jaata hai "AI mein active". Agents se kahani nahi, source ke saath structured facts aage badhwao, aur jab accuracy zaroori ho toh aakhri agent ko asli saboot tak pahunch do.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">When a team beats one agent</span><span class="l-hi">Kab team ek agent ko harati hai</span></h4>
+  <p class="l-en">Use several agents when the work <strong>splits into independent parts</strong> (research N companies), when the total reading <strong>won't fit one context</strong>, or when specialists need <strong>different tools or permissions</strong>. Stay with one agent when steps depend tightly on each other, such as writing one coherent program, where coordination overhead and lost context hurt more than parallelism helps.</p>
+  <p class="l-hi">Kai agents tab use karo jab kaam <strong>alag hisson mein bate</strong> (N companies ki research), jab kul padhaai <strong>ek context mein na aaye</strong>, ya specialists ko <strong>alag tools ya permissions</strong> chahiye. Ek agent par raho jab steps ek-doosre par kas ke depend hon, jaise ek juda hua program likhna, jahan taal-mel ka bojh aur khoya context parallelism ki madad se zyaada nuksaan karta hai.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Agents across company walls</span><span class="l-hi">Company ki deewaron ke paar agents</span></h4>
+  <p class="l-en">A2A was launched by Google in 2025 with many partners and moved to the Linux Foundation as an open project. The promise: your procurement agent negotiates with a supplier's sales agent without either company exposing its internals. The open questions are the business ones: who is liable for what an agent agreed to, how agents prove identity, and how to audit a conversation between two companies' AIs.</p>
+  <p class="l-hi">A2A Google ne 2025 mein kai partners ke saath launch kiya aur yeh open project ki tarah Linux Foundation mein gaya. Vaada: aapka procurement agent supplier ke sales agent se mol-bhaav kare, bina kisi company ke andar ki baatein khole. Khule sawaal business ke hain: agent ne jo maana uski zimmedaari kiski, agents pehchaan kaise saabit karein, aur do companies ke AIs ki baatcheet ka audit kaise ho.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: an Agent Card</span><span class="l-hi">Coders ke liye: Agent Card</span><span class="lvl">json</span></summary>
+  <div class="inner">
+<pre>{
+  "name": "Acme Travel Agent",
+  "description": "Books and changes business travel within Acme's travel policy.",
+  "url": "https://agents.acme.example/travel",
+  "version": "1.2.0",
+  "capabilities": { "streaming": true },
+  "skills": [
+    { "id": "book-flight", "name": "Book a flight",
+      "description": "Finds and books policy-compliant flights.", "tags": ["travel", "flights"] }
+  ]
+}</pre>
+    <p class="l-en">A simplified card; see the A2A specification for required fields and auth schemes. Book 1, Chapter 9 has a runnable orchestrator–worker team in Python.</p>
+    <p class="l-hi">Saral card; zaroori fields aur auth schemes ke liye A2A specification dekho. Book 1 ke Chapter 9 mein Python mein chalne wali orchestrator–worker team hai.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Teams come in shapes: orchestrator–workers, handoffs, and debate or review.</li><li>MCP plugs in tools; A2A lets agents delegate to other agents.</li><li>Teams cost many times more tokens and can lose details.</li><li>Use a team only when the work truly splits.</li></ol>
+  <ol class="l-hi"><li>Teams ki shapes: orchestrator–workers, handoffs, aur debate ya review.</li><li>MCP tools lagaata hai; A2A agents ko doosre agents ko kaam saunpne deta hai.</li><li>Teams kai guna zyaada tokens leti hain aur details kho sakti hain.</li><li>Team tabhi jab kaam sach mein bate.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Run Book 1's <code>code/ch09/team_demo.py</code>. Then change it so workers return JSON facts with a source URL, and the lead must cite them. <span class="level">coder</span></p><p class="l-hi">Book 1 ka <code>code/ch09/team_demo.py</code> chalao. Phir badlo taaki workers source URL ke saath JSON facts lautaayein, aur lead unhe cite kare. <span class="level">coder</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Google (2025). <em>Announcing the Agent2Agent Protocol (A2A).</em> · A2A Project. <em>Specification.</em></li>
+  <li>Anthropic (2025). <em>How we built our multi-agent research system.</em></li>
+  <li>Du et al. (2023). <em>Improving Factuality and Reasoning in Language Models through Multiagent Debate.</em></li>
+</ol>
+<nav class="pager"><a href="ch19.html">← Ch 19</a><a href="ch21.html"><span class="l-en">Ch 21 · Computer-Use &amp; Browser Agents →</span><span class="l-hi">Ch 21 · Computer-Use aur Browser Agents →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.columns("scA", [
+    { en: "Orchestrator–workers", hi: "Orchestrator–workers", cls: "box-sig", step: 0, items: [
+      { en: "A lead splits the task, workers run in parallel with fresh contexts, the lead combines", hi: "Lead kaam baantta, workers naye contexts ke saath saath-saath chalte, lead jodta", step: 0 },
+      { en: "Best for: research, many documents, many companies", hi: "Best: research, kai documents, kai companies", cls: "box-plm", step: 0 } ] },
+    { en: "Handoff", hi: "Handoff", cls: "box-amb", step: 1, items: [
+      { en: "Front desk → billing → shipping; each specialist owns one stage and passes a note", hi: "Front desk → billing → shipping; har specialist ek stage ka maalik, note aage deta", step: 1 },
+      { en: "Best for: customer service, pipelines with clear stages", hi: "Best: customer service, saaf stages wali pipelines", cls: "box-plm", step: 1 } ] },
+    { en: "Debate / review", hi: "Debate / review", cls: "box-plm", step: 2, items: [
+      { en: "One drafts, others critique from set angles (legal, finance), the lead decides", hi: "Ek draft karta, doosre tay nazariye se critique (legal, finance), lead faisla karta", step: 2 },
+      { en: "Best for: high-stakes documents and decisions", hi: "Best: bade daav wale documents aur faisle", cls: "box-plm", step: 2 } ] }
+  ], [
+    ["<strong>Orchestrator–workers</strong>: divide and conquer.", "<strong>Orchestrator–workers</strong>: baanto aur jeeto."],
+    ["<strong>Handoff</strong>: a relay race between specialists.", "<strong>Handoff</strong>: specialists ke beech relay race."],
+    ["<strong>Debate or review</strong>: several viewpoints before a decision.", "<strong>Debate ya review</strong>: faisle se pehle kai nazariye."]
+  ]);
+
+  B.columns("scB", [
+    { en: "MCP", hi: "MCP", cls: "box-sig", step: 0, items: [
+      { en: "Agent ↔ tool or data source", hi: "Agent ↔ tool ya data source", step: 0 },
+      { en: "The server does one thing when called", hi: "Server call hone par ek kaam karta hai", step: 0 },
+      { en: "Fast, stateless calls", hi: "Tez, stateless calls", step: 0 },
+      { en: "“Get this employee's leave balance”", hi: "“Is employee ka leave balance do”", cls: "box-plm", step: 0 } ] },
+    { en: "A2A", hi: "A2A", cls: "box-amb", step: 1, items: [
+      { en: "Agent ↔ another agent (maybe another company's)", hi: "Agent ↔ doosra agent (shayad doosri company ka)", step: 1 },
+      { en: "The other side plans and reasons by itself", hi: "Doosri taraf khud plan aur reasoning karti hai", step: 1 },
+      { en: "Long tasks with states and progress updates", hi: "States aur progress updates wale lambe tasks", step: 1 },
+      { en: "“Book my team's offsite within policy”", hi: "“Policy ke andar team ka offsite book karo”", cls: "box-plm", step: 1 } ] }
+  ], [
+    ["<strong>MCP</strong>: your agent picks up a tool.", "<strong>MCP</strong>: aapka agent tool uthaata hai."],
+    ["<strong>A2A</strong>: your agent hires another agent. They complement each other; many systems use both.", "<strong>A2A</strong>: aapka agent doosre agent ko kaam deta hai. Dono ek-doosre ke poorak hain; kai systems dono use karte hain."]
+  ]);
+
+  B.bars("scC", [
+    { en: "Chat", hi: "Chat", v: 1, txt: "≈ 1× tokens", cls: "box", step: 0 },
+    { en: "Single agent", hi: "Ek agent", v: 4, txt: "≈ 4×", cls: "box-sig", step: 1 },
+    { en: "Multi-agent", hi: "Multi-agent", v: 15, txt: "≈ 15×", cls: "box-amb", step: 2 }
+  ], [
+    ["Baseline: one chat answer.", "Baseline: ek chat jawab."],
+    ["One agent with tools: about 4× the tokens, because the loop re-sends its growing context.", "Tools wala ek agent: lagbhag 4× tokens, kyunki loop badhta context dobara bhejta hai."],
+    ["A multi-agent team: about 15× (figures reported by Anthropic for its research system). Worth it when the task's value justifies it.", "Multi-agent team: lagbhag 15× (Anthropic ne apne research system ke liye bataaye). Tab theek jab kaam ki keemat ise sahi thehraaye."]
+  ]);
+})();
+</script>
+
+</body>
+</html>

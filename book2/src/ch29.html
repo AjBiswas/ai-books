@@ -1,0 +1,112 @@
+  <div class="story">
+    <p class="l-en">Your prototype works. Then finance sees the bill, and users complain it's slow. Good news: most AI apps can be made several times cheaper and noticeably faster without losing quality, using a short list of levers. Apply them in order: the free ones first, the ones that trade quality last, and measure each with your eval (Chapter 26).</p>
+    <p class="l-hi">Aapka prototype chalta hai. Phir finance bill dekhta hai, aur users shikaayat karte hain ki dheema hai. Achhi khabar: zyaadatar AI apps quality khoye bina kai guna sasti aur saaf tez ban sakti hain, levers ki chhoti list se. Inhe order mein lagao: pehle muft wale, quality ka sauda karne wale aakhir mein, aur har ek ko apne eval se naapo (Chapter 26).</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Where the time goes in one request</span><span class="l-hi">Ek request mein samay kahan jaata hai</span></li>
+    <li><b>2</b><span class="l-en">Eight levers, cheapest first</span><span class="l-hi">Aath levers, saste pehle</span></li>
+    <li><b>3</b><span class="l-en">Prompt caching, with real numbers</span><span class="l-hi">Prompt caching, asli numbers ke saath</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Where the seconds go</span><span class="l-hi">Second kahan jaate hain</span></h2></div>
+<div class="story">
+  <p class="l-en">One request has two phases. <strong>Reading</strong> your prompt (time to first token) grows with prompt length. <strong>Writing</strong> the answer takes time per output token, and that's usually the bigger part. So the two biggest speed levers are: send less, and ask for less.</p>
+  <p class="l-hi">Ek request ke do hisse hain. Prompt <strong>padhna</strong> (pehle token tak ka samay) prompt ki lambaai ke saath badhta hai. Jawab <strong>likhna</strong> har output token ka samay leta hai, aur aksar yahi bada hissa hai. Isliye speed ke do sabse bade levers: kam bhejo, aur kam maango.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Eight levers</span><span class="l-hi">Aath levers</span></h2></div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Caching, measured</span><span class="l-hi">Caching, naap kar</span></h2></div>
+<div class="story">
+  <p class="l-en">An agent that runs 10 steps re-sends the same 12,000-token instructions and tool list every step. With <strong>prompt caching</strong>, the provider keeps the processed prefix, and repeat reads cost about 10% of the normal input price. From Book 1's cost lab, on a balanced-tier model:</p>
+  <p class="l-hi">10 steps chalne wala agent har step same 12,000-token instructions aur tool list dobara bhejta hai. <strong>Prompt caching</strong> ke saath provider process kiya prefix rakhta hai, aur dobara padhna normal input daam ka lagbhag 10% padta hai. Book 1 ke cost lab se, santulit-tier model par:</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Cheaper settings can change behaviour</span><span class="l-hi">Saste settings behaviour badal sakte hain</span></h4>
+  <p class="l-en">A smaller model, lower effort or a stricter output cap can quietly drop quality on hard cases: shorter reasoning, missed edge cases, truncated JSON. That's why every cost change goes through the same eval gate as a prompt change. Judge <strong>cost per successful task</strong>, not cost per call: a cheap call that needs three retries isn't cheap.</p>
+  <p class="l-hi">Chhota model, kam effort ya sakht output limit mushkil cases par chupchaap quality gira sakte hain: chhoti reasoning, chhoote edge cases, kata JSON. Isliye har kharch badlaav usi eval gate se jaata hai jisse prompt badlaav. <strong>Har safal kaam ka kharch</strong> dekho, har call ka nahi: teen retries wali sasti call sasti nahi.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Don't break your own cache</span><span class="l-hi">Apni cache khud mat todo</span></h4>
+  <p class="l-en">Caching only works on an <strong>exact prefix</strong>. A timestamp, a user name or a randomly ordered tool list at the top of the prompt makes every request a cache miss. Keep the stable parts first and identical (sorted JSON, fixed tool order), put volatile values at the end, and check the provider's usage fields for cache-read tokens to confirm it's working.</p>
+  <p class="l-hi">Caching sirf <strong>sateek prefix</strong> par chalti hai. Prompt ke upar timestamp, user ka naam ya random order wali tool list har request ko cache miss bana deti hai. Sthir hisse pehle aur bilkul same rakho (sorted JSON, fixed tool order), badalti values aakhir mein, aur kaam kar raha hai yeh confirm karne ke liye provider ke usage fields mein cache-read tokens check karo.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Perceived speed matters as much as real speed</span><span class="l-hi">Mehsoos hone wali speed asli speed jitni zaroori</span></h4>
+  <p class="l-en">Streaming the first words in under a second makes a 10-second answer feel fast. Showing progress ("Checking your order…") during tool calls keeps users patient. For work nobody waits for (nightly reports, bulk tagging), use the batch API at about half price and let it take hours.</p>
+  <p class="l-hi">Second se kam mein pehle words stream karna 10 second ke jawab ko tez mehsoos karaata hai. Tool calls ke dauraan progress dikhaana ("Aapka order check kar raha hoon…") users ko dhairya deta hai. Jis kaam ka koi intezaar nahi karta (raat ki reports, bulk tagging), uske liye lagbhag aadhe daam par batch API use karo aur ghanton lene do.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Writing is the slow, pricey part: ask for shorter output.</li><li>Free wins first: caching, trimming context, capping output, streaming.</li><li>Then trade-offs: batch, lower effort, smaller models and routing, each checked by evals.</li><li>Measure cost per successful task.</li></ol>
+  <ol class="l-hi"><li>Likhna dheema, mehenga hissa hai: chhota output maango.</li><li>Pehle muft jeet: caching, context chhota, output limit, streaming.</li><li>Phir sauda: batch, kam effort, chhote models aur routing, har ek evals se check.</li><li>Har safal kaam ka kharch naapo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Run Book 1's <code>code/ch02/cost.py</code>. Change the stable prefix from 12,000 to 2,000 tokens. How much does caching save now, and why? <span class="level">coder</span></p><p class="l-hi">Book 1 ka <code>code/ch02/cost.py</code> chalao. Stable prefix 12,000 se 2,000 tokens karo. Ab caching kitna bachaati hai, aur kyun? <span class="level">coder</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Anthropic. <em>Prompt caching</em>, <em>Message Batches</em> and <em>Effort</em> documentation.</li>
+  <li>Chen, Zaharia &amp; Zou (2023). <em>FrugalGPT.</em> · Ong et al. (2024). <em>RouteLLM.</em></li>
+  <li>Book 1, Chapter 2: <em>Haron's Wallet</em> and Chapter 13: <em>Budgets for Everyone.</em></li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.bars("scA", [
+    { en: "Network + queue", hi: "Network + queue", v: 0.3, txt: "~0.3 s", cls: "box", step: 0 },
+    { en: "Reading the prompt (TTFT)", hi: "Prompt padhna (TTFT)", v: 0.8, txt: "~0.8 s for 10 K tokens", cls: "box-sig", step: 1 },
+    { en: "Writing 500 tokens", hi: "500 tokens likhna", v: 6, txt: "~6 s", cls: "box-amb", step: 2 },
+    { en: "Tool calls (agent)", hi: "Tool calls (agent)", v: 2, txt: "~2 s per tool", cls: "box-plm", step: 3 }
+  ], [
+    ["A little time is network and queueing.", "Thoda samay network aur queue ka."],
+    ["Reading the prompt is fast, and caching makes it faster still.", "Prompt padhna tez hai, aur caching aur tez banaati hai."],
+    ["Writing dominates: each output token is a full trip through the model. Shorter answers = faster answers. (Illustrative timings.)", "Likhna haavi hai: har output token model ki poori trip hai. Chhote jawab = tez jawab. (Example timings.)"],
+    ["In agents, tool calls and extra model steps add up. Fewer, better steps help most.", "Agents mein tool calls aur extra model steps judte hain. Kam, behtar steps sabse zyaada madad karte hain."]
+  ]);
+
+  B.columns("scB", [
+    { en: "Free wins (no quality cost)", hi: "Muft jeet (quality ka kharch nahi)", cls: "box-sig", step: 0, items: [
+      { en: "1 · Prompt caching: repeated prefix ~90% cheaper", hi: "1 · Prompt caching: dohraaya prefix ~90% sasta", step: 0 },
+      { en: "2 · Trim context: fewer docs, clear old tool results", hi: "2 · Context chhota: kam docs, purane tool results saaf", step: 0 },
+      { en: "3 · Cap and shape output: max_tokens, terse formats", hi: "3 · Output limit aur shape: max_tokens, chhote formats", step: 0 },
+      { en: "4 · Stream: same cost, feels much faster", hi: "4 · Stream: same kharch, kahin tez lagta", step: 0 } ] },
+    { en: "Trade-offs (check with evals)", hi: "Sauda (evals se check)", cls: "box-amb", step: 1, items: [
+      { en: "5 · Batch API for non-urgent work: ~50% off", hi: "5 · Gair-zaroori kaam ke liye batch API: ~50% kam", step: 1 },
+      { en: "6 · Lower effort / less thinking where quality holds", hi: "6 · Jahan quality tike wahan kam effort / kam sochna", step: 1 },
+      { en: "7 · Route easy work to a smaller model", hi: "7 · Aasaan kaam chhote model par", step: 1 },
+      { en: "8 · Distil or fine-tune a small model for one task", hi: "8 · Ek kaam ke liye chhota model distil ya fine-tune", step: 1 } ] }
+  ], [
+    ["Start with the <strong>free wins</strong>: they cut cost and latency with no quality risk.", "<strong>Muft jeet</strong> se shuru: bina quality risk ke kharch aur der kam."],
+    ["Then the <strong>trade-offs</strong>, each one measured on your eval before it ships.", "Phir <strong>sauda</strong>, har ek ship se pehle apne eval par naapa."]
+  ]);
+
+  B.bars("scC", [
+    { en: "10-step agent, no caching", hi: "10-step agent, bina caching", v: 0.342, txt: "$0.342 per task", cls: "box-amb", step: 0 },
+    { en: "Same task, with caching", hi: "Wahi kaam, caching ke saath", v: 0.1018, txt: "$0.102 · 70% less", cls: "box-sig", step: 1 },
+    { en: "× 1 lakh tasks / month, no caching", hi: "× 1 lakh kaam / mahina, bina caching", v: 0.342, txt: "$34,200", cls: "box-amb", step: 2 },
+    { en: "× 1 lakh tasks / month, with caching", hi: "× 1 lakh kaam / mahina, caching ke saath", v: 0.1018, txt: "$10,180", cls: "box-sig", step: 2 }
+  ], [
+    ["Without caching, the agent pays full price for its 12,000-token prefix on all 10 steps.", "Bina caching agent apne 12,000-token prefix ka 10 steps par poora daam deta hai."],
+    ["With caching: the same 156,000 input tokens, 70% cheaper. Caching changes the price of tokens, not their number.", "Caching ke saath: wahi 156,000 input tokens, 70% sasta. Caching tokens ki keemat badalti hai, ginti nahi."],
+    ["At one lakh tasks a month, that's $24,000 saved from moving a timestamp and keeping tool order fixed.", "Mahine ke ek lakh kaamon par yeh $24,000 ki bachat hai, bas timestamp khiska kar aur tool order fixed rakh kar."]
+  ]);
+})();
+</script>

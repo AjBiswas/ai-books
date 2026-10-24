@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 32 · Responsible AI & the Law</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part VI · Chapter 32</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 32 · Production</span><span class="l-hi">Chapter 32 · Production</span></div>
+  <h1><span class="l-en">Responsible AI &amp; the Law</span><span class="l-hi">Zimmedaar AI aur Kanoon</span></h1>
+  <div class="story">
+    <p class="l-en">A loan-advice bot that quietly gives worse answers in Tamil than in English. A hiring assistant that learned to prefer one college. A support bot that stores customers' Aadhaar numbers in its logs forever. None of these teams meant harm. <strong>Responsible AI</strong> is the engineering discipline of not causing it by accident, and the law increasingly requires it.</p>
+    <p class="l-hi">Loan-salaah bot jo chupchaap Tamil mein English se kharab jawab deta hai. Hiring assistant jisne ek college ko pasand karna seekh liya. Support bot jo customers ke Aadhaar numbers hamesha ke liye logs mein rakhta hai. In mein se kisi team ka iraada nuksaan ka nahi tha. <strong>Responsible AI</strong> galti se nuksaan na karne ki engineering hai, aur kanoon ise badhte roop se zaroori bana raha hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The main risks: bias, privacy, transparency, copyright, safety</span><span class="l-hi">Mukhya khatre: bias, privacy, paardarshita, copyright, suraksha</span></li>
+    <li><b>2</b><span class="l-en">The laws an Indian AI engineer meets</span><span class="l-hi">Kanoon jinse Indian AI engineer milta hai</span></li>
+    <li><b>3</b><span class="l-en">A responsible-release checklist</span><span class="l-hi">Zimmedaar release checklist</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Not legal advice</span><span class="l-hi">Kanooni salaah nahi</span></h4>
+  <p class="l-en">This chapter is an engineer's map. Laws and their timelines change, and how they apply depends on your product. Work with your legal and compliance team. Book 1, Chapter 12 goes deeper into building these rules into a system.</p>
+  <p class="l-hi">Yeh chapter engineer ka naksha hai. Kanoon aur unki timelines badalti hain, aur laagu kaise hote hain yeh aapke product par depend karta hai. Apni legal aur compliance team ke saath kaam karo. Book 1 ka Chapter 12 in niyamon ko system mein banaane mein aur gehraai mein jaata hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Five risks to design against</span><span class="l-hi">Paanch khatre jinke khilaaf design karo</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">The rulebook</span><span class="l-hi">Rulebook</span></h2></div>
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Law / standard</span><span class="l-hi">Kanoon / standard</span></th><th><span class="l-en">What it means for your build</span><span class="l-hi">Aapke build ke liye matlab</span></th></tr></thead>
+<tbody>
+<tr><td><b>DPDP Act 2023 + DPDP Rules 2025</b> (India)</td><td><span class="l-en">Personal data needs a purpose, notice and consent where required, security safeguards, breach reporting, and erasure on request, phased in over 2026–27.</span><span class="l-hi">Personal data ke liye maqsad, jahan zaroori soochna aur sahmati, suraksha upaay, breach reporting, aur maangne par mitaana, 2026–27 mein charanon mein laagu.</span></td></tr>
+<tr><td><b>IT Rules</b> (India)</td><td><span class="l-en">Platform duties on unlawful content, and evolving rules on labelling AI-generated (synthetic) media and deepfakes.</span><span class="l-hi">Gair-kanooni content par platform ki zimmedaariyaan, aur AI-generated (synthetic) media aur deepfakes ko label karne ke badalte niyam.</span></td></tr>
+<tr><td><b>Sector regulators</b></td><td><span class="l-en">Banking, insurance, health and telecom regulators (e.g. RBI) add their own expectations on AI governance, outsourcing and customer protection.</span><span class="l-hi">Banking, insurance, health aur telecom regulators (jaise RBI) AI governance, outsourcing aur customer suraksha par apni ummeedein jodte hain.</span></td></tr>
+<tr><td><b>GDPR</b> (EU)</td><td><span class="l-en">Applies when you handle EU residents' data: lawful basis, data transfers, rights to access and erasure.</span><span class="l-hi">EU nivasiyon ka data sambhaalne par laagu: kanooni aadhaar, data transfers, dekhne aur mitaane ka haq.</span></td></tr>
+<tr><td><b>EU AI Act</b></td><td><span class="l-en">Risk-based: some uses banned, "high-risk" uses (hiring, credit, education) need risk management, logs and human oversight; chatbots must disclose they're AI; applies in stages from 2025.</span><span class="l-hi">Risk par aadhaarit: kuch use mana, "high-risk" use (hiring, credit, shiksha) ko risk management, logs aur insaani nigraani chahiye; chatbots ko batana hoga ki AI hain; 2025 se charanon mein laagu.</span></td></tr>
+<tr><td><b>ISO/IEC 42001</b>, <b>NIST AI RMF</b></td><td><span class="l-en">Management-system standards and frameworks that turn all of the above into processes you can be audited on.</span><span class="l-hi">Management-system standards aur frameworks jo upar ki sab cheezon ko audit hone laayak processes banaate hain.</span></td></tr>
+</tbody></table></div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Responsible release, step by step</span><span class="l-hi">Zimmedaar release, step by step</span></h2></div>
+<figure class="scene" id="scB"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Models carry society's biases</span><span class="l-hi">Models samaaj ke bias saath laate hain</span></h4>
+  <p class="l-en">Models learn from human writing, including its stereotypes about gender, caste, religion, region and language. They may also be measurably worse in some languages. You can't remove bias with one prompt; you can <strong>measure</strong> it (same question, swap only the name, city or language, compare answers), reduce it, keep humans on high-stakes decisions, and document what you found.</p>
+  <p class="l-hi">Models insaani lekhan se seekhte hain, ling, jaati, dharm, kshetra aur bhasha ke baare mein uske stereotypes samet. Kuch bhashaon mein woh naapne laayak kharab bhi ho sakte hain. Ek prompt se bias nahi hatta; aap use <strong>naap</strong> sakte ho (same sawaal, sirf naam, shehar ya bhasha badlo, jawab compare karo), kam kar sakte ho, bade daav ke faislon par insaan rakh sakte ho, aur jo mila use document kar sakte ho.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Privacy by default</span><span class="l-hi">Default mein privacy</span></h4>
+  <p class="l-en">Collect the minimum. Mask personal data before it reaches a model (Book 1's redactor handles Aadhaar, PAN, phone, card). Log hashes instead of raw prompts unless you truly need them. Set retention periods. Check each provider's data terms (training use, retention, region). These defaults make most compliance questions easy.</p>
+  <p class="l-hi">Kam se kam jama karo. Model tak pahunchne se pehle personal data chhupao (Book 1 ka redactor Aadhaar, PAN, phone, card sambhaalta hai). Jab tak sach mein zaroorat na ho, raw prompts ki jagah hash log karo. Retention periods tay karo. Har provider ki data terms check karo (training use, retention, region). Yeh defaults zyaadatar compliance sawaal aasaan bana dete hain.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Design against bias, privacy harm, hidden AI, copyright and unsafe actions.</li><li>India's DPDP Act, sector rules, and (for EU users) GDPR and the EU AI Act shape what you build.</li><li>Measure bias by swapping names, places and languages.</li><li>Privacy by default; humans on high-stakes decisions; document everything.</li></ol>
+  <ol class="l-hi"><li>Bias, privacy nuksaan, chhupa AI, copyright aur asurakshit kaamon ke khilaaf design karo.</li><li>India ka DPDP Act, sector niyam, aur (EU users ke liye) GDPR aur EU AI Act tay karte hain aap kya banaate ho.</li><li>Naam, jagah aur bhasha badalkar bias naapo.</li><li>Default mein privacy; bade daav ke faislon par insaan; sab document karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Ask your laptop model to write a short job reference for 10 candidates who differ only in name (vary gender and region). Compare the adjectives used. <span class="level">core</span></p><p class="l-hi">Laptop model se 10 candidates ke liye chhota job reference likhwao jo sirf naam mein alag hon (ling aur kshetra badlo). Use hue visheshan compare karo. <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Government of India. <em>Digital Personal Data Protection Act, 2023</em> and <em>DPDP Rules, 2025.</em></li>
+  <li>European Union. <em>Regulation (EU) 2024/1689 (AI Act).</em></li>
+  <li>NIST (2023). <em>AI Risk Management Framework.</em> · ISO/IEC 42001:2023.</li>
+  <li>Gebru et al. (2021). <em>Datasheets for Datasets.</em> · Mitchell et al. (2019). <em>Model Cards for Model Reporting.</em></li>
+</ol>
+<nav class="pager"><a href="ch31.html">← Ch 31</a><a href="ch33.html"><span class="l-en">Ch 33 · The Hot-Topics Radar →</span><span class="l-hi">Ch 33 · Hot Topics Radar →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.columns("scA", [
+    { en: "Risk", hi: "Khatra", cls: "box-amb", step: 0, items: [
+      { en: "Bias: worse or unfair outcomes for some groups or languages", hi: "Bias: kuch groups ya bhashaon ke liye kharab ya anyaaypoorn nateeje", step: 0 },
+      { en: "Privacy: personal data leaked, kept too long, or used for training", hi: "Privacy: personal data leak, zyaada der rakha, ya training mein use", step: 1 },
+      { en: "Transparency: people don't know they're dealing with AI", hi: "Paardarshita: logon ko pata nahi ki AI se deal kar rahe hain", step: 2 },
+      { en: "Copyright & likeness: generated content copies protected work or real people", hi: "Copyright aur chehra: banaaya content surakshit kaam ya asli logon ki nakal kare", step: 3 },
+      { en: "Unsafe actions: an agent does something harmful or irreversible", hi: "Asurakshit kaam: agent kuch nuksaan wala ya wapas na hone wala kare", step: 4 } ] },
+    { en: "Engineering response", hi: "Engineering jawab", cls: "box-sig", step: 0, items: [
+      { en: "Slice evals by language and group; swap tests; human review for high stakes", hi: "Bhasha aur group se slice evals; swap tests; bade daav par insaani review", step: 0 },
+      { en: "Mask PII, minimise logs, retention limits, check provider terms", hi: "PII chhupao, kam logs, retention limits, provider terms check", step: 1 },
+      { en: "Disclose AI; label generated media; explain limits", hi: "AI batao; banaaye media label karo; seemaayein samjhao", step: 2 },
+      { en: "Licensed sources, provenance metadata (e.g. C2PA), consent for likeness", hi: "Licensed sources, provenance metadata (jaise C2PA), chehre ke liye sahmati", step: 3 },
+      { en: "Least privilege, approvals, audit logs (Ch 16, 27)", hi: "Kam se kam permission, approvals, audit logs (Ch 16, 27)", step: 4 } ] }
+  ], [
+    ["<strong>Bias</strong>: measure it with slices and swap tests.", "<strong>Bias</strong>: slices aur swap tests se naapo."],
+    ["<strong>Privacy</strong>: minimise, mask and delete.", "<strong>Privacy</strong>: kam karo, chhupao aur mitaao."],
+    ["<strong>Transparency</strong>: tell people it's AI, and label what AI made.", "<strong>Paardarshita</strong>: logon ko batao ki AI hai, aur AI ka banaaya label karo."],
+    ["<strong>Copyright and likeness</strong>: know where content comes from and get consent.", "<strong>Copyright aur chehra</strong>: jaano content kahan se aaya aur sahmati lo."],
+    ["<strong>Unsafe actions</strong>: limit what agents can do and keep records.", "<strong>Asurakshit kaam</strong>: agents kya kar sakte hain seemit karo aur record rakho."]
+  ]);
+
+  B.flow("scB", [
+    { en: "Classify the use", hi: "Use classify karo", sen: "low risk? high risk (credit, hiring, health)?", shi: "kam risk? high risk (credit, hiring, health)?" },
+    { en: "Data review", hi: "Data review", sen: "what personal data, why, how long, where", shi: "kaunsa personal data, kyun, kitni der, kahan" },
+    { en: "Evals + slices", hi: "Evals + slices", sen: "quality, bias, safety by language and group", shi: "bhasha aur group ke hisaab se quality, bias, safety" },
+    { en: "Human oversight", hi: "Insaani nigraani", sen: "who reviews what, and how to appeal", shi: "kaun kya review kare, aur appeal kaise" },
+    { en: "Disclose", hi: "Batao", sen: "AI label, limits, contact a human", shi: "AI label, seemaayein, insaan se sampark" },
+    { en: "Monitor + document", hi: "Nazar + document", sen: "model card, incidents, re-review yearly", shi: "model card, incidents, saalaana re-review" }
+  ], [
+    ["Classify the use case by risk; high-risk uses need much more care.", "Use case ko risk se classify karo; high-risk use ko kahin zyaada dhyaan chahiye."],
+    ["Review the data: minimum needed, purpose, retention, residency.", "Data review: kam se kam zaroori, maqsad, retention, residency."],
+    ["Evaluate quality, bias and safety, sliced by language and group.", "Quality, bias aur safety evaluate karo, bhasha aur group se slice karke."],
+    ["Decide where humans review and how users can appeal.", "Tay karo insaan kahan review karein aur users appeal kaise karein."],
+    ["Disclose clearly that it's AI and what it can't do.", "Saaf batao ki AI hai aur kya nahi kar sakta."],
+    ["Monitor, record incidents, keep a model card, and review again regularly.", "Nazar rakho, incidents record karo, model card rakho, aur niyamit dobara review karo."]
+  ], { perRow: 3 });
+})();
+</script>
+
+</body>
+</html>

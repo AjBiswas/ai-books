@@ -1,0 +1,113 @@
+  <div class="story">
+    <p class="l-en">You need 500 test questions in Hinglish for your support bot, but launch is next week and you have 12 real ones. Or you need training examples of rare cases (a fraud attempt, an angry customer) that almost never happen. Models can write them: this is <strong>synthetic data</strong>. Done well, it fills gaps quickly. Done badly, it teaches your system a fake world.</p>
+    <p class="l-hi">Aapko support bot ke liye Hinglish mein 500 test sawaal chahiye, par launch agle hafte hai aur aapke paas 12 asli hain. Ya aapko aise rare cases ke training examples chahiye (fraud ki koshish, gussa customer) jo lagbhag kabhi nahi hote. Models unhe likh sakte hain: ise <strong>synthetic data</strong> kehte hain. Achhe se kiya toh khaali jagah jaldi bharta hai. Bure se kiya toh aapke system ko nakli duniya sikhaata hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">A pipeline for useful synthetic data</span><span class="l-hi">Kaam ke synthetic data ki pipeline</span></li>
+    <li><b>2</b><span class="l-en">Getting variety instead of 500 copies of one example</span><span class="l-hi">Ek example ki 500 copies ki jagah variety</span></li>
+    <li><b>3</b><span class="l-en">Where it helps, and where it misleads</span><span class="l-hi">Kahan madad karta hai, aur kahan bhatkaata hai</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The pipeline</span><span class="l-hi">Pipeline</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Variety on purpose</span><span class="l-hi">Jaan-boojh kar variety</span></h2></div>
+<div class="story">
+  <p class="l-en">Ask a model for "50 customer complaints" and you'll get 50 polite, grammatical, English, medium-length complaints that sound like the same person. Real customers aren't like that. Feed the generator explicit <strong>dimensions</strong> (persona, language, mood, length, typos, topic) and combine them, so every example is a different point in the space.</p>
+  <p class="l-hi">Model se "50 customer shikaayatein" maango toh 50 vinamra, sahi grammar wali, English, madhyam lambi shikaayatein milengi jo ek hi insaan jaisi lagti hain. Asli customers aise nahi hote. Generator ko saaf <strong>dimensions</strong> do (persona, bhasha, mood, lambaai, typos, vishay) aur unhe milao, taaki har example space mein alag bindu ho.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Uses and dangers</span><span class="l-hi">Use aur khatre</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Models write in their own voice</span><span class="l-hi">Models apni awaaz mein likhte hain</span></h4>
+  <p class="l-en">Synthetic text carries the generator's habits: favourite words, tidy structure, a polite tone, its blind spots and biases. Train or test only on that, and your system learns to handle the model's imitation of customers, not customers. Train models repeatedly on model output and quality degrades over generations (<strong>model collapse</strong>). Always mix in and validate against real data.</p>
+  <p class="l-hi">Synthetic text generator ki aadatein laata hai: pasandeeda shabd, saaf structure, vinamra tone, uske andhe kone aur bias. Sirf us par train ya test karo toh aapka system customers ki model wali nakal sambhaalna seekhta hai, customers nahi. Models ko baar-baar model output par train karo toh peedhiyon mein quality girti hai (<strong>model collapse</strong>). Hamesha asli data milaao aur usse validate karo.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Synthetic tests are the best first use</span><span class="l-hi">Synthetic tests sabse achha pehla use</span></h4>
+  <p class="l-en">The safest, highest-value use is building <strong>eval sets</strong> before you have real traffic: edge cases, adversarial inputs, other languages, every product category. Have a human review each one (it's faster to fix 200 drafted cases than to write 200 from scratch), then replace them gradually with real failures from production.</p>
+  <p class="l-hi">Sabse surakshit, sabse keemti use hai asli traffic se pehle <strong>eval sets</strong> banana: edge cases, hamle wale inputs, doosri bhashayein, har product category. Har ek insaan se review karwao (200 draft cases theek karna 200 shuru se likhne se tez hai), phir dheere-dheere production ke asli failures se badlo.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Synthetic data for privacy</span><span class="l-hi">Privacy ke liye synthetic data</span></h4>
+  <p class="l-en">Teams use synthetic records shaped like real ones (same fields, realistic values, fake people) so developers and vendors can work without touching customer data. Generated names, Aadhaar-like numbers and addresses must be clearly fake, and the generator must not have memorised real records. Check terms of service too: some providers restrict using outputs to train competing models.</p>
+  <p class="l-hi">Teams asli jaise synthetic records use karti hain (same fields, asli jaisi values, nakli log) taaki developers aur vendors customer data chhue bina kaam kar sakein. Banaaye naam, Aadhaar jaise numbers aur pate saaf nakli hone chahiye, aur generator ne asli records yaad na kiye hon. Terms of service bhi check karo: kuch providers competing models train karne ke liye outputs use karna rokte hain.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Synthetic data = seeds → generate with explicit variety → filter → dedupe → human check.</li><li>Its best first use is test sets for cases you don't have yet.</li><li>It carries the generator's voice and biases; always validate against real data.</li><li>Use it to protect privacy, with clearly fake identities.</li></ol>
+  <ol class="l-hi"><li>Synthetic data = seeds → saaf variety ke saath banao → filter → dedupe → insaani check.</li><li>Iska sabse achha pehla use un cases ke test sets hain jo abhi aapke paas nahi.</li><li>Isme generator ki awaaz aur bias hota hai; hamesha asli data se validate karo.</li><li>Privacy bachaane ke liye use karo, saaf nakli pehchaanon ke saath.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Generate 30 support tickets with your laptop model twice: once with "write 30 tickets", once with a persona × language × mood grid. Compare how different they really are. <span class="level">core</span></p><p class="l-hi">Laptop model se 30 support tickets do baar banao: ek baar "30 tickets likho", ek baar persona × bhasha × mood grid ke saath. Compare karo woh sach mein kitne alag hain. <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Wang et al. (2022). <em>Self-Instruct: Aligning Language Models with Self-Generated Instructions.</em></li>
+  <li>Shumailov et al. (2024). <em>AI models collapse when trained on recursively generated data.</em> Nature.</li>
+  <li>Gunasekar et al. (2023). <em>Textbooks Are All You Need</em> (phi-1).</li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.flow("scA", [
+    { en: "Seeds", hi: "Seeds", sen: "12 real tickets + a list of topics", shi: "12 asli tickets + vishayon ki list" },
+    { en: "Generate", hi: "Banao", sen: "a strong model, varied prompts", shi: "majboot model, alag prompts" },
+    { en: "Filter", hi: "Filter", sen: "a judge drops off-topic or unrealistic ones", shi: "judge bekaar ya nakli-lagne wale hataaye" },
+    { en: "Dedupe", hi: "Dedupe", sen: "embeddings remove near-copies (Ch 13)", shi: "embeddings milte-julte hataayein (Ch 13)" },
+    { en: "Human check", hi: "Insaani check", sen: "review all for tests, a sample for training", shi: "tests ke liye sab, training ke liye sample" },
+    { en: "Use + replace", hi: "Use + badlo", sen: "swap in real failures over time", shi: "samay ke saath asli failures daalo" }
+  ], [
+    ["Start from real seeds so the output stays anchored to reality.", "Asli seeds se shuru karo taaki output haqeeqat se juda rahe."],
+    ["Generate with a strong model and many different prompts.", "Majboot model aur kai alag prompts se banao."],
+    ["Filter automatically: drop examples a judge flags as unrealistic, wrong or off-topic.", "Apne aap filter: judge jinhe nakli, galat ya bekaar bataaye unhe hatao."],
+    ["Remove near-duplicates; models love to repeat themselves.", "Milte-julte hatao; models khud ko dohraana pasand karte hain."],
+    ["A human reviews: everything for eval sets, a sample for training sets.", "Insaan review kare: eval sets ke liye sab, training sets ke liye sample."],
+    ["Use it, then replace it bit by bit with real data as it arrives.", "Use karo, phir asli data aane par thoda-thoda badlo."]
+  ], { perRow: 3 });
+
+  B.chat("scB", [
+    { who: "user", en: "Generate a support ticket. Persona: retired teacher, Lucknow. Language: Hindi in Latin script. Mood: confused. Topic: refund not received. Length: 2 sentences, with one typo.", hi: "Ek support ticket banao. Persona: retired teacher, Lucknow. Bhasha: Latin script mein Hindi. Mood: uljhan. Vishay: refund nahi mila. Lambaai: 2 sentences, ek typo ke saath.", step: 0 },
+    { who: "good", en: "Beta maine pichle hafte order cancel kiya tha par paise abhi tak nahi aaye. Ye refund kitne din mein aata hai, samjh nahi aa raha.", hi: "Beta maine pichle hafte order cancel kiya tha par paise abhi tak nahi aaye. Ye refund kitne din mein aata hai, samjh nahi aa raha.", step: 1 },
+    { who: "user", en: "Persona: startup founder, Bengaluru. Language: English. Mood: angry. Topic: duplicate charge. Length: 1 line, all caps words allowed.", hi: "Persona: startup founder, Bengaluru. Bhasha: English. Mood: gussa. Vishay: do baar charge. Lambaai: 1 line, kuch CAPS words chalenge.", step: 2 },
+    { who: "good", en: "You charged my card TWICE for ORD-100231. Fix it today or I'm disputing both.", hi: "You charged my card TWICE for ORD-100231. Fix it today or I'm disputing both.", step: 3 }
+  ], [
+    ["Each generation request fixes a point in the grid: persona, language, mood, topic, length, noise.", "Har request grid mein ek bindu tay karti hai: persona, bhasha, mood, vishay, lambaai, shor."],
+    ["The result sounds like a real person, typo included (“samjh”). (Illustrative.)", "Nateeja asli insaan jaisa lagta hai, typo samet (“samjh”). (Example.)"],
+    ["Change the dimensions and you get a genuinely different case.", "Dimensions badlo aur sach mein alag case milta hai."],
+    ["Five personas × three languages × four moods × ten topics = 600 distinct cases, not 600 copies.", "Paanch persona × teen bhashayein × chaar mood × das vishay = 600 alag cases, 600 copies nahi."]
+  ]);
+
+  B.columns("scC", [
+    { en: "Great for", hi: "Badhiya", cls: "box-sig", step: 0, items: [
+      { en: "Eval sets before launch", hi: "Launch se pehle eval sets", step: 0 },
+      { en: "Rare cases: fraud, abuse, edge cases", hi: "Rare cases: fraud, abuse, edge cases", step: 0 },
+      { en: "Red-team attacks in many languages", hi: "Kai bhashaon mein red-team hamle", step: 0 },
+      { en: "Privacy-safe test records", hi: "Privacy-safe test records", step: 0 } ] },
+    { en: "Dangerous when", hi: "Khatarnaak jab", cls: "box-amb", step: 1, items: [
+      { en: "It's the only data you train or test on", hi: "Sirf isi par train ya test karo", step: 1 },
+      { en: "Nobody reviewed it", hi: "Kisi ne review nahi kiya", step: 1 },
+      { en: "It's generated and graded by the same model", hi: "Same model ne banaaya aur grade kiya", step: 1 },
+      { en: "It copies real personal data", hi: "Asli personal data copy karta hai", step: 1 } ] }
+  ], [
+    ["Synthetic data shines where real data is missing, rare or sensitive.", "Synthetic data wahan chamakta hai jahan asli data gaayab, rare ya sensitive ho."],
+    ["It misleads when it replaces reality instead of supplementing it.", "Woh tab bhatkaata hai jab haqeeqat ka saathi banne ki jagah uski jagah le leta hai."]
+  ]);
+})();
+</script>

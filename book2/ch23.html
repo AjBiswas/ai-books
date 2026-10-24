@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 23 · Fine-Tuning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part V · Chapter 23</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 23 · Changing the model itself</span><span class="l-hi">Chapter 23 · Model ko hi badalna</span></div>
+  <h1><span class="l-en">Fine-Tuning</span><span class="l-hi">Fine-Tuning</span></h1>
+  <div class="story">
+    <p class="l-en">Fine-tuning means continuing a model's training on your own examples, so its behaviour changes permanently. It sounds like the obvious way to "teach Haron our business". Usually it isn't: prompting, RAG and tools (Chapters 6–19) solve most needs faster and cheaper. But for a few jobs, such as a consistent house style, a narrow task at huge volume, or making a small model act like a big one, fine-tuning is exactly right. This chapter shows when, and how, on hardware you might actually have.</p>
+    <p class="l-hi">Fine-tuning ka matlab hai model ki training ko aapke examples par aage badhaana, taaki uska behaviour hamesha ke liye badle. "Haron ko hamara business sikhaana" ka yeh seedha tareeka lagta hai. Aksar nahi hota: prompting, RAG aur tools (Chapter 6–19) zyaadatar zaroorat jaldi aur saste mein poori karte hain. Par kuch kaamon ke liye, jaise ek jaisa house style, bade volume par sankara kaam, ya chhote model ko bade jaisa banana, fine-tuning bilkul sahi hai. Yeh chapter dikhata hai kab, aur kaise, us hardware par jo shayad aapke paas ho.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">When fine-tuning helps, and when it doesn't</span><span class="l-hi">Fine-tuning kab madad karta hai, aur kab nahi</span></li>
+    <li><b>2</b><span class="l-en">LoRA and QLoRA, with real numbers</span><span class="l-hi">LoRA aur QLoRA, asli numbers ke saath</span></li>
+    <li><b>3</b><span class="l-en">SFT, DPO and the fine-tuning workflow</span><span class="l-hi">SFT, DPO aur fine-tuning ka workflow</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">For and not for</span><span class="l-hi">Kiske liye aur kiske liye nahi</span></h2></div>
+<figure class="scene" id="scA"></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">Fine-tuning changes <strong>how</strong> a model behaves far more reliably than <strong>what</strong> it knows. To add facts that change (prices, policies, stock), use RAG. A model fine-tuned on last month's price list will confidently quote last month's prices forever.</p>
+  <p class="l-hi">Fine-tuning model ke <strong>kaise</strong> behave karne ko badalta hai, <strong>kya</strong> jaanta hai use kahin kam bharose se. Badalne wale facts (daam, policies, stock) jodne ke liye RAG use karo. Pichhle mahine ki price list par fine-tune hua model hamesha yakeen se pichhle mahine ke daam batayega.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">LoRA: train a tiny add-on, not the whole model</span><span class="l-hi">LoRA: poora model nahi, chhota add-on train karo</span></h2></div>
+<div class="story">
+  <p class="l-en">Full fine-tuning updates billions of numbers and needs huge GPUs. <strong>LoRA</strong> freezes the model and trains two thin matrices beside each big one; their product is the change. It works because useful changes tend to be <strong>low-rank</strong>: they can be described with few directions. Our lab fakes such a change and measures how much a rank-r LoRA captures.</p>
+  <p class="l-hi">Poora fine-tuning arbon numbers badalta hai aur bade GPUs chahiye. <strong>LoRA</strong> model ko jama deta hai aur har badi matrix ke saath do patli matrices train karta hai; unka guna hi badlaav hai. Yeh isliye chalta hai kyunki kaam ke badlaav aksar <strong>low-rank</strong> hote hain: kam dishaon se bayaan ho jaate hain. Hamara lab aisa badlaav banata hai aur naapta hai ki rank-r LoRA kitna pakadta hai.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Memory to fine-tune an 8B model</span><span class="l-hi">8B model fine-tune karne ki memory</span></h2></div>
+<figure class="scene" id="scC"></figure>
+
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">The workflow</span><span class="l-hi">Workflow</span></h2></div>
+<figure class="scene" id="scD"></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Fine-tuning can break things you didn't touch</span><span class="l-hi">Fine-tuning un cheezon ko tod sakta hai jinhe chhua bhi nahi</span></h4>
+  <p class="l-en">Train hard on one task and the model can get worse at others (<strong>catastrophic forgetting</strong>), copy mistakes in your data, or lose some of its safety behaviour; researchers have shown even small fine-tunes can weaken refusals. Keep a general eval and a safety eval alongside your task eval, and compare before and after.</p>
+  <p class="l-hi">Ek kaam par zor se train karo toh model doosron mein kharab ho sakta hai (<strong>catastrophic forgetting</strong>), aapke data ki galtiyaan copy kar sakta hai, ya apna kuch safety behaviour kho sakta hai; researchers ne dikhaaya hai ki chhote fine-tunes bhi refusals kamzor kar sakte hain. Task eval ke saath general eval aur safety eval rakho, aur pehle-baad compare karo.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Data quality beats data quantity</span><span class="l-hi">Data ki quality maatra se upar</span></h4>
+  <p class="l-en">A few hundred excellent, varied, correctly formatted examples often beat ten thousand noisy ones. Read a random sample of your training data yourself before training. Use the exact chat template the model expects, hold out 10–20% for evaluation, and start with a small LoRA rank (8–16) and a few epochs.</p>
+  <p class="l-hi">Kuch sau behtareen, alag-alag, sahi format wale examples aksar das hazaar shor wale examples ko harate hain. Training se pehle apne training data ka random sample khud padho. Model ka sateek chat template use karo, 10–20% evaluation ke liye alag rakho, aur chhote LoRA rank (8–16) aur kuch epochs se shuru karo.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Where fine-tuning happens</span><span class="l-hi">Fine-tuning kahan hota hai</span></h4>
+  <p class="l-en">Two routes: <strong>provider fine-tuning APIs</strong> (upload examples, get a private model endpoint; easy, but the model stays on their platform) and <strong>open-weights fine-tuning</strong> with libraries like Hugging Face TRL, Unsloth or Axolotl on your own or rented GPUs (full control; you serve it yourself). Check the model licence and the provider's terms before training on outputs from another model.</p>
+  <p class="l-hi">Do raaste: <strong>provider fine-tuning APIs</strong> (examples upload karo, private model endpoint pao; aasaan, par model unke platform par rehta hai) aur <strong>open-weights fine-tuning</strong>, Hugging Face TRL, Unsloth ya Axolotl jaisi libraries se apne ya kiraaye ke GPUs par (poora control; serve aap karte ho). Doosre model ke outputs par train karne se pehle model licence aur provider ki terms check karo.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: the maths of LoRA</span><span class="l-hi">Gehraai mein: LoRA ka maths</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <div class="eq">W′ = W + ΔW,   ΔW = B·A,   B ∈ ℝ<sup>d×r</sup>, A ∈ ℝ<sup>r×d</sup>,  r ≪ d</div>
+    <p class="l-en">Instead of learning a full d×d update (16.8 M numbers for d = 4,096), LoRA learns B and A with only 2·d·r numbers (65,536 for r = 8). W stays frozen. The adapter can be merged into W for serving, or kept separate so one base model serves many adapters. <strong>QLoRA</strong> stores the frozen W in 4-bit and trains the adapters in higher precision, which is how a 7–8B model can be fine-tuned on a single consumer GPU. <strong>SFT</strong> trains on input→ideal-output pairs; <strong>DPO</strong> trains on chosen-vs-rejected pairs (Book 1, Chapter 4).</p>
+    <p class="l-hi">Poora d×d update (d = 4,096 ke liye 1.68 crore numbers) seekhne ki jagah LoRA sirf 2·d·r numbers ke saath B aur A seekhta hai (r = 8 ke liye 65,536). W jama rehta hai. Adapter serving ke liye W mein mila sakte ho, ya alag rakh sakte ho taaki ek base model kai adapters serve kare. <strong>QLoRA</strong> jame W ko 4-bit mein rakhta hai aur adapters zyaada precision mein train karta hai, isi se 7–8B model ek consumer GPU par fine-tune hota hai. <strong>SFT</strong> input→behtareen-output pairs par train karta hai; <strong>DPO</strong> chuna-vs-thukraaya pairs par (Book 1, Chapter 4).</p>
+<pre>$ python code2/ch23/lora_math.py
+full update: 16,777,216 parameters per 4096x4096 matrix
+ rank r  LoRA params % of full  update captured
+      1        8,192     0.05%             7.0%
+      2       16,384     0.10%            14.5%
+      4       32,768     0.20%            31.2%
+      8       65,536     0.39%            99.3%
+     16      131,072     0.78%            99.3%
+     64      524,288     3.12%            99.3%
+
+Rough GPU memory to fine-tune an 8B model
+  full fine-tune (bf16 weights + grads + Adam fp32 states):     96 GB
+  LoRA  (bf16 frozen weights + small adapters):                 16 GB
+  QLoRA (4-bit frozen weights + small adapters):                 4 GB</pre>
+    <p class="l-en">The memory figures exclude activations, which add several GB depending on batch size and sequence length. The update in the lab is synthetic with a true rank of 8, which is why capture jumps at r = 8; real updates aren't this clean, but the same effect shows up.</p>
+    <p class="l-hi">Memory figures mein activations shaamil nahi, jo batch size aur sequence length ke hisaab se kai GB jodti hain. Lab ka update banaaya hua hai jiska asli rank 8 hai, isliye r = 8 par capture uchhalta hai; asli updates itne saaf nahi, par yahi asar dikhta hai.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Fine-tune for behaviour, style and narrow high-volume tasks, not for changing facts.</li><li>LoRA trains a tiny add-on; QLoRA makes it fit on one consumer GPU.</li><li>Quality data, the right template, a held-out eval, and a safety check.</li><li>Always compare against a well-prompted base model first.</li></ol>
+  <ol class="l-hi"><li>Fine-tune behaviour, style aur sankare bade-volume kaamon ke liye karo, badalne wale facts ke liye nahi.</li><li>LoRA chhota add-on train karta hai; QLoRA use ek consumer GPU par fit karta hai.</li><li>Quality data, sahi template, alag rakha eval, aur safety check.</li><li>Hamesha pehle achhe se prompt kiye base model se compare karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Collect 200 examples of a task you do (for example rewriting support replies in your brand voice). Before fine-tuning, try a few-shot prompt with 5 of them. Is fine-tuning still needed? <span class="level">core</span></p><p class="l-hi">Apne kisi kaam ke 200 examples jama karo (jaise support jawab brand ki awaaz mein dobara likhna). Fine-tune se pehle unme se 5 ke saath few-shot prompt try karo. Kya fine-tuning ab bhi chahiye? <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Follow an Unsloth or TRL notebook to QLoRA-tune a 1–3B model on a free cloud GPU. Measure your eval before and after. <span class="level">project</span></p><p class="l-hi">Unsloth ya TRL notebook se free cloud GPU par 1–3B model QLoRA-tune karo. Pehle aur baad apna eval naapo. <span class="level">project</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Hu et al. (2021). <em>LoRA: Low-Rank Adaptation of Large Language Models.</em></li>
+  <li>Dettmers et al. (2023). <em>QLoRA: Efficient Finetuning of Quantized LLMs.</em></li>
+  <li>Rafailov et al. (2023). <em>Direct Preference Optimization.</em></li>
+  <li>Qi et al. (2023). <em>Fine-tuning Aligned Language Models Compromises Safety, Even When Users Do Not Intend To!</em></li>
+</ol>
+<nav class="pager"><a href="ch22.html">← Ch 22</a><a href="ch24.html"><span class="l-en">Ch 24 · Small Models, Distillation &amp; Quantisation →</span><span class="l-hi">Ch 24 · Chhote Models, Distillation aur Quantisation →</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.columns("scA", [
+    { en: "Fine-tune for", hi: "Fine-tune karo", cls: "box-sig", step: 0, items: [
+      { en: "A consistent style, tone or output format", hi: "Ek jaisa style, tone ya output format", step: 0 },
+      { en: "A narrow task at very high volume (classify 10 M tickets)", hi: "Bahut bade volume par sankara kaam (1 crore tickets classify)", step: 0 },
+      { en: "Making a small, cheap model do what a big one does", hi: "Chhote, saste model se bade jaisa kaam karwaana", step: 0 },
+      { en: "Domain language the base model handles badly", hi: "Domain ki bhasha jise base model kharab sambhaale", step: 0 } ] },
+    { en: "Don't fine-tune for", hi: "Fine-tune mat karo", cls: "box-amb", step: 1, items: [
+      { en: "Facts that change: prices, policies, stock → RAG", hi: "Badalne wale facts: daam, policies, stock → RAG", step: 1 },
+      { en: "Actions → tools / MCP", hi: "Kaam → tools / MCP", step: 1 },
+      { en: "Something a better prompt fixes → try that first", hi: "Jo behtar prompt se theek ho → pehle woh try karo", step: 1 },
+      { en: "When you have under ~100 good examples", hi: "Jab ~100 se kam achhe examples hon", step: 1 } ] }
+  ], [
+    ["Fine-tuning is strongest at changing <strong>behaviour</strong>: style, format, and narrow skills at scale.", "Fine-tuning <strong>behaviour</strong> badalne mein sabse majboot: style, format, aur bade paimane par sankare hunar."],
+    ["It's the wrong tool for knowledge that changes, for actions, or when you haven't tried prompting properly.", "Badalne wale gyaan, kaam, ya jab prompting theek se try nahi ki, tab yeh galat tool hai."]
+  ]);
+
+  B.bars("scB", [
+    { en: "rank 1 (8 K params)", hi: "rank 1 (8 K params)", v: 7.0, txt: "7.0% captured", cls: "box-amb", step: 0 },
+    { en: "rank 4 (33 K params)", hi: "rank 4 (33 K params)", v: 31.2, txt: "31.2%", cls: "box-amb", step: 1 },
+    { en: "rank 8 (66 K params)", hi: "rank 8 (66 K params)", v: 99.3, txt: "99.3% · 0.39% of full", cls: "box-sig", step: 2 },
+    { en: "rank 64 (524 K params)", hi: "rank 64 (524 K params)", v: 99.3, txt: "99.3% · no gain", cls: "box-plm", step: 3 }
+  ], [
+    ["A rank-1 adapter captures only 7% of the update.", "Rank-1 adapter update ka sirf 7% pakadta hai."],
+    ["Rank 4: 31%.", "Rank 4: 31%."],
+    ["Rank 8 captures 99.3% using just 0.39% of the parameters of a full update.", "Rank 8 poore update ke sirf 0.39% parameters se 99.3% pakadta hai."],
+    ["Going to rank 64 adds parameters but no quality. Start small. (Real output of <code>code2/ch23/lora_math.py</code>.)", "Rank 64 parameters jodta hai par quality nahi. Chhote se shuru karo. (<code>code2/ch23/lora_math.py</code> ka asli output.)"]
+  ]);
+
+  B.bars("scC", [
+    { en: "Full fine-tune", hi: "Poora fine-tune", v: 96, txt: "≈ 96 GB · multi-GPU", cls: "box-plm", step: 0 },
+    { en: "LoRA", hi: "LoRA", v: 16, txt: "≈ 16 GB · one big GPU", cls: "box-amb", step: 1 },
+    { en: "QLoRA", hi: "QLoRA", v: 4.5, txt: "≈ 4-5 GB + activations · a gaming GPU", cls: "box-sig", step: 2 }
+  ], [
+    ["Full fine-tuning stores weights, gradients and optimiser state for every parameter: about 96 GB for 8B.", "Poora fine-tuning har parameter ke weights, gradients aur optimiser state rakhta hai: 8B ke liye lagbhag 96 GB."],
+    ["LoRA freezes the weights and trains only the adapters: about 16 GB.", "LoRA weights jama kar sirf adapters train karta hai: lagbhag 16 GB."],
+    ["QLoRA also stores the frozen weights in 4-bit: about 4–5 GB plus activations. That's a free cloud notebook or a gaming GPU.", "QLoRA jame weights ko 4-bit mein bhi rakhta hai: lagbhag 4–5 GB aur activations. Yeh free cloud notebook ya gaming GPU hai."]
+  ]);
+
+  B.flow("scD", [
+    { en: "Baseline", hi: "Baseline", sen: "best prompt + RAG on your eval", shi: "eval par best prompt + RAG" },
+    { en: "Data", hi: "Data", sen: "200-5,000 clean examples, right template", shi: "200-5,000 saaf examples, sahi template" },
+    { en: "Split", hi: "Baanto", sen: "train / validation / test", shi: "train / validation / test" },
+    { en: "Train", hi: "Train", sen: "QLoRA, rank 8-16, 1-3 epochs", shi: "QLoRA, rank 8-16, 1-3 epochs" },
+    { en: "Evaluate", hi: "Evaluate", sen: "task + general + safety evals", shi: "task + general + safety evals" },
+    { en: "Ship or drop", hi: "Ship ya chhodo", sen: "only if it beats the baseline", shi: "sirf agar baseline ko harae" }
+  ], [
+    ["Measure the best non-fine-tuned version first. That's the bar to beat.", "Pehle bina fine-tune ka best version naapo. Wahi harane ka nishaana hai."],
+    ["Build a clean dataset in the model's chat format.", "Model ke chat format mein saaf dataset banao."],
+    ["Keep test data the model never trains on.", "Aisa test data rakho jis par model kabhi train na ho."],
+    ["Train a small adapter.", "Chhota adapter train karo."],
+    ["Evaluate on your task, on general ability and on safety.", "Apne kaam, general kaabiliyat aur safety par evaluate karo."],
+    ["Ship only if it clearly wins. Often the honest result is “the prompt was enough”.", "Sirf saaf jeet par ship karo. Aksar imaandaar nateeja hota hai “prompt kaafi tha”."]
+  ], { perRow: 3 });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 8 · Packing the Diary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 08</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 08 · Building Haron's team</span><span class="l-hi">Chapter 08 · Haron ki team banana</span></div>
+  <h1><span class="l-en">Packing the Diary</span><span class="l-hi">Diary Pack Karna</span></h1>
+  <div class="story">
+    <p class="l-en">Packing for a trip is a skill: take what you need, put the things you always use where they're easy to reach, and leave the rest at home. Packing Haron's diary is the same skill, and it has a grand name: <strong>context engineering</strong>. Most "the agent got dumber" bugs are packing bugs, not model bugs.</p>
+    <p class="l-hi">Safar ke liye packing ek hunar hai: jo chahiye woh lo, roz ki cheezein aise rakho ki aasaani se mil jaayein, aur baaki ghar chhod do. Haron ki diary pack karna bhi yahi hunar hai, aur iska bhaari naam hai: <strong>context engineering</strong>. "Agent bewakoof ho gaya" wale zyaadatar bugs packing ke bugs hain, model ke nahi.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The order of the diary, and why it saves money</span><span class="l-hi">Diary ka order, aur isse paisa kyun bachta hai</span></li>
+    <li><b>2</b><span class="l-en">Retrieval (RAG): fetch only the pages that matter</span><span class="l-hi">Retrieval (RAG): sirf kaam ke pages laao</span></li>
+    <li><b>3</b><span class="l-en">Compaction: summarise the past to keep going</span><span class="l-hi">Compaction: purani baaton ka summary banakar aage badho</span></li>
+    <li><b>4</b><span class="l-en">Memory tiers and skills</span><span class="l-hi">Memory tiers aur skills</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The packing order</span><span class="l-hi">Packing ka order</span></h2></div>
+<div class="story">
+  <p class="l-en">Remember the train from Chapter 1: the prompt cache reuses the front of the request only while it stays <em>exactly</em> the same. So we pack from <strong>never-changing</strong> to <strong>always-changing</strong>.</p>
+  <p class="l-hi">Chapter 1 ki train yaad karo: prompt cache request ka aage ka hissa tabhi reuse karta hai jab woh <em>bilkul</em> same rahe. Isliye hum <strong>kabhi-na-badalne-wale</strong> se <strong>hamesha-badalne-wale</strong> ki taraf pack karte hain.</p>
+</div>
+<figure class="scene" id="scA"><div class="stage"><svg id="svA" viewBox="0 0 760 320" width="760" role="img" aria-label="The diary is stacked from stable to volatile, with a cache line after the stable part"></svg></div></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Fetching the right pages (RAG)</span><span class="l-hi">Sahi pages laana (RAG)</span></h2></div>
+<div class="story">
+  <p class="l-en">Acme has hundreds of HR policies. Putting all of them in the diary is slow, costly and makes Haron miss details. Instead, the team searches the library for the pages that match the question and packs only those. This is <strong>retrieval-augmented generation (RAG)</strong>.</p>
+  <p class="l-hi">Acme ki saikadon HR policies hain. Sabko diary mein daalna slow, mehenga hai aur Haron details miss karta hai. Iske badle team library mein sawaal se match karne wale pages dhoondhti hai aur sirf wahi pack karti hai. Ise <strong>retrieval-augmented generation (RAG)</strong> kehte hain.</p>
+</div>
+<figure class="scene" id="scB"><div class="stage"><svg id="svB" viewBox="0 0 760 300" width="760" role="img" aria-label="A question is matched against policy pages; the best page goes into the diary"></svg></div></figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">More context can make answers worse</span><span class="l-hi">Zyaada context jawab bigaad bhi sakta hai</span></h4>
+  <p class="l-en">Ten retrieved pages where one is relevant often beat zero pages, but lose to two good pages. Irrelevant text distracts the model and can even pull it towards a wrong but similar-looking answer. Retrieve fewer, better pages, and put the best one closest to the question.</p>
+  <p class="l-hi">Das pages jinme ek hi kaam ka ho, aksar zero pages se behtar hain, par do achhe pages se haar jaate hain. Bekaar text model ka dhyaan bhatkaata hai aur use milte-julte galat jawab ki taraf kheench sakta hai. Kam par behtar pages laao, aur sabse achha page sawaal ke sabse paas rakho.</p>
+</div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Squeezing the past (compaction)</span><span class="l-hi">Purani baatein dabaana (compaction)</span></h2></div>
+<div class="story">
+  <p class="l-en">Haron is auditing 30 expense reports. After 91 messages, the diary is too thick. The team keeps the original task and the last few messages word for word, and replaces everything in between with a short summary. One rule: never separate a tool call from its result.</p>
+  <p class="l-hi">Haron 30 expense reports audit kar raha hai. 91 messages ke baad diary bahut moti ho gayi. Team asli kaam aur aakhri kuch messages jaise ke taise rakhti hai, aur beech ka sab ek chhote summary se badal deti hai. Ek niyam: tool call ko uske result se kabhi alag mat karo.</p>
+</div>
+<figure class="scene" id="scC"><div class="stage"><svg id="svC" viewBox="0 0 760 260" width="760" role="img" aria-label="91 messages are compacted into the task, a summary and the last messages"></svg></div></figure>
+
+<h2><span class="l-en">Four kinds of memory</span><span class="l-hi">Chaar tarah ki memory</span></h2>
+<div class="tablewrap"><table>
+<thead><tr><th><span class="l-en">Tier</span><span class="l-hi">Tier</span></th><th><span class="l-en">Where it lives</span><span class="l-hi">Kahan rehti hai</span></th><th><span class="l-en">Example</span><span class="l-hi">Example</span></th></tr></thead>
+<tbody>
+<tr><td><b><span class="l-en">Working</span><span class="l-hi">Working</span></b></td><td><span class="l-en">The context window, this request</span><span class="l-hi">Context window, yahi request</span></td><td><span class="l-en">The current chat and tool results</span><span class="l-hi">Abhi ki chat aur tool results</span></td></tr>
+<tr><td><b><span class="l-en">Session</span><span class="l-hi">Session</span></b></td><td><span class="l-en">Harness storage, this conversation</span><span class="l-hi">Harness storage, yahi baatcheet</span></td><td><span class="l-en">Full transcript, compaction summaries</span><span class="l-hi">Poora transcript, compaction summaries</span></td></tr>
+<tr><td><b><span class="l-en">Long-term</span><span class="l-hi">Long-term</span></b></td><td><span class="l-en">Files or a database, across sessions</span><span class="l-hi">Files ya database, sessions ke paar</span></td><td><span class="l-en">"Riya prefers Hindi; her team is payments"</span><span class="l-hi">"Riya ko Hindi pasand; uski team payments"</span></td></tr>
+<tr><td><b><span class="l-en">Skills</span><span class="l-hi">Skills</span></b></td><td><span class="l-en">Folders of instructions loaded on demand</span><span class="l-hi">Instructions ke folders, zaroorat par load</span></td><td><span class="l-en">"How to file a GST return" loaded only when asked</span><span class="l-hi">"GST return kaise file karein" sirf poochne par load</span></td></tr>
+</tbody></table></div>
+
+<div class="callout harness">
+  <span class="tag">Harness note</span>
+  <h4><span class="l-en">Progressive disclosure</span><span class="l-hi">Dheere-dheere kholna</span></h4>
+  <p class="l-en">Don't load 200 skill manuals up front. Put a one-line index of skills in the system prompt ("gst-return: filing GST returns"), and let Haron read the full manual with a tool only when the task needs it. Claude Code's skills and many enterprise harnesses work this way. It keeps the stable prefix small and cache-friendly.</p>
+  <p class="l-hi">200 skill manuals pehle se load mat karo. System prompt mein skills ka ek-line index rakho ("gst-return: GST return file karna"), aur Haron tool se poora manual tabhi padhe jab kaam ko zaroorat ho. Claude Code ki skills aur kai enterprise harness aise hi chalte hain. Isse stable prefix chhota aur cache-friendly rehta hai.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">Retrieval must respect permissions</span><span class="l-hi">Retrieval ko permissions ka dhyaan rakhna hoga</span></h4>
+  <p class="l-en">If the search index contains salary files, a clever question can pull them into an intern's chat. Filter retrieval by the <strong>caller's</strong> access rights (document ACLs) before ranking, not after. Long-term memory needs the same care: what is remembered, for how long, and who can ask the agent to forget it (DPDP and GDPR give people that right; Chapter 12).</p>
+  <p class="l-hi">Agar search index mein salary files hain, toh chalaak sawaal unhe intern ki chat mein kheench sakta hai. Ranking se <strong>pehle</strong> retrieval ko <strong>poochne wale</strong> ke access rights (document ACLs) se filter karo, baad mein nahi. Long-term memory mein bhi yahi dhyaan: kya yaad rakha jaata hai, kitne samay tak, aur kaun agent se bhoolne ko keh sakta hai (DPDP aur GDPR logon ko yeh haq dete hain; Chapter 12).</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: BM25, embeddings and hybrid search</span><span class="l-hi">Gehraai mein: BM25, embeddings aur hybrid search</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <div class="eq">BM25(q, d) = Σ<sub>w∈q</sub> IDF(w) · f(w,d)(k₁+1) / ( f(w,d) + k₁(1 − b + b·|d|/avgdl) ) <span class="lbl">(8.1)</span></div>
+    <p class="l-en"><strong>BM25</strong> scores keyword overlap, weighting rare words more. It is fast, explainable and strong on exact terms (policy names, error codes). <strong>Embedding search</strong> turns text into vectors (Chapter 1's meaning map) and finds neighbours, which is good for paraphrases. Production systems often use <strong>hybrid</strong> search (both, merged with reciprocal-rank fusion), then a <strong>reranker</strong> model on the top 20–50, then keep the top 3–5. Chunk documents by meaning (headings, paragraphs), keep a source ID on every chunk, and evaluate retrieval separately from generation: recall@k tells you whether the right page was even found.</p>
+    <p class="l-hi"><strong>BM25</strong> keywords ke mel ko score karta hai, rare words ko zyaada weight dekar. Yeh tez, samjhaane laayak aur sateek shabdon (policy naam, error codes) par majboot hai. <strong>Embedding search</strong> text ko vectors (Chapter 1 ka meaning map) mein badalkar padosi dhoondhta hai, jo alag shabdon mein kahi same baat ke liye achha hai. Production systems aksar <strong>hybrid</strong> search (dono, reciprocal-rank fusion se mila kar) use karte hain, phir top 20–50 par <strong>reranker</strong> model, phir top 3–5 rakhte hain. Documents ko matlab ke hisaab se kaato (headings, paragraphs), har chunk par source ID rakho, aur retrieval ko generation se alag evaluate karo: recall@k batata hai ki sahi page mila bhi ya nahi.</p>
+  </div>
+</details>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: layout, retrieval, compaction</span><span class="l-hi">Coders ke liye: layout, retrieval, compaction</span><span class="lvl">code/harness/context.py</span></summary>
+  <div class="inner">
+<pre>$ python code/ch08/context_demo.py
+Query: Can I fly business class to London?
+   2.82  Travel policy: economy class for flights under 6 hours; business class...
+   0.77  Work from home: up to 2 days per week with manager approval....
+
+Cache reuse on the second request:
+  date at the END   ->  152 tokens reusable
+  date at the START ->    5 tokens reusable
+
+Compaction: 91 messages / ~2,918 tokens -> 10 messages / ~1,593 tokens</pre>
+    <p class="l-en">The summariser here is extractive (it keeps the first characters of each old message) so it runs offline. In production, ask a small, cheap model to write the summary, and tell it what must survive: decisions, open questions, IDs, file paths and errors.</p>
+    <p class="l-hi">Yahan summariser extractive hai (har purane message ke pehle kuch characters rakhta hai) taaki offline chale. Production mein summary ek chhote, saste model se likhwao, aur batao kya bachna zaroori hai: faisle, khule sawaal, IDs, file paths aur errors.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Pack my diary from never-changing to always-changing.</li><li>Fetch a few good pages, not the whole library, and filter by who is asking.</li><li>When the diary gets thick, summarise the middle; keep the task and recent steps.</li><li>Load skill manuals only when the task needs them.</li></ol>
+  <ol class="l-hi"><li>Meri diary kabhi-na-badalne-wale se hamesha-badalne-wale ki taraf pack karo.</li><li>Poori library nahi, kuch achhe pages laao, aur poochne wale ke hisaab se filter karo.</li><li>Diary moti ho toh beech ka summary banao; kaam aur haal ke steps rakho.</li><li>Skill manuals tabhi load karo jab kaam ko zaroorat ho.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Add five more policies to <code>context_demo.py</code> and ten test questions with the right policy for each. Measure recall@1 and recall@2 for BM25. <span class="level">coder</span></p><p class="l-hi"><code>context_demo.py</code> mein paanch aur policies aur das test sawaal (har ek ki sahi policy ke saath) jodo. BM25 ka recall@1 aur recall@2 naapo. <span class="level">coder</span></p></div>
+  <div class="exercise"><p class="l-en">Write the summarisation prompt you would give a small model during compaction for a coding agent. List the five things it must never drop. <span class="level">harness</span></p><p class="l-hi">Coding agent ke compaction ke liye chhote model ko diya jaane wala summary prompt likho. Woh paanch cheezein likho jo kabhi nahi chhootni chahiye. <span class="level">harness</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Lewis et al. (2020). <em>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.</em></li>
+  <li>Robertson &amp; Zaragoza (2009). <em>The Probabilistic Relevance Framework: BM25 and Beyond.</em></li>
+  <li>Shi et al. (2023). <em>Large Language Models Can Be Easily Distracted by Irrelevant Context.</em></li>
+  <li>Anthropic (2025). <em>Effective context engineering for AI agents.</em></li>
+</ol>
+
+<nav class="pager"><a href="ch07.html">← Ch 7</a><a href="ch09.html"><span class="l-en">Ch 9 · Many Harons →</span><span class="l-hi">Ch 9 · Kai Saare Haron →</span></a></nav>
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, cls = B.cls, move = B.move;
+
+  /* Scene A: packing order */
+  (function () {
+    var s = document.getElementById("svA");
+    var layers = [
+      ["Rules (system prompt)", "Niyam (system prompt)", "never changes", "kabhi nahi badalta", "box-sig"],
+      ["Tool definitions, sorted", "Tool definitions, sorted", "changes on release", "release par badalta", "box-sig"],
+      ["Reference documents", "Reference documents", "changes per topic", "topic ke hisaab se", "box-sig"],
+      ["Conversation so far", "Ab tak ki baatcheet", "grows every turn", "har turn badhti", "box-plm"],
+      ["Today's date, user name, question", "Aaj ki date, user ka naam, sawaal", "new every request", "har request naya", "box-amb"]
+    ];
+    var gs = layers.map(function (L, i) {
+      return B.box(s, { x: 120, y: 20 + i * 50, w: 380, h: 42, cls: L[4], en: L[0], hi: L[1] });
+    });
+    var tags = layers.map(function (L, i) {
+      var g = E(s, "g", { "class": "anim" });
+      BI(g, { x: 515, y: 46 + i * 50, "font-size": 12, "class": "muted" }, L[2], L[3]);
+      return g;
+    });
+    var cache = E(s, "g", { "class": "anim" });
+    E(cache, "line", { x1: 100, y1: 166, x2: 740, y2: 166, "class": "line-sig dash", "stroke-width": 2.5 });
+    BI(cache, { x: 515, y: 161, "font-size": 11, "font-weight": 700, "class": "sig" }, "cache line: all above is reused", "cache line: upar ka sab reuse");
+    var arrowG = E(s, "g", { "class": "anim" });
+    E(arrowG, "path", { d: "M60 30 V260", "class": "line", "stroke-width": 2 });
+    E(arrowG, "path", { d: "M54 250 L60 264 L66 250", "class": "line", "stroke-width": 2, fill: "none" });
+    BI(arrowG, { x: 20, y: 290, "font-size": 11, "class": "muted" }, "stable → volatile", "sthir → badalta");
+    var caps = layers.map(function (L, i) {
+      return ["Pack layer " + (i + 1) + ": <strong>" + L[0] + "</strong> (" + L[2] + ").", "Layer " + (i + 1) + " pack karo: <strong>" + L[1] + "</strong> (" + L[3] + ")."];
+    });
+    caps.push(["The cache line sits after the stable part. Requests from every user share everything above it, at about 10% of the price. The date lives at the bottom, so it never breaks the cache.", "Cache line sthir hisse ke baad hai. Har user ki requests uske upar ka sab share karti hain, lagbhag 10% daam par. Date sabse neeche hai, isliye cache kabhi nahi todti."]);
+    B.scene(document.getElementById("scA"), caps, function (i) {
+      gs.forEach(function (g, k) { show(g, k <= i); });
+      tags.forEach(function (g, k) { show(g, k <= i); });
+      show(cache, i >= 5); show(arrowG, i >= 4);
+    }, { delay: 2400 });
+  })();
+
+  /* Scene B: RAG */
+  (function () {
+    var s = document.getElementById("svB");
+    var q = B.box(s, { x: 20, y: 14, w: 320, h: 40, cls: "box-amb", en: "“Can I fly business class to London?”", hi: "“Kya main London business class jaa sakta hoon?”", fs: 12 });
+    var docs = [["Leave policy", "24 days paid leave", 0], ["Travel policy", "business class > 6 h with VP OK", 2.82], ["Laptop policy", "refresh every 3 years", 0], ["Work from home", "2 days / week", 0.77]];
+    var cards = [], scores = [];
+    docs.forEach(function (d, i) {
+      var y = 74 + i * 52;
+      var g = B.box(s, { x: 20, y: y, w: 320, h: 44, cls: "box", en: d[0], hi: d[0], sen: d[1], shi: d[1] });
+      cards.push(g);
+      scores.push(E(s, "text", { x: 352, y: y + 28, "font-size": 14, "font-weight": 700, "class": "mono anim" }, d[2] ? d[2].toFixed(2) : "0.00"));
+    });
+    var diary = E(s, "g", { "class": "anim" });
+    E(diary, "rect", { x: 440, y: 60, width: 300, height: 150, rx: 8, "class": "box", "stroke-width": 2 });
+    BI(diary, { x: 456, y: 84, "font-size": 12, "font-weight": 700 }, "Haron's diary", "Haron ki diary");
+    E(diary, "rect", { x: 456, y: 96, width: 268, height: 44, rx: 4, "class": "box-sig" });
+    BI(diary, { x: 470, y: 123, "font-size": 12 }, "[doc 2] Travel policy: business > 6 h", "[doc 2] Travel policy: business > 6 h");
+    E(diary, "rect", { x: 456, y: 150, width: 268, height: 44, rx: 4, "class": "box-amb" });
+    BI(diary, { x: 470, y: 177, "font-size": 12 }, "question", "sawaal");
+    var ans = B.box(s, { x: 440, y: 226, w: 300, h: 60, cls: "box-sig", fs: 12, en: "“Yes, if the flight is over 6 h", hi: "“Haan, agar flight 6 h se lambi ho", sen: "and a VP approves. [doc 2]”", shi: "aur VP approve kare. [doc 2]”" });
+    var arr = B.arrow(s, s, 342, 148, 436, 118, "sig");
+    B.scene(document.getElementById("scB"), [
+      ["An employee asks a travel question.", "Ek employee travel ka sawaal poochta hai."],
+      ["The team searches the policy library. BM25 scores each page by matching words; “Travel policy” wins with 2.82.", "Team policy library mein search karti hai. BM25 matching words se har page ko score deta hai; “Travel policy” 2.82 se jeetta hai."],
+      ["Only the winning page goes into the diary, right above the question.", "Sirf jeetne wala page diary mein, sawaal ke theek upar jaata hai."],
+      ["Haron answers from the page and cites it, so anyone can check.", "Haron page se jawab deta hai aur citation deta hai, taaki koi bhi check kar sake."]
+    ], function (i) {
+      scores.forEach(function (t) { show(t, i >= 1); });
+      cards.forEach(function (c, k) { cls(c.firstChild, i >= 1 && k === 1 ? "box-sig" : "box"); c.style.opacity = i >= 2 && k !== 1 ? 0.35 : 1; });
+      show(diary, i >= 2); show(arr, i >= 2); show(ans, i >= 3);
+    });
+  })();
+
+  /* Scene C: compaction */
+  (function () {
+    var s = document.getElementById("svC");
+    var sq = [];
+    for (var i = 0; i < 91; i++) {
+      var col = i % 23, row = Math.floor(i / 23);
+      var r = E(s, "rect", { x: 20 + col * 31, y: 20 + row * 30, width: 26, height: 24, rx: 3, "class": "anim " + (i === 0 ? "box-sig" : (i % 3 === 2 ? "box" : (i % 3 === 0 ? "box-plm" : "box-amb"))) });
+      sq.push(r);
+    }
+    var meter = E(s, "text", { x: 20, y: 172, "font-size": 15, "font-weight": 700, "class": "mono" }, "");
+    var lim = E(s, "g", { "class": "anim" });
+    BI(lim, { x: 20, y: 194, "font-size": 12, "class": "amb" }, "limit: 1,500 tokens", "limit: 1,500 tokens");
+    var after = E(s, "g", { "class": "anim" });
+    E(after, "rect", { x: 20, y: 210, width: 26, height: 24, rx: 3, "class": "box-sig" });
+    E(after, "rect", { x: 52, y: 210, width: 250, height: 24, rx: 3, "class": "box-plm" });
+    BI(after, { x: 60, y: 227, "font-size": 11 }, "summary of messages 2–84", "messages 2–84 ka summary");
+    E(after, "rect", { x: 308, y: 210, width: 26, height: 24, rx: 3, "class": "box" });
+    for (var k = 0; k < 7; k++) E(after, "rect", { x: 340 + k * 31, y: 210, width: 26, height: 24, rx: 3, "class": k % 3 === 0 ? "box-plm" : (k % 3 === 1 ? "box-amb" : "box") });
+    BI(after, { x: 570, y: 227, "font-size": 11, "class": "muted" }, "← last steps kept as is", "← aakhri steps jaise ke taise");
+    B.scene(document.getElementById("scC"), [
+      ["91 messages: the task (blue), then 30 rounds of tool call (purple), result (orange) and “next” (grey).", "91 messages: kaam (blue), phir 30 round tool call (purple), result (orange) aur “next” (grey)."],
+      ["About 2,918 tokens, over the 1,500-token limit the team set for this agent.", "Lagbhag 2,918 tokens, team ki rakhi 1,500 token limit se zyaada."],
+      ["Compaction: keep the task, summarise the middle, keep the last steps (cut only at a user turn, so no tool call loses its result). 10 messages, about 1,600 tokens.", "Compaction: kaam rakho, beech ka summary, aakhri steps rakho (sirf user turn par kaato, taaki koi tool call apna result na khoye). 10 messages, lagbhag 1,600 tokens."]
+    ], function (i) {
+      sq.forEach(function (r) { r.style.opacity = i === 2 ? 0.12 : 1; });
+      meter.textContent = i >= 1 ? (i === 2 ? "≈ 1,593 tokens" : "≈ 2,918 tokens") : "91 messages";
+      meter.setAttribute("class", "mono " + (i === 1 ? "amb" : (i === 2 ? "sig" : "")));
+      show(lim, i === 1); show(after, i === 2);
+    });
+  })();
+})();
+</script>
+</body>
+</html>

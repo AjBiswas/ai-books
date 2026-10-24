@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 1 · Inside Haron's Brain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="book.css">
+<style>
+  :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .hero-tokku { display: grid; grid-template-columns: 1fr 9rem; gap: 1.5rem; align-items: center; }
+  .hero-tokku svg { width: 9rem; height: auto; }
+  @media (max-width: 560px) { .hero-tokku { grid-template-columns: 1fr; } .hero-tokku svg { width: 6rem; } }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<div class="topbar">
+  <div class="crumbs">
+    <a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a>
+    <span>Part I · Chapter 01</span>
+  </div>
+  <div class="langtog" role="group" aria-label="Language">
+    <button type="button" data-setlang="en" aria-pressed="true">English</button>
+    <button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button>
+  </div>
+</div>
+
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 01 · How models behave</span><span class="l-hi">Chapter 01 · Model kaise behave karte hain</span></div>
+  <div class="hero-tokku">
+    <h1><span class="l-en">Inside Haron's Brain</span><span class="l-hi">Haron ke Dimaag ke Andar</span></h1>
+    <svg viewBox="0 0 120 140" role="img" aria-label="Haron the robot"><use href="#tokku"/></svg>
+  </div>
+  <div class="story">
+    <p class="l-en">Meet <strong>Haron</strong>. Haron is a robot with a very big brain and exactly <strong>one skill</strong>: it guesses the next word. Say "Twinkle twinkle little…" and Haron says "star". That is all it does.</p>
+    <p class="l-hi">Milo <strong>Haron</strong> se. Haron ek robot hai jiska dimaag bahut bada hai, par usse sirf <strong>ek hi kaam</strong> aata hai: agla word guess karna. Aap bolo "Twinkle twinkle little…" aur Haron bolega "star". Bas itna hi.</p>
+    <p class="l-en">Yet with the right team around it, the same Haron can book tickets, write code and answer thousands of customers for a big company. This book is the story of building that team. In this first chapter, we open Haron's head and look inside.</p>
+    <p class="l-hi">Lekin agar uske aas-paas sahi team ho, toh yahi Haron ticket book kar sakta hai, code likh sakta hai, aur ek badi company ke hazaaron customers ko jawab de sakta hai. Yeh book usi team ko banane ki kahani hai. Is pehle chapter mein hum Haron ka sar kholkar andar dekhenge.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Why Haron needs a team (the harness)</span><span class="l-hi">Haron ko team (harness) kyun chahiye</span></li>
+    <li><b>2</b><span class="l-en">How Haron reads: tokens and attention</span><span class="l-hi">Haron padhta kaise hai: tokens aur attention</span></li>
+    <li><b>3</b><span class="l-en">Why writing is slow and costly, and how notes help</span><span class="l-hi">Likhna slow aur mehenga kyun hai, aur notes kaise madad karte hain</span></li>
+    <li><b>4</b><span class="l-en">How Haron picks a word: the lucky wheel</span><span class="l-hi">Haron word kaise chunta hai: lucky wheel</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<!-- ===================== SCENE 1 ===================== -->
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Haron forgets everything</span><span class="l-hi">Haron sab bhool jaata hai</span></h2></div>
+<div class="story">
+  <p class="l-en">One morning you ask Haron: <em>"What's the weather in Pune right now?"</em> Haron freezes. It doesn't know what "now" means, because it has no clock. It can't look out of a window. It doesn't even remember that you talked yesterday. <strong>Every time you talk to Haron, it is as if it just woke up.</strong></p>
+  <p class="l-hi">Ek subah aap Haron se poochte ho: <em>"Pune mein abhi mausam kaisa hai?"</em> Haron atak jaata hai. Use "abhi" ka matlab nahi pata, kyunki uske paas ghadi nahi hai. Woh khidki se bahar nahi dekh sakta. Use yeh bhi yaad nahi ki kal aapne usse baat ki thi. <strong>Har baar jab aap Haron se baat karte ho, woh aisa hai jaise abhi-abhi neend se utha ho.</strong></p>
+  <p class="l-en">So we give Haron a team. Watch them arrive one by one.</p>
+  <p class="l-hi">Isliye hum Haron ko ek team dete hain. Dekho, ek-ek karke sab aate hain.</p>
+</div>
+
+<figure class="scene" id="scA">
+  <div class="stage"><svg id="svA" viewBox="0 0 760 360" width="760" role="img" aria-label="Haron surrounded by its team: diary, toolbox, rulebook, wallet and manager"></svg></div>
+</figure>
+
+<div class="analogy">
+  <div><span class="k"><span class="l-en">In the story</span><span class="l-hi">Kahani mein</span></span><span class="l-en">Haron, the brain</span><span class="l-hi">Haron, sirf dimaag</span></div>
+  <div><span class="k"><span class="l-en">Real name</span><span class="l-hi">Asli naam</span></span><strong>Model</strong> (LLM: Claude, GPT, Llama…)</div>
+  <div><span class="k"><span class="l-en">In the story</span><span class="l-hi">Kahani mein</span></span><span class="l-en">Haron's team</span><span class="l-hi">Haron ki team</span></div>
+  <div><span class="k"><span class="l-en">Real name</span><span class="l-hi">Asli naam</span></span><strong>Harness</strong> (Claude Code, Cursor, <span class="l-en">your company's AI platform</span><span class="l-hi">aapki company ka AI platform</span>)</div>
+</div>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">Because Haron forgets everything, the team must hand over the <strong>whole diary every single time</strong>: the rules, the tools, the full chat so far. On message 40 of a chat, you pay again for messages 1 to 39. Most of this book is about doing that smartly.</p>
+  <p class="l-hi">Kyunki Haron sab bhool jaata hai, team ko <strong>har baar poori diary</strong> deni padti hai: niyam, tools, ab tak ki poori chat. Chat ke 40th message par aap message 1 se 39 tak ka paisa phir se dete ho. Yeh poori book isi kaam ko smart tareeke se karne ke baare mein hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: model vs harness</span><span class="l-hi">Gehraai mein: model vs harness</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <p class="l-en">An LLM is a <strong>stateless function</strong>: it takes a list of token IDs and returns a score (logit) for every token in its vocabulary. It keeps no state between calls and has no tools, clock, identity or budget. Everything agent-like lives in the harness: prompt assembly, tool execution, memory, the control loop, output validation, policy, budgeting and telemetry. When something fails, first decide which side it belongs to. An invented API name is model behaviour, and the harness handles it by validating tool calls. An endless loop is a harness bug: a missing step limit.</p>
+    <p class="l-hi">LLM ek <strong>stateless function</strong> hai: token IDs ki list leta hai aur vocabulary ke har token ke liye ek score (logit) deta hai. Do calls ke beech kuch yaad nahi rakhta, aur uske paas na tools hain, na ghadi, na pehchaan, na budget. Agent jaisa sab kuch harness mein hota hai: prompt jodna, tools chalana, memory, loop, output check, policy, budget aur logging. Jab kuch fail ho, pehle socho galti kis taraf ki hai. Model ne nakli API naam bana diya toh woh model ka behaviour hai, aur harness tool call validate karke use pakadta hai. Agent kabhi khatam hi na ho toh woh harness ka bug hai: step limit lagana bhool gaye.</p>
+  </div>
+</details>
+
+<!-- ===================== SCENE 2 ===================== -->
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Haron can't read letters</span><span class="l-hi">Haron letters nahi padh sakta</span></h2></div>
+<div class="story">
+  <p class="l-en">Here is a secret: Haron has never seen a single letter. Before a sentence reaches Haron, a helper <strong>chops it into pieces</strong>, the way a cook chops vegetables before cooking. Each piece is called a <strong>token</strong>. Common words stay whole. Rare words, like "Haron" or "Bengaluru", get cut into smaller bits.</p>
+  <p class="l-hi">Ek raaz ki baat: Haron ne aaj tak ek bhi letter nahi dekha. Sentence Haron tak pahunchne se pehle ek helper use <strong>tukdon mein kaat deta hai</strong>, jaise khaana banane se pehle sabzi kaatte hain. Har tukde ko <strong>token</strong> kehte hain. Common words poore rehte hain. "Haron" ya "Bengaluru" jaise rare words chhote tukdon mein kat jaate hain.</p>
+</div>
+
+<figure class="scene" id="scB">
+  <div class="stage"><svg id="svB" viewBox="0 0 760 270" width="760" role="img" aria-label="A sentence is cut into tokens, each token gets a number, each number becomes a list of numbers"></svg></div>
+</figure>
+
+<div class="story">
+  <p class="l-en">The last step is the magic one. Each number becomes a long list of numbers called a <strong>vector</strong>. Think of it as the token's <strong>home address on a meaning map</strong>. Words with similar meanings live in the same neighbourhood: "king" lives near "queen", "chai" lives near "coffee", and "banana" lives far away from "laptop".</p>
+  <p class="l-hi">Aakhri step sabse jaadui hai. Har number ek lambi numbers ki list ban jaata hai, jise <strong>vector</strong> kehte hain. Ise token ka <strong>"meaning map" par ghar ka pata</strong> samjho. Milte-julte matlab wale words ek hi mohalle mein rehte hain: "king" "queen" ke paas, "chai" "coffee" ke paas, aur "banana" "laptop" se bahut door.</p>
+</div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Why Haron can't count the r's in "strawberry"</span><span class="l-hi">Haron "strawberry" mein r kyun nahi gin paata</span></h4>
+  <p class="l-en">Haron sees "straw" + "berry" as two pieces, not ten letters. So counting letters, spelling words backwards, or adding long numbers digit by digit is surprisingly hard for it. That isn't stupidity; Haron simply never sees the letters. The fix belongs to the team: give Haron a calculator or code tool for these jobs.</p>
+  <p class="l-hi">Haron ke liye "strawberry" das letters nahi, balki do tukde hain: "straw" + "berry". Isliye letters ginna, word ulta likhna, ya lambe numbers jodna uske liye ajeeb tarah se mushkil hai. Yeh bewakoofi nahi hai; Haron letters dekhta hi nahi. Iska ilaaj team ke paas hai: aise kaamon ke liye Haron ko calculator ya code tool do.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">Hindi costs more than English</span><span class="l-hi">Hindi, English se mehengi padti hai</span></h4>
+  <p class="l-en">Companies pay <strong>per token</strong>. Tokenizers learned mostly from English, so English words become few pieces. Hindi, Tamil or Kannada text often breaks into many more pieces for the same meaning. Same message, bigger bill. A company serving Indian customers must <strong>measure</strong> this on real messages, never guess.</p>
+  <p class="l-hi">Companies <strong>har token ka</strong> paisa deti hain. Tokenizer zyaadatar English se seekhe hain, isliye English words kam tukdon mein bante hain. Wahi baat Hindi, Tamil ya Kannada mein likho toh aksar kai guna zyaada tukde bante hain. Same message, bada bill. Indian customers wali company ko yeh asli messages par <strong>naapna</strong> chahiye, andaaza nahi lagana chahiye.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: BPE, vocabularies, positions</span><span class="l-hi">Gehraai mein: BPE, vocabulary, position</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <p class="l-en">Most tokenizers use <strong>byte-pair encoding (BPE)</strong>. BPE starts from raw bytes and repeatedly merges the most frequent neighbouring pair until it reaches a target vocabulary size: 128,256 tokens for Llama 3, about 200k for OpenAI's <code>o200k_base</code>. A rough English rule is 1 token ≈ 4 characters ≈ ¾ word. Each token ID selects one row of the embedding matrix (<var>|V|</var> × <var>d</var><sub>model</sub>, with <var>d</var><sub>model</sub> = 4,096 in Llama-3-8B).</p>
+    <p class="l-hi">Zyaadatar tokenizer <strong>byte-pair encoding (BPE)</strong> use karte hain. BPE bytes se shuru karta hai aur sabse zyaada saath aane wale jode ko baar-baar jodta rehta hai, jab tak vocabulary target size tak na pahunch jaaye: Llama 3 mein 128,256 tokens, OpenAI <code>o200k_base</code> mein lagbhag 200k. English ke liye mota hisaab: 1 token ≈ 4 characters ≈ ¾ word. Har token ID embedding matrix (<var>|V|</var> × <var>d</var><sub>model</sub>; Llama-3-8B mein <var>d</var><sub>model</sub> = 4,096) ki ek row chunta hai.</p>
+    <p class="l-en"><strong>Position:</strong> attention by itself has no sense of word order. <strong>RoPE</strong> (rotary position embedding) rotates query and key vectors by an angle that grows with position, so their dot product depends on the distance between two tokens. Stretching these rotations (NTK scaling, YaRN) is how a model trained on 8k tokens gets served at 128k.</p>
+    <p class="l-hi"><strong>Position:</strong> attention khud word ka order nahi jaanta. <strong>RoPE</strong> query aur key vectors ko position ke hisaab se ghumata hai, taaki unka dot product do tokens ki doori par depend kare. In rotations ko stretch karke (NTK scaling, YaRN) 8k par train hua model 128k tak chalaya jaata hai.</p>
+    <p class="l-en"><strong>Harness rule:</strong> count tokens with each provider's own tokenizer or token-count API. Never use <code>len(text)/4</code> for budgets.</p>
+    <p class="l-hi"><strong>Harness niyam:</strong> tokens har provider ke apne tokenizer ya token-count API se gino. Budget ke liye kabhi <code>len(text)/4</code> mat lagao.</p>
+  </div>
+</details>
+
+<!-- ===================== SCENE 3 ===================== -->
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Who is "it"? Attention</span><span class="l-hi">"it" kaun hai? Attention</span></h2></div>
+<div class="story">
+  <p class="l-en">Haron reads: <em>"The cat sat on the mat because it was tired."</em> Who was tired, the cat or the mat? You know instantly. Haron has to work it out, and the way it does this is called <strong>attention</strong>.</p>
+  <p class="l-hi">Haron padhta hai: <em>"The cat sat on the mat because it was tired."</em> (Billi chatai par baithi kyunki woh thaki thi.) Thaka kaun tha, billi ya chatai? Aapko turant pata chal gaya. Haron ko yeh nikaalna padta hai, aur jis tareeke se woh nikaalta hai use <strong>attention</strong> kehte hain.</p>
+  <p class="l-en">Picture a classroom. The word "it" stands up holding a <strong>question card</strong>: "Who am I talking about?" Every earlier word holds up a <strong>name tag</strong>. The better a name tag matches the question, the more "it" listens to that word, and that word hands over its <strong>message</strong>.</p>
+  <p class="l-hi">Ek classroom socho. Word "it" khada hota hai, haath mein ek <strong>sawaal card</strong> leke: "Main kiski baat kar raha hoon?" Pehle ke har word ke haath mein ek <strong>name tag</strong> hai. Jiska name tag sawaal se jitna zyaada match kare, "it" us word ki utni zyaada sunta hai, aur woh word apna <strong>message</strong> de deta hai.</p>
+</div>
+
+<figure class="scene" id="scC">
+  <div class="stage"><svg id="svC" viewBox="0 0 760 290" width="760" role="img" aria-label="The word it sends attention arcs to earlier words; cat gets the thickest arc"></svg></div>
+</figure>
+
+<div class="analogy">
+  <div><span class="k"><span class="l-en">Classroom</span><span class="l-hi">Classroom</span></span><span class="l-en">Question card</span><span class="l-hi">Sawaal card</span></div>
+  <div><span class="k"><span class="l-en">Real name</span><span class="l-hi">Asli naam</span></span><strong>Query (Q)</strong></div>
+  <div><span class="k"><span class="l-en">Classroom</span><span class="l-hi">Classroom</span></span><span class="l-en">Name tag</span><span class="l-hi">Name tag</span></div>
+  <div><span class="k"><span class="l-en">Real name</span><span class="l-hi">Asli naam</span></span><strong>Key (K)</strong></div>
+  <div><span class="k"><span class="l-en">Classroom</span><span class="l-hi">Classroom</span></span><span class="l-en">Message handed over</span><span class="l-hi">Diya gaya message</span></div>
+  <div><span class="k"><span class="l-en">Real name</span><span class="l-hi">Asli naam</span></span><strong>Value (V)</strong></div>
+</div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Lost in the middle</span><span class="l-hi">Beech mein kho jaana</span></h4>
+  <p class="l-en">Give Haron a 100-page document and ask about one fact. Haron finds it more easily when the fact is near the <strong>start</strong> or the <strong>end</strong>, and more often misses it when it sits in the middle (Liu et al., 2023). It's like a concert: you remember the first and last songs best. So the team puts important rules at the top and the current question at the bottom.</p>
+  <p class="l-hi">Haron ko 100 page ka document do aur ek fact poocho. Fact <strong>shuru</strong> ya <strong>aakhir</strong> mein ho toh Haron use aasaani se dhoondh leta hai, beech mein ho toh aksar miss kar deta hai (Liu et al., 2023). Concert jaisa hai: pehla aur aakhri gaana sabse achha yaad rehta hai. Isliye team zaroori niyam upar rakhti hai aur abhi ka sawaal sabse neeche.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: the attention formula</span><span class="l-hi">Gehraai mein: attention ka formula</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <div class="eq">Attention(Q, K, V) = softmax( Q·Kᵀ / √d<sub>k</sub> + M ) · V <span class="lbl">(1.1)</span></div>
+    <p class="l-en">Q·Kᵀ scores every (question, name-tag) pair. Dividing by √<var>d</var><sub>k</sub> keeps the scores from blowing up as vectors get longer. <var>M</var> is the <strong>causal mask</strong>: it sets every score for a later word to −∞, so a word can never peek ahead. Softmax turns each row into percentages that add up to 100%, and those percentages blend the values. <strong>Multi-head</strong> attention runs many of these in parallel (64 heads in Llama-3-70B), each learning a different kind of question. <strong>GQA</strong> lets several query heads share one key/value head (64 query heads, 8 KV heads), which cuts memory by 8×. Models also park extra attention on the first tokens, called <strong>attention sinks</strong> (Xiao et al., 2023).</p>
+    <p class="l-hi">Q·Kᵀ har (sawaal, name-tag) jode ko score deta hai. √<var>d</var><sub>k</sub> se divide karne par lambe vectors ke saath scores bahut bade nahi hote. <var>M</var> <strong>causal mask</strong> hai: aage wale words ka score −∞ kar deta hai, taaki koi word aage jhaank na sake. Softmax har row ko percentages mein badalta hai jinka total 100% hota hai, aur unhi percentages se values mix hoti hain. <strong>Multi-head</strong> attention aise kai kaam saath-saath karta hai (Llama-3-70B mein 64 heads), har head alag tarah ka sawaal seekhta hai. <strong>GQA</strong> mein kai query heads ek hi key/value head share karte hain (64 query, 8 KV), jisse memory 8 guna kam lagti hai. Model pehle tokens par extra attention daal dete hain; ise <strong>attention sinks</strong> kehte hain (Xiao et al., 2023).</p>
+  </div>
+</details>
+
+<!-- ===================== SCENE 4 ===================== -->
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">A building with many floors</span><span class="l-hi">Kai manzilon wali building</span></h2></div>
+<div class="story">
+  <p class="l-en">Haron's brain is like a tall building. Each word takes the lift up, floor by floor. On every floor, the word does one round of attention (talking to other words) and one round of thinking alone. By the top floor, the word understands the whole sentence, and the roof shouts out a guess for the next word. Small models have about 30 floors, big ones 80 or more. Each floor is called a <strong>layer</strong>.</p>
+  <p class="l-hi">Haron ka dimaag ek oonchi building jaisa hai. Har word lift mein baithkar ek-ek manzil upar jaata hai. Har manzil par word ek baar attention karta hai (baaki words se baat) aur ek baar akele sochta hai. Top floor tak pahunchte-pahunchte word poora sentence samajh jaata hai, aur chhat se agle word ka guess bola jaata hai. Chhote models mein lagbhag 30 manzil hoti hain, bade models mein 80 ya usse zyaada. Har manzil ko <strong>layer</strong> kehte hain.</p>
+</div>
+
+<figure class="scene" id="scL">
+  <div class="stage"><svg id="svL" viewBox="0 0 760 330" width="760" role="img" aria-label="A word rides a lift up the floors of a building, understanding more on each floor"></svg></div>
+</figure>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: residual stream, MLP, mixture of experts</span><span class="l-hi">Gehraai mein: residual stream, MLP, mixture of experts</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <p class="l-en">Each layer is <code>x = x + Attention(RMSNorm(x))</code> followed by <code>x = x + MLP(RMSNorm(x))</code>. The running vector <code>x</code> is the <strong>residual stream</strong> (the lift), and every sub-layer <em>adds</em> to it. The MLP holds most of the parameters and much of the stored factual knowledge. In <strong>mixture-of-experts</strong> models, a router sends each token to only a few expert MLPs: 2 of 8 in Mixtral 8×7B, and about 37B of 671B parameters active per token in DeepSeek-V3. You pay compute only for the active parameters, but all of them must fit in GPU memory. At the top, the <strong>LM head</strong> maps the final vector to one raw score per vocabulary token. These scores are the <strong>logits</strong>, the true output of the model.</p>
+    <p class="l-hi">Har layer mein pehle <code>x = x + Attention(RMSNorm(x))</code> hota hai, phir <code>x = x + MLP(RMSNorm(x))</code>. Chalta hua vector <code>x</code> <strong>residual stream</strong> hai (yahi lift hai), aur har sub-layer usme kuch <em>jodti</em> hai. Zyaadatar parameters aur facts ka bada hissa MLP mein hota hai. <strong>Mixture-of-experts</strong> models mein ek router har token ko sirf kuch expert MLPs ke paas bhejta hai: Mixtral 8×7B mein 8 mein se 2, aur DeepSeek-V3 mein har token par 671B mein se lagbhag 37B parameters active hote hain. Compute ka kharch sirf active parameters ka hota hai, par saare parameters GPU memory mein fit hone chahiye. Top par <strong>LM head</strong> aakhri vector ko har vocab token ke ek raw score mein badalta hai. Yeh scores <strong>logits</strong> hain, model ka asli output.</p>
+  </div>
+</details>
+
+<!-- ===================== SCENE 5 ===================== -->
+<div class="scene-title"><span class="sn">5</span><h2><span class="l-en">Reading is fast, writing is slow</span><span class="l-hi">Padhna tez, likhna dheema</span></h2></div>
+<div class="story">
+  <p class="l-en">Think of an exam. You read the whole question paper in one go, quickly. But you write the answer <strong>one word at a time</strong>, and before each new word you glance at everything you've written so far. Haron works exactly like this.</p>
+  <p class="l-hi">Exam socho. Poora question paper aap ek baar mein, jaldi se padh lete ho. Lekin jawab <strong>ek-ek word karke</strong> likhte ho, aur har naye word se pehle ab tak ka likha hua dekhte ho. Haron bilkul aise hi kaam karta hai.</p>
+</div>
+
+<figure class="scene" id="scD">
+  <div class="stage"><svg id="svD" viewBox="0 0 760 270" width="760" role="img" aria-label="Haron reads the whole question at once, then writes the answer one word per step"></svg></div>
+</figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">Words Haron <strong>writes</strong> (output tokens) are slower and cost about <strong>3 to 5 times more</strong> than words it <strong>reads</strong> (input tokens). A good team keeps Haron's answers short, sets a word limit (<code>max_tokens</code>), and shows words on screen as they come (<code>streaming</code>) so the user isn't left waiting.</p>
+  <p class="l-hi">Haron jo words <strong>likhta</strong> hai (output tokens) woh slow hote hain aur jo words <strong>padhta</strong> hai (input tokens) unse lagbhag <strong>3 se 5 guna mehenge</strong> padte hain. Achhi team Haron ke jawab chhote rakhti hai, word limit (<code>max_tokens</code>) lagaati hai, aur words aate hi screen par dikhaati hai (<code>streaming</code>) taaki user ko intezaar na karna pade.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: prefill, decode, TTFT, TPOT</span><span class="l-hi">Gehraai mein: prefill, decode, TTFT, TPOT</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <div class="eq">latency ≈ TTFT(prompt_tokens) + output_tokens × TPOT <span class="lbl">(1.2)</span></div>
+    <p class="l-en"><strong>Prefill</strong> (reading) processes all prompt tokens in parallel as large matrix multiplies. It is <em>compute-bound</em>, and attention cost grows as O(<var>n</var>²). <strong>Decode</strong> (writing) makes one forward pass per new token. Each pass does little arithmetic but must stream all the weights and the KV cache from GPU memory, so it is <em>memory-bandwidth-bound</em>. TTFT is time to first token, and TPOT is time per output token.</p>
+    <p class="l-hi"><strong>Prefill</strong> (padhna) saare prompt tokens ek saath bade matrix multiply se process karta hai. Yeh <em>compute-bound</em> hai, aur attention ka kharch O(<var>n</var>²) ki tarah badhta hai. <strong>Decode</strong> (likhna) har naye token ke liye ek forward pass karta hai. Har pass mein hisaab kam hota hai, lekin GPU memory se saare weights aur KV cache padhne padte hain, isliye yeh <em>memory-bandwidth-bound</em> hai. TTFT = pehla token aane ka samay, TPOT = har output token ka samay.</p>
+  </div>
+</details>
+
+<!-- ===================== SCENE 6 ===================== -->
+<div class="scene-title"><span class="sn">6</span><h2><span class="l-en">Haron's sticky notes</span><span class="l-hi">Haron ke sticky notes</span></h2></div>
+<div class="story">
+  <p class="l-en">Imagine writing an essay where, before every new word, you must re-read the <em>whole</em> essay from the first line. Word 100 would mean reading 99 words again. Exhausting! So Haron keeps <strong>sticky notes</strong>: a short summary of each word's name tag and message, written once and reused forever. Each new word only needs its own note. These notes are the <strong>KV cache</strong> (K for name tags, V for messages).</p>
+  <p class="l-hi">Socho aap essay likh rahe ho, aur har naye word se pehle <em>poora</em> essay pehli line se dobara padhna pade. 100th word ke liye 99 words phir se padhne padenge. Thak jaaoge! Isliye Haron <strong>sticky notes</strong> rakhta hai: har word ke name tag aur message ka chhota note, ek baar likha aur hamesha kaam aaya. Naye word ko bas apna note banana hota hai. Inhi notes ko <strong>KV cache</strong> kehte hain (K = name tags, V = messages).</p>
+</div>
+
+<figure class="scene" id="scE">
+  <div class="stage"><svg id="svE" viewBox="0 0 760 290" width="760" role="img" aria-label="Without notes, work grows with every word; with notes, each word costs one unit"></svg></div>
+</figure>
+
+<h3><span class="l-en">The train of notes: prompt caching</span><span class="l-hi">Notes ki train: prompt caching</span></h3>
+<div class="story">
+  <p class="l-en">Now picture each request to Haron as a <strong>train</strong>. The front coaches are the rules and tools, then a big policy book, and the last coach is the customer's question. If the next customer's train has the <em>same front coaches</em>, Haron reuses its old notes for them, and that part costs about <strong>90% less</strong>. But the reuse stops at the first coach that is different. Change one tiny thing in the front coach, and every coach behind it has to be read from scratch.</p>
+  <p class="l-hi">Ab Haron ki har request ko ek <strong>train</strong> socho. Aage ke dibbe niyam aur tools hain, phir ek badi policy book, aur aakhri dibba customer ka sawaal hai. Agar agle customer ki train ke <em>aage ke dibbe same</em> hain, toh Haron unke purane notes dobara use kar leta hai, aur woh hissa lagbhag <strong>90% sasta</strong> padta hai. Lekin jo pehla dibba alag hua, wahin se reuse ruk jaata hai. Aage ke dibbe mein ek chhoti si cheez badli, toh uske peeche ka har dibba shuru se padhna padega.</p>
+</div>
+
+<figure class="scene" id="scF">
+  <div class="stage"><svg id="svF" viewBox="0 0 760 300" width="760" role="img" aria-label="Three request trains; matching front coaches are reused; a timestamp in the first coach breaks reuse"></svg></div>
+</figure>
+
+<div class="callout harness">
+  <span class="tag">Harness note</span>
+  <h4><span class="l-en">The golden train rule</span><span class="l-hi">Train ka golden niyam</span></h4>
+  <p class="l-en">Line up every request from <strong>never-changing to always-changing</strong>: rules, then tools in a fixed order, then documents, then the chat history, then the newest question. Things that change every time, like today's date, the user's name or a request ID, go in the <strong>last coach</strong>, never the first. This one rule can cut a company's bill by half or more.</p>
+  <p class="l-hi">Har request ko <strong>kabhi-na-badalne-wale se hamesha-badalne-wale</strong> ki line mein lagao: niyam, phir tools (fixed order mein), phir documents, phir chat history, phir sabse naya sawaal. Har baar badalne wali cheezein, jaise aaj ki date, user ka naam ya request ID, <strong>aakhri dibbe</strong> mein jaati hain, pehle mein kabhi nahi. Sirf is ek niyam se company ka bill aadha ya usse bhi kam ho sakta hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: KV-cache memory maths</span><span class="l-hi">Gehraai mein: KV-cache memory ka hisaab</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <div class="eq">KV bytes per token = 2 × n<sub>layers</sub> × n<sub>kv_heads</sub> × d<sub>head</sub> × bytes <span class="lbl">(1.3)</span></div>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Model</th><th class="n"><span class="l-en">per token</span><span class="l-hi">per token</span></th><th class="n">128k context</th><th class="n"><span class="l-en">× 32 users</span><span class="l-hi">× 32 users</span></th></tr></thead>
+      <tbody>
+        <tr><td>Llama-3.1-8B</td><td class="n">128 KB</td><td class="n">15.6 GB</td><td class="n">500 GB</td></tr>
+        <tr><td>Llama-3.1-70B</td><td class="n">320 KB</td><td class="n">39.1 GB</td><td class="n">1.2 TB</td></tr>
+        <tr><td><span class="l-en">Same 70B, no GQA</span><span class="l-hi">Wahi 70B, bina GQA</span></td><td class="n">2.5 MB</td><td class="n">312.5 GB</td><td class="n">9.8 TB</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="l-en">Numbers are bf16, from <code>code/ch01/kv_cache.py</code>. For a self-hosted model, the notes often take more GPU memory than the model itself: the 70B weights are about 140 GB. That is why vLLM uses <strong>PagedAttention</strong> (Kwon et al., 2023), and why a per-team context limit is a capacity decision. On APIs, a cache read costs a fraction of the normal input price (10% on Anthropic).</p>
+    <p class="l-hi">Numbers bf16 mein hain, <code>code/ch01/kv_cache.py</code> se. Khud host kiye model mein aksar notes model se bhi zyaada GPU memory le lete hain: 70B ke weights lagbhag 140 GB ke hain. Isi wajah se vLLM <strong>PagedAttention</strong> use karta hai (Kwon et al., 2023), aur har team ki context limit ek capacity ka faisla hai. APIs par cache read normal input price ka chhota hissa padta hai (Anthropic par 10%).</p>
+  </div>
+</details>
+
+<!-- ===================== SCENE 7 ===================== -->
+<div class="scene-title"><span class="sn">7</span><h2><span class="l-en">The lucky wheel</span><span class="l-hi">Lucky wheel</span></h2></div>
+<div class="story">
+  <p class="l-en">At the top floor, Haron doesn't give one answer. It gives <strong>chances</strong>: "Paris" a big chance, "Lyon" a small one, "banana" almost none. To pick a word, the team spins a <strong>lucky wheel</strong>, like at a fair, where each word's slice is as big as its chance.</p>
+  <p class="l-hi">Top floor par Haron ek jawab nahi deta. Woh <strong>chances</strong> deta hai: "Paris" ka bada chance, "Lyon" ka chhota, "banana" ka lagbhag zero. Word chunne ke liye team ek <strong>lucky wheel</strong> ghumaati hai, mele jaisa, jisme har word ka hissa uske chance jitna bada hota hai.</p>
+  <p class="l-en">Two knobs change the wheel. <strong>Temperature</strong> is how "fair" the wheel is: cold makes the big slice swallow everything, and hot lets small slices grow. <strong>Top-p</strong> removes the tiny joke slices from the wheel. Try it. Question: <em>"The capital of France is…"</em></p>
+  <p class="l-hi">Wheel ko do knob badalte hain. <strong>Temperature</strong> batata hai wheel kitna "fair" hai: thanda ho toh bada hissa sab kuch kha jaata hai, garam ho toh chhote hisse bade ho jaate hain. <strong>Top-p</strong> wheel se chhote-chhote mazaak wale hisse hata deta hai. Khud try karo. Sawaal: <em>"The capital of France is…"</em></p>
+</div>
+
+<figure class="scene" id="scG">
+  <div class="wheel-wrap">
+    <svg id="svG" viewBox="0 0 360 370" role="img" aria-label="Lucky wheel with a slice for each candidate word"></svg>
+    <div class="wheel-side">
+      <div><label for="gT"><span class="l-en">Temperature (cold ↔ hot)</span><span class="l-hi">Temperature (thanda ↔ garam)</span> <output id="gTv">1.00</output></label><input id="gT" type="range" min="0" max="2.5" step="0.05" value="1"></div>
+      <div><label for="gP"><span class="l-en">Top-p (remove tiny slices)</span><span class="l-hi">Top-p (chhote hisse hatao)</span> <output id="gPv">1.00</output></label><input id="gP" type="range" min="0.5" max="1" step="0.01" value="1"></div>
+      <div class="wheel-legend" id="gLeg"></div>
+      <button type="button" class="spin-btn" id="gSpin"><span class="l-en">Spin the wheel</span><span class="l-hi">Wheel ghumao</span></button>
+      <div class="result" id="gRes" aria-live="polite"></div>
+      <div class="tally" id="gTally"></div>
+    </div>
+  </div>
+</figure>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">A cold wheel doesn't make Haron right</span><span class="l-hi">Thanda wheel Haron ko sahi nahi banata</span></h4>
+  <p class="l-en">If Haron is confidently wrong, and the wrong answer has the biggest slice, a cold wheel picks that wrong answer <strong>every single time</strong>. Temperature controls <em>variety</em>, not <em>truth</em>. Making Haron correct is the team's job: give it real documents, tools, and checks (Chapters 3 and 8). And a fully cold wheel has its own bug: Haron can get stuck repeating the same phrase in a loop.</p>
+  <p class="l-hi">Agar Haron pakke yakeen se galat hai, aur galat jawab ka hissa sabse bada hai, toh thanda wheel <strong>har baar</strong> wahi galat jawab chunega. Temperature <em>variety</em> control karta hai, <em>sach</em> nahi. Haron ko sahi banana team ka kaam hai: asli documents, tools aur checks do (Chapter 3 aur 8). Aur bilkul thande wheel ka apna bug hai: Haron ek hi line baar-baar dohraane ke loop mein atak sakta hai.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">Enterprise</span>
+  <h4><span class="l-en">"Same question, same answer" is not guaranteed</span><span class="l-hi">"Same sawaal, same jawab" ki guarantee nahi</span></h4>
+  <p class="l-en">Auditors often ask: "If we ask again, will we get the same answer?" Even with temperature 0, the answer can change slightly, because GPU maths depends on how many other requests run alongside, and providers update models. So a company's team must <strong>save every request and every answer</strong> with the exact model version and settings. The saved log is the proof, not a re-run.</p>
+  <p class="l-hi">Auditors aksar poochte hain: "Dobara poochenge toh wahi jawab milega?" Temperature 0 par bhi jawab thoda badal sakta hai, kyunki GPU ka hisaab is baat par depend karta hai ki saath mein kitni aur requests chal rahi hain, aur providers models update karte rehte hain. Isliye company ki team ko <strong>har request aur har jawab save</strong> karna chahiye, exact model version aur settings ke saath. Proof saved log hai, dobara chalana nahi.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">Deep dive: the maths of sampling, and which settings to use</span><span class="l-hi">Gehraai mein: sampling ka maths, aur kaunsi settings kab</span><span class="lvl">advanced</span></summary>
+  <div class="inner">
+    <div class="eq">p<sub>i</sub> = exp(z<sub>i</sub> / T) / Σ<sub>j</sub> exp(z<sub>j</sub> / T) <span class="lbl">(1.4)</span></div>
+    <p class="l-en">Pipeline used by vLLM and llama.cpp: logits → ÷T → softmax → top-k → top-p → min-p → renormalise → draw. <strong>Top-k</strong> keeps the k most likely tokens. <strong>Top-p</strong> (nucleus) keeps the smallest set whose probabilities add up to p (Holtzman et al., 2019). <strong>Min-p</strong> keeps tokens with at least min_p × the top token's probability, and works better at high T (Nguyen et al., 2024).</p>
+    <p class="l-hi">vLLM aur llama.cpp ki pipeline: logits → ÷T → softmax → top-k → top-p → min-p → renormalise → draw. <strong>Top-k</strong> sabse likely k tokens rakhta hai. <strong>Top-p</strong> (nucleus) sabse chhota set rakhta hai jiski probability ka total p ho (Holtzman et al., 2019). <strong>Min-p</strong> sirf woh tokens rakhta hai jinki probability top token ki probability × min_p se kam na ho, aur high T par behtar chalta hai (Nguyen et al., 2024).</p>
+    <p class="l-en"><strong>Hosted APIs are moving away from these knobs.</strong> Since 21 Oct 2026, Anthropic's Messages API rejects <code>temperature</code>, <code>top_p</code> and <code>top_k</code> on every model; you steer depth and spend with <code>effort</code> instead. The knobs still matter when you self-host (vLLM, llama.cpp) and on providers that keep them, so a provider-agnostic harness must send them only where the provider accepts them (Chapter 5).</p>
+    <p class="l-hi"><strong>Hosted APIs in knobs se door ja rahe hain.</strong> 21 Oct 2026 se Anthropic ki Messages API har model par <code>temperature</code>, <code>top_p</code> aur <code>top_k</code> reject karti hai; gehraai aur kharch <code>effort</code> se control hota hai. Self-host (vLLM, llama.cpp) aur jo providers inhe rakhte hain wahan yeh knobs ab bhi kaam ke hain, isliye provider-agnostic harness inhe sirf wahi bheje jahan provider accept kare (Chapter 5).</p>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th><span class="l-en">Task</span><span class="l-hi">Kaam</span></th><th class="n">T</th><th><span class="l-en">Truncation</span><span class="l-hi">Kaat-chhaant</span></th></tr></thead>
+      <tbody>
+        <tr><td><span class="l-en">Tool calls, JSON, classification</span><span class="l-hi">Tool calls, JSON, classification</span></td><td class="n">0–0.2</td><td>none</td></tr>
+        <tr><td><span class="l-en">Code</span><span class="l-hi">Code</span></td><td class="n">0–0.4</td><td>top-p 0.95</td></tr>
+        <tr><td><span class="l-en">Reasoning models</span><span class="l-hi">Reasoning models</span></td><td class="n">default</td><td><span class="l-en">provider default (often fixed)</span><span class="l-hi">provider ka default (aksar fixed)</span></td></tr>
+        <tr><td><span class="l-en">Writing, brainstorming</span><span class="l-hi">Likhna, brainstorming</span></td><td class="n">0.7–1.0</td><td>top-p 0.9–0.95 / min-p 0.05</td></tr>
+        <tr><td><span class="l-en">Majority voting (n samples)</span><span class="l-hi">Majority voting (n samples)</span></td><td class="n">0.7</td><td>top-p 0.95</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</details>
+
+<!-- ===================== WRAP-UP ===================== -->
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say">
+  <svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg>
+  <div class="bubble">
+    <ol class="l-en">
+      <li>I only guess the next word. My team (the <strong>harness</strong>) does everything else.</li>
+      <li>I forget everything, so my team gives me the whole diary every time, and pays for it.</li>
+      <li>I read <strong>tokens</strong>, not letters. Hindi costs more tokens than English.</li>
+      <li>I use <strong>attention</strong> to work out which words matter. I remember the start and end of long texts best.</li>
+      <li>I read fast but write slowly, one word at a time. Writing costs more.</li>
+      <li>My <strong>sticky notes</strong> (KV cache) save work. Keep the front of the train the same to reuse them.</li>
+      <li>My <strong>lucky wheel</strong> controls variety, not truth. Always keep a log.</li>
+    </ol>
+    <ol class="l-hi">
+      <li>Main sirf agla word guess karta hoon. Baaki sab meri team (<strong>harness</strong>) karti hai.</li>
+      <li>Main sab bhool jaata hoon, isliye team mujhe har baar poori diary deti hai, aur uska paisa lagta hai.</li>
+      <li>Main letters nahi, <strong>tokens</strong> padhta hoon. Hindi mein English se zyaada tokens lagte hain.</li>
+      <li>Kaunse words zaroori hain, yeh main <strong>attention</strong> se samajhta hoon. Lambe text ka shuru aur aakhir mujhe sabse achha yaad rehta hai.</li>
+      <li>Main tez padhta hoon par dheere likhta hoon, ek-ek word karke. Likhna mehenga hai.</li>
+      <li>Mere <strong>sticky notes</strong> (KV cache) mehnat bachaate hain. Unhe dobara use karne ke liye train ka aage ka hissa same rakho.</li>
+      <li>Mera <strong>lucky wheel</strong> variety control karta hai, sach nahi. Hamesha log rakho.</li>
+    </ol>
+  </div>
+</div>
+
+<h2><span class="l-en">Word dictionary</span><span class="l-hi">Shabd-kosh</span></h2>
+<div class="gloss">
+  <div><b>Model / LLM</b><span class="l-en">Haron's brain. Guesses the next token.</span><span class="l-hi">Haron ka dimaag. Agla token guess karta hai.</span></div>
+  <div><b>Harness</b><span class="l-en">Haron's team: memory, tools, rules, budget, loop.</span><span class="l-hi">Haron ki team: memory, tools, niyam, budget, loop.</span></div>
+  <div><b>Token</b><span class="l-en">A piece of text. The unit you pay for.</span><span class="l-hi">Text ka ek tukda. Isi ka paisa lagta hai.</span></div>
+  <div><b>Vector / Embedding</b><span class="l-en">A token's address on the meaning map.</span><span class="l-hi">Meaning map par token ka pata.</span></div>
+  <div><b>Attention</b><span class="l-en">How a word decides which other words to listen to.</span><span class="l-hi">Word kaise tay karta hai ki kis word ki sune.</span></div>
+  <div><b>Layer</b><span class="l-en">One floor of the brain building.</span><span class="l-hi">Dimaag ki building ki ek manzil.</span></div>
+  <div><b>Context window</b><span class="l-en">How many tokens fit in Haron's diary at once.</span><span class="l-hi">Ek baar mein diary mein kitne tokens aa sakte hain.</span></div>
+  <div><b>KV cache</b><span class="l-en">Haron's sticky notes, so it doesn't re-read.</span><span class="l-hi">Haron ke sticky notes, taaki dobara padhna na pade.</span></div>
+  <div><b>Prompt caching</b><span class="l-en">Reusing notes when the front of the train matches.</span><span class="l-hi">Train ka aage ka hissa same ho toh notes dobara use karna.</span></div>
+  <div><b>Temperature</b><span class="l-en">How fair the lucky wheel is.</span><span class="l-hi">Lucky wheel kitna fair hai.</span></div>
+  <div><b>Top-p</b><span class="l-en">Removes tiny slices from the wheel.</span><span class="l-hi">Wheel se chhote hisse hataata hai.</span></div>
+  <div><b>TTFT</b><span class="l-en">Time until the first word appears.</span><span class="l-hi">Pehla word aane tak ka samay.</span></div>
+</div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Open any tokenizer playground (for example OpenAI's online tokenizer). Type the same sentence in English and in Hindi. Which one makes more tokens? How many times more? <span class="level">easy</span></p><p class="l-hi">Koi bhi tokenizer playground kholo (jaise OpenAI ka online tokenizer). Ek hi sentence English aur Hindi mein likho. Kisme zyaada tokens bane? Kitne guna? <span class="level">easy</span></p></div>
+  <div class="exercise"><p class="l-en">On the lucky wheel, set temperature to 0 and spin 10 times. Then set it to 2.5 and spin 10 times. Write down what changed and why. <span class="level">easy</span></p><p class="l-hi">Lucky wheel par temperature 0 karke 10 baar ghumao. Phir 2.5 karke 10 baar ghumao. Kya badla aur kyun, likho. <span class="level">easy</span></p></div>
+  <div class="exercise"><p class="l-en">Your company's system prompt starts with "Today is 24 Oct, 10:42 AM. You are a helpful assistant…". Using the train rule, explain what's wrong and how to fix it. <span class="level">harness</span></p><p class="l-hi">Aapki company ka system prompt shuru hota hai "Today is 24 Oct, 10:42 AM. You are a helpful assistant…" se. Train wale niyam se samjhao isme kya galat hai aur kaise theek karein. <span class="level">harness</span></p></div>
+  <div class="exercise"><p class="l-en">Run <code>code/ch01/kv_cache.py</code>, then change it to show how many 32k-token chats fit on 8 GPUs of 80 GB each with Llama-3.1-70B. <span class="level">coder</span></p><p class="l-hi"><code>code/ch01/kv_cache.py</code> chalao, phir use badlo taaki dikhe ki Llama-3.1-70B ke saath 80 GB wale 8 GPUs par 32k-token ki kitni chats fit hongi. <span class="level">coder</span></p></div>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: build Haron's attention in Python</span><span class="l-hi">Coders ke liye: Python mein Haron ka attention banao</span><span class="lvl">code/ch01/</span></summary>
+  <div class="inner">
+    <p class="l-en">Three small scripts, needing only <code>numpy</code>. The outputs below are real runs.</p>
+    <p class="l-hi">Teen chhote scripts, sirf <code>numpy</code> chahiye. Neeche ke outputs asli runs ke hain.</p>
+    <div class="codehead"><span>code/ch01/attention.py · core of forward()</span><span>python</span></div>
+<pre>scores = q @ k.transpose(0, 2, 1) / np.sqrt(self.dh)  # (h, T_new, T_all)
+# Causal mask: query i (absolute position T_all-T_new+i) may only see keys &lt;= its position.
+offset = T_all - T_new
+mask = np.triu(np.ones((T_new, T_all), dtype=bool), k=offset + 1)
+scores = np.where(mask, -np.inf, scores)
+w = softmax(scores, axis=-1)
+out = (w @ v).transpose(1, 0, 2).reshape(T_new, -1) @ self.Wo</pre>
+    <div class="codehead"><span>$ python attention.py</span><span>output</span></div>
+<pre>Head 0 attention weights (rows = query, cols = key):
+[[1.   0.   0.   0.   0.   0.  ]
+ [0.48 0.52 0.   0.   0.   0.  ]
+ [0.01 0.95 0.04 0.   0.   0.  ]
+ [0.26 0.35 0.1  0.3  0.   0.  ]
+ [0.37 0.05 0.17 0.28 0.12 0.  ]
+ [0.29 0.2  0.24 0.16 0.07 0.04]]
+
+Prefill output == incremental (KV-cached) output: True
+Cached K shape (heads, tokens, d_head): (4, 6, 16)</pre>
+    <p class="l-en"><code>True</code> proves the sticky notes are exact: writing word by word with notes gives the same result as reading everything at once.</p>
+    <p class="l-hi"><code>True</code> saabit karta hai ki sticky notes bilkul sahi hain: notes ke saath word-by-word likhne ka result wahi hai jo sab ek saath padhne ka.</p>
+    <div class="codehead"><span>$ python sampling.py</span><span>output</span></div>
+<pre>{'temperature': 0}                            H=0.00 bits | Paris=1.000
+{'temperature': 0.7}                          H=0.31 bits | Paris=0.962, Lyon=0.015, the=0.010, France=0.006
+{'temperature': 1.0}                          H=0.92 bits | Paris=0.858, Lyon=0.047, the=0.035, France=0.026
+{'temperature': 1.5}                          H=1.80 bits | Paris=0.654, Lyon=0.095, the=0.077, France=0.063
+{'temperature': 1.0, 'top_p': 0.9}            H=0.30 bits | Paris=0.948, Lyon=0.052
+{'temperature': 1.5, 'min_p': 0.05}           H=1.66 bits | Paris=0.669, Lyon=0.097, the=0.079, France=0.065</pre>
+  </div>
+</details>
+
+<h2><span class="l-en">References</span><span class="l-hi">References</span></h2>
+<ol class="refs">
+  <li>Vaswani et al. (2017). <em>Attention Is All You Need.</em></li>
+  <li>Su et al. (2021). <em>RoFormer: Rotary Position Embedding.</em> · Ainslie et al. (2023). <em>GQA.</em></li>
+  <li>Holtzman et al. (2019). <em>The Curious Case of Neural Text Degeneration.</em> · Nguyen et al. (2024). <em>Min-p Sampling.</em></li>
+  <li>Liu et al. (2023). <em>Lost in the Middle.</em> · Xiao et al. (2023). <em>Attention Sinks.</em></li>
+  <li>Kwon et al. (2023). <em>PagedAttention (vLLM).</em> · Jiang et al. (2024). <em>Mixtral.</em> · DeepSeek-AI (2024). <em>DeepSeek-V3.</em></li>
+  <li>He &amp; Thinking Machines Lab (2025). <em>Defeating Nondeterminism in LLM Inference.</em></li>
+</ol>
+
+<nav class="pager">
+  <a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a>
+  <span style="color:var(--ink-2)"><span class="l-en">Next: Ch 2 · Haron's Wallet (tokens &amp; money)</span><span class="l-hi">Agla: Ch 2 · Haron ka Wallet (tokens aur paisa)</span></span>
+</nav>
+
+</article>
+</div>
+
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show, move = B.move;
+
+  function card(p, x, y, w, h, cls) { return E(p, "rect", { x: x, y: y, width: w, height: h, rx: 6, "class": cls }); }
+  var tokku = B.tokku;
+
+  /* ---------- Scene A: Haron's team ---------- */
+  (function () {
+    var s = document.getElementById("svA");
+    var boundary = E(s, "g", { "class": "anim" });
+    E(boundary, "rect", { x: 14, y: 14, width: 732, height: 332, rx: 10, "class": "line dash", "stroke-width": 1.6 });
+    BI(boundary, { x: 28, y: 36, "class": "mono sig", "font-size": 12 }, "HARNESS = Haron's whole team", "HARNESS = Haron ki poori team");
+
+    var lines = [];
+    function ln(x1, y1, x2, y2) { var l = E(s, "line", { x1: x1, y1: y1, x2: x2, y2: y2, "class": "line anim", "stroke-width": 1.5 }); lines.push(l); return l; }
+    var lDiary = ln(200, 119, 335, 165), lTool = ln(560, 119, 425, 165), lRule = ln(200, 259, 335, 215),
+        lWallet = ln(560, 259, 425, 215), lMgr = ln(380, 282, 380, 245);
+
+    tokku(s, 330, 120, 100);
+
+    function helper(x, y, w, en, hi, sen, shi, cls) {
+      var g = E(s, "g", { "class": "anim" });
+      card(g, x, y, w, 58, cls || "box");
+      BI(g, { x: x + w / 2, y: y + 24, "text-anchor": "middle", "font-weight": 600, "font-size": 14 }, en, hi);
+      BI(g, { x: x + w / 2, y: y + 44, "text-anchor": "middle", "class": "muted", "font-size": 11 }, sen, shi);
+      return g;
+    }
+    var diary = helper(40, 90, 160, "Diary", "Diary", "memory of past chats", "purani baaton ki yaad");
+    var tool = helper(560, 90, 160, "Toolbox", "Auzaar ka dabba", "weather API, search, code", "weather API, search, code");
+    var rule = helper(40, 230, 160, "Rulebook", "Niyam ki kitaab", "what is allowed", "kya allowed hai", "box-plm");
+    var wallet = helper(560, 230, 160, "Wallet", "Batua", "token budget", "token ka budget", "box-plm");
+    var mgr = helper(300, 282, 160, "Manager", "Manager", "loop: keep going till done", "loop: kaam poora hone tak");
+
+    var q = E(s, "g", { "class": "anim" });
+    E(q, "rect", { x: 210, y: 30, width: 340, height: 40, rx: 20, "class": "box" });
+    BI(q, { x: 380, y: 55, "text-anchor": "middle", "font-size": 14 }, "“What's the weather in Pune right now?”", "“Pune mein abhi mausam kaisa hai?”");
+    var huh = E(s, "text", { x: 440, y: 140, "class": "amb anim", "font-size": 26, "font-weight": 700 }, "? ? ?");
+    var ans = E(s, "g", { "class": "anim" });
+    E(ans, "rect", { x: 438, y: 122, width: 118, height: 34, rx: 17, "class": "box-sig" });
+    BI(ans, { x: 497, y: 144, "text-anchor": "middle", "font-size": 13, "font-weight": 600 }, "24°C, cloudy", "24°C, badal");
+
+    B.scene(document.getElementById("scA"), [
+      ["Meet Haron. Haron is only a brain. It can guess the next word, and nothing else.", "Yeh hai Haron. Haron sirf ek dimaag hai. Agla word guess kar sakta hai, aur kuch nahi."],
+      ["You ask about the weather <em>right now</em>. Haron is stuck: no clock, no window, no internet.", "Aap <em>abhi</em> ka mausam poochte ho. Haron atak gaya: na ghadi, na khidki, na internet."],
+      ["The <strong>Diary</strong> arrives. It remembers past chats and hands them to Haron every time.", "<strong>Diary</strong> aayi. Yeh purani baatein yaad rakhti hai aur har baar Haron ko deti hai."],
+      ["The <strong>Toolbox</strong> arrives. Now Haron can <em>ask</em> for the weather API, and the team runs it.", "<strong>Auzaar ka dabba</strong> aaya. Ab Haron weather API <em>maang</em> sakta hai, aur team use chalaati hai."],
+      ["The <strong>Rulebook</strong> (what's allowed), the <strong>Wallet</strong> (how many tokens to spend) and the <strong>Manager</strong> (keep working till the job is done) join.", "<strong>Niyam ki kitaab</strong> (kya allowed hai), <strong>Batua</strong> (kitne tokens kharch karne hain) aur <strong>Manager</strong> (kaam poora hone tak chalte raho) bhi aa gaye."],
+      ["Haron answers! This whole team around Haron is called the <strong>harness</strong>.", "Haron ne jawab de diya! Haron ke aas-paas ki is poori team ko <strong>harness</strong> kehte hain."]
+    ], function (i) {
+      show(q, i >= 1); show(huh, i >= 1 && i < 5); show(ans, i >= 5);
+      show(diary, i >= 2); show(lDiary, i >= 2);
+      show(tool, i >= 3); show(lTool, i >= 3);
+      show(rule, i >= 4); show(lRule, i >= 4); show(wallet, i >= 4); show(lWallet, i >= 4); show(mgr, i >= 4); show(lMgr, i >= 4);
+      show(boundary, i >= 5);
+    });
+  })();
+
+  /* ---------- Scene B: tokenizer ---------- */
+  (function () {
+    var s = document.getElementById("svB");
+    var toks = ["Har", "on", "loves", "chai", "in", "Beng", "al", "uru"];
+    var rare = [1, 1, 0, 0, 0, 1, 1, 1];
+    var ids = [4421, 2063, 16180, 523, 304, 13574, 278, 20330];
+    var w = toks.map(function (t) { return 14 + 9 * t.length + (t.length < 3 ? 8 : 0); });
+    var total = w.reduce(function (a, b) { return a + b; }, 0);
+    var gap = 14, packedX = [], spacedX = [], px = (760 - total) / 2, sx = 150;
+    w.forEach(function (wi) { packedX.push(px); px += wi; spacedX.push(sx); sx += wi + gap; });
+
+    var labels = [
+      BI(s, { x: 10, y: 32, "class": "mono muted", "font-size": 11 }, "sentence", "sentence"),
+      BI(s, { x: 10, y: 92, "class": "mono muted", "font-size": 11 }, "tokens", "tokens"),
+      BI(s, { x: 10, y: 160, "class": "mono muted", "font-size": 11 }, "numbers (IDs)", "numbers (IDs)"),
+      BI(s, { x: 10, y: 215, "class": "mono muted", "font-size": 11 }, "meaning (vector)", "matlab (vector)")
+    ];
+    labels.forEach(function (l) { l.setAttribute("class", "anim"); });
+
+    var chips = [], rects = [], idT = [], vecs = [];
+    var shades = [[.9,.3,.6,.15,.5],[.2,.8,.4,.7,.3],[.5,.5,.95,.2,.6],[.3,.7,.2,.6,.9],[.8,.1,.5,.9,.2],[.4,.6,.3,.5,.7],[.7,.4,.8,.3,.4],[.2,.9,.4,.6,.5]];
+    toks.forEach(function (t, i) {
+      var g = E(s, "g", { "class": "anim" });
+      rects.push(E(g, "rect", { x: 0, y: 70, width: w[i], height: 36, rx: 4, "class": "box anim" }));
+      E(g, "text", { x: w[i] / 2, y: 93, "text-anchor": "middle", "class": "mono", "font-size": 14 }, t);
+      chips.push(g);
+      var cx = spacedX[i] + w[i] / 2;
+      idT.push(E(s, "text", { x: cx, y: 160, "text-anchor": "middle", "class": "mono anim", "font-size": 13, "font-weight": 600 }, ids[i]));
+      var vg = E(s, "g", { "class": "anim" });
+      shades[i].forEach(function (o, r) { E(vg, "rect", { x: cx - 11, y: 188 + r * 11, width: 22, height: 9, rx: 1.5, "class": "sig", "fill-opacity": o }); });
+      vecs.push(vg);
+    });
+    var note = BI(s, { x: 750, y: 255, "class": "muted", "font-size": 11, "text-anchor": "end" }, "IDs are illustrative; each tokenizer differs", "IDs sirf example hain; har tokenizer alag hota hai");
+    note.setAttribute("class", "anim");
+
+    B.scene(document.getElementById("scB"), [
+      ["A sentence arrives: <em>“Haron loves chai in Bengaluru.”</em> Haron can't read it yet.", "Ek sentence aaya: <em>“Haron loves chai in Bengaluru.”</em> Haron ise abhi padh nahi sakta."],
+      ["Chop! The sentence is cut into <strong>tokens</strong>. Common words stay whole. Rare words (orange) break into pieces: Har·on, Beng·al·uru.", "Kaat diya! Sentence <strong>tokens</strong> mein kat gaya. Common words poore rahe. Rare words (orange) tukdon mein toote: Har·on, Beng·al·uru."],
+      ["Each token is looked up in Haron's dictionary of about 1,28,000 pieces and replaced by its <strong>number</strong>.", "Har token Haron ki lagbhag 1,28,000 tukdon wali dictionary mein dhoondha jaata hai aur apne <strong>number</strong> se badal diya jaata hai."],
+      ["Each number becomes a list of numbers, a <strong>vector</strong>: the token's address on the meaning map. Only now can Haron start thinking.", "Har number numbers ki ek list ban jaata hai, yaani <strong>vector</strong>: meaning map par token ka pata. Ab jaake Haron sochna shuru kar sakta hai."]
+    ], function (i) {
+      chips.forEach(function (g, k) {
+        move(g, i >= 1 ? spacedX[k] : packedX[k], 0);
+        rects[k].setAttribute("class", "anim " + (i >= 1 ? (rare[k] ? "box-amb" : "box-sig") : "box"));
+        show(idT[k], i >= 2); show(vecs[k], i >= 3);
+      });
+      show(labels[0], i === 0); show(labels[1], i >= 1); show(labels[2], i >= 2); show(labels[3], i >= 3); show(note, i >= 2);
+    }, { delay: 3200 });
+  })();
+
+  /* ---------- Scene C: attention ---------- */
+  (function () {
+    var s = document.getElementById("svC");
+    var words = ["The", "cat", "sat", "on", "the", "mat", "because", "it", "was", "tired"];
+    var wt = [0.03, 0.55, 0.04, 0.02, 0.03, 0.22, 0.06];
+    var IT = 7, gap = 12, x = 0, pos = [];
+    words.forEach(function (wd) { var w = 16 + 9 * wd.length + (wd.length < 3 ? 6 : 0); pos.push({ x: x, w: w }); x += w + gap; });
+    var off = (760 - (x - gap)) / 2;  // centre the row
+    pos.forEach(function (p) { p.x += off; p.c = p.x + p.w / 2; });
+
+    var Y = 200, arcs = [], pct = [];
+    for (var j = 0; j < IT; j++) {
+      var a = pos[IT].c, b = pos[j].c, h = 40 + (a - b) * 0.42;
+      arcs.push(E(s, "path", { d: "M" + a + " " + Y + " Q" + (a + b) / 2 + " " + (Y - h) + " " + b + " " + Y, "class": "line-sig anim", "stroke-width": 2, fill: "none", "stroke-linecap": "round" }));
+      pct.push(E(s, "text", { x: (a + b) / 2, y: Y - h / 2 - 6, "text-anchor": "middle", "class": "mono sig anim", "font-size": wt[j] > 0.1 ? 14 : 10, "font-weight": wt[j] > 0.1 ? 700 : 400 }, Math.round(wt[j] * 100) + "%"));
+    }
+    var boxes = [], wg = [];
+    words.forEach(function (wd, k) {
+      var g = E(s, "g", { "class": "anim" });
+      boxes.push(E(g, "rect", { x: pos[k].x, y: Y, width: pos[k].w, height: 34, rx: 4, "class": "box anim" }));
+      E(g, "text", { x: pos[k].c, y: Y + 22, "text-anchor": "middle", "class": "mono", "font-size": 14 }, wd);
+      wg.push(g);
+    });
+    var future = BI(s, { x: (pos[8].x + pos[9].x + pos[9].w) / 2, y: Y + 58, "text-anchor": "middle", "class": "muted", "font-size": 11 }, "future: can't peek", "future: jhaank nahi sakte");
+    future.setAttribute("class", "anim");
+    var q = BI(s, { x: pos[IT].c, y: Y + 58, "text-anchor": "middle", "class": "amb", "font-size": 12, "font-weight": 600 }, "who am I?", "main kaun hoon?");
+    q.setAttribute("class", "anim");
+    var res = BI(s, { x: pos[IT].c, y: Y + 58, "text-anchor": "middle", "class": "sig", "font-size": 13, "font-weight": 700 }, "it = cat", "it = billi (cat)");
+    res.setAttribute("class", "anim");
+
+    B.scene(document.getElementById("scC"), [
+      ["Haron reads the sentence. The tricky word is <strong>“it”</strong>: does it mean the cat or the mat?", "Haron sentence padhta hai. Mushkil word hai <strong>“it”</strong>: billi ki baat hai ya chatai ki?"],
+      ["“it” holds up its <strong>question card</strong>. Words after it are covered: Haron can only look <em>back</em>, never ahead.", "“it” apna <strong>sawaal card</strong> uthata hai. Uske baad ke words dhake hain: Haron sirf <em>peeche</em> dekh sakta hai, aage kabhi nahi."],
+      ["“it” checks the <strong>name tag</strong> of every earlier word: is this the one I mean?", "“it” pehle ke har word ka <strong>name tag</strong> check karta hai: kya yahi woh hai?"],
+      ["Scores! “cat” matches best (55%), “mat” gets some (22%), the rest almost nothing. Thicker line = more attention.", "Score aaye! “cat” sabse achha match (55%), “mat” ko thoda (22%), baaki ko lagbhag kuch nahi. Moti line = zyaada attention."],
+      ["“cat” hands over its <strong>message</strong>. Now “it” carries the meaning <em>cat</em>. This happens for every word, on every floor, many times in parallel.", "“cat” apna <strong>message</strong> de deta hai. Ab “it” ke andar <em>billi</em> ka matlab aa gaya. Yeh har word ke saath, har manzil par, ek saath kai baar hota hai."]
+    ], function (i) {
+      wg.forEach(function (g, k) { g.style.opacity = (i >= 1 && k > IT) ? 0.25 : 1; });
+      boxes.forEach(function (r, k) {
+        var c = "box";
+        if (k === IT && i >= 1) c = i >= 4 ? "box-sig" : "box-amb";
+        if (k === 1 && i >= 3) c = "box-sig";
+        r.setAttribute("class", "anim " + c);
+      });
+      arcs.forEach(function (a, j) {
+        show(a, i >= 2);
+        a.setAttribute("stroke-width", i >= 3 ? (1 + 16 * wt[j]).toFixed(1) : 2);
+        if (i >= 4) a.style.opacity = j === 1 ? 1 : 0.2;
+      });
+      pct.forEach(function (p) { show(p, i === 3 || i === 4); });
+      if (i === 4) pct.forEach(function (p, j) { p.style.opacity = j === 1 ? 1 : 0.2; });
+      show(future, i >= 1); show(q, i >= 1 && i < 4); show(res, i >= 4);
+    }, { delay: 3200 });
+  })();
+
+  /* ---------- Scene L: floors ---------- */
+  (function () {
+    var s = document.getElementById("svL");
+    var floors = [
+      ["Layer 1", "cat → an animal word", "cat → jaanwar wala word"],
+      ["Layer 2", "cat → the one who sat", "cat → jo baitha tha"],
+      ["Layer 20", "“it” will point back here", "“it” yahin point karega"],
+      ["Layer 60", "story: a tired cat", "kahani: ek thaki billi"],
+      ["Layer 80", "next word is probably “was”", "agla word shayad “was” hai"]
+    ];
+    var bx = 250, bw = 220, fh = 52, top = 30;
+    E(s, "path", { d: "M" + (bx - 10) + " " + top + " L" + (bx + bw / 2) + " " + (top - 22) + " L" + (bx + bw + 10) + " " + top + " Z", "class": "box-sig" });
+    var notes = [], bands = [];
+    floors.forEach(function (f, k) {
+      var y = top + (4 - k) * fh;
+      bands.push(E(s, "rect", { x: bx, y: y, width: bw, height: fh, "class": "box anim", "stroke-width": 1.2 }));
+      E(s, "text", { x: bx + 14, y: y + fh / 2 + 5, "class": "mono", "font-size": 13 }, f[0]);
+      for (var wnd = 0; wnd < 3; wnd++) E(s, "rect", { x: bx + 120 + wnd * 30, y: y + 15, width: 18, height: 22, rx: 2, "class": "box" });
+      var n = BI(s, { x: bx + bw + 30, y: y + fh / 2 + 5, "font-size": 13 }, f[1], f[2]);
+      n.setAttribute("class", "anim"); notes.push(n);
+    });
+    E(s, "rect", { x: 190, y: top, width: 40, height: 5 * fh, "class": "box" });
+    var lift = E(s, "g", { "class": "anim" });
+    E(lift, "rect", { x: 193, y: 0, width: 34, height: 40, rx: 4, "class": "box-amb" });
+    E(lift, "text", { x: 210, y: 25, "text-anchor": "middle", "class": "mono", "font-size": 11, "font-weight": 600 }, "cat");
+    E(s, "line", { x1: 120, y1: top + 5 * fh, x2: 600, y2: top + 5 * fh, "class": "line", "stroke-width": 1.5 });
+    BI(s, { x: 210, y: top + 5 * fh + 22, "text-anchor": "middle", "class": "muted", "font-size": 11 }, "word enters here", "word yahan se ghusta hai");
+    var gap = BI(s, { x: 120, y: top + 2.5 * fh + 4, "text-anchor": "middle", "class": "muted", "font-size": 11 }, "floors skipped", "beech ki manzilein");
+    gap.setAttribute("class", "anim");
+
+    B.scene(document.getElementById("scL"), [
+      ["The word “cat” enters the ground floor. Here it only knows it's an animal word.", "Word “cat” ground floor par aata hai. Yahan use bas itna pata hai ki yeh jaanwar wala word hai."],
+      ["Floor 2: after attention, “cat” knows it is the one who <em>sat</em>.", "Floor 2: attention ke baad “cat” jaanta hai ki <em>baithne</em> wala wahi hai."],
+      ["Middle floors: “cat” is now marked as the main character that “it” will point to.", "Beech ki manzilein: “cat” ab main character ban gaya, jise “it” point karega."],
+      ["Higher up: the whole story is understood: a tired cat.", "Aur upar: poori kahani samajh aa gayi: ek thaki hui billi."],
+      ["Top floor (80 in a big model): the roof turns this understanding into chances for the next word.", "Top floor (bade model mein 80): chhat is samajh ko agle word ke chances mein badal deti hai."]
+    ], function (i) {
+      move(lift, 0, top + (4 - i) * fh + 6);
+      bands.forEach(function (b, k) { b.setAttribute("class", "anim " + (k === i ? "box-sig" : "box")); });
+      notes.forEach(function (n, k) { n.style.opacity = k < i ? 0.45 : (k === i ? 1 : 0); });
+      show(gap, true);
+    });
+  })();
+
+  /* ---------- Scene D: read fast, write slow ---------- */
+  (function () {
+    var s = document.getElementById("svD");
+    var toks = ["Capital", "of", "France", "?", "The", "capital", "is", "Paris", "<end>"];
+    var x = 96, pos = [];
+    toks.forEach(function (t) { var w = 18 + 9 * t.length; pos.push({ x: x, w: w }); x += w + 8; });
+    var rects = [], gs = [];
+    toks.forEach(function (t, k) {
+      var g = E(s, "g", { "class": "anim" });
+      rects.push(E(g, "rect", { x: pos[k].x, y: 70, width: pos[k].w, height: 36, rx: 4, "class": "box anim" }));
+      E(g, "text", { x: pos[k].x + pos[k].w / 2, y: 93, "text-anchor": "middle", "class": "mono", "font-size": 13 }, t);
+      gs.push(g);
+    });
+    BI(s, { x: 10, y: 93, "class": "mono muted", "font-size": 11 }, "text", "text");
+    var br = E(s, "g", { "class": "anim" });
+    var qx2 = pos[3].x + pos[3].w;
+    E(br, "path", { d: "M" + pos[0].x + " 58 V50 H" + qx2 + " V58", "class": "line-sig", "stroke-width": 2 });
+    BI(br, { x: (pos[0].x + qx2) / 2, y: 42, "text-anchor": "middle", "class": "sig", "font-size": 12, "font-weight": 600 }, "READ: all at once", "PADHA: sab ek saath");
+    var wr = E(s, "g", { "class": "anim" });
+    E(wr, "path", { d: "M" + pos[4].x + " 58 V50 H" + (pos[8].x + pos[8].w) + " V58", "class": "line-amb", "stroke-width": 2 });
+    BI(wr, { x: (pos[4].x + pos[8].x + pos[8].w) / 2, y: 42, "text-anchor": "middle", "class": "amb", "font-size": 12, "font-weight": 600 }, "WRITE: one word per trip", "LIKHA: har trip mein ek word");
+
+    BI(s, { x: 10, y: 205, "class": "mono muted", "font-size": 11 }, "time", "samay");
+    var segs = [];
+    var sx = 96;
+    segs.push(E(s, "rect", { x: sx, y: 186, width: 90, height: 28, rx: 3, "class": "box-sig anim" }));
+    var segLbl = [BI(s, { x: sx + 45, y: 205, "text-anchor": "middle", "font-size": 11 }, "read", "padha")];
+    sx += 94;
+    for (var k = 0; k < 5; k++) {
+      segs.push(E(s, "rect", { x: sx, y: 186, width: 70, height: 28, rx: 3, "class": "box-amb anim" }));
+      segLbl.push(BI(s, { x: sx + 35, y: 205, "text-anchor": "middle", "font-size": 11 }, "write", "likha"));
+      sx += 74;
+    }
+    segLbl.forEach(function (l) { l.setAttribute("class", "anim"); });
+    var loop = BI(s, { x: 96, y: 150, "class": "muted", "font-size": 12 }, "each new word joins the text and goes back in", "har naya word text mein judkar wapas andar jaata hai");
+    loop.setAttribute("class", "anim");
+
+    B.scene(document.getElementById("scD"), [
+      ["You ask: <em>“Capital of France?”</em>", "Aap poochte ho: <em>“Capital of France?”</em>"],
+      ["Haron <strong>reads</strong> the whole question in one go. That's fast, like reading a question paper. (Experts call this <em>prefill</em>.)", "Haron poora sawaal ek baar mein <strong>padhta</strong> hai. Yeh tez hai, question paper padhne jaisa. (Experts ise <em>prefill</em> kehte hain.)"],
+      ["Now Haron <strong>writes</strong>. One full trip through the brain gives just one word: “The”. (This is <em>decode</em>.)", "Ab Haron <strong>likhta</strong> hai. Dimaag ki ek poori trip se bas ek word nikla: “The”. (Ise <em>decode</em> kehte hain.)"],
+      ["“The” joins the text (turns blue) and goes back in. Next trip: “capital”.", "“The” text mein jud gaya (blue ho gaya) aur wapas andar gaya. Agli trip: “capital”."],
+      ["Another trip: “is”. See the time bar growing? Every word costs a trip.", "Ek aur trip: “is”. Time bar badhta dikh raha hai? Har word ek trip ka kharch hai."],
+      ["Another trip: “Paris”.", "Ek aur trip: “Paris”."],
+      ["Haron writes <strong>&lt;end&gt;</strong> and stops. Reading 4 words took one trip; writing 5 words took five. That's why output tokens are slower and pricier.", "Haron <strong>&lt;end&gt;</strong> likhkar ruk gaya. 4 words padhne mein ek trip lagi; 5 words likhne mein paanch. Isliye output tokens slow aur mehenge hote hain."]
+    ], function (i) {
+      gs.forEach(function (g, k) { show(g, k < 4 || k - 4 < i - 1); });
+      rects.forEach(function (r, k) {
+        var c = "box";
+        if (k < 4 && i >= 1) c = "box-sig";
+        if (k >= 4) c = (k - 4 === i - 2) ? "box-amb" : "box-sig";
+        r.setAttribute("class", "anim " + c);
+      });
+      show(br, i >= 1); show(wr, i >= 2); show(loop, i >= 3 && i < 6);
+      segs.forEach(function (sg, k) { show(sg, k === 0 ? i >= 1 : k <= i - 1); show(segLbl[k], k === 0 ? i >= 1 : k <= i - 1); });
+    }, { delay: 2600 });
+  })();
+
+  /* ---------- Scene E: sticky notes (KV cache) ---------- */
+  (function () {
+    var s = document.getElementById("svE");
+    var words = ["The", "capital", "is", "Paris", "<end>"];
+    BI(s, { x: 20, y: 76, "font-weight": 700, "font-size": 14 }, "Without notes", "Bina notes");
+    BI(s, { x: 20, y: 96, "class": "muted", "font-size": 11 }, "re-read everything", "sab dobara padho");
+    BI(s, { x: 20, y: 196, "font-weight": 700, "font-size": 14 }, "With notes", "Notes ke saath");
+    BI(s, { x: 20, y: 216, "class": "muted", "font-size": 11 }, "KV cache", "KV cache");
+    var r1 = [], r2 = [];
+    words.forEach(function (w, k) {
+      var x = 210 + k * 56;
+      var g1 = E(s, "g", { "class": "anim" });
+      r1.push({ g: g1, r: E(g1, "rect", { x: x, y: 60, width: 50, height: 44, rx: 4, "class": "box-amb anim" }) });
+      E(g1, "text", { x: x + 25, y: 87, "text-anchor": "middle", "class": "mono", "font-size": 10 }, w);
+      var g2 = E(s, "g", { "class": "anim" });
+      r2.push({ g: g2, r: E(g2, "rect", { x: x, y: 180, width: 50, height: 44, rx: 4, "class": "box-amb anim" }) });
+      E(g2, "text", { x: x + 25, y: 207, "text-anchor": "middle", "class": "mono", "font-size": 10 }, w);
+    });
+    var c1 = E(s, "text", { x: 520, y: 80, "class": "mono amb", "font-size": 13, "font-weight": 600 }, "");
+    var c1b = E(s, "text", { x: 520, y: 100, "class": "mono muted", "font-size": 11 }, "");
+    var c2 = E(s, "text", { x: 520, y: 200, "class": "mono sig", "font-size": 13, "font-weight": 600 }, "");
+    var c2b = E(s, "text", { x: 520, y: 220, "class": "mono muted", "font-size": 11 }, "");
+    E(s, "line", { x1: 20, y1: 140, x2: 740, y2: 140, "class": "line dash", "stroke-width": 1 });
+    var key = E(s, "g");
+    E(key, "rect", { x: 210, y: 252, width: 14, height: 14, "class": "box-amb" });
+    BI(key, { x: 230, y: 264, "font-size": 11, "class": "muted" }, "work done now", "abhi ka kaam");
+    E(key, "rect", { x: 360, y: 252, width: 14, height: 14, "class": "box-sig" });
+    BI(key, { x: 380, y: 264, "font-size": 11, "class": "muted" }, "read from a sticky note (free)", "sticky note se padha (free)");
+
+    function lang() { return B.lang() === "hi"; }
+    var steps = 6;
+    function render(i) {
+      var k = Math.min(i, 4);
+      r1.forEach(function (o, j) { show(o.g, j <= k); o.r.setAttribute("class", "anim box-amb"); });
+      r2.forEach(function (o, j) { show(o.g, j <= k); o.r.setAttribute("class", "anim " + (j < k ? "box-sig" : "box-amb")); });
+      var tot1 = (k + 1) * (k + 2) / 2, tot2 = k + 1, hi = lang();
+      if (i < 5) {
+        c1.textContent = (hi ? "is word ka kaam: " : "work for this word: ") + (k + 1);
+        c1b.textContent = (hi ? "ab tak total: " : "total so far: ") + tot1;
+        c2.textContent = (hi ? "is word ka kaam: " : "work for this word: ") + 1;
+        c2b.textContent = (hi ? "ab tak total: " : "total so far: ") + tot2;
+      } else {
+        c1.textContent = hi ? "1,000 words: 5,00,500 kaam" : "1,000 words: 500,500 work";
+        c1b.textContent = hi ? "har word pichhla sab padhta hai" : "every word re-reads all before it";
+        c2.textContent = hi ? "1,000 words: 1,000 kaam" : "1,000 words: 1,000 work";
+        c2b.textContent = hi ? "500 guna kam!" : "500 times less!";
+      }
+    }
+    var player = B.scene(document.getElementById("scE"), [
+      ["Word 1, “The”. Both ways cost the same: 1 unit of work.", "Word 1, “The”. Dono tareekon mein same kharch: 1 unit kaam."],
+      ["Word 2. Without notes, Haron re-reads “The” too (2 units). With notes, “The” comes from a sticky note (blue), so only 1 unit.", "Word 2. Bina notes, Haron “The” bhi dobara padhta hai (2 units). Notes ke saath “The” sticky note se aata hai (blue), bas 1 unit."],
+      ["Word 3. Without notes: 3 units this time, 6 in total. With notes: still 1 unit.", "Word 3. Bina notes: is baar 3 units, total 6. Notes ke saath: abhi bhi 1 unit."],
+      ["Word 4. The gap keeps growing: 10 vs 4.", "Word 4. Farak badhta ja raha hai: 10 vs 4."],
+      ["Word 5. 15 vs 5. The notes are always exact: same answer, far less work.", "Word 5. 15 vs 5. Notes hamesha bilkul sahi hote hain: same jawab, bahut kam kaam."],
+      ["For a 1,000-word answer the difference is huge. That is why every modern AI server keeps a <strong>KV cache</strong>. The catch: notes take GPU memory.", "1,000 words ke jawab mein farak bahut bada ho jaata hai. Isliye har modern AI server <strong>KV cache</strong> rakhta hai. Bas ek dikkat: notes GPU memory lete hain."]
+    ], render, { delay: 3000 });
+    document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest("[data-setlang]")) { var on = document.querySelectorAll("#scE .dots span.on").length; render(on - 1); } });
+  })();
+
+  /* ---------- Scene F: the train (prompt caching) ---------- */
+  (function () {
+    var s = document.getElementById("svF");
+    var coachW = [120, 90, 220, 110], x0 = 170, ys = [36, 126, 216];
+    var names = [["Rules 3k", "Niyam 3k"], ["Tools 2k", "Tools 2k"], ["Policy book 10k", "Policy book 10k"], ["Question", "Sawaal"]];
+    var rows = [];
+    ys.forEach(function (y, r) {
+      var g = E(s, "g", { "class": "anim" });
+      var lbl = BI(g, { x: 10, y: y + 20, "font-weight": 700, "font-size": 13 }, "Request " + (r + 1), "Request " + (r + 1));
+      var st = E(g, "text", { x: 10, y: y + 40, "font-size": 11, "class": "muted" }, "");
+      var cs = [], ts = [], x = x0;
+      coachW.forEach(function (w, c) {
+        cs.push(E(g, "rect", { x: x, y: y, width: w, height: 44, rx: 7, "class": "box-amb anim" }));
+        E(g, "circle", { cx: x + 18, cy: y + 50, r: 6, "class": "box" });
+        E(g, "circle", { cx: x + w - 18, cy: y + 50, r: 6, "class": "box" });
+        var t = BI(g, { x: x + w / 2, y: y + 27, "text-anchor": "middle", "class": "mono", "font-size": 12 }, names[c][0], names[c][1]);
+        ts.push(t);
+        if (c < 3) E(g, "line", { x1: x + w, y1: y + 22, x2: x + w + 6, y2: y + 22, "class": "line", "stroke-width": 2 });
+        x += w + 6;
+      });
+      E(g, "line", { x1: x0 - 10, y1: y + 57, x2: x - 6 + 10, y2: y + 57, "class": "line", "stroke-width": 1.5 });
+      rows.push({ g: g, cs: cs, ts: ts, st: st });
+    });
+    // clock text swaps in row 3
+    var clockFront = E(s, "text", { x: x0 + 60, y: ys[2] - 4, "text-anchor": "middle", "class": "mono amb anim", "font-size": 11, "font-weight": 700 }, "+ 10:42 AM");
+    var clockBack = E(s, "text", { x: x0 + 120 + 90 + 220 + 18 + 55, y: ys[2] - 4, "text-anchor": "middle", "class": "mono sig anim", "font-size": 11, "font-weight": 700 }, "+ 10:42 AM");
+    var leg = E(s, "g");
+    E(leg, "rect", { x: 450, y: 6, width: 12, height: 12, "class": "box-sig" });
+    BI(leg, { x: 468, y: 16, "font-size": 11, "class": "muted" }, "reused notes (cheap)", "purane notes (sasta)");
+    E(leg, "rect", { x: 600, y: 6, width: 12, height: 12, "class": "box-amb" });
+    BI(leg, { x: 618, y: 16, "font-size": 11, "class": "muted" }, "read fresh (full price)", "naya padha (poora daam)");
+
+    function status(i) {
+      var hi = B.lang() === "hi";
+      return [
+        hi ? "sab naya" : "all fresh",
+        hi ? "15k reuse hua" : "15k reused",
+        i >= 3 ? (hi ? "15k reuse hua" : "15k reused") : (hi ? "0 reuse!" : "0 reused!")
+      ];
+    }
+    function render(i) {
+      rows.forEach(function (row, r) { show(row.g, r <= i); });
+      var st = status(i);
+      rows.forEach(function (row, r) { row.st.textContent = st[r]; });
+      rows[0].cs.forEach(function (c) { c.setAttribute("class", "anim box-amb"); });
+      rows[1].cs.forEach(function (c, k) { c.setAttribute("class", "anim " + (k < 3 ? "box-sig" : "box-amb")); });
+      rows[2].cs.forEach(function (c, k) { c.setAttribute("class", "anim " + (i >= 3 && k < 3 ? "box-sig" : "box-amb")); });
+      show(clockFront, i === 2); show(clockBack, i >= 3);
+    }
+    B.scene(document.getElementById("scF"), [
+      ["Request 1: Haron reads every coach fresh and writes sticky notes for all of them. Full price.", "Request 1: Haron har dibba naya padhta hai aur sabke sticky notes banata hai. Poora daam."],
+      ["Request 2: the first three coaches are <em>exactly</em> the same, so their notes are reused (blue). Only the new question is read. About 90% cheaper on 15k tokens!", "Request 2: pehle teen dibbe <em>bilkul</em> same hain, toh unke notes reuse hue (blue). Sirf naya sawaal padha gaya. 15k tokens par lagbhag 90% sasta!"],
+      ["Request 3: someone put the <strong>time</strong> in the first coach. The very first coach is now different, so nothing behind it can be reused. Full price again!", "Request 3: kisi ne pehle dibbe mein <strong>time</strong> daal diya. Pehla dibba hi alag ho gaya, toh uske peeche kuch reuse nahi ho sakta. Phir se poora daam!"],
+      ["The fix: move the time into the <strong>last coach</strong>. The front matches again, and the savings come back.", "Ilaaj: time ko <strong>aakhri dibbe</strong> mein daalo. Aage ka hissa phir match hua, aur bachat wapas aa gayi."]
+    ], render, { delay: 3400 });
+    document.addEventListener("click", function (e) { if (e.target.closest && e.target.closest("[data-setlang]")) { var on = document.querySelectorAll("#scF .dots span.on").length; render(on - 1); } });
+  })();
+
+  /* ---------- Scene G: lucky wheel ---------- */
+  (function () {
+    var s = document.getElementById("svG");
+    var vocab = ["Paris", "Lyon", "the", "France", "a", "banana"];
+    var logits = [6.0, 3.1, 2.8, 2.5, 2.0, -1.0];
+    var cols = ["var(--signal)", "var(--amber)", "var(--plum)", "var(--c5)", "var(--c6)", "var(--ink-2)"];
+    var cx = 180, cy = 200, R = 150, rot = 0, spinning = false, tally = [];
+    var wheel = E(s, "g");
+    wheel.style.transformBox = "view-box";
+    wheel.style.transformOrigin = cx + "px " + cy + "px";
+    wheel.style.transition = B.reduced ? "none" : "transform 2.6s cubic-bezier(.15,.85,.2,1)";
+    E(s, "circle", { cx: cx, cy: cy, r: R + 6, fill: "none", "class": "line", "stroke-width": 3 });
+    E(s, "polygon", { points: (cx - 14) + ",26 " + (cx + 14) + ",26 " + cx + ",56", "class": "box-amb", "stroke-width": 2 });
+    E(s, "circle", { cx: cx, cy: cy, r: 14, "class": "box", "stroke-width": 2 });
+    var slices = [];
+
+    function dist(T, P) {
+      var n = logits.length, p = [], keep = [], i;
+      if (T <= 0) { for (i = 0; i < n; i++) { p.push(i === 0 ? 1 : 0); keep.push(i === 0); } return { p: p, keep: keep }; }
+      var mx = Math.max.apply(null, logits), z = 0;
+      for (i = 0; i < n; i++) { p.push(Math.exp((logits[i] - mx) / T)); z += p[i]; }
+      for (i = 0; i < n; i++) { p[i] /= z; keep.push(true); }
+      if (P < 1) {
+        var order = p.map(function (_, k) { return k; }).sort(function (a, b) { return p[b] - p[a]; });
+        var cum = 0, nuc = new Array(n).fill(false);
+        for (var r = 0; r < n; r++) { nuc[order[r]] = true; cum += p[order[r]]; if (cum >= P) break; }
+        var z2 = 0; for (i = 0; i < n; i++) { keep[i] = nuc[i]; if (keep[i]) z2 += p[i]; }
+        for (i = 0; i < n; i++) p[i] = keep[i] ? p[i] / z2 : 0;
+      }
+      return { p: p, keep: keep };
+    }
+    function pt(a, r) { var rad = a * Math.PI / 180; return [cx + r * Math.sin(rad), cy - r * Math.cos(rad)]; }
+    var cur;
+    function draw() {
+      var T = +document.getElementById("gT").value, P = +document.getElementById("gP").value;
+      document.getElementById("gTv").textContent = T.toFixed(2);
+      document.getElementById("gPv").textContent = P.toFixed(2);
+      cur = dist(T, P);
+      while (wheel.firstChild) wheel.removeChild(wheel.firstChild);
+      slices = [];
+      var a = 0;
+      cur.p.forEach(function (pi, i) {
+        var span = pi * 360, a0 = a, a1 = a + span;
+        slices.push([a0, a1]);
+        if (span <= 0) return;
+        if (span >= 359.99) {
+          E(wheel, "circle", { cx: cx, cy: cy, r: R, style: "fill:" + cols[i] + ";stroke:var(--fig-bg);stroke-width:2" });
+        } else {
+          var s0 = pt(a0, R), s1 = pt(a1, R);
+          E(wheel, "path", { d: "M" + cx + " " + cy + " L" + s0[0] + " " + s0[1] + " A" + R + " " + R + " 0 " + (span > 180 ? 1 : 0) + " 1 " + s1[0] + " " + s1[1] + " Z", style: "fill:" + cols[i] + ";stroke:var(--fig-bg);stroke-width:2" });
+        }
+        if (span >= 16) {
+          var m = pt((a0 + a1) / 2, R * 0.66);
+          E(wheel, "text", { x: m[0], y: m[1] + 5, "text-anchor": "middle", "font-size": span > 60 ? 16 : 12, "font-weight": 700, style: "fill:var(--fig-bg)" }, vocab[i]);
+        }
+        a = a1;
+      });
+      var leg = document.getElementById("gLeg"); leg.textContent = "";
+      vocab.forEach(function (v, i) {
+        var d = document.createElement("div");
+        var sw = document.createElement("i"); sw.style.background = cols[i];
+        var nm = document.createElement("span"); nm.textContent = v; if (!cur.keep[i]) nm.className = "gone";
+        var pc = document.createElement("span"); pc.textContent = (cur.p[i] * 100).toFixed(1) + "%";
+        d.appendChild(sw); d.appendChild(nm); d.appendChild(pc); leg.appendChild(d);
+      });
+    }
+    function spin() {
+      if (spinning) return;
+      var u = Math.random(), acc = 0, pick = 0;
+      for (var i = 0; i < cur.p.length; i++) { acc += cur.p[i]; if (u <= acc && cur.p[i] > 0) { pick = i; break; } }
+      var sl = slices[pick], t = sl[0] + (sl[1] - sl[0]) * (0.2 + 0.6 * Math.random());
+      var target = ((-t % 360) + 360) % 360, base = ((rot % 360) + 360) % 360;
+      rot += 360 * 4 + ((target - base + 360) % 360);
+      spinning = true;
+      document.getElementById("gRes").textContent = "…";
+      wheel.style.transform = "rotate(" + rot + "deg)";
+      setTimeout(function () {
+        spinning = false;
+        var hi = B.lang() === "hi";
+        document.getElementById("gRes").innerHTML = (hi ? "Haron bola: " : "Haron says: ") + "<strong>" + vocab[pick] + "</strong>";
+        tally.unshift(vocab[pick]); tally = tally.slice(0, 16);
+        var tl = document.getElementById("gTally"); tl.textContent = "";
+        tally.forEach(function (w) { var sp = document.createElement("span"); sp.textContent = w; tl.appendChild(sp); });
+      }, B.reduced ? 50 : 2700);
+    }
+    document.getElementById("gT").addEventListener("input", draw);
+    document.getElementById("gP").addEventListener("input", draw);
+    document.getElementById("gSpin").addEventListener("click", spin);
+    draw();
+  })();
+})();
+</script>
+</body>
+</html>
