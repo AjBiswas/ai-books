@@ -65,7 +65,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 [hidden] { display: none !important; }
 
 .page { max-width: 72rem; margin: 0 auto; }
-.col { max-width: 44rem; margin: 0 auto; }
+.col { max-width: 60rem; margin: 0 auto; }   /* same width as the contents pages */
 .wide { max-width: 60rem; margin: 0 auto; }
 
 /* Running header */

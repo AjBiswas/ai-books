@@ -239,7 +239,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 [hidden] { display: none !important; }
 
 .page { max-width: 72rem; margin: 0 auto; }
-.col { max-width: 44rem; margin: 0 auto; }
+.col { max-width: 60rem; margin: 0 auto; }   /* same width as the contents pages */
 .wide { max-width: 60rem; margin: 0 auto; }
 
 /* Running header */
@@ -5482,7 +5482,7 @@ $ cd code && python -m pytest -q
 
 <section class="part"><h2><span class="pn">Part I</span><span class="l-en">Start here</span><span class="l-hi">Shuruaat</span></h2><ol class="chapters">
 <li><span class="cn">01</span><a class="ct" href="#b2-ch01"><span class="l-en">What an AI Engineer Does</span><span class="l-hi">AI Engineer Kya Karta Hai</span><span><span class="l-en">The role, the skills map, and how this book gets you there</span><span class="l-hi">Role, skills ka naksha, aur yeh book wahan kaise pahunchaayegi</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
-<li><span class="cn">02</span><a class="ct" href="#b2-ch02"><span class="l-en">LLMs in 15 Minutes</span><span class="l-hi">15 Minute mein LLM</span><span><span class="l-en">Tokens, next-word guessing, context, temperature</span><span class="l-hi">Tokens, agla word guess karna, context, temperature</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
+<li><span class="cn">02</span><a class="ct" href="#b2-ch02"><span class="l-en">How LLMs Work</span><span class="l-hi">LLM kaise kaam karte hain</span><span><span class="l-en">Tokens, next-word guessing, context, temperature</span><span class="l-hi">Tokens, agla word guess karna, context, temperature</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 <li><span class="cn">03</span><a class="ct" href="#b2-ch03"><span class="l-en">The Model Zoo</span><span class="l-hi">Models ka Chidiyaghar</span><span><span class="l-en">Closed vs open models, free vs paid, and which to pick when</span><span class="l-hi">Closed vs open models, free vs paid, aur kab kaunsa chunein</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 <li><span class="cn">04</span><a class="ct" href="#b2-ch04"><span class="l-en">Models on Your Laptop</span><span class="l-hi">Laptop par Models</span><span><span class="l-en">Ollama, LM Studio, llama.cpp, GGUF and what your hardware can run</span><span class="l-hi">Ollama, LM Studio, llama.cpp, GGUF aur aapka hardware kya chala sakta hai</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
 <li><span class="cn">05</span><a class="ct" href="#b2-ch05"><span class="l-en">Your First API Call</span><span class="l-hi">Pehli API Call</span><span><span class="l-en">Keys, SDKs, streaming, errors, rate limits and cost</span><span class="l-hi">Keys, SDKs, streaming, errors, rate limits aur kharch</span></span></a><span class="st ready"><span class="l-en">Ready</span><span class="l-hi">Taiyaar</span></span></li>
@@ -5623,7 +5623,7 @@ $ cd code && python -m pytest -q
   <li>Huyen, C. (2025). <em>AI Engineering: Building Applications with Foundation Models.</em> O'Reilly.</li>
   <li>Anthropic (2024). <em>Building effective agents.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><a href="#b2-ch02"><span class="l-en">Ch 2 · LLMs in 15 Minutes</span><span class="l-hi">Ch 2 · 15 Minute mein LLM</span></a></nav>
+<nav class="pager"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><a href="#b2-ch02"><span class="l-en">Ch 2 · How LLMs Work</span><span class="l-hi">Ch 2 · LLM kaise kaam karte hain</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch01">
@@ -5687,14 +5687,14 @@ $ cd code && python -m pytest -q
   ], { delay: 2200 });
 })();
 </script>
-<template id="t-b2-ch02" data-title="Ch 2 · LLMs in 15 Minutes"><div class="page">
+<template id="t-b2-ch02" data-title="Ch 2 · How LLMs Work"><div class="page">
 <div class="topbar">
   <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part I · Chapter 02</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
   <div class="eyebrow"><span class="l-en">Chapter 02 · Start here</span><span class="l-hi">Chapter 02 · Shuruaat</span></div>
-  <h1><span class="l-en">LLMs in 15 Minutes</span><span class="l-hi">15 Minute mein LLM</span></h1>
+  <h1><span class="l-en">How LLMs Work</span><span class="l-hi">LLM kaise kaam karte hain</span></h1>
   <div class="story">
     <p class="l-en">Before you build with a model, you need a mental picture of what it is. Not the maths, just the picture. Haron explains itself in fifteen minutes. (Book 2, Chapter 1 animates every step in much more depth.)</p>
     <p class="l-hi">Model ke saath kuch banaane se pehle uski ek tasveer dimaag mein honi chahiye. Maths nahi, bas tasveer. Haron pandrah minute mein khud ko samjhaata hai. (Book 2 ka Chapter 1 har step ko kahin zyaada gehraai se animate karta hai.)</p>

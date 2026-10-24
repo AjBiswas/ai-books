@@ -23,7 +23,7 @@ PARTS = [
 # (num, part index, title en, title hi, subtitle en, subtitle hi)
 CHAPTERS = [
     (1, 0, "What an AI Engineer Does", "AI Engineer Kya Karta Hai", "The role, the skills map, and how this book gets you there", "Role, skills ka naksha, aur yeh book wahan kaise pahunchaayegi"),
-    (2, 0, "LLMs in 15 Minutes", "15 Minute mein LLM", "Tokens, next-word guessing, context, temperature", "Tokens, agla word guess karna, context, temperature"),
+    (2, 0, "How LLMs Work", "LLM kaise kaam karte hain", "Tokens, next-word guessing, context, temperature", "Tokens, agla word guess karna, context, temperature"),
     (3, 0, "The Model Zoo", "Models ka Chidiyaghar", "Closed vs open models, free vs paid, and which to pick when", "Closed vs open models, free vs paid, aur kab kaunsa chunein"),
     (4, 0, "Models on Your Laptop", "Laptop par Models", "Ollama, LM Studio, llama.cpp, GGUF and what your hardware can run", "Ollama, LM Studio, llama.cpp, GGUF aur aapka hardware kya chala sakta hai"),
     (5, 0, "Your First API Call", "Pehli API Call", "Keys, SDKs, streaming, errors, rate limits and cost", "Keys, SDKs, streaming, errors, rate limits aur kharch"),
