@@ -6,9 +6,9 @@
   var index = null;
 
   var btn = document.createElement("button");
-  btn.className = "sbtn"; btn.type = "button"; btn.setAttribute("aria-label", "Search topics");
+  btn.className = "sbtn"; btn.type = "button"; btn.setAttribute("aria-label", "Search topics"); btn.title = "Search topics";
   btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">' +
-    '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg><span>Search</span>';
+    '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>';
   var over = document.createElement("div");
   over.className = "sover"; over.setAttribute("role", "dialog"); over.setAttribute("aria-modal", "true");
   over.innerHTML = '<div class="sbox"><div class="shead"><input type="search" autocomplete="off" aria-label="Search topics">' +

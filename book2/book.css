@@ -384,6 +384,7 @@ h2, h3 { font-weight: 700; letter-spacing: -0.01em; }
 
 .topbar { background: var(--bar); border-bottom: 0;
   box-shadow: 0 0 0 100vmax var(--bar), 0 1px 0 100vmax var(--bar-line); clip-path: inset(0 -100vmax); }
+.topbar { max-width: 60rem; margin-inline: auto; }   /* same width on every page */
 .topbar .crumbs { align-items: center; }
 .topbar .crumbs a { background: var(--chip); color: var(--chip-ink); border-radius: 999px; padding: 0.4rem 0.95rem;
   font-family: var(--font-display); font-weight: 500; font-size: 0.85rem; letter-spacing: 0.01em; text-transform: none; }

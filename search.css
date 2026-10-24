@@ -1,7 +1,7 @@
 /* Topic search for the single-file edition (inlined by package_single_html.py). */
 .sbtn { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 20;
-  display: inline-flex; align-items: center; gap: 0.4rem; border: 0; border-radius: 999px; cursor: pointer;
-  padding: 0.65rem 1rem; background: var(--signal); color: var(--paper); font: 600 0.95rem var(--font-display);
+  width: 2.9rem; height: 2.9rem; display: grid; place-items: center; border: 0; border-radius: 50%; cursor: pointer;
+  padding: 0; background: var(--signal); color: var(--paper); font: 600 0.95rem var(--font-display);
   box-shadow: 0 4px 14px rgba(0, 0, 0, .25); }
 .sbtn svg { width: 1.1rem; height: 1.1rem; }
 .sover { position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, .45); display: none; }
@@ -23,8 +23,6 @@
 .slist .sempty { color: var(--ink-2); padding: 1rem 0.4rem; }
 @media (max-width: 560px) {
   .sbox { margin: 0; max-height: none; height: 100%; border-radius: 0; border: 0; }
-  .sbtn { padding: 0.75rem; }
-  .sbtn span { display: none; }
 }
 
 /* Soft mono theme, both modes (tokens live in book.css) */
@@ -37,4 +35,4 @@
 .slist mark { background: var(--mark); }
 
 /* Theme switch sits above the search button */
-.tbtn { bottom: calc(4.4rem + env(safe-area-inset-bottom, 0px)); }
+.tbtn { bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px)); }
