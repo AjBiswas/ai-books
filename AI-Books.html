@@ -1002,7 +1002,7 @@ Cached K shape (heads, tokens, d_head): (4, 6, 16)</pre>
     var s = document.getElementById("svA");
     var boundary = E(s, "g", { "class": "anim" });
     E(boundary, "rect", { x: 14, y: 14, width: 732, height: 332, rx: 10, "class": "line dash", "stroke-width": 1.6 });
-    BI(boundary, { x: 28, y: 36, "class": "mono sig", "font-size": 12 }, "HARNESS = Haron's whole team", "HARNESS = Haron ki poori team");
+    BI(boundary, { x: 28, y: 334, "class": "mono sig", "font-size": 12 }, "HARNESS = Haron's whole team", "HARNESS = Haron ki poori team");
 
     var lines = [];
     function ln(x1, y1, x2, y2) { var l = E(s, "line", { x1: x1, y1: y1, x2: x2, y2: y2, "class": "line anim", "stroke-width": 1.5 }); lines.push(l); return l; }
@@ -1121,7 +1121,7 @@ Cached K shape (heads, tokens, d_head): (4, 6, 16)</pre>
       E(g, "text", { x: pos[k].c, y: Y + 22, "text-anchor": "middle", "class": "mono", "font-size": 14 }, wd);
       wg.push(g);
     });
-    var future = BI(s, { x: (pos[8].x + pos[9].x + pos[9].w) / 2, y: Y + 58, "text-anchor": "middle", "class": "muted", "font-size": 11 }, "future: can't peek", "future: jhaank nahi sakte");
+    var future = BI(s, { x: (pos[8].x + pos[9].x + pos[9].w) / 2, y: Y + 80, "text-anchor": "middle", "class": "muted", "font-size": 11 }, "future: can't peek", "future: jhaank nahi sakte");
     future.setAttribute("class", "anim");
     var q = BI(s, { x: pos[IT].c, y: Y + 58, "text-anchor": "middle", "class": "amb", "font-size": 12, "font-weight": 600 }, "who am I?", "main kaun hoon?");
     q.setAttribute("class", "anim");
@@ -10197,13 +10197,13 @@ def chat(body: dict):
   var ringEls = rings.map(function (r) {
     var g = E(s, "g", { "class": "anim" });
     E(g, "circle", { cx: cx, cy: cy, r: r[0], "class": r[3], "fill-opacity": 0.5, "stroke-width": 1.5 });
-    BI(g, { x: cx, y: cy - r[0] + 16, "text-anchor": "middle", "font-size": 12, "font-weight": 700, "class": "mono" }, r[1], r[2]);
+    BI(g, { x: cx - r[0] + 8, y: cy + 4, "font-size": 12, "font-weight": 700, "class": "mono" }, r[1], r[2]);   // ring name on the left edge, clear of the dots
     return g;
   });
   var dots = [
     [0, -30, "RAG", 0], [40, 20, "Evals", 0], [-45, 15, "Tools", 0], [5, 45, "MCP", 0], [-20, -55, "Caching", 0], [55, -35, "Guardrails", 0],
     [-110, -40, "Skills", 1], [110, 20, "Sub-agents", 1], [-95, 70, "Computer use", 1], [90, 90, "Voice agents", 1], [20, 115, "Distillation", 1], [-30, -115, "A2A", 1],
-    [-170, -30, "World models", 2], [160, -70, "Diffusion LMs", 2], [150, 120, "AGI claims", 2], [-140, 130, "Agentic browsers", 2]
+    [-180, -80, "World models", 2], [160, -70, "Diffusion LMs", 2], [150, 120, "AGI claims", 2], [-140, 130, "Agentic browsers", 2]
   ];
   var dotEls = dots.map(function (d) {
     var g = E(s, "g", { "class": "anim" });
