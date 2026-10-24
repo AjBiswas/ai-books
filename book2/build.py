@@ -68,12 +68,13 @@ HEAD = """<!doctype html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<script>(function(){{var r=document.documentElement,t=null;try{{t=localStorage.getItem("harness-book-theme")}}catch(e){{}}r.setAttribute("data-theme",t||(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"))}})()</script>
 <link rel="stylesheet" href="book.css">
 </head>
 <body>
 <div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>{part} · Chapter {nn}</span></div>
+  <div class="crumbs"><a href="index.html"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>{part} · Chapter {nn}</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 """
@@ -102,8 +103,8 @@ def build():
         prev_ = next((c for c in reversed(CHAPTERS) if c[0] < num and os.path.exists(os.path.join(HERE, "src", f"ch{c[0]:02d}.html"))), None)
         next_ = next((c for c in CHAPTERS if c[0] > num and os.path.exists(os.path.join(HERE, "src", f"ch{c[0]:02d}.html"))), None)
         pager = '<nav class="pager">'
-        pager += (f'<a href="ch{prev_[0]:02d}.html">← Ch {prev_[0]}</a>' if prev_ else '<a href="index.html"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a>')
-        pager += (f'<a href="ch{next_[0]:02d}.html"><span class="l-en">Ch {next_[0]} · {esc(next_[2])} →</span><span class="l-hi">Ch {next_[0]} · {esc(next_[3])} →</span></a>'
+        pager += (f'<a href="ch{prev_[0]:02d}.html">Ch {prev_[0]}</a>' if prev_ else '<a href="index.html"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a>')
+        pager += (f'<a href="ch{next_[0]:02d}.html"><span class="l-en">Ch {next_[0]} · {esc(next_[2])}</span><span class="l-hi">Ch {next_[0]} · {esc(next_[3])}</span></a>'
                   if next_ else '<a href="index.html"><span class="l-en">Back to contents</span><span class="l-hi">Vishay-suchi par wapas</span></a>')
         pager += "</nav>\n"
         i = body.rfind("</article>")
@@ -140,6 +141,7 @@ INDEX_TOP = """<title>Becoming an AI Engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<script>(function(){var r=document.documentElement,t=null;try{t=localStorage.getItem("harness-book-theme")}catch(e){}r.setAttribute("data-theme",t||(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"))})()</script>
 <link rel="stylesheet" href="book.css">
 <style>
   .cover-grid { display: grid; grid-template-columns: 1fr 11rem; gap: 2rem; align-items: center; }

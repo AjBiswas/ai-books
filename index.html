@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AI Books</title>
+<script>(function(){var r=document.documentElement,t=null;try{t=localStorage.getItem("harness-book-theme")}catch(e){}r.setAttribute("data-theme",t||(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"))})()</script>
 <style>@font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
@@ -533,45 +534,50 @@ h2 { scroll-margin-top: 4.5rem; }
 
 /* Soft mono theme (light mode only): grey gradient page, heavy black headings,
    white pill controls and floating cards with soft shadows, charcoal round buttons. */
-@media not all and (prefers-color-scheme: dark) {
-  :root { --lift: 0 22px 48px -18px rgba(0, 0, 0, .28), 0 3px 10px rgba(0, 0, 0, .05);
+  html[data-theme="light"] { --lift: 0 22px 48px -18px rgba(0, 0, 0, .28), 0 3px 10px rgba(0, 0, 0, .05);
           --lift-sm: 0 8px 22px -10px rgba(0, 0, 0, .3); --knob: #262626; --card: #fafafa; }
-  html { background: #ececec; }
-  body { background: linear-gradient(180deg, #fafafa 0, #f1f1f1 30rem, #ececec 100%); }
-  body::before { background: #efefef; }
-  h1 { font-weight: 900; letter-spacing: -0.03em; }
-  h2, h3 { font-weight: 700; letter-spacing: -0.01em; }
+  html[data-theme="light"] { background: #ececec; }
+  [data-theme="light"] body { background: linear-gradient(180deg, #fafafa 0, #f1f1f1 30rem, #ececec 100%); }
+  [data-theme="light"] body::before { background: #efefef; }
+  [data-theme="light"] h1 { font-weight: 900; letter-spacing: -0.03em; }
+  [data-theme="light"] h2, [data-theme="light"] h3 { font-weight: 700; letter-spacing: -0.01em; }
 
-  .topbar { background: rgba(236, 236, 236, .86); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  [data-theme="light"] .topbar { background: rgba(236, 236, 236, .86); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
             border-bottom: 0;
             box-shadow: 0 0 0 100vmax rgba(236, 236, 236, .86), 0 1px 0 100vmax rgba(0, 0, 0, .05); clip-path: inset(0 -100vmax); }
-  .topbar .crumbs a { background: #7b7b7b; color: #fff; border-radius: 999px; padding: 0.4rem 0.95rem;
+  [data-theme="light"] .topbar .crumbs a { background: #7b7b7b; color: #fff; border-radius: 999px; padding: 0.4rem 0.95rem;
                       font-family: var(--font-display); font-weight: 500; font-size: 0.85rem; letter-spacing: 0.01em; text-transform: none; }
-  .langtog { border: 0; background: #7b7b7b; padding: 3px; }
-  .langtog button { color: #fff; border-radius: 999px; }
-  .langtog button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 2px 6px rgba(0, 0, 0, .18); }
+  [data-theme="light"] .langtog { border: 0; background: #7b7b7b; padding: 3px; }
+  [data-theme="light"] .langtog button { color: #fff; border-radius: 999px; }
+  [data-theme="light"] .langtog button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 2px 6px rgba(0, 0, 0, .18); }
 
-  .opener, .cover { border-bottom: 1px solid var(--rule); }
-  .opener > .eyebrow, .opener > h1, .cover > .eyebrow, .cover > h1, .cover > .lede { text-align: center; margin-inline: auto; }
+  [data-theme="light"] .opener, [data-theme="light"] .cover { border-bottom: 1px solid var(--rule); }
+  [data-theme="light"] .opener > .eyebrow, [data-theme="light"] .opener > h1, [data-theme="light"] .cover > .eyebrow, [data-theme="light"] .cover > h1, [data-theme="light"] .cover > .lede { text-align: center; margin-inline: auto; }
 
-  .scene, .callout, details.deep, .figbox, .analogy { border: 0; border-radius: 24px; background: var(--card); box-shadow: var(--lift); }
-  .scene-bar { background: #efefef; border-top: 0; }
-  .scene-bar button { border: 0; background: #fff; color: var(--ink); box-shadow: var(--lift-sm); }
-  .scene-bar button.play { background: var(--knob); color: #fff; }
-  .scene-cap { border-top: 1px solid #e6e6e6; }
-  .callout { padding: 1.1rem 1.3rem 0.5rem; }
-  .callout .tag { border-radius: 999px; padding: 0.2rem 0.7rem; }
-  .gloss div { border: 0; border-radius: 18px; background: var(--card); box-shadow: var(--lift-sm); }
-  pre { border: 0; border-radius: 16px; box-shadow: inset 0 2px 8px rgba(0, 0, 0, .06); }
-  .codehead { border: 0; border-radius: 16px 16px 0 0; background: #dedede; }
-  .scene-title .sn, .spin-btn { background: var(--knob); color: #fff; box-shadow: 0 12px 24px -8px rgba(0, 0, 0, .5); }
+  [data-theme="light"] .scene, [data-theme="light"] .callout, [data-theme="light"] details.deep, [data-theme="light"] .figbox, [data-theme="light"] .analogy { border: 0; border-radius: 24px; background: var(--card); box-shadow: var(--lift); }
+  [data-theme="light"] .scene-bar { background: #efefef; border-top: 0; }
+  [data-theme="light"] .scene-bar button { border: 0; background: #fff; color: var(--ink); box-shadow: var(--lift-sm); }
+  [data-theme="light"] .scene-bar button.play { background: var(--knob); color: #fff; }
+  [data-theme="light"] .scene-cap { border-top: 1px solid #e6e6e6; }
+  [data-theme="light"] .callout { padding: 1.1rem 1.3rem 0.5rem; }
+  [data-theme="light"] .callout .tag { border-radius: 999px; padding: 0.2rem 0.7rem; }
+  [data-theme="light"] .gloss div { border: 0; border-radius: 18px; background: var(--card); box-shadow: var(--lift-sm); }
+  [data-theme="light"] pre { border: 0; border-radius: 16px; box-shadow: inset 0 2px 8px rgba(0, 0, 0, .06); }
+  [data-theme="light"] .codehead { border: 0; border-radius: 16px 16px 0 0; background: #dedede; }
+  [data-theme="light"] .scene-title .sn, [data-theme="light"] .spin-btn { background: var(--knob); color: #fff; box-shadow: 0 12px 24px -8px rgba(0, 0, 0, .5); }
 
-  .chapters { border-top: 0; display: grid; gap: 0.7rem; }
-  .chapters li { background: var(--card); border: 0; border-radius: 20px; padding: 0.9rem 1.1rem; box-shadow: var(--lift-sm); }
-  .chapters .st { border-radius: 999px; padding-inline: 0.7rem; }
-  .chapters .ct { text-decoration: none; color: var(--ink); }
-  .pager a { background: #fff; border-radius: 999px; padding: 0.55rem 1.1rem; box-shadow: var(--lift-sm); color: var(--ink); }
-}
+  [data-theme="light"] .chapters { border-top: 0; display: grid; gap: 0.7rem; }
+  [data-theme="light"] .chapters li { background: var(--card); border: 0; border-radius: 20px; padding: 0.9rem 1.1rem; box-shadow: var(--lift-sm); }
+  [data-theme="light"] .chapters .st { border-radius: 999px; padding-inline: 0.7rem; }
+  [data-theme="light"] .chapters .ct { text-decoration: none; color: var(--ink); }
+  [data-theme="light"] .pager a { background: #fff; border-radius: 999px; padding: 0.55rem 1.1rem; box-shadow: var(--lift-sm); color: var(--ink); }
+
+
+/* Light/dark switch button (added by book.js) */
+.tbtn { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 20;
+  width: 2.9rem; height: 2.9rem; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: var(--ink); color: var(--paper); box-shadow: 0 12px 26px -8px rgba(0, 0, 0, .5); }
+.tbtn svg { width: 1.25rem; height: 1.25rem; }
 
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 /* Topic search for the single-file edition (inlined by package_single_html.py). */
@@ -604,15 +610,17 @@ h2 { scroll-margin-top: 4.5rem; }
 }
 
 /* Soft mono theme (light mode only): charcoal round button, white pill input */
-@media not all and (prefers-color-scheme: dark) {
-  .sbtn { background: #262626; color: #fff; box-shadow: 0 16px 32px -10px rgba(0, 0, 0, .55); }
-  .sbox { background: #f3f3f3; border: 0; }
-  .shead { border-bottom: 0; padding: 1rem; }
-  .shead input { background: #fff; border: 0; border-radius: 999px; padding: 0.7rem 1.1rem; box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .3); }
-  .shead button { border: 0; background: #7b7b7b; color: #fff; }
-  .slist a { background: #fafafa; border: 0; border-radius: 18px; margin-bottom: 0.6rem; padding: 0.8rem 1rem; box-shadow: 0 8px 22px -12px rgba(0, 0, 0, .3); }
-  .slist mark { background: #dcdcdc; }
-}
+  [data-theme="light"] .sbtn { background: #262626; color: #fff; box-shadow: 0 16px 32px -10px rgba(0, 0, 0, .55); }
+  [data-theme="light"] .sbox { background: #f3f3f3; border: 0; }
+  [data-theme="light"] .shead { border-bottom: 0; padding: 1rem; }
+  [data-theme="light"] .shead input { background: #fff; border: 0; border-radius: 999px; padding: 0.7rem 1.1rem; box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .3); }
+  [data-theme="light"] .shead button { border: 0; background: #7b7b7b; color: #fff; }
+  [data-theme="light"] .slist a { background: #fafafa; border: 0; border-radius: 18px; margin-bottom: 0.6rem; padding: 0.8rem 1rem; box-shadow: 0 8px 22px -12px rgba(0, 0, 0, .3); }
+  [data-theme="light"] .slist mark { background: #dcdcdc; }
+
+
+/* Theme switch sits above the search button */
+.tbtn { bottom: calc(4.4rem + env(safe-area-inset-bottom, 0px)); }
 
 </style>
 </head>
@@ -625,7 +633,7 @@ h2 { scroll-margin-top: 4.5rem; }
 </style><div class="page wide">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#home">← All books</a><span><span class="l-en">Book 2 · A storybook field manual</span><span class="l-hi">Book 2 · Kahani wali field manual</span></span></div>
+  <div class="crumbs"><a href="#home">All books</a><span><span class="l-en">Book 2 · A storybook field manual</span><span class="l-hi">Book 2 · Kahani wali field manual</span></span></div>
   <div class="langtog" role="group" aria-label="Language">
     <button type="button" data-setlang="en" aria-pressed="true">English</button>
     <button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button>
@@ -704,7 +712,7 @@ h2 { scroll-margin-top: 4.5rem; }
 
 <div class="topbar">
   <div class="crumbs">
-    <a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a>
+    <a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a>
     <span>Part I · Chapter 01</span>
   </div>
   <div class="langtog" role="group" aria-label="Language">
@@ -1098,7 +1106,7 @@ Cached K shape (heads, tokens, d_head): (4, 6, 16)</pre>
 </ol>
 
 <nav class="pager">
-  <a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a>
+  <a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a>
   <span style="color:var(--ink-2)"><span class="l-en">Next: Ch 2 · Haron's Wallet (tokens &amp; money)</span><span class="l-hi">Agla: Ch 2 · Haron ka Wallet (tokens aur paisa)</span></span>
 </nav>
 
@@ -1581,7 +1589,7 @@ Cached K shape (heads, tokens, d_head): (4, 6, 16)</pre>
 <template id="t-b1-ch02" data-title="Ch 2 · Haron's Wallet"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 02</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part I · Chapter 02</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -1706,7 +1714,7 @@ Hindi    DEVANAGARI ~ 38 tokens
   <li>Petrov et al. (2023). <em>Language Model Tokenizers Introduce Unfairness Between Languages.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch01">← Ch 1</a><a href="#b1-ch03"><span class="l-en">Ch 3 · Haron's Bad Habits →</span><span class="l-hi">Ch 3 · Haron ki Buri Aadatein →</span></a></nav>
+<nav class="pager"><a href="#b1-ch01">Ch 1</a><a href="#b1-ch03"><span class="l-en">Ch 3 · Haron's Bad Habits</span><span class="l-hi">Ch 3 · Haron ki Buri Aadatein</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch02">
@@ -1827,7 +1835,7 @@ Hindi    DEVANAGARI ~ 38 tokens
 <template id="t-b1-ch03" data-title="Ch 3 · Haron's Bad Habits"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 03</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part I · Chapter 03</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -1951,7 +1959,7 @@ people-pleaser model   flip rate under pushback: 58%</pre>
   <li>Greshake et al. (2023). <em>Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch02">← Ch 2</a><a href="#b1-ch04"><span class="l-en">Ch 4 · How Haron Went to School →</span><span class="l-hi">Ch 4 · Haron School Kaise Gaya →</span></a></nav>
+<nav class="pager"><a href="#b1-ch02">Ch 2</a><a href="#b1-ch04"><span class="l-en">Ch 4 · How Haron Went to School</span><span class="l-hi">Ch 4 · Haron School Kaise Gaya</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch03">
@@ -2080,7 +2088,7 @@ people-pleaser model   flip rate under pushback: 58%</pre>
 <template id="t-b1-ch04" data-title="Ch 4 · How Haron Went to School"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 04</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part I · Chapter 04</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -2198,7 +2206,7 @@ DPO loss before update: 0.6931 | after preferring the winner: 0.6076</pre>
   <li>Shao et al. (2024). <em>DeepSeekMath</em> (GRPO). · DeepSeek-AI (2025). <em>DeepSeek-R1.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch03">← Ch 3</a><a href="#b1-ch05"><span class="l-en">Ch 5 · What a Harness Is →</span><span class="l-hi">Ch 5 · Harness Kya Hai →</span></a></nav>
+<nav class="pager"><a href="#b1-ch03">Ch 3</a><a href="#b1-ch05"><span class="l-en">Ch 5 · What a Harness Is</span><span class="l-hi">Ch 5 · Harness Kya Hai</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch04">
@@ -2318,7 +2326,7 @@ DPO loss before update: 0.6931 | after preferring the winner: 0.6076</pre>
 <template id="t-b1-ch05" data-title="Ch 5 · What a Harness Is"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 05</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 05</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -2435,7 +2443,7 @@ class Provider(ABC):
   <li>Anthropic (2024). <em>Building effective agents.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch04">← Ch 4</a><a href="#b1-ch06"><span class="l-en">Ch 6 · The Manager's Loop →</span><span class="l-hi">Ch 6 · Manager ka Loop →</span></a></nav>
+<nav class="pager"><a href="#b1-ch04">Ch 4</a><a href="#b1-ch06"><span class="l-en">Ch 6 · The Manager's Loop</span><span class="l-hi">Ch 6 · Manager ka Loop</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch05">
@@ -2555,7 +2563,7 @@ class Provider(ABC):
 <template id="t-b1-ch06" data-title="Ch 6 · The Manager's Loop"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 06</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 06</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -2670,7 +2678,7 @@ Failure modes the loop must catch:
   <li>Anthropic (2024). <em>Building effective agents.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch05">← Ch 5</a><a href="#b1-ch07"><span class="l-en">Ch 7 · The Toolbox &amp; MCP →</span><span class="l-hi">Ch 7 · Auzaar ka Dabba &amp; MCP →</span></a></nav>
+<nav class="pager"><a href="#b1-ch05">Ch 5</a><a href="#b1-ch07"><span class="l-en">Ch 7 · The Toolbox &amp; MCP</span><span class="l-hi">Ch 7 · Auzaar ka Dabba &amp; MCP</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch06">
@@ -2793,7 +2801,7 @@ Failure modes the loop must catch:
 <template id="t-b1-ch07" data-title="Ch 7 · The Toolbox and MCP"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 07</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 07</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -2905,7 +2913,7 @@ dangerous      ERROR Permission denied: delete_account is a dangerous tool and m
   <li>Anthropic (2025). <em>Writing effective tools for agents.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch06">← Ch 6</a><a href="#b1-ch08"><span class="l-en">Ch 8 · Packing the Diary →</span><span class="l-hi">Ch 8 · Diary Pack Karna →</span></a></nav>
+<nav class="pager"><a href="#b1-ch06">Ch 6</a><a href="#b1-ch08"><span class="l-en">Ch 8 · Packing the Diary</span><span class="l-hi">Ch 8 · Diary Pack Karna</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch07">
@@ -3014,7 +3022,7 @@ dangerous      ERROR Permission denied: delete_account is a dangerous tool and m
 <template id="t-b1-ch08" data-title="Ch 8 · Packing the Diary"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 08</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 08</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -3134,7 +3142,7 @@ Compaction: 91 messages / ~2,918 tokens -> 10 messages / ~1,593 tokens</pre>
   <li>Anthropic (2025). <em>Effective context engineering for AI agents.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch07">← Ch 7</a><a href="#b1-ch09"><span class="l-en">Ch 9 · Many Harons →</span><span class="l-hi">Ch 9 · Kai Saare Haron →</span></a></nav>
+<nav class="pager"><a href="#b1-ch07">Ch 7</a><a href="#b1-ch09"><span class="l-en">Ch 9 · Many Harons</span><span class="l-hi">Ch 9 · Kai Saare Haron</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch08">
@@ -3245,7 +3253,7 @@ Compaction: 91 messages / ~2,918 tokens -> 10 messages / ~1,593 tokens</pre>
 <template id="t-b1-ch09" data-title="Ch 9 · Many Harons"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 09</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 09</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -3346,7 +3354,7 @@ total tokens 271</pre>
   <li>OpenAI (2025). <em>Agents SDK: handoffs.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch08">← Ch 8</a><a href="#b1-ch10"><span class="l-en">Ch 10 · Hooks, Skills &amp; Policies →</span><span class="l-hi">Ch 10 · Hooks, Skills &amp; Policies →</span></a></nav>
+<nav class="pager"><a href="#b1-ch08">Ch 8</a><a href="#b1-ch10"><span class="l-en">Ch 10 · Hooks, Skills &amp; Policies</span><span class="l-hi">Ch 10 · Hooks, Skills &amp; Policies</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch09">
@@ -3449,7 +3457,7 @@ total tokens 271</pre>
 <template id="t-b1-ch10" data-title="Ch 10 · Hooks, Skills and Policies"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 10</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 10</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -3552,7 +3560,7 @@ ok       deploy prod --dry-run</pre>
   <li>OWASP (2025). <em>Top 10 for LLM Applications: Excessive Agency.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch09">← Ch 9</a><a href="#b1-ch11"><span class="l-en">Ch 11 · The Company Blueprint →</span><span class="l-hi">Ch 11 · Company ka Naksha →</span></a></nav>
+<nav class="pager"><a href="#b1-ch09">Ch 9</a><a href="#b1-ch11"><span class="l-en">Ch 11 · The Company Blueprint</span><span class="l-hi">Ch 11 · Company ka Naksha</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch10">
@@ -3653,7 +3661,7 @@ ok       deploy prod --dry-run</pre>
 <template id="t-b1-ch11" data-title="Ch 11 · The Company Blueprint"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part III · Chapter 11</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part III · Chapter 11</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -3748,7 +3756,7 @@ Note: the first cloud call failed and fell back to the next model in its chain.<
   <li>OpenTelemetry. <em>Semantic conventions for generative AI.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch10">← Ch 10</a><a href="#b1-ch12"><span class="l-en">Ch 12 · Rules &amp; Regulations →</span><span class="l-hi">Ch 12 · Niyam aur Kaanoon →</span></a></nav>
+<nav class="pager"><a href="#b1-ch10">Ch 10</a><a href="#b1-ch12"><span class="l-en">Ch 12 · Rules &amp; Regulations</span><span class="l-hi">Ch 12 · Niyam aur Kaanoon</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch11">
@@ -3865,7 +3873,7 @@ Note: the first cloud call failed and fell back to the next model in its chain.<
 <template id="t-b1-ch12" data-title="Ch 12 · Rules and Regulations"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part III · Chapter 12</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part III · Chapter 12</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -3977,7 +3985,7 @@ restored == original: True
   <li>UIDAI. <em>Aadhaar number structure</em> (Verhoeff check digit).</li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch11">← Ch 11</a><a href="#b1-ch13"><span class="l-en">Ch 13 · Budgets for Everyone →</span><span class="l-hi">Ch 13 · Sabke liye Budget →</span></a></nav>
+<nav class="pager"><a href="#b1-ch11">Ch 11</a><a href="#b1-ch13"><span class="l-en">Ch 13 · Budgets for Everyone</span><span class="l-hi">Ch 13 · Sabke liye Budget</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch12">
@@ -4090,7 +4098,7 @@ restored == original: True
 <template id="t-b1-ch13" data-title="Ch 13 · Budgets for Everyone"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part III · Chapter 13</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part III · Chapter 13</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -4198,7 +4206,7 @@ Rate limit, 8 requests at once (burst 5, 2/s): YYYYYnnn</pre>
   <li>Chen, Zaharia &amp; Zou (2023). <em>FrugalGPT.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch12">← Ch 12</a><a href="#b1-ch14"><span class="l-en">Ch 14 · Guarding Haron →</span><span class="l-hi">Ch 14 · Haron ki Hifaazat →</span></a></nav>
+<nav class="pager"><a href="#b1-ch12">Ch 12</a><a href="#b1-ch14"><span class="l-en">Ch 14 · Guarding Haron</span><span class="l-hi">Ch 14 · Haron ki Hifaazat</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch13">
@@ -4335,7 +4343,7 @@ Rate limit, 8 requests at once (burst 5, 2/s): YYYYYnnn</pre>
 <template id="t-b1-ch14" data-title="Ch 14 · Guarding Haron"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part III · Chapter 14</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part III · Chapter 14</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -4448,7 +4456,7 @@ session tainted: True</pre>
   <li>OWASP (2025). <em>Top 10 for LLM Applications.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch13">← Ch 13</a><a href="#b1-ch15"><span class="l-en">Ch 15 · Haron at Home →</span><span class="l-hi">Ch 15 · Ghar ka Haron →</span></a></nav>
+<nav class="pager"><a href="#b1-ch13">Ch 13</a><a href="#b1-ch15"><span class="l-en">Ch 15 · Haron at Home</span><span class="l-hi">Ch 15 · Ghar ka Haron</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch14">
@@ -4560,7 +4568,7 @@ session tainted: True</pre>
 <template id="t-b1-ch15" data-title="Ch 15 · Haron at Home"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part III · Chapter 15</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part III · Chapter 15</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -4671,7 +4679,7 @@ OpenAICompatProvider(base_url="http://gpu-node:8000/v1", api_key="internal")</pr
   <li>Leviathan et al. (2023). <em>Fast Inference from Transformers via Speculative Decoding.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch14">← Ch 14</a><a href="#b1-ch16"><span class="l-en">Ch 16 · Haron's Exams →</span><span class="l-hi">Ch 16 · Haron ke Exams →</span></a></nav>
+<nav class="pager"><a href="#b1-ch14">Ch 14</a><a href="#b1-ch16"><span class="l-en">Ch 16 · Haron's Exams</span><span class="l-hi">Ch 16 · Haron ke Exams</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch15">
@@ -4780,7 +4788,7 @@ OpenAICompatProvider(base_url="http://gpu-node:8000/v1", api_key="internal")</pr
 <template id="t-b1-ch16" data-title="Ch 16 · Haron's Exams"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 16</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part IV · Chapter 16</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -4897,7 +4905,7 @@ pass@1 / pass@5 with 10 samples, 3 correct: 0.3 0.92</pre>
   <li>Yao et al. (2024). <em>τ-bench: A Benchmark for Tool-Agent-User Interaction</em> (pass^k).</li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch15">← Ch 15</a><a href="#b1-ch17"><span class="l-en">Ch 17 · Watching Haron Work →</span><span class="l-hi">Ch 17 · Haron par Nazar →</span></a></nav>
+<nav class="pager"><a href="#b1-ch15">Ch 15</a><a href="#b1-ch17"><span class="l-en">Ch 17 · Watching Haron Work</span><span class="l-hi">Ch 17 · Haron par Nazar</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch16">
@@ -4997,7 +5005,7 @@ pass@1 / pass@5 with 10 samples, 3 correct: 0.3 0.92</pre>
 <template id="t-b1-ch17" data-title="Ch 17 · Watching Haron Work"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 17</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part IV · Chapter 17</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -5103,7 +5111,7 @@ PSI answer length, after model update: 2.887  <- investigate</pre>
   <li>Yurdakul (2018). <em>Statistical Properties of Population Stability Index.</em></li>
 </ol>
 
-<nav class="pager"><a href="#b1-ch16">← Ch 16</a><a href="#b1-ch18"><span class="l-en">Ch 18 · Capstone →</span><span class="l-hi">Ch 18 · Capstone →</span></a></nav>
+<nav class="pager"><a href="#b1-ch16">Ch 16</a><a href="#b1-ch18"><span class="l-en">Ch 18 · Capstone</span><span class="l-hi">Ch 18 · Capstone</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch17">
@@ -5204,7 +5212,7 @@ PSI answer length, after model update: 2.887  <- investigate</pre>
 <template id="t-b1-ch18" data-title="Ch 18 · The Company Harness"><div class="page">
 
 <div class="topbar">
-  <div class="crumbs"><a href="#b1-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 18</span></div>
+  <div class="crumbs"><a href="#b1-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part IV · Chapter 18</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 
@@ -5326,7 +5334,7 @@ $ cd code && python -m pytest -q
   <div class="exercise"><p class="l-en">Write a two-page proposal for your own organisation: the first three use cases, the Phase 0 architecture, the policies that legal must approve, and the metrics that will decide whether Phase 1 succeeded. <span class="level">enterprise</span></p><p class="l-hi">Apni organisation ke liye do page ka proposal likho: pehle teen use cases, Phase 0 architecture, legal ko approve karni wali policies, aur woh metrics jo tay karenge ki Phase 1 safal hua ya nahi. <span class="level">enterprise</span></p></div>
 </div>
 
-<nav class="pager"><a href="#b1-ch17">← Ch 17</a><a href="#b1-index"><span class="l-en">Back to contents</span><span class="l-hi">Vishay-suchi par wapas</span></a></nav>
+<nav class="pager"><a href="#b1-ch17">Ch 17</a><a href="#b1-index"><span class="l-en">Back to contents</span><span class="l-hi">Vishay-suchi par wapas</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b1-ch18">
@@ -5441,7 +5449,7 @@ $ cd code && python -m pytest -q
   @media (max-width: 640px) { .cover-grid { grid-template-columns: 1fr; } .cover-grid svg { width: 7rem; } }
 </style><div class="page wide">
 <div class="topbar">
-  <div class="crumbs"><a href="#home">← All books</a><span><span class="l-en">Book 1 · A storybook course</span><span class="l-hi">Book 1 · Kahani wala course</span></span></div>
+  <div class="crumbs"><a href="#home">All books</a><span><span class="l-en">Book 1 · A storybook course</span><span class="l-hi">Book 1 · Kahani wala course</span></span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <header class="cover">
@@ -5514,7 +5522,7 @@ $ cd code && python -m pytest -q
 </div></template>
 <template id="t-b2-ch01" data-title="Ch 1 · What an AI Engineer Does"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 01</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part I · Chapter 01</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -5605,7 +5613,7 @@ $ cd code && python -m pytest -q
   <li>Huyen, C. (2025). <em>AI Engineering: Building Applications with Foundation Models.</em> O'Reilly.</li>
   <li>Anthropic (2024). <em>Building effective agents.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><a href="#b2-ch02"><span class="l-en">Ch 2 · LLMs in 15 Minutes →</span><span class="l-hi">Ch 2 · 15 Minute mein LLM →</span></a></nav>
+<nav class="pager"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><a href="#b2-ch02"><span class="l-en">Ch 2 · LLMs in 15 Minutes</span><span class="l-hi">Ch 2 · 15 Minute mein LLM</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch01">
@@ -5671,7 +5679,7 @@ $ cd code && python -m pytest -q
 </script>
 <template id="t-b2-ch02" data-title="Ch 2 · LLMs in 15 Minutes"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 02</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part I · Chapter 02</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -5762,7 +5770,7 @@ $ cd code && python -m pytest -q
   <li>Karpathy, A. (2023). <em>Intro to Large Language Models</em> (video lecture).</li>
   <li>Book 2, <em>Building the Harness</em>, Chapter 1: <em>Inside Haron's Brain.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch01">← Ch 1</a><a href="#b2-ch03"><span class="l-en">Ch 3 · The Model Zoo →</span><span class="l-hi">Ch 3 · Models ka Chidiyaghar →</span></a></nav>
+<nav class="pager"><a href="#b2-ch01">Ch 1</a><a href="#b2-ch03"><span class="l-en">Ch 3 · The Model Zoo</span><span class="l-hi">Ch 3 · Models ka Chidiyaghar</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch02">
@@ -5819,7 +5827,7 @@ $ cd code && python -m pytest -q
 </script>
 <template id="t-b2-ch03" data-title="Ch 3 · The Model Zoo"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 03</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part I · Chapter 03</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -5908,7 +5916,7 @@ $ cd code && python -m pytest -q
   <li>Hugging Face. <em>Model cards</em> documentation.</li>
   <li>Open Source Initiative (2024). <em>The Open Source AI Definition.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch02">← Ch 2</a><a href="#b2-ch04"><span class="l-en">Ch 4 · Models on Your Laptop →</span><span class="l-hi">Ch 4 · Laptop par Models →</span></a></nav>
+<nav class="pager"><a href="#b2-ch02">Ch 2</a><a href="#b2-ch04"><span class="l-en">Ch 4 · Models on Your Laptop</span><span class="l-hi">Ch 4 · Laptop par Models</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch03">
@@ -5969,7 +5977,7 @@ $ cd code && python -m pytest -q
 </script>
 <template id="t-b2-ch04" data-title="Ch 4 · Models on Your Laptop"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 04</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part I · Chapter 04</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -6089,7 +6097,7 @@ think=False                         21.3s   329 output tokens  thinking field: 0
   <li>Dettmers et al. (2022). <em>LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale.</em></li>
   <li>Qwen Team (2025). <em>Qwen3 Technical Report.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch03">← Ch 3</a><a href="#b2-ch05"><span class="l-en">Ch 5 · Your First API Call →</span><span class="l-hi">Ch 5 · Pehli API Call →</span></a></nav>
+<nav class="pager"><a href="#b2-ch03">Ch 3</a><a href="#b2-ch05"><span class="l-en">Ch 5 · Your First API Call</span><span class="l-hi">Ch 5 · Pehli API Call</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch04">
@@ -6139,7 +6147,7 @@ think=False                         21.3s   329 output tokens  thinking field: 0
 </script>
 <template id="t-b2-ch05" data-title="Ch 5 · Your First API Call"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part I · Chapter 05</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part I · Chapter 05</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -6252,7 +6260,7 @@ print(resp.choices[0].message.content, resp.choices[0].finish_reason, resp.usage
   <li>OpenAI. <em>Chat Completions API</em> reference. · Ollama. <em>OpenAI compatibility.</em></li>
   <li>GitHub. <em>Secret scanning</em> documentation.</li>
 </ol>
-<nav class="pager"><a href="#b2-ch04">← Ch 4</a><a href="#b2-ch06"><span class="l-en">Ch 6 · Prompt Engineering Basics →</span><span class="l-hi">Ch 6 · Prompt Engineering ki Buniyaad →</span></a></nav>
+<nav class="pager"><a href="#b2-ch04">Ch 4</a><a href="#b2-ch06"><span class="l-en">Ch 6 · Prompt Engineering Basics</span><span class="l-hi">Ch 6 · Prompt Engineering ki Buniyaad</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch05">
@@ -6314,7 +6322,7 @@ print(resp.choices[0].message.content, resp.choices[0].finish_reason, resp.usage
 </script>
 <template id="t-b2-ch06" data-title="Ch 6 · Prompt Engineering Basics"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 06</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 06</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -6413,7 +6421,7 @@ def build_user_turn(policy: str, order: dict, message: str) -> str:
   <li>OpenAI. <em>Prompt engineering guide.</em></li>
   <li>Google. <em>Prompting strategies for Gemini.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch05">← Ch 5</a><a href="#b2-ch07"><span class="l-en">Ch 7 · Advanced Prompting →</span><span class="l-hi">Ch 7 · Advanced Prompting →</span></a></nav>
+<nav class="pager"><a href="#b2-ch05">Ch 5</a><a href="#b2-ch07"><span class="l-en">Ch 7 · Advanced Prompting</span><span class="l-hi">Ch 7 · Advanced Prompting</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch06">
@@ -6462,7 +6470,7 @@ def build_user_turn(policy: str, order: dict, message: str) -> str:
 </script>
 <template id="t-b2-ch07" data-title="Ch 7 · Advanced Prompting"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 07</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 07</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -6550,7 +6558,7 @@ def build_user_turn(policy: str, order: dict, message: str) -> str:
   <li>Wang et al. (2022). <em>Self-Consistency Improves Chain of Thought Reasoning.</em></li>
   <li>Anthropic. <em>Chain complex prompts</em> and <em>Prompt generator</em> documentation.</li>
 </ol>
-<nav class="pager"><a href="#b2-ch06">← Ch 6</a><a href="#b2-ch08"><span class="l-en">Ch 8 · Structured Outputs →</span><span class="l-hi">Ch 8 · Structured Outputs →</span></a></nav>
+<nav class="pager"><a href="#b2-ch06">Ch 6</a><a href="#b2-ch08"><span class="l-en">Ch 8 · Structured Outputs</span><span class="l-hi">Ch 8 · Structured Outputs</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch07">
@@ -6609,7 +6617,7 @@ def build_user_turn(policy: str, order: dict, message: str) -> str:
 </script>
 <template id="t-b2-ch08" data-title="Ch 8 · Structured Outputs"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 08</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 08</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -6733,7 +6741,7 @@ ticket = resp.parsed_output          # a validated Ticket object</pre>
   <li>Anthropic. <em>Structured outputs</em> documentation. · OpenAI. <em>Structured Outputs</em> guide.</li>
   <li>Ollama. <em>Structured outputs</em> (format parameter).</li>
 </ol>
-<nav class="pager"><a href="#b2-ch07">← Ch 7</a><a href="#b2-ch09"><span class="l-en">Ch 9 · Reasoning Models →</span><span class="l-hi">Ch 9 · Sochne Wale Models →</span></a></nav>
+<nav class="pager"><a href="#b2-ch07">Ch 7</a><a href="#b2-ch09"><span class="l-en">Ch 9 · Reasoning Models</span><span class="l-hi">Ch 9 · Sochne Wale Models</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch08">
@@ -6790,7 +6798,7 @@ ticket = resp.parsed_output          # a validated Ticket object</pre>
 </script>
 <template id="t-b2-ch09" data-title="Ch 9 · Reasoning Models"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 09</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 09</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -6885,7 +6893,7 @@ for block in resp.content:
   <li>Snell et al. (2024). <em>Scaling LLM Test-Time Compute Optimally Can Be More Effective than Scaling Model Parameters.</em></li>
   <li>Anthropic. <em>Extended and adaptive thinking</em> and <em>Effort</em> documentation.</li>
 </ol>
-<nav class="pager"><a href="#b2-ch08">← Ch 8</a><a href="#b2-ch10"><span class="l-en">Ch 10 · Context Engineering →</span><span class="l-hi">Ch 10 · Context Engineering →</span></a></nav>
+<nav class="pager"><a href="#b2-ch08">Ch 8</a><a href="#b2-ch10"><span class="l-en">Ch 10 · Context Engineering</span><span class="l-hi">Ch 10 · Context Engineering</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch09">
@@ -6934,7 +6942,7 @@ for block in resp.content:
 </script>
 <template id="t-b2-ch10" data-title="Ch 10 · Context Engineering"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 10</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 10</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -7011,7 +7019,7 @@ for block in resp.content:
   <li>Chroma Research (2025). <em>Context Rot.</em></li>
   <li>Book 2, Chapter 8: <em>Packing the Diary.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch09">← Ch 9</a><a href="#b2-ch11"><span class="l-en">Ch 11 · Reverse Engineering AI →</span><span class="l-hi">Ch 11 · AI ki Reverse Engineering →</span></a></nav>
+<nav class="pager"><a href="#b2-ch09">Ch 9</a><a href="#b2-ch11"><span class="l-en">Ch 11 · Reverse Engineering AI</span><span class="l-hi">Ch 11 · AI ki Reverse Engineering</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch10">
@@ -7062,7 +7070,7 @@ for block in resp.content:
 </script>
 <template id="t-b2-ch11" data-title="Ch 11 · Reverse Engineering AI"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 11</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 11</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -7144,7 +7152,7 @@ for block in resp.content:
   <li>Templeton et al. (2024). <em>Scaling Monosemanticity</em> (Anthropic interpretability).</li>
   <li>OWASP (2025). <em>Top 10 for LLM Applications: System Prompt Leakage.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch10">← Ch 10</a><a href="#b2-ch12"><span class="l-en">Ch 12 · Multimodal AI →</span><span class="l-hi">Ch 12 · Multimodal AI →</span></a></nav>
+<nav class="pager"><a href="#b2-ch10">Ch 10</a><a href="#b2-ch12"><span class="l-en">Ch 12 · Multimodal AI</span><span class="l-hi">Ch 12 · Multimodal AI</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch11">
@@ -7195,7 +7203,7 @@ for block in resp.content:
 </script>
 <template id="t-b2-ch12" data-title="Ch 12 · Multimodal AI"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part II · Chapter 12</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part II · Chapter 12</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -7288,7 +7296,7 @@ resp = client.messages.create(model="claude-opus-5-5", max_tokens=1024, messages
   <li>Ho, Jain &amp; Abbeel (2020). <em>Denoising Diffusion Probabilistic Models.</em></li>
   <li>Anthropic. <em>Vision</em> and <em>PDF support</em> documentation.</li>
 </ol>
-<nav class="pager"><a href="#b2-ch11">← Ch 11</a><a href="#b2-ch13"><span class="l-en">Ch 13 · Embeddings &amp; Vector Databases →</span><span class="l-hi">Ch 13 · Embeddings aur Vector Databases →</span></a></nav>
+<nav class="pager"><a href="#b2-ch11">Ch 11</a><a href="#b2-ch13"><span class="l-en">Ch 13 · Embeddings &amp; Vector Databases</span><span class="l-hi">Ch 13 · Embeddings aur Vector Databases</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch12">
@@ -7348,7 +7356,7 @@ resp = client.messages.create(model="claude-opus-5-5", max_tokens=1024, messages
 </script>
 <template id="t-b2-ch13" data-title="Ch 13 · Embeddings & Vector Databases"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part III · Chapter 13</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part III · Chapter 13</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -7446,7 +7454,7 @@ query: "How do I reset my password?"
   <li>Chen et al. (2024). <em>BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity.</em></li>
   <li>MTEB. <em>Massive Text Embedding Benchmark</em> leaderboard.</li>
 </ol>
-<nav class="pager"><a href="#b2-ch12">← Ch 12</a><a href="#b2-ch14"><span class="l-en">Ch 14 · RAG from Zero to Production →</span><span class="l-hi">Ch 14 · RAG: Zero se Production →</span></a></nav>
+<nav class="pager"><a href="#b2-ch12">Ch 12</a><a href="#b2-ch14"><span class="l-en">Ch 14 · RAG from Zero to Production</span><span class="l-hi">Ch 14 · RAG: Zero se Production</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch13">
@@ -7514,7 +7522,7 @@ query: "How do I reset my password?"
 </script>
 <template id="t-b2-ch14" data-title="Ch 14 · RAG from Zero to Production"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part III · Chapter 14</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part III · Chapter 14</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -7632,7 +7640,7 @@ Q: What is the dress code?
   <li>Anthropic (2024). <em>Introducing Contextual Retrieval.</em></li>
   <li>Es et al. (2023). <em>RAGAS: Automated Evaluation of Retrieval Augmented Generation.</em> · Edge et al. (2024). <em>From Local to Global: A GraphRAG Approach.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch13">← Ch 13</a><a href="#b2-ch15"><span class="l-en">Ch 15 · Memory →</span><span class="l-hi">Ch 15 · Memory →</span></a></nav>
+<nav class="pager"><a href="#b2-ch13">Ch 13</a><a href="#b2-ch15"><span class="l-en">Ch 15 · Memory</span><span class="l-hi">Ch 15 · Memory</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch14">
@@ -7696,7 +7704,7 @@ Q: What is the dress code?
 </script>
 <template id="t-b2-ch15" data-title="Ch 15 · Memory"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part III · Chapter 15</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part III · Chapter 15</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -7762,7 +7770,7 @@ Q: What is the dress code?
   <li>Park et al. (2023). <em>Generative Agents: Interactive Simulacra of Human Behavior.</em></li>
   <li>Anthropic. <em>Memory tool</em> documentation.</li>
 </ol>
-<nav class="pager"><a href="#b2-ch14">← Ch 14</a><a href="#b2-ch16"><span class="l-en">Ch 16 · Tool Calling →</span><span class="l-hi">Ch 16 · Tool Calling →</span></a></nav>
+<nav class="pager"><a href="#b2-ch14">Ch 14</a><a href="#b2-ch16"><span class="l-en">Ch 16 · Tool Calling</span><span class="l-hi">Ch 16 · Tool Calling</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch15">
@@ -7822,7 +7830,7 @@ Q: What is the dress code?
 </script>
 <template id="t-b2-ch16" data-title="Ch 16 · Tool Calling"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 16</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part IV · Chapter 16</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -7927,7 +7935,7 @@ Task: I paid for ORD-100231. How much is that in USD?
   <li>Anthropic. <em>Tool use</em> documentation. · OpenAI. <em>Function calling</em> guide.</li>
   <li>Ollama. <em>Tool support.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch15">← Ch 15</a><a href="#b2-ch17"><span class="l-en">Ch 17 · Building Agents →</span><span class="l-hi">Ch 17 · Agents Banana →</span></a></nav>
+<nav class="pager"><a href="#b2-ch15">Ch 15</a><a href="#b2-ch17"><span class="l-en">Ch 17 · Building Agents</span><span class="l-hi">Ch 17 · Agents Banana</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch16">
@@ -7980,7 +7988,7 @@ Task: I paid for ORD-100231. How much is that in USD?
 </script>
 <template id="t-b2-ch17" data-title="Ch 17 · Building Agents"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 17</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part IV · Chapter 17</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -8070,7 +8078,7 @@ Task: I paid for ORD-100231. How much is that in USD?
   <li>Yao et al. (2022). <em>ReAct: Synergizing Reasoning and Acting in Language Models.</em></li>
   <li>LangChain. <em>LangGraph</em> documentation. · OpenAI. <em>Agents SDK.</em> · Anthropic. <em>Claude Agent SDK.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch16">← Ch 16</a><a href="#b2-ch18"><span class="l-en">Ch 18 · MCP: The Universal Plug →</span><span class="l-hi">Ch 18 · MCP: Universal Plug →</span></a></nav>
+<nav class="pager"><a href="#b2-ch16">Ch 16</a><a href="#b2-ch18"><span class="l-en">Ch 18 · MCP: The Universal Plug</span><span class="l-hi">Ch 18 · MCP: Universal Plug</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch17">
@@ -8124,7 +8132,7 @@ Task: I paid for ORD-100231. How much is that in USD?
 </script>
 <template id="t-b2-ch18" data-title="Ch 18 · MCP: The Universal Plug"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 18</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part IV · Chapter 18</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -8242,7 +8250,7 @@ if __name__ == "__main__":
   <li>Anthropic (2024). <em>Introducing the Model Context Protocol.</em></li>
   <li>JSON-RPC 2.0 Specification.</li>
 </ol>
-<nav class="pager"><a href="#b2-ch17">← Ch 17</a><a href="#b2-ch19"><span class="l-en">Ch 19 · Skills, Plugins &amp; Sub-agents →</span><span class="l-hi">Ch 19 · Skills, Plugins aur Sub-agents →</span></a></nav>
+<nav class="pager"><a href="#b2-ch17">Ch 17</a><a href="#b2-ch19"><span class="l-en">Ch 19 · Skills, Plugins &amp; Sub-agents</span><span class="l-hi">Ch 19 · Skills, Plugins aur Sub-agents</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch18">
@@ -8299,7 +8307,7 @@ if __name__ == "__main__":
 </script>
 <template id="t-b2-ch19" data-title="Ch 19 · Skills, Plugins & Sub-agents"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 19</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part IV · Chapter 19</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -8399,7 +8407,7 @@ You are a careful database reviewer. For each migration file:
   <li>Anthropic. <em>Claude Code: Skills, Sub-agents and Plugins</em> documentation.</li>
   <li>OpenAI. <em>Custom GPTs.</em> · Google. <em>Gemini Gems.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch18">← Ch 18</a><a href="#b2-ch20"><span class="l-en">Ch 20 · Multi-Agent Systems &amp; A2A →</span><span class="l-hi">Ch 20 · Multi-Agent Systems aur A2A →</span></a></nav>
+<nav class="pager"><a href="#b2-ch18">Ch 18</a><a href="#b2-ch20"><span class="l-en">Ch 20 · Multi-Agent Systems &amp; A2A</span><span class="l-hi">Ch 20 · Multi-Agent Systems aur A2A</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch19">
@@ -8452,7 +8460,7 @@ You are a careful database reviewer. For each migration file:
 </script>
 <template id="t-b2-ch20" data-title="Ch 20 · Multi-Agent Systems & A2A"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 20</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part IV · Chapter 20</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -8541,7 +8549,7 @@ You are a careful database reviewer. For each migration file:
   <li>Anthropic (2025). <em>How we built our multi-agent research system.</em></li>
   <li>Du et al. (2023). <em>Improving Factuality and Reasoning in Language Models through Multiagent Debate.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch19">← Ch 19</a><a href="#b2-ch21"><span class="l-en">Ch 21 · Computer-Use &amp; Browser Agents →</span><span class="l-hi">Ch 21 · Computer-Use aur Browser Agents →</span></a></nav>
+<nav class="pager"><a href="#b2-ch19">Ch 19</a><a href="#b2-ch21"><span class="l-en">Ch 21 · Computer-Use &amp; Browser Agents</span><span class="l-hi">Ch 21 · Computer-Use aur Browser Agents</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch20">
@@ -8592,7 +8600,7 @@ You are a careful database reviewer. For each migration file:
 </script>
 <template id="t-b2-ch21" data-title="Ch 21 · Computer-Use & Browser Agents"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 21</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part IV · Chapter 21</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -8663,7 +8671,7 @@ You are a careful database reviewer. For each migration file:
   <li>Xie et al. (2024). <em>OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments.</em></li>
   <li>Microsoft. <em>Playwright MCP server.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch20">← Ch 20</a><a href="#b2-ch22"><span class="l-en">Ch 22 · AI Coding Assistants →</span><span class="l-hi">Ch 22 · AI Coding Assistants →</span></a></nav>
+<nav class="pager"><a href="#b2-ch20">Ch 20</a><a href="#b2-ch22"><span class="l-en">Ch 22 · AI Coding Assistants</span><span class="l-hi">Ch 22 · AI Coding Assistants</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch21">
@@ -8713,7 +8721,7 @@ You are a careful database reviewer. For each migration file:
 </script>
 <template id="t-b2-ch22" data-title="Ch 22 · AI Coding Assistants"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part IV · Chapter 22</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part IV · Chapter 22</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -8784,7 +8792,7 @@ You are a careful database reviewer. For each migration file:
   <li>Jimenez et al. (2023). <em>SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</em></li>
   <li>Anthropic. <em>Claude Code best practices.</em> · AGENTS.md convention.</li>
 </ol>
-<nav class="pager"><a href="#b2-ch21">← Ch 21</a><a href="#b2-ch23"><span class="l-en">Ch 23 · Fine-Tuning →</span><span class="l-hi">Ch 23 · Fine-Tuning →</span></a></nav>
+<nav class="pager"><a href="#b2-ch21">Ch 21</a><a href="#b2-ch23"><span class="l-en">Ch 23 · Fine-Tuning</span><span class="l-hi">Ch 23 · Fine-Tuning</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch22">
@@ -8837,7 +8845,7 @@ You are a careful database reviewer. For each migration file:
 </script>
 <template id="t-b2-ch23" data-title="Ch 23 · Fine-Tuning"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part V · Chapter 23</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part V · Chapter 23</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -8943,7 +8951,7 @@ Rough GPU memory to fine-tune an 8B model
   <li>Rafailov et al. (2023). <em>Direct Preference Optimization.</em></li>
   <li>Qi et al. (2023). <em>Fine-tuning Aligned Language Models Compromises Safety, Even When Users Do Not Intend To!</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch22">← Ch 22</a><a href="#b2-ch24"><span class="l-en">Ch 24 · Small Models, Distillation &amp; Quantisation →</span><span class="l-hi">Ch 24 · Chhote Models, Distillation aur Quantisation →</span></a></nav>
+<nav class="pager"><a href="#b2-ch22">Ch 22</a><a href="#b2-ch24"><span class="l-en">Ch 24 · Small Models, Distillation &amp; Quantisation</span><span class="l-hi">Ch 24 · Chhote Models, Distillation aur Quantisation</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch23">
@@ -9006,7 +9014,7 @@ Rough GPU memory to fine-tune an 8B model
 </script>
 <template id="t-b2-ch24" data-title="Ch 24 · Small Models, Distillation & Quantisation"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part V · Chapter 24</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part V · Chapter 24</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -9077,7 +9085,7 @@ Rough GPU memory to fine-tune an 8B model
   <li>Leviathan et al. (2023). <em>Fast Inference from Transformers via Speculative Decoding.</em></li>
   <li>Chen, Zaharia &amp; Zou (2023). <em>FrugalGPT</em> (LLM cascades).</li>
 </ol>
-<nav class="pager"><a href="#b2-ch23">← Ch 23</a><a href="#b2-ch25"><span class="l-en">Ch 25 · Synthetic Data →</span><span class="l-hi">Ch 25 · Synthetic Data →</span></a></nav>
+<nav class="pager"><a href="#b2-ch23">Ch 23</a><a href="#b2-ch25"><span class="l-en">Ch 25 · Synthetic Data</span><span class="l-hi">Ch 25 · Synthetic Data</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch24">
@@ -9130,7 +9138,7 @@ Rough GPU memory to fine-tune an 8B model
 </script>
 <template id="t-b2-ch25" data-title="Ch 25 · Synthetic Data"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part V · Chapter 25</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part V · Chapter 25</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -9200,7 +9208,7 @@ Rough GPU memory to fine-tune an 8B model
   <li>Shumailov et al. (2024). <em>AI models collapse when trained on recursively generated data.</em> Nature.</li>
   <li>Gunasekar et al. (2023). <em>Textbooks Are All You Need</em> (phi-1).</li>
 </ol>
-<nav class="pager"><a href="#b2-ch24">← Ch 24</a><a href="#b2-ch26"><span class="l-en">Ch 26 · Evals →</span><span class="l-hi">Ch 26 · Evals →</span></a></nav>
+<nav class="pager"><a href="#b2-ch24">Ch 24</a><a href="#b2-ch26"><span class="l-en">Ch 26 · Evals</span><span class="l-hi">Ch 26 · Evals</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch25">
@@ -9253,7 +9261,7 @@ Rough GPU memory to fine-tune an 8B model
 </script>
 <template id="t-b2-ch26" data-title="Ch 26 · Evals"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part VI · Chapter 26</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part VI · Chapter 26</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -9352,7 +9360,7 @@ gate: diff +4.5% (95% CI -4.0% to +12.5%) -> FAIL
   <li>Husain, H. (2024). <em>Your AI Product Needs Evals.</em></li>
   <li>Book 2, Chapter 16: <em>Haron's Exams.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch25">← Ch 25</a><a href="#b2-ch27"><span class="l-en">Ch 27 · Guardrails &amp; Security →</span><span class="l-hi">Ch 27 · Guardrails aur Security →</span></a></nav>
+<nav class="pager"><a href="#b2-ch25">Ch 25</a><a href="#b2-ch27"><span class="l-en">Ch 27 · Guardrails &amp; Security</span><span class="l-hi">Ch 27 · Guardrails aur Security</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch26">
@@ -9404,7 +9412,7 @@ gate: diff +4.5% (95% CI -4.0% to +12.5%) -> FAIL
 </script>
 <template id="t-b2-ch27" data-title="Ch 27 · Guardrails & Security"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part VI · Chapter 27</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part VI · Chapter 27</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -9477,7 +9485,7 @@ gate: diff +4.5% (95% CI -4.0% to +12.5%) -> FAIL
   <li>Willison, S. (2025). <em>The lethal trifecta for AI agents.</em></li>
   <li>Hines et al. (2024). <em>Spotlighting.</em> · Book 2, Chapter 14: <em>Guarding Haron.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch26">← Ch 26</a><a href="#b2-ch28"><span class="l-en">Ch 28 · LLMOps &amp; Observability →</span><span class="l-hi">Ch 28 · LLMOps aur Observability →</span></a></nav>
+<nav class="pager"><a href="#b2-ch26">Ch 26</a><a href="#b2-ch28"><span class="l-en">Ch 28 · LLMOps &amp; Observability</span><span class="l-hi">Ch 28 · LLMOps aur Observability</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch27">
@@ -9536,7 +9544,7 @@ gate: diff +4.5% (95% CI -4.0% to +12.5%) -> FAIL
 </script>
 <template id="t-b2-ch28" data-title="Ch 28 · LLMOps & Observability"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part VI · Chapter 28</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part VI · Chapter 28</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -9610,7 +9618,7 @@ gate: diff +4.5% (95% CI -4.0% to +12.5%) -> FAIL
   <li>Shankar et al. (2024). <em>Who Validates the Validators?</em></li>
   <li>Book 2, Chapter 17: <em>Watching Haron Work.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch27">← Ch 27</a><a href="#b2-ch29"><span class="l-en">Ch 29 · Cost &amp; Speed →</span><span class="l-hi">Ch 29 · Kharch aur Speed →</span></a></nav>
+<nav class="pager"><a href="#b2-ch27">Ch 27</a><a href="#b2-ch29"><span class="l-en">Ch 29 · Cost &amp; Speed</span><span class="l-hi">Ch 29 · Kharch aur Speed</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch28">
@@ -9663,7 +9671,7 @@ gate: diff +4.5% (95% CI -4.0% to +12.5%) -> FAIL
 </script>
 <template id="t-b2-ch29" data-title="Ch 29 · Cost & Speed"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part VI · Chapter 29</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part VI · Chapter 29</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -9737,7 +9745,7 @@ gate: diff +4.5% (95% CI -4.0% to +12.5%) -> FAIL
   <li>Chen, Zaharia &amp; Zou (2023). <em>FrugalGPT.</em> · Ong et al. (2024). <em>RouteLLM.</em></li>
   <li>Book 2, Chapter 2: <em>Haron's Wallet</em> and Chapter 13: <em>Budgets for Everyone.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch28">← Ch 28</a><a href="#b2-ch30"><span class="l-en">Ch 30 · Front-End for AI Apps →</span><span class="l-hi">Ch 30 · AI Apps ka Front-End →</span></a></nav>
+<nav class="pager"><a href="#b2-ch28">Ch 28</a><a href="#b2-ch30"><span class="l-en">Ch 30 · Front-End for AI Apps</span><span class="l-hi">Ch 30 · AI Apps ka Front-End</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch29">
@@ -9785,7 +9793,7 @@ gate: diff +4.5% (95% CI -4.0% to +12.5%) -> FAIL
 </script>
 <template id="t-b2-ch30" data-title="Ch 30 · Front-End for AI Apps"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part VI · Chapter 30</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part VI · Chapter 30</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -9885,7 +9893,7 @@ def chat(body: dict):
   <li>Streamlit, Gradio and Chainlit documentation.</li>
   <li>Google PAIR. <em>People + AI Guidebook.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch29">← Ch 29</a><a href="#b2-ch31"><span class="l-en">Ch 31 · Shipping to Production →</span><span class="l-hi">Ch 31 · Production mein Bhejna →</span></a></nav>
+<nav class="pager"><a href="#b2-ch29">Ch 29</a><a href="#b2-ch31"><span class="l-en">Ch 31 · Shipping to Production</span><span class="l-hi">Ch 31 · Production mein Bhejna</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch30">
@@ -9939,7 +9947,7 @@ def chat(body: dict):
 </script>
 <template id="t-b2-ch31" data-title="Ch 31 · Shipping to Production"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part VI · Chapter 31</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part VI · Chapter 31</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -10009,7 +10017,7 @@ def chat(body: dict):
   <li>Google SRE Book. <em>Handling Overload</em> and <em>Addressing Cascading Failures.</em></li>
   <li>Book 2, Part III: <em>Haron goes to a big company.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch30">← Ch 30</a><a href="#b2-ch32"><span class="l-en">Ch 32 · Responsible AI &amp; the Law →</span><span class="l-hi">Ch 32 · Zimmedaar AI aur Kanoon →</span></a></nav>
+<nav class="pager"><a href="#b2-ch30">Ch 30</a><a href="#b2-ch32"><span class="l-en">Ch 32 · Responsible AI &amp; the Law</span><span class="l-hi">Ch 32 · Zimmedaar AI aur Kanoon</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch31">
@@ -10069,7 +10077,7 @@ def chat(body: dict):
 </script>
 <template id="t-b2-ch32" data-title="Ch 32 · Responsible AI & the Law"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part VI · Chapter 32</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part VI · Chapter 32</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -10145,7 +10153,7 @@ def chat(body: dict):
   <li>NIST (2023). <em>AI Risk Management Framework.</em> · ISO/IEC 42001:2023.</li>
   <li>Gebru et al. (2021). <em>Datasheets for Datasets.</em> · Mitchell et al. (2019). <em>Model Cards for Model Reporting.</em></li>
 </ol>
-<nav class="pager"><a href="#b2-ch31">← Ch 31</a><a href="#b2-ch33"><span class="l-en">Ch 33 · The Hot-Topics Radar →</span><span class="l-hi">Ch 33 · Hot Topics Radar →</span></a></nav>
+<nav class="pager"><a href="#b2-ch31">Ch 31</a><a href="#b2-ch33"><span class="l-en">Ch 33 · The Hot-Topics Radar</span><span class="l-hi">Ch 33 · Hot Topics Radar</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch32">
@@ -10191,7 +10199,7 @@ def chat(body: dict):
 </script>
 <template id="t-b2-ch33" data-title="Ch 33 · The Hot-Topics Radar"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part VII · Chapter 33</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part VII · Chapter 33</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -10298,7 +10306,7 @@ def chat(body: dict):
   <li>Stanford HAI. <em>AI Index Report.</em></li>
   <li>Provider engineering blogs: Anthropic, OpenAI, Google DeepMind, Meta AI.</li>
 </ol>
-<nav class="pager"><a href="#b2-ch32">← Ch 32</a><a href="#b2-ch34"><span class="l-en">Ch 34 · Your Roadmap &amp; Portfolio →</span><span class="l-hi">Ch 34 · Aapka Roadmap aur Portfolio →</span></a></nav>
+<nav class="pager"><a href="#b2-ch32">Ch 32</a><a href="#b2-ch34"><span class="l-en">Ch 34 · Your Roadmap &amp; Portfolio</span><span class="l-hi">Ch 34 · Aapka Roadmap aur Portfolio</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch33">
@@ -10349,7 +10357,7 @@ def chat(body: dict):
 </script>
 <template id="t-b2-ch34" data-title="Ch 34 · Your Roadmap & Portfolio"><div class="page">
 <div class="topbar">
-  <div class="crumbs"><a href="#b2-index"><span class="l-en">← Contents</span><span class="l-hi">← Vishay-suchi</span></a><span>Part VII · Chapter 34</span></div>
+  <div class="crumbs"><a href="#b2-index"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part VII · Chapter 34</span></div>
   <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
 </div>
 <section class="opener col">
@@ -10431,7 +10439,7 @@ def chat(body: dict):
   <li>Anthropic, OpenAI and Google. <em>Cookbooks</em> on GitHub.</li>
   <li>Book 2: <em>Building the Harness</em>, for the enterprise side of everything in this book.</li>
 </ol>
-<nav class="pager"><a href="#b2-ch33">← Ch 33</a><a href="#b2-index"><span class="l-en">Back to contents</span><span class="l-hi">Vishay-suchi par wapas</span></a></nav>
+<nav class="pager"><a href="#b2-ch33">Ch 33</a><a href="#b2-index"><span class="l-en">Back to contents</span><span class="l-hi">Vishay-suchi par wapas</span></a></nav>
 </article>
 </div></template>
 <script type="text/plain" id="s-b2-ch34">
@@ -10843,6 +10851,36 @@ def chat(body: dict):
     tokku: tokku, box: box, arrow: arrow, cls: cls, onLang: onLang,
     chat: chat, flow: flow, bars: bars, stack: stack, columns: columns, stage: stage, mtext: mtext, wrapText: wrapText,
     lang: function () { return root.getAttribute("data-lang") || "en"; } };
+})();
+
+/* Light/dark switch: a round button at the bottom right. Follows the system until the reader
+   picks a theme; the choice is saved per browser. */
+(function () {
+  var KEY = "harness-book-theme", root = document.documentElement;
+  var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  var choice = null;
+  try { choice = localStorage.getItem(KEY); } catch (e) {}
+  var SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/>' +
+    '<path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
+  var MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>';
+  var btn = document.createElement("button");
+  btn.className = "tbtn"; btn.type = "button";
+  function current() { return choice || (mq && mq.matches ? "dark" : "light"); }
+  function apply() {
+    var t = current();
+    root.setAttribute("data-theme", t);
+    btn.innerHTML = t === "dark" ? SUN : MOON;
+    btn.setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
+    btn.title = btn.getAttribute("aria-label");
+  }
+  btn.addEventListener("click", function () {
+    choice = current() === "dark" ? "light" : "dark";
+    try { localStorage.setItem(KEY, choice); } catch (e) {}
+    apply();
+  });
+  if (mq) { if (mq.addEventListener) mq.addEventListener("change", apply); else if (mq.addListener) mq.addListener(apply); }
+  apply();
+  document.body.appendChild(btn);
 })();
 
 </script>

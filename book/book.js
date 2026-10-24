@@ -182,3 +182,33 @@
     tokku: tokku, box: box, arrow: arrow, cls: cls, onLang: onLang,
     lang: function () { return root.getAttribute("data-lang") || "en"; } };
 })();
+
+/* Light/dark switch: a round button at the bottom right. Follows the system until the reader
+   picks a theme; the choice is saved per browser. */
+(function () {
+  var KEY = "harness-book-theme", root = document.documentElement;
+  var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  var choice = null;
+  try { choice = localStorage.getItem(KEY); } catch (e) {}
+  var SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/>' +
+    '<path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
+  var MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>';
+  var btn = document.createElement("button");
+  btn.className = "tbtn"; btn.type = "button";
+  function current() { return choice || (mq && mq.matches ? "dark" : "light"); }
+  function apply() {
+    var t = current();
+    root.setAttribute("data-theme", t);
+    btn.innerHTML = t === "dark" ? SUN : MOON;
+    btn.setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
+    btn.title = btn.getAttribute("aria-label");
+  }
+  btn.addEventListener("click", function () {
+    choice = current() === "dark" ? "light" : "dark";
+    try { localStorage.setItem(KEY, choice); } catch (e) {}
+    apply();
+  });
+  if (mq) { if (mq.addEventListener) mq.addEventListener("change", apply); else if (mq.addListener) mq.addListener(apply); }
+  apply();
+  document.body.appendChild(btn);
+})();

@@ -360,42 +360,47 @@ h2 { scroll-margin-top: 4.5rem; }
 
 /* Soft mono theme (light mode only): grey gradient page, heavy black headings,
    white pill controls and floating cards with soft shadows, charcoal round buttons. */
-@media not all and (prefers-color-scheme: dark) {
-  :root { --lift: 0 22px 48px -18px rgba(0, 0, 0, .28), 0 3px 10px rgba(0, 0, 0, .05);
+  html[data-theme="light"] { --lift: 0 22px 48px -18px rgba(0, 0, 0, .28), 0 3px 10px rgba(0, 0, 0, .05);
           --lift-sm: 0 8px 22px -10px rgba(0, 0, 0, .3); --knob: #262626; --card: #fafafa; }
-  html { background: #ececec; }
-  body { background: linear-gradient(180deg, #fafafa 0, #f1f1f1 30rem, #ececec 100%); }
-  body::before { background: #efefef; }
-  h1 { font-weight: 900; letter-spacing: -0.03em; }
-  h2, h3 { font-weight: 700; letter-spacing: -0.01em; }
+  html[data-theme="light"] { background: #ececec; }
+  [data-theme="light"] body { background: linear-gradient(180deg, #fafafa 0, #f1f1f1 30rem, #ececec 100%); }
+  [data-theme="light"] body::before { background: #efefef; }
+  [data-theme="light"] h1 { font-weight: 900; letter-spacing: -0.03em; }
+  [data-theme="light"] h2, [data-theme="light"] h3 { font-weight: 700; letter-spacing: -0.01em; }
 
-  .topbar { background: rgba(236, 236, 236, .86); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  [data-theme="light"] .topbar { background: rgba(236, 236, 236, .86); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
             border-bottom: 0;
             box-shadow: 0 0 0 100vmax rgba(236, 236, 236, .86), 0 1px 0 100vmax rgba(0, 0, 0, .05); clip-path: inset(0 -100vmax); }
-  .topbar .crumbs a { background: #7b7b7b; color: #fff; border-radius: 999px; padding: 0.4rem 0.95rem;
+  [data-theme="light"] .topbar .crumbs a { background: #7b7b7b; color: #fff; border-radius: 999px; padding: 0.4rem 0.95rem;
                       font-family: var(--font-display); font-weight: 500; font-size: 0.85rem; letter-spacing: 0.01em; text-transform: none; }
-  .langtog { border: 0; background: #7b7b7b; padding: 3px; }
-  .langtog button { color: #fff; border-radius: 999px; }
-  .langtog button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 2px 6px rgba(0, 0, 0, .18); }
+  [data-theme="light"] .langtog { border: 0; background: #7b7b7b; padding: 3px; }
+  [data-theme="light"] .langtog button { color: #fff; border-radius: 999px; }
+  [data-theme="light"] .langtog button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 2px 6px rgba(0, 0, 0, .18); }
 
-  .opener, .cover { border-bottom: 1px solid var(--rule); }
-  .opener > .eyebrow, .opener > h1, .cover > .eyebrow, .cover > h1, .cover > .lede { text-align: center; margin-inline: auto; }
+  [data-theme="light"] .opener, [data-theme="light"] .cover { border-bottom: 1px solid var(--rule); }
+  [data-theme="light"] .opener > .eyebrow, [data-theme="light"] .opener > h1, [data-theme="light"] .cover > .eyebrow, [data-theme="light"] .cover > h1, [data-theme="light"] .cover > .lede { text-align: center; margin-inline: auto; }
 
-  .scene, .callout, details.deep, .figbox, .analogy { border: 0; border-radius: 24px; background: var(--card); box-shadow: var(--lift); }
-  .scene-bar { background: #efefef; border-top: 0; }
-  .scene-bar button { border: 0; background: #fff; color: var(--ink); box-shadow: var(--lift-sm); }
-  .scene-bar button.play { background: var(--knob); color: #fff; }
-  .scene-cap { border-top: 1px solid #e6e6e6; }
-  .callout { padding: 1.1rem 1.3rem 0.5rem; }
-  .callout .tag { border-radius: 999px; padding: 0.2rem 0.7rem; }
-  .gloss div { border: 0; border-radius: 18px; background: var(--card); box-shadow: var(--lift-sm); }
-  pre { border: 0; border-radius: 16px; box-shadow: inset 0 2px 8px rgba(0, 0, 0, .06); }
-  .codehead { border: 0; border-radius: 16px 16px 0 0; background: #dedede; }
-  .scene-title .sn, .spin-btn { background: var(--knob); color: #fff; box-shadow: 0 12px 24px -8px rgba(0, 0, 0, .5); }
+  [data-theme="light"] .scene, [data-theme="light"] .callout, [data-theme="light"] details.deep, [data-theme="light"] .figbox, [data-theme="light"] .analogy { border: 0; border-radius: 24px; background: var(--card); box-shadow: var(--lift); }
+  [data-theme="light"] .scene-bar { background: #efefef; border-top: 0; }
+  [data-theme="light"] .scene-bar button { border: 0; background: #fff; color: var(--ink); box-shadow: var(--lift-sm); }
+  [data-theme="light"] .scene-bar button.play { background: var(--knob); color: #fff; }
+  [data-theme="light"] .scene-cap { border-top: 1px solid #e6e6e6; }
+  [data-theme="light"] .callout { padding: 1.1rem 1.3rem 0.5rem; }
+  [data-theme="light"] .callout .tag { border-radius: 999px; padding: 0.2rem 0.7rem; }
+  [data-theme="light"] .gloss div { border: 0; border-radius: 18px; background: var(--card); box-shadow: var(--lift-sm); }
+  [data-theme="light"] pre { border: 0; border-radius: 16px; box-shadow: inset 0 2px 8px rgba(0, 0, 0, .06); }
+  [data-theme="light"] .codehead { border: 0; border-radius: 16px 16px 0 0; background: #dedede; }
+  [data-theme="light"] .scene-title .sn, [data-theme="light"] .spin-btn { background: var(--knob); color: #fff; box-shadow: 0 12px 24px -8px rgba(0, 0, 0, .5); }
 
-  .chapters { border-top: 0; display: grid; gap: 0.7rem; }
-  .chapters li { background: var(--card); border: 0; border-radius: 20px; padding: 0.9rem 1.1rem; box-shadow: var(--lift-sm); }
-  .chapters .st { border-radius: 999px; padding-inline: 0.7rem; }
-  .chapters .ct { text-decoration: none; color: var(--ink); }
-  .pager a { background: #fff; border-radius: 999px; padding: 0.55rem 1.1rem; box-shadow: var(--lift-sm); color: var(--ink); }
-}
+  [data-theme="light"] .chapters { border-top: 0; display: grid; gap: 0.7rem; }
+  [data-theme="light"] .chapters li { background: var(--card); border: 0; border-radius: 20px; padding: 0.9rem 1.1rem; box-shadow: var(--lift-sm); }
+  [data-theme="light"] .chapters .st { border-radius: 999px; padding-inline: 0.7rem; }
+  [data-theme="light"] .chapters .ct { text-decoration: none; color: var(--ink); }
+  [data-theme="light"] .pager a { background: #fff; border-radius: 999px; padding: 0.55rem 1.1rem; box-shadow: var(--lift-sm); color: var(--ink); }
+
+
+/* Light/dark switch button (added by book.js) */
+.tbtn { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 20;
+  width: 2.9rem; height: 2.9rem; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: var(--ink); color: var(--paper); box-shadow: 0 12px 26px -8px rgba(0, 0, 0, .5); }
+.tbtn svg { width: 1.25rem; height: 1.25rem; }

@@ -76,7 +76,7 @@ pages = {}   # id -> (title, html, script)
 for folder, key, title in [("book", "b1", "Building the Harness"), ("book2", "b2", "Becoming an AI Engineer")]:
     base = os.path.join(ROOT, folder)
     st, body, _ = split_index(read(os.path.join(base, "index.html")))
-    body = body.replace('<div class="crumbs">', '<div class="crumbs"><a href="#home">← All books</a>', 1)
+    body = body.replace('<div class="crumbs">', '<div class="crumbs"><a href="#home">All books</a>', 1)
     pages[f"{key}-index"] = (title, st + rewrite_links(body, key), "")
     for name in sorted(os.listdir(base)):
         m = re.fullmatch(r"(ch\d\d)\.html", name)
@@ -110,6 +110,7 @@ parts = ["""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AI Books</title>
+<script>(function(){var r=document.documentElement,t=null;try{t=localStorage.getItem("harness-book-theme")}catch(e){}r.setAttribute("data-theme",t||(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"))})()</script>
 <style>""", fonts, css, """
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 """, read(os.path.join(ROOT, "search.css")), """

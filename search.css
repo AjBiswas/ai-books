@@ -28,12 +28,14 @@
 }
 
 /* Soft mono theme (light mode only): charcoal round button, white pill input */
-@media not all and (prefers-color-scheme: dark) {
-  .sbtn { background: #262626; color: #fff; box-shadow: 0 16px 32px -10px rgba(0, 0, 0, .55); }
-  .sbox { background: #f3f3f3; border: 0; }
-  .shead { border-bottom: 0; padding: 1rem; }
-  .shead input { background: #fff; border: 0; border-radius: 999px; padding: 0.7rem 1.1rem; box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .3); }
-  .shead button { border: 0; background: #7b7b7b; color: #fff; }
-  .slist a { background: #fafafa; border: 0; border-radius: 18px; margin-bottom: 0.6rem; padding: 0.8rem 1rem; box-shadow: 0 8px 22px -12px rgba(0, 0, 0, .3); }
-  .slist mark { background: #dcdcdc; }
-}
+  [data-theme="light"] .sbtn { background: #262626; color: #fff; box-shadow: 0 16px 32px -10px rgba(0, 0, 0, .55); }
+  [data-theme="light"] .sbox { background: #f3f3f3; border: 0; }
+  [data-theme="light"] .shead { border-bottom: 0; padding: 1rem; }
+  [data-theme="light"] .shead input { background: #fff; border: 0; border-radius: 999px; padding: 0.7rem 1.1rem; box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .3); }
+  [data-theme="light"] .shead button { border: 0; background: #7b7b7b; color: #fff; }
+  [data-theme="light"] .slist a { background: #fafafa; border: 0; border-radius: 18px; margin-bottom: 0.6rem; padding: 0.8rem 1rem; box-shadow: 0 8px 22px -12px rgba(0, 0, 0, .3); }
+  [data-theme="light"] .slist mark { background: #dcdcdc; }
+
+
+/* Theme switch sits above the search button */
+.tbtn { bottom: calc(4.4rem + env(safe-area-inset-bottom, 0px)); }
