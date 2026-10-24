@@ -240,18 +240,29 @@
         links.map(function (k) { return '<a href="' + k.href + '">' + (k.html || bi(k.en, k.hi)) + "</a>"; }).join("") +
         (window.openSearch ? '<a href="#" data-opensearch>' + bi("Search topics", "Topic dhoondho") + "</a>" : "") + "</nav>";
     }
-    h += "<h3>" + bi("Language", "Bhasha") + '</h3><div class="seg" role="group" aria-label="Language">' +
+    // language and mode sit in a collapsed "Options" section, so the chapter list gets the room
+    h += '<details class="drawer-opts"' + (optsOpen ? " open" : "") + '><summary><span class="opt-name">' + bi("Options", "Options") +
+      '</span><span class="opt-now"></span></summary>' +
+      '<div class="opt-label">' + bi("Language", "Bhasha") + '</div><div class="seg" role="group" aria-label="Language">' +
       '<button type="button" data-setlang="en" aria-pressed="' + (l === "en") + '">English</button>' +
-      '<button type="button" data-setlang="hi" aria-pressed="' + (l === "hi") + '">Hinglish</button></div>';
-    h += "<h3>" + bi("Mode", "Mode") + '</h3><div class="seg" role="group" aria-label="Theme">' +
+      '<button type="button" data-setlang="hi" aria-pressed="' + (l === "hi") + '">Hinglish</button></div>' +
+      '<div class="opt-label">' + bi("Mode", "Mode") + '</div><div class="seg" role="group" aria-label="Theme">' +
       '<button type="button" data-settheme="light" aria-pressed="' + (t === "light") + '">' + bi("Light", "Light") + "</button>" +
-      '<button type="button" data-settheme="dark" aria-pressed="' + (t === "dark") + '">' + bi("Dark", "Dark") + "</button></div>";
+      '<button type="button" data-settheme="dark" aria-pressed="' + (t === "dark") + '">' + bi("Dark", "Dark") + "</button></div></details>";
     if (nav && nav.items && nav.items.length) {
       h += "<h3>" + nav.title + '</h3><nav class="drawer-links drawer-chapters">' + nav.items.map(function (it) {
         return '<a href="' + it.href + '"' + (it.current ? ' class="current" aria-current="page"' : "") + ">" + it.label + (it.done ? ' <span class="dn">✓</span>' : "") + "</a>";
       }).join("") + "</nav>";
     }
     dr.innerHTML = h + "</div>";
+    var opts = dr.querySelector(".drawer-opts");
+    opts.addEventListener("toggle", function () { optsOpen = opts.open; });
+    showNow();
+  }
+  var optsOpen = false;                            // remembered while the page is open
+  function showNow() {                             // "English · Dark" next to the Options heading
+    var now = dr.querySelector(".opt-now");
+    if (now) now.textContent = (B.lang() === "hi" ? "Hinglish" : "English") + " · " + (B.getTheme() === "dark" ? "Dark" : "Light");
   }
 
   function open() {
@@ -272,7 +283,8 @@
     var t = e.target.closest("button, a");
     if (!t) return;
     if (t.classList.contains("drawer-x")) return close();
-    if (t.hasAttribute("data-settheme")) return B.setTheme(t.getAttribute("data-settheme"));
+    if (t.hasAttribute("data-setlang")) return setTimeout(showNow, 0);   // the page's own handler switches the language
+    if (t.hasAttribute("data-settheme")) { B.setTheme(t.getAttribute("data-settheme")); return showNow(); }
     if (t.hasAttribute("data-opensearch")) { e.preventDefault(); close(); return window.openSearch(); }
     if (t.tagName === "A") close();                // navigating away
   });

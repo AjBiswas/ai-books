@@ -466,3 +466,14 @@ pre { border: 0; border-radius: 16px; box-shadow: inset 0 2px 8px rgba(0, 0, 0, 
 @media (max-width: 560px) {
   .topbar.has-drawer .crumbs > span { display: block; }
 }
+
+/* Options section in the drawer (language + mode), collapsed by default */
+.drawer-opts { margin: 1rem 0 0.2rem; border-radius: 14px; background: var(--card, var(--paper-2)); }
+.drawer-opts summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+  padding: 0.6rem 0.9rem; cursor: pointer; font: 600 0.95rem var(--font-display); }
+.drawer-opts summary::-webkit-details-marker { display: none; }
+.drawer-opts summary::after { content: "▾"; color: var(--ink-2); transition: transform .2s; }
+.drawer-opts[open] summary::after { transform: rotate(180deg); }
+.drawer-opts .opt-now { margin-left: auto; font: 500 0.75rem var(--font-mono); color: var(--ink-2); }
+.drawer-opts .opt-label { font: 600 0.7rem var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); margin: 0.4rem 0.9rem 0.4rem; }
+.drawer-opts .seg { margin: 0 0.6rem 0.7rem; }
