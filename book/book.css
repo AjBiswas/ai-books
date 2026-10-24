@@ -358,49 +358,61 @@ h2 { scroll-margin-top: 4.5rem; }
   .langtog button { padding: 0.28rem 0.65rem; }
 }
 
-/* Soft mono theme (light mode only): grey gradient page, heavy black headings,
-   white pill controls and floating cards with soft shadows, charcoal round buttons. */
-  html[data-theme="light"] { --lift: 0 22px 48px -18px rgba(0, 0, 0, .28), 0 3px 10px rgba(0, 0, 0, .05);
-          --lift-sm: 0 8px 22px -10px rgba(0, 0, 0, .3); --knob: #262626; --card: #fafafa; }
-  html[data-theme="light"] { background: #ececec; }
-  [data-theme="light"] body { background: linear-gradient(180deg, #fafafa 0, #f1f1f1 30rem, #ececec 100%); }
-  [data-theme="light"] body::before { background: #efefef; }
-  [data-theme="light"] h1 { font-weight: 900; letter-spacing: -0.03em; }
-  [data-theme="light"] h2, [data-theme="light"] h3 { font-weight: 700; letter-spacing: -0.01em; }
+/* Soft mono theme, both modes: gradient page, heavy headings, pill controls and floating
+   cards with soft shadows, round "knob" buttons. Colours come from the tokens below. */
+:root { --bg-top: #fafafa; --bg-mid: #f1f1f1; --bg: #ececec; --bar: #eeeeee; --bar-line: rgba(0, 0, 0, .06);
+  --chip: #7b7b7b; --chip-ink: #fff; --on-bg: #fff; --on-ink: #1c1c1c; --pill: #fff; --card: #fafafa;
+  --well: #efefef; --codehead: #dedede; --knob: #262626; --knob-ink: #fff; --mark: #dcdcdc; --sheet: #f3f3f3;
+  --lift: 0 22px 48px -18px rgba(0, 0, 0, .28), 0 3px 10px rgba(0, 0, 0, .05);
+  --lift-sm: 0 8px 22px -10px rgba(0, 0, 0, .3); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg-top: #16212a; --bg-mid: #11191f; --bg: #0f161b; --bar: #121b21; --bar-line: rgba(255, 255, 255, .05);
+  --chip: #2a3741; --chip-ink: #dde5ea; --on-bg: #dde5ea; --on-ink: #0f161b; --pill: #22303a; --card: #172129;
+  --well: #131c22; --codehead: #1f2b33; --knob: #dde5ea; --knob-ink: #0f161b; --mark: #2a3741; --sheet: #121b21;
+  --lift: 0 22px 48px -18px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .05);
+  --lift-sm: 0 8px 22px -10px rgba(0, 0, 0, .75), 0 0 0 1px rgba(255, 255, 255, .05); } }
+:root[data-theme="dark"] { --bg-top: #16212a; --bg-mid: #11191f; --bg: #0f161b; --bar: #121b21; --bar-line: rgba(255, 255, 255, .05);
+  --chip: #2a3741; --chip-ink: #dde5ea; --on-bg: #dde5ea; --on-ink: #0f161b; --pill: #22303a; --card: #172129;
+  --well: #131c22; --codehead: #1f2b33; --knob: #dde5ea; --knob-ink: #0f161b; --mark: #2a3741; --sheet: #121b21;
+  --lift: 0 22px 48px -18px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .05);
+  --lift-sm: 0 8px 22px -10px rgba(0, 0, 0, .75), 0 0 0 1px rgba(255, 255, 255, .05); }
 
-  [data-theme="light"] .topbar { background: rgba(236, 236, 236, .86); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-            border-bottom: 0;
-            box-shadow: 0 0 0 100vmax rgba(236, 236, 236, .86), 0 1px 0 100vmax rgba(0, 0, 0, .05); clip-path: inset(0 -100vmax); }
-  [data-theme="light"] .topbar .crumbs a { background: #7b7b7b; color: #fff; border-radius: 999px; padding: 0.4rem 0.95rem;
-                      font-family: var(--font-display); font-weight: 500; font-size: 0.85rem; letter-spacing: 0.01em; text-transform: none; }
-  [data-theme="light"] .langtog { border: 0; background: #7b7b7b; padding: 3px; }
-  [data-theme="light"] .langtog button { color: #fff; border-radius: 999px; }
-  [data-theme="light"] .langtog button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 2px 6px rgba(0, 0, 0, .18); }
+html { background: var(--bg); }
+body { background: linear-gradient(180deg, var(--bg-top) 0, var(--bg-mid) 30rem, var(--bg) 100%); }
+body::before { background: var(--bar); }
+h1 { font-weight: 900; letter-spacing: -0.03em; }
+h2, h3 { font-weight: 700; letter-spacing: -0.01em; }
 
-  [data-theme="light"] .opener, [data-theme="light"] .cover { border-bottom: 1px solid var(--rule); }
-  [data-theme="light"] .opener > .eyebrow, [data-theme="light"] .opener > h1, [data-theme="light"] .cover > .eyebrow, [data-theme="light"] .cover > h1, [data-theme="light"] .cover > .lede { text-align: center; margin-inline: auto; }
+.topbar { background: var(--bar); border-bottom: 0;
+  box-shadow: 0 0 0 100vmax var(--bar), 0 1px 0 100vmax var(--bar-line); clip-path: inset(0 -100vmax); }
+.topbar .crumbs { align-items: center; }
+.topbar .crumbs a { background: var(--chip); color: var(--chip-ink); border-radius: 999px; padding: 0.4rem 0.95rem;
+  font-family: var(--font-display); font-weight: 500; font-size: 0.85rem; letter-spacing: 0.01em; text-transform: none; }
+.langtog { border: 0; background: var(--chip); padding: 3px; }
+.langtog button { color: var(--chip-ink); border-radius: 999px; }
+.langtog button[aria-pressed="true"] { background: var(--on-bg); color: var(--on-ink); box-shadow: 0 2px 6px rgba(0, 0, 0, .18); }
 
-  [data-theme="light"] .scene, [data-theme="light"] .callout, [data-theme="light"] details.deep, [data-theme="light"] .figbox, [data-theme="light"] .analogy { border: 0; border-radius: 24px; background: var(--card); box-shadow: var(--lift); }
-  [data-theme="light"] .scene-bar { background: #efefef; border-top: 0; }
-  [data-theme="light"] .scene-bar button { border: 0; background: #fff; color: var(--ink); box-shadow: var(--lift-sm); }
-  [data-theme="light"] .scene-bar button.play { background: var(--knob); color: #fff; }
-  [data-theme="light"] .scene-cap { border-top: 1px solid #e6e6e6; }
-  [data-theme="light"] .callout { padding: 1.1rem 1.3rem 0.5rem; }
-  [data-theme="light"] .callout .tag { border-radius: 999px; padding: 0.2rem 0.7rem; }
-  [data-theme="light"] .gloss div { border: 0; border-radius: 18px; background: var(--card); box-shadow: var(--lift-sm); }
-  [data-theme="light"] pre { border: 0; border-radius: 16px; box-shadow: inset 0 2px 8px rgba(0, 0, 0, .06); }
-  [data-theme="light"] .codehead { border: 0; border-radius: 16px 16px 0 0; background: #dedede; }
-  [data-theme="light"] .scene-title .sn, [data-theme="light"] .spin-btn { background: var(--knob); color: #fff; box-shadow: 0 12px 24px -8px rgba(0, 0, 0, .5); }
+.opener, .cover { border-bottom: 1px solid var(--rule); }
+.opener > .eyebrow, .opener > h1, .cover > .eyebrow, .cover > h1, .cover > .lede { text-align: center; margin-inline: auto; }
 
-  [data-theme="light"] .chapters { border-top: 0; display: grid; gap: 0.7rem; }
-  [data-theme="light"] .chapters li { background: var(--card); border: 0; border-radius: 20px; padding: 0.9rem 1.1rem; box-shadow: var(--lift-sm); }
-  [data-theme="light"] .chapters .st { border-radius: 999px; padding-inline: 0.7rem; }
-  [data-theme="light"] .chapters .ct { text-decoration: none; color: var(--ink); }
-  [data-theme="light"] .pager a { background: #fff; border-radius: 999px; padding: 0.55rem 1.1rem; box-shadow: var(--lift-sm); color: var(--ink); }
+.scene, .callout, details.deep, .figbox, .analogy { border: 0; border-radius: 24px; background: var(--card); box-shadow: var(--lift); }
+.scene-bar { background: var(--well); border-top: 0; }
+.scene-bar button { border: 0; background: var(--pill); color: var(--ink); box-shadow: var(--lift-sm); }
+.scene-bar button.play { background: var(--knob); color: var(--knob-ink); }
+.scene-cap { border-top: 1px solid var(--rule); }
+.callout { padding: 1.1rem 1.3rem 0.5rem; }
+.callout .tag { border-radius: 999px; padding: 0.2rem 0.7rem; }
+.gloss div { border: 0; border-radius: 18px; background: var(--card); box-shadow: var(--lift-sm); }
+pre { border: 0; border-radius: 16px; box-shadow: inset 0 2px 8px rgba(0, 0, 0, .08); }
+.codehead { border: 0; border-radius: 16px 16px 0 0; background: var(--codehead); }
+.scene-title .sn, .spin-btn { background: var(--knob); color: var(--knob-ink); box-shadow: 0 12px 24px -8px rgba(0, 0, 0, .5); }
 
+.chapters { border-top: 0; display: grid; gap: 0.7rem; }
+.chapters li { background: var(--card); border: 0; border-radius: 20px; padding: 0.9rem 1.1rem; box-shadow: var(--lift-sm); }
+.chapters .st { border-radius: 999px; padding-inline: 0.7rem; }
+.pager a { background: var(--pill); border-radius: 999px; padding: 0.55rem 1.1rem; box-shadow: var(--lift-sm); color: var(--ink); }
 
 /* Light/dark switch button (added by book.js) */
 .tbtn { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 20;
   width: 2.9rem; height: 2.9rem; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
-  background: var(--ink); color: var(--paper); box-shadow: 0 12px 26px -8px rgba(0, 0, 0, .5); }
+  background: var(--knob); color: var(--knob-ink); box-shadow: 0 12px 26px -8px rgba(0, 0, 0, .5); }
 .tbtn svg { width: 1.25rem; height: 1.25rem; }
