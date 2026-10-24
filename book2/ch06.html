@@ -95,6 +95,52 @@ def build_user_turn(policy: str, order: dict, message: str) -> str:
   </div>
 </details>
 
+<details class="deep">
+  <summary><span class="l-en">For coders: a vague prompt versus a clear one</span><span class="l-hi">Coders ke liye: dhundhla prompt vs saaf prompt</span><span class="lvl">code2/ch06/prompt_basics.py</span></summary>
+  <div class="inner">
+<pre>vague = f"Write an update about this.\n{NOTES}"
+clear = (f"Write a WhatsApp update for the sales team (non-technical) from these meeting notes.\n"
+         f"Include: what changed, why, who owns the next step, and the next meeting date.\n"
+         f"Format: 3 short bullet points, under 50 words total, no greeting.\n"
+         f"If something isn't in the notes, leave it out; don't invent details.\n\nNotes: {NOTES}")</pre>
+<pre>$ python code2/ch06/prompt_basics.py
+--- VAGUE prompt (179 words)
+Here’s a clear, professional update based on your details:
+
+---
+
+**Subject:** Project Update: Launch Date Adjustment &amp; Next Steps  
+
+**From:** [Your Name/Team]  
+**Date:** 23 October 2024  
+
+Following our meeting today (23 Oct):  
+
+1.  **Launch Date Adjusted:** The project launch has been moved from **1 November** to **15 November** due to vendor delays.  
+2.  **Vendor Follow-Up:** Priya is now responsible for all vendor communication and resolution to ensure the new timeline is met.  
+3.  **Budget Status:** The project budget remains **unchanged** – no additional costs are anticipated.  
+4.  **Next Sync:** We’ll align on progress and next steps at our next meeting on **30 October**.  
+
+This adjustment ensures we address the vendor delay proactively while maintaining budget discipline. Priya will provide updates on vendor status by 30 Oct.  
+
+**Action:** Priya to confirm vendor resolution path by EOD 30 Oct.  
+
+—  
+*This update reflects decisions made at the 23 Oct meeting.*  
+
+---  
+
+This version is concise, action-oriented, and emphasizes accountability (Priya), stability (budget), and urgency (next sync on 30 Oct). It avoids technical jargon while clearly communicating the change and next steps.
+
+--- CLEAR prompt (19 words)
+- Launch moved to 15 Nov (vendor delay)  
+- Priya to follow up vendor  
+- Next sync: 30 Oct</pre>
+  <p class="l-en">Look closely at the vague answer: it invented a year (2024) and a deadline for Priya ("by EOD 30 Oct") that the notes never mention. The clear prompt said who it was for, what to include, the format, the length, and "don't invent details": 19 accurate words.</p>
+  <p class="l-hi">Dhundhle jawab ko dhyaan se dekho: usne ek saal (2024) aur Priya ki deadline ("30 Oct EOD tak") gadh di jo notes mein thi hi nahi. Saaf prompt ne bataaya kiske liye, kya shaamil karna, format, lambai, aur "details mat gadho": 19 sahi shabd.</p>
+  </div>
+</details>
+
 <div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
 <div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
   <ol class="l-en"><li>Brief me like a smart new colleague: who, what, why, for whom, how long.</li><li>A strong prompt has role and context, task, data in tags, rules with reasons, examples, and an output format.</li><li>Tell me what to do and why, not just what to avoid.</li><li>Treat prompts like code: versioned, reviewed, tested.</li></ol>

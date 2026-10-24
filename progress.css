@@ -1,0 +1,24 @@
+/* Reading progress and chapter quizzes (single-file edition, inlined by package_single_html.py). */
+.quiz { margin: 3rem 0 1.5rem; }
+.quiz h2 { margin-top: 0; }
+.quiz-sub { color: var(--ink-2); font-family: var(--font-display); }
+.quiz-q { background: var(--card, var(--paper-2)); border-radius: 18px; padding: 1rem 1.1rem; margin: 0.9rem 0; box-shadow: var(--lift-sm, none); }
+.quiz-stem { font-family: var(--font-display); font-weight: 600; margin-bottom: 0.6rem; }
+.quiz-q button { display: block; width: 100%; text-align: left; margin: 0.4rem 0; padding: 0.6rem 0.9rem; border-radius: 12px;
+  border: 1px solid var(--rule); background: var(--pill, var(--paper)); color: var(--ink); font: 0.98rem/1.4 var(--font-display); cursor: pointer; }
+.quiz-q button:hover { border-color: var(--ink-2); }
+.quiz-q.answered button { cursor: default; opacity: 0.6; }
+.quiz-q.answered button.right { opacity: 1; border-color: var(--signal); background: var(--signal-soft); font-weight: 600; }
+.quiz-q.answered button.wrong { opacity: 1; border-color: var(--amber); background: var(--amber-soft); }
+.quiz-why { margin: 0.6rem 0 0; font-size: 0.95rem; color: var(--ink-2); }
+.donebar { margin: 1.5rem 0 0; text-align: center; }
+.donebar button { border: 0; border-radius: 999px; padding: 0.7rem 1.4rem; cursor: pointer; font: 600 0.95rem var(--font-display);
+  background: var(--knob, var(--ink)); color: var(--knob-ink, var(--paper)); box-shadow: var(--lift-sm, none); }
+.donebar button.is-done { background: var(--signal-soft); color: var(--ink); }
+.progress { margin: 2rem 0 0; font-family: var(--font-display); }
+.progress-text { display: flex; justify-content: space-between; align-items: center; gap: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+.progress-reset { border: 0; background: transparent; color: var(--ink-2); font: 0.8rem var(--font-mono); cursor: pointer; text-decoration: underline; }
+.progress-track { height: 10px; border-radius: 999px; background: var(--well, var(--paper-2)); overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 999px; background: var(--signal); }
+.chapters li.is-done .cn::after { content: " ✓"; color: var(--signal); font-weight: 700; }
+.home-progress { display: block; margin-top: 0.3rem; font: 600 0.8rem var(--font-mono); color: var(--signal); }

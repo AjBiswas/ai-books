@@ -19,6 +19,8 @@ PARTS = [
     ("Part VI", "Production", "Production"),
     ("Part VII", "Your career", "Aapka career"),
     ("Part VIII", "Frontier and reference", "Frontier aur reference"),
+    ("Part IX", "Under the hood", "Andar ki baat"),
+    ("Part X", "Engineering deep dives", "Engineering ki gehraai"),
 ]
 
 # (num, part index, title en, title hi, subtitle en, subtitle hi)
@@ -59,6 +61,17 @@ CHAPTERS = [
     (34, 6, "Your Roadmap & Portfolio", "Aapka Roadmap aur Portfolio", "A 90-day plan, five portfolio projects, and interviews", "90 din ka plan, paanch portfolio projects, aur interviews"),
     (35, 7, "Research Frontier: Beyond the Plain LLM", "Research Frontier: Saade LLM se Aage", "RLM, NCM, diffusion, state-space and concept models, and how to judge the hype", "RLM, NCM, diffusion, state-space aur concept models, aur hype ko kaise parkhein"),
     (36, 7, "The AI Dictionary", "AI Shabdkosh", "Every term from LLM to NCM in plain words, with a study order", "LLM se NCM tak har shabd aasaan bhasha mein, padhne ke kram ke saath"),
+    (37, 8, 'How a Neural Network Learns', 'Neural Network Kaise Seekhta Hai', 'Weights, loss, gradient descent and backpropagation, in plain numpy', 'Weights, loss, gradient descent aur backpropagation, saade numpy mein'),
+    (38, 8, 'Inside a Transformer Block', 'Transformer Block ke Andar', 'Embeddings, attention, heads, MLP, residuals and layer norm', 'Embeddings, attention, heads, MLP, residuals aur layer norm'),
+    (39, 8, 'Build a Tiny LLM from Scratch', 'Shunya se Tiny LLM Banao', 'Train a character-level GPT on your laptop in a minute', 'Laptop par ek minute mein character-level GPT train karo'),
+    (40, 9, 'AI-Assisted Software Engineering', 'AI ke Saath Software Engineering', 'TDD, static and dynamic analysis, ASTs, dependency graphs, brownfield vs greenfield', 'TDD, static aur dynamic analysis, AST, dependency graphs, brownfield vs greenfield'),
+    (41, 9, 'Long-Running Agents', 'Lambe Chalne Wale Agents', 'Durable execution, state, control plane and harness-as-code', 'Durable execution, state, control plane aur harness-as-code'),
+    (42, 9, 'Deeper Reasoning and Memory', 'Gehri Soch aur Memory', 'Self-consistency, tree of thoughts, episodic memory, continual learning', 'Self-consistency, tree of thoughts, episodic memory, continual learning'),
+    (43, 9, 'Talking to Databases: Text-to-SQL', 'Database se Baat: Text-to-SQL', 'Schema in context, safe read-only SQL, repair loops, evaluation', 'Context mein schema, surakshit read-only SQL, repair loops, evaluation'),
+    (44, 9, 'Deploying Models: Docker, Kubernetes, GPUs', 'Models Deploy Karna: Docker, Kubernetes, GPUs', 'GPU memory maths, serving engines, containers, autoscaling', 'GPU memory ka hisaab, serving engines, containers, autoscaling'),
+    (45, 9, 'Automatic Prompt Optimisation and DSPy', 'Automatic Prompt Optimisation aur DSPy', 'Let a program search for the best prompt against your eval', 'Program ko apne eval par sabse achha prompt dhoondhne do'),
+    (46, 9, 'Agent Identity and Access', 'Agent ki Pehchaan aur Access', 'Non-human identities, scoped short-lived tokens, on-behalf-of, audit', 'Non-human identities, scoped short-lived tokens, on-behalf-of, audit'),
+    (47, 9, 'Watermarks and Content Provenance', 'Watermark aur Content Provenance', 'Detecting AI text, C2PA content credentials, and their limits', 'AI text pehchanna, C2PA content credentials, aur unki seemayein'),
 ]
 
 HEAD = """<!doctype html>

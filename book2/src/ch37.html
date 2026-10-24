@@ -1,0 +1,219 @@
+  <div class="story">
+    <p class="l-en">Every model in this book, from a spam filter to a frontier LLM, learns the same way: <strong>guess, measure how wrong the guess was, nudge the numbers to be a little less wrong, repeat</strong> millions of times. This chapter opens that machine with two tiny programs you can run in seconds: one learns a straight line, the other learns a puzzle that needs a hidden layer. No calculus degree needed, just the idea of "walking downhill".</p>
+    <p class="l-hi">Is book ka har model, spam filter se lekar frontier LLM tak, ek hi tarah seekhta hai: <strong>andaaza lagao, naapo andaaza kitna galat tha, numbers ko thoda kam galat hone ke liye khiskao, dohraao</strong>, laakhon baar. Yeh chapter us machine ko do chhote programs se kholta hai jo seconds mein chalte hain: ek seedhi line seekhta hai, doosra ek paheli jise hidden layer chahiye. Calculus ki degree nahi chahiye, bas "dhalaan par neeche chalne" ka idea.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Weights, loss and the training loop</span><span class="l-hi">Weights, loss aur training loop</span></li>
+    <li><b>2</b><span class="l-en">Gradient descent: walking downhill</span><span class="l-hi">Gradient descent: dhalaan par neeche chalna</span></li>
+    <li><b>3</b><span class="l-en">Neurons, layers and why depth helps</span><span class="l-hi">Neurons, layers aur gehraai kyun madad karti hai</span></li>
+    <li><b>4</b><span class="l-en">Backpropagation, and how to trust it</span><span class="l-hi">Backpropagation, aur us par bharosa kaise karein</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">A model is a function with knobs</span><span class="l-hi">Model knobs wala ek function hai</span></h2></div>
+<div class="story">
+  <p class="l-en">Imagine a radio with millions of tuning knobs. Turn them one way and it plays noise; turn them just right and it plays music. A neural network is that radio. The knobs are called <strong>weights</strong> (or parameters): Qwen3-4B has about 4 billion of them. "Training" means finding knob positions that make the outputs right. Before training, the knobs are random and the model talks nonsense, exactly like the tiny GPT in Chapter 39 before its first step.</p>
+  <p class="l-hi">Socho ek radio jisme laakhon tuning knobs hain. Ek taraf ghumao toh shor; bilkul sahi ghumao toh sangeet. Neural network wahi radio hai. Knobs ko <strong>weights</strong> (ya parameters) kehte hain: Qwen3-4B mein lagbhag 4 arab hain. "Training" ka matlab hai aisi knob positions dhoondhna jisse outputs sahi aayein. Training se pehle knobs random hote hain aur model bakwaas bolta hai, bilkul Chapter 39 ke tiny GPT ki tarah pehle step se pehle.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Gradient descent: walking downhill in fog</span><span class="l-hi">Gradient descent: kohre mein dhalaan par neeche chalna</span></h2></div>
+<div class="story">
+  <p class="l-en">You're on a hill in thick fog and want to reach the valley. You can't see it, but you can feel which way the ground slopes under your feet. So you take a small step downhill, feel again, step again. That's gradient descent. The "height" is the <strong>loss</strong>: one number that says how wrong the model is. The "slope" is the <strong>gradient</strong>: for each weight, which direction makes the loss smaller. The step size is the <strong>learning rate</strong>: too small and you crawl, too big and you jump over the valley.</p>
+  <p class="l-hi">Aap gehre kohre mein ek pahaadi par ho aur ghaati tak pahunchna hai. Ghaati dikhti nahi, par pairon ke neeche zameen kis taraf jhukti hai woh mehsoos hota hai. Toh aap neeche ki taraf chhota kadam lete ho, phir mehsoos karte ho, phir kadam. Yahi gradient descent hai. "Oonchaai" hai <strong>loss</strong>: ek number jo batata hai model kitna galat hai. "Dhalaan" hai <strong>gradient</strong>: har weight ke liye, kis disha mein loss chhota hoga. Kadam ka size hai <strong>learning rate</strong>: bahut chhota toh rengte ho, bahut bada toh ghaati ke upar se kood jaate ho.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: learn y = 2x + 1 from 50 noisy points</span><span class="l-hi">Coders ke liye: 50 shor wale points se y = 2x + 1 seekho</span><span class="lvl">code2/ch37/learn_line.py</span></summary>
+  <div class="inner">
+<pre>w, b, lr = 0.0, 0.0, 0.05                     # start knowing nothing; lr = step size
+for step in range(101):
+    err = (w * x + b) - y
+    loss = np.mean(err ** 2)                  # mean squared error: how wrong we are
+    dw = np.mean(2 * err * x)                 # slope of the loss with respect to w
+    db = np.mean(2 * err)                     # ... and with respect to b
+    w -= lr * dw                              # step downhill
+    b -= lr * db</pre>
+<pre>$ python code2/ch37/learn_line.py
+step   0  loss  14.252   w  0.64  b  0.13
+step   1  loss   7.051   w  1.08  b  0.24
+step   2  loss   3.574   w  1.38  b  0.33
+step   5  loss   0.622   w  1.83  b  0.53
+step  10  loss   0.136   w  2.00  b  0.73
+step  20  loss   0.051   w  2.02  b  0.91
+step  50  loss   0.040   w  2.02  b  1.00
+step 100  loss   0.040   w  2.02  b  1.00
+
+learned: y = 2.02x + 1.00   (hidden rule: y = 2x + 1)</pre>
+  <p class="l-en">The loss falls fast, then flattens at 0.04: that last bit is the noise in the data, which no line can explain. A good model stops there instead of chasing noise.</p>
+  <p class="l-hi">Loss tezi se girta hai, phir 0.04 par ruk jaata hai: woh aakhri hissa data ka shor hai, jise koi line samjha nahi sakti. Achha model wahin rukta hai, shor ke peeche nahi bhaagta.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Neurons and layers</span><span class="l-hi">Neurons aur layers</span></h2></div>
+<div class="story">
+  <p class="l-en">A <strong>neuron</strong> is tiny: multiply each input by a weight, add them up, add a bias, then pass the result through a bend called an <strong>activation</strong> (such as tanh or ReLU). One neuron can only draw a straight dividing line. Stack neurons into a <strong>layer</strong>, and layers on top of layers, and the bends combine into curves that can separate almost anything. That's the whole trick of "deep" learning: many simple bends, stacked.</p>
+  <p class="l-hi"><strong>Neuron</strong> chhota sa hai: har input ko ek weight se guna karo, jodo, ek bias jodo, phir nateeje ko ek mod se guzaaro jise <strong>activation</strong> kehte hain (jaise tanh ya ReLU). Ek neuron sirf seedhi bantwaara line kheench sakta hai. Neurons ko <strong>layer</strong> mein jodo, aur layers ke upar layers, toh mod milkar curves bante hain jo lagbhag kuch bhi alag kar sakte hain. "Deep" learning ki poori chaal yahi hai: bahut saare saade mod, ek ke upar ek.</p>
+  <p class="l-en">The classic test is <strong>XOR</strong>: output 1 when exactly one of two inputs is 1. Plot the four cases and you'll see no single straight line separates the 1s from the 0s. One hidden layer of four neurons solves it.</p>
+  <p class="l-hi">Classic test hai <strong>XOR</strong>: output 1 jab do inputs mein se theek ek 1 ho. Chaaron cases plot karo toh dikhega ki koi ek seedhi line 1s ko 0s se alag nahi karti. Chaar neurons ki ek hidden layer ise suljha deti hai.</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">Backpropagation: passing the blame backwards</span><span class="l-hi">Backpropagation: dosh ko peeche ki taraf bhejna</span></h2></div>
+<div class="story">
+  <p class="l-en">With one weight, finding the slope is easy. With four billion, you need a clever shortcut. <strong>Backpropagation</strong> is that shortcut. After a forward pass computes the loss, it walks backwards through the network, layer by layer, and works out how much each weight contributed to the error, reusing the work of the layer above (that's the "chain rule"). One backward pass costs about as much as two forward passes, for all the weights at once. Libraries like PyTorch do it automatically; here we write it by hand once, and then check it against a slow but simple numerical estimate.</p>
+  <p class="l-hi">Ek weight ho toh dhalaan nikaalna aasaan hai. Chaar arab ho toh chaalaak shortcut chahiye. <strong>Backpropagation</strong> wahi shortcut hai. Forward pass loss nikaalta hai, phir yeh network mein peeche ki taraf, layer-dar-layer chalta hai, aur hisaab lagaata hai ki har weight ne galti mein kitna hissa diya, upar wali layer ka kaam dobara use karke (yahi "chain rule" hai). Ek backward pass lagbhag do forward passes jitna kharcha karta hai, saare weights ke liye ek saath. PyTorch jaisi libraries yeh apne aap karti hain; yahan hum ek baar haath se likhte hain, phir dheemi par saadi numerical estimate se check karte hain.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: a two-layer network learns XOR, with a gradient check</span><span class="l-hi">Coders ke liye: do-layer network XOR seekhta hai, gradient check ke saath</span><span class="lvl">code2/ch37/tiny_net.py</span></summary>
+  <div class="inner">
+<pre>h = np.tanh(X @ W1 + b1)                    # forward: hidden layer of 4 neurons
+p = sigmoid(h @ W2 + b2)                    # output: probability of "1"
+
+dz2 = (p - Y) / n                           # backward: loss -> output
+gW2 = h.T @ dz2
+dh  = dz2 @ W2.T                            # pass the blame back to the hidden layer
+dz1 = dh * (1 - h ** 2)                     # through tanh
+gW1 = X.T @ dz1</pre>
+<pre>$ python code2/ch37/tiny_net.py
+gradient check  backprop -0.029283   numerical -0.029283
+step    0  loss 0.6712   predictions [0.5  0.66 0.46 0.55]
+step  100  loss 0.0379   predictions [0.01 0.96 0.96 0.06]
+step  500  loss 0.0051   predictions [0.   0.99 0.99 0.01]
+step 1000  loss 0.0024   predictions [0. 1. 1. 0.]
+step 2000  loss 0.0012   predictions [0. 1. 1. 0.]
+
+inputs     target  prediction
+[0 0]   0       0.000
+[0 1]   1       0.999
+[1 0]   1       0.999
+[1 1]   0       0.002</pre>
+  </div>
+</details>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Overfitting: memorising instead of learning</span><span class="l-hi">Overfitting: seekhne ki jagah ratna</span></h4>
+  <p class="l-en">A network with enough knobs can memorise its training data, noise included, and then fail on anything new, like a student who memorised last year's answer key. That's why we always keep a <strong>validation set</strong> the model never trains on, and stop when its loss stops improving. The same idea, scaled up, is why evals (Ch 26) use questions the model hasn't seen.</p>
+  <p class="l-hi">Kaafi knobs wala network apna training data, shor samet, rat sakta hai, aur phir kisi bhi nayi cheez par fail ho jaata hai, jaise pichhle saal ki answer key ratne wala student. Isliye hum hamesha ek <strong>validation set</strong> rakhte hain jis par model kabhi train nahi hota, aur jab uska loss sudharna band ho tab ruk jaate hain. Yahi idea bade scale par wajah hai ki evals (Ch 26) aise sawaal use karte hain jo model ne nahi dekhe.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">From here to a real LLM</span><span class="l-hi">Yahan se asli LLM tak</span></h4>
+  <p class="l-en">An LLM is this same loop with three changes: the input is text turned into tokens, the network is a stack of transformer blocks (Ch 38), and the loss asks "how surprised were you by the real next token?" (cross-entropy). The optimiser is usually <strong>Adam</strong>, a smarter version of "step downhill" that adapts the step size for each weight. Chapter 39 puts all of it together and trains a tiny GPT on your laptop.</p>
+  <p class="l-hi">LLM yahi loop hai teen badlaav ke saath: input text hai jo tokens mein badla gaya, network transformer blocks ka dher hai (Ch 38), aur loss poochhta hai "asli agle token se tum kitna chaunke?" (cross-entropy). Optimiser aksar <strong>Adam</strong> hota hai, "neeche kadam" ka smart version jo har weight ke liye kadam ka size badalta hai. Chapter 39 sab jod kar aapke laptop par ek tiny GPT train karta hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>A model is a function with many knobs (weights); training finds good knob settings.</li><li>The loss measures how wrong the model is; the gradient says which way to turn each knob.</li><li>Gradient descent takes small steps downhill; the learning rate sets the step size.</li><li>Stacked layers with bends (activations) can learn curves a single neuron can't.</li><li>Backpropagation computes every gradient in one backward pass; check it numerically once.</li></ol>
+  <ol class="l-hi"><li>Model bahut saare knobs (weights) wala function hai; training achhi knob settings dhoondhti hai.</li><li>Loss naapta hai model kitna galat hai; gradient batata hai har knob kis taraf ghumaana hai.</li><li>Gradient descent neeche ki taraf chhote kadam leta hai; learning rate kadam ka size tay karta hai.</li><li>Mod (activations) wali layers ka dher woh curves seekh sakta hai jo ek neuron nahi.</li><li>Backpropagation ek backward pass mein har gradient nikaalta hai; ek baar numerically check karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">In <code>learn_line.py</code>, set the learning rate to 0.5, then 0.001. Describe what happens to the loss in each case. <span class="level">core</span></p><p class="l-hi"><code>learn_line.py</code> mein learning rate 0.5, phir 0.001 karo. Har case mein loss ka kya hota hai, likho. <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">In <code>tiny_net.py</code>, shrink the hidden layer from 4 neurons to 1. Can it still learn XOR? Why not? <span class="level">core</span></p><p class="l-hi"><code>tiny_net.py</code> mein hidden layer 4 se 1 neuron karo. Kya ab bhi XOR seekh paata hai? Kyun nahi? <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Add a validation set to <code>learn_line.py</code> (20 new points) and print both losses. <span class="level">stretch</span></p><p class="l-hi"><code>learn_line.py</code> mein validation set (20 naye points) jodo aur dono losses print karo. <span class="level">stretch</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Rumelhart, Hinton &amp; Williams (1986). <em>Learning representations by back-propagating errors.</em> Nature.</li>
+  <li>Kingma &amp; Ba (2015). <em>Adam: A Method for Stochastic Optimization.</em></li>
+  <li>Karpathy, A. <em>Neural Networks: Zero to Hero</em> (video course, micrograd and makemore).</li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.flow("scA", [
+    { en: "Input", hi: "Input", sen: "numbers in: pixels, tokens, prices", shi: "numbers andar: pixels, tokens, daam" },
+    { en: "Model (weights)", hi: "Model (weights)", sen: "millions of knobs, random at first", shi: "laakhon knobs, shuru mein random" },
+    { en: "Prediction", hi: "Prediction", sen: "the model's guess", shi: "model ka andaaza" },
+    { en: "Loss", hi: "Loss", sen: "one number: how wrong was it?", shi: "ek number: kitna galat tha?" },
+    { en: "Update", hi: "Update", sen: "nudge every knob a little", shi: "har knob thoda khiskao" },
+    { en: "Repeat", hi: "Dohraao", sen: "millions of times", shi: "laakhon baar" }
+  ], [
+    ["Numbers go in. For an LLM, they're tokens turned into vectors.", "Numbers andar jaate hain. LLM ke liye yeh vectors bane tokens hain."],
+    ["The model mixes them using its weights, the knobs. At the start they're random.", "Model unhe apne weights, yaani knobs, se milaata hai. Shuru mein yeh random hote hain."],
+    ["Out comes a guess.", "Bahar ek andaaza aata hai."],
+    ["The loss compares the guess with the right answer and gives one number.", "Loss andaaze ko sahi jawab se milaata hai aur ek number deta hai."],
+    ["Every weight is nudged in the direction that lowers the loss.", "Har weight us disha mein khiskaaya jaata hai jo loss ghataaye."],
+    ["Repeat, with fresh examples, until the loss stops improving.", "Naye examples ke saath dohraao, jab tak loss sudharna band na ho."]
+  ], { perRow: 3 });
+
+  (function () {
+    var E = B.E, BI = B.BI, show = B.show;
+    var S = B.stage("scB", "A ball rolls down a loss curve in steps toward the minimum");
+    var s = S.svg; S.height(300);
+    var x0 = 60, x1 = 700, base = 250;
+    function yOf(w) { return base - 10 - 180 * Math.min(1, Math.pow((w - 2) / 2.4, 2)); }   // valley at w = 2
+    function xOf(w) { return x0 + (w + 0.4) / 4.8 * (x1 - x0); }
+    var d = "";
+    for (var w = -0.4; w <= 4.4; w += 0.05) d += (d ? " L" : "M") + xOf(w).toFixed(1) + " " + yOf(w).toFixed(1);
+    E(s, "path", { d: d, "class": "line", "stroke-width": 2.5, fill: "none" });
+    E(s, "line", { x1: x0, y1: base, x2: x1, y2: base, "class": "line" });
+    BI(s, { x: x1, y: base + 22, "text-anchor": "end", "font-size": 12, "class": "muted" }, "weight w", "weight w");
+    BI(s, { x: x0, y: 30, "font-size": 12, "class": "muted" }, "loss (how wrong)", "loss (kitna galat)");
+    BI(s, { x: xOf(2), y: base + 22, "text-anchor": "middle", "font-size": 12, "font-weight": 700, "class": "sig" }, "best w = 2", "sabse achha w = 2");
+    var path = [0, 0.64, 1.08, 1.38, 1.83, 2.0];
+    var dots = path.map(function (w, k) {
+      var g = E(s, "g", { "class": "anim" });
+      E(g, "circle", { cx: xOf(w), cy: yOf(w) - 9, r: 9, style: "fill:var(--" + (k === path.length - 1 ? "signal" : "amber") + ")" });
+      var dx = k === 4 ? -24 : k === 5 ? 24 : 0;            // the last two balls sit close together: spread their labels
+      E(g, "text", { x: xOf(w) + dx, y: yOf(w) - 24, "text-anchor": "middle", "font-size": 11, "class": "mono" }, "step " + [0, 1, 2, 3, 5, 10][k]);
+      return g;
+    });
+    B.scene(S.fig, [
+      ["Start knowing nothing: w = 0. The loss is high (14.3).", "Kuch na jaante hue shuru: w = 0. Loss ooncha hai (14.3)."],
+      ["Feel the slope, step downhill: w = 0.64.", "Dhalaan mehsoos karo, neeche kadam: w = 0.64."],
+      ["Another step: 1.08. Steps are big while the slope is steep.", "Ek aur kadam: 1.08. Dhalaan tez hai tab tak kadam bade."],
+      ["1.38 ... the ground flattens, so the steps shrink.", "1.38 ... zameen samtal hoti hai, toh kadam chhote."],
+      ["1.83 after five steps.", "Paanch kadam baad 1.83."],
+      ["After ten steps, w = 2.00: the bottom of the valley. That's training.", "Das kadam baad w = 2.00: ghaati ka tal. Yahi training hai."]
+    ], function (i) { dots.forEach(function (g, k) { show(g, k <= i); }); });
+  })();
+
+  (function () {
+    var E = B.E, BI = B.BI, show = B.show;
+    var S = B.stage("scC", "XOR: four points that one straight line can't separate, solved by a hidden layer");
+    var s = S.svg; S.height(290);
+    var pts = [[0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 0]];
+    function px(v) { return 90 + v * 200; }
+    function py(v) { return 230 - v * 180; }
+    E(s, "rect", { x: 50, y: 20, width: 280, height: 250, rx: 8, "class": "box" });
+    pts.forEach(function (p) {
+      E(s, "circle", { cx: px(p[0]), cy: py(p[1]), r: 16, style: "fill:var(--" + (p[2] ? "signal" : "amber") + ")" });
+      E(s, "text", { x: px(p[0]), y: py(p[1]) + 5, "text-anchor": "middle", "font-size": 13, "font-weight": 700, fill: "#fff" }, String(p[2]));
+      E(s, "text", { x: px(p[0]), y: py(p[1]) + 34, "text-anchor": "middle", "font-size": 11, "class": "mono muted" }, "(" + p[0] + "," + p[1] + ")");
+    });
+    var one = E(s, "g", { "class": "anim" });
+    E(one, "line", { x1: 60, y1: 260, x2: 320, y2: 30, "class": "line-amb", "stroke-width": 2.5, "stroke-dasharray": "6 5" });
+    var two = E(s, "g", { "class": "anim" });
+    E(two, "path", { d: "M60 165 Q190 40 320 165", "class": "line-sig", "stroke-width": 3, fill: "none" });
+    E(two, "path", { d: "M60 95 Q190 220 320 95", "class": "line-sig", "stroke-width": 3, fill: "none" });
+    var net = E(s, "g", { "class": "anim" });
+    var ins = [[430, 110], [430, 190]], hid = [[560, 60], [560, 120], [560, 180], [560, 240]], out = [690, 150];
+    ins.forEach(function (a) { hid.forEach(function (h) { E(net, "line", { x1: a[0], y1: a[1], x2: h[0], y2: h[1], "class": "line", "stroke-width": 1 }); }); });
+    hid.forEach(function (h) { E(net, "line", { x1: h[0], y1: h[1], x2: out[0], y2: out[1], "class": "line", "stroke-width": 1 }); });
+    ins.forEach(function (a) { E(net, "circle", { cx: a[0], cy: a[1], r: 14, "class": "box" }); });
+    hid.forEach(function (h) { E(net, "circle", { cx: h[0], cy: h[1], r: 14, "class": "box-sig" }); });
+    E(net, "circle", { cx: out[0], cy: out[1], r: 16, "class": "box-amb" });
+    BI(net, { x: 430, y: 280, "text-anchor": "middle", "font-size": 11, "class": "muted" }, "2 inputs", "2 inputs");
+    BI(net, { x: 560, y: 280, "text-anchor": "middle", "font-size": 11, "class": "muted" }, "4 hidden neurons", "4 hidden neurons");
+    BI(net, { x: 690, y: 280, "text-anchor": "middle", "font-size": 11, "class": "muted" }, "1 output", "1 output");
+    B.scene(S.fig, [
+      ["XOR: the answer is 1 when exactly one input is 1.", "XOR: jawab 1 jab theek ek input 1 ho."],
+      ["One neuron draws one straight line. Wherever you put it, a 1 and a 0 end up on the same side.", "Ek neuron ek seedhi line kheenchta hai. Kahin bhi rakho, ek 1 aur ek 0 ek hi taraf aa jaate hain."],
+      ["Add a hidden layer of 4 neurons. Their bends combine into a curved boundary.", "4 neurons ki hidden layer jodo. Unke mod milkar ek curved seema banate hain."],
+      ["Now the 1s sit between the curves and the 0s outside: XOR solved (predictions 0.000, 0.999, 0.999, 0.002).", "Ab 1s curves ke beech aur 0s bahar: XOR hal (predictions 0.000, 0.999, 0.999, 0.002)."]
+    ], function (i) { show(one, i === 1); show(net, i >= 2); show(two, i >= 3); });
+  })();
+})();
+</script>

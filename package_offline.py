@@ -57,11 +57,18 @@ if __name__ == "__main__":
         for name in os.listdir(os.path.join(ROOT, src)):
             if name.endswith((".html", ".css", ".js")):
                 shutil.copy2(os.path.join(ROOT, src, name), os.path.join(out, name))
+                if name.endswith(".html"):
+                    p = os.path.join(out, name)
+                    t = open(p, encoding="utf-8").read()
+                    open(p, "w", encoding="utf-8").write(t.replace('href="../book/', 'href="../book1/'))
         idx = os.path.join(out, "index.html")
         text = open(idx, encoding="utf-8").read()
         if not text.lstrip().lower().startswith("<!doctype"):
             open(idx, "w", encoding="utf-8").write(standalone_index(text))
-    open(os.path.join(DIST, "index.html"), "w", encoding="utf-8").write(HOME)
+    open(os.path.join(DIST, "separate-files.html"), "w", encoding="utf-8").write(HOME)
+    single = os.path.join(ROOT, "AI-Books.html")          # build it first: python package_single_html.py
+    assert os.path.exists(single), "run package_single_html.py first"
+    shutil.copy2(single, os.path.join(DIST, "index.html"))
 
     zpath = os.path.join(ROOT, "AI-Books-offline.zip")
     with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
@@ -70,5 +77,5 @@ if __name__ == "__main__":
                 full = os.path.join(base, f)
                 z.write(full, os.path.join("AI-Books", os.path.relpath(full, DIST)))
     n = sum(len(fs) for _, _, fs in os.walk(DIST))
-    print(f"dist/ ready ({n} files) -> open dist/index.html")
+    print(f"dist/ ready ({n} files) -> open dist/index.html (everything in one file; book1/ and book2/ hold the same pages as separate files)")
     print(f"zip: {zpath} ({os.path.getsize(zpath) // 1024} KB)")

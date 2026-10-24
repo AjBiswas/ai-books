@@ -65,6 +65,28 @@
   </div>
 </details>
 
+<details class="deep">
+  <summary><span class="l-en">For coders: count real tokens, and watch temperature</span><span class="l-hi">Coders ke liye: asli tokens gino, aur temperature dekho</span><span class="lvl">code2/ch02/tokens_temperature.py</span></summary>
+  <div class="inner">
+<pre>full = post("generate", {"model": "qwen3:4b", "prompt": text, "raw": True, "options": {"num_predict": 1}})
+tokens = full["prompt_eval_count"]                  # Ollama reports how many tokens it read
+
+for temp in (0.0, 1.2):
+    names = [ask("Suggest one name for a chai shop.", temperature=temp, seed=s) for s in (1, 2, 3)]</pre>
+<pre>$ python code2/ch02/tokens_temperature.py
+1) same meaning, different token counts
+   English        13 tokens    68 characters
+   Hinglish       16 tokens    61 characters
+   Hindi script   51 tokens    59 characters
+
+2) temperature
+   temperature 0.0: ['Chai Breeze', 'Chai Hoo', 'Chai Hoo']
+   temperature 1.2: ['Chai Breeze', 'Spice &amp; Steam', 'Spice &amp; Steam']</pre>
+  <p class="l-en">Hindi script took about 4× the tokens of English for the same request, so it costs about 4× as much. And notice that temperature 0 still gave two different names across runs: low temperature makes answers <em>more</em> repeatable, not guaranteed identical. Never rely on it for exact repeatability.</p>
+  <p class="l-hi">Ek hi request ke liye Hindi script ne English se lagbhag 4 guna tokens liye, yaani lagbhag 4 guna kharch. Aur dekho, temperature 0 par bhi runs mein do alag naam aaye: kam temperature jawabon ko <em>zyaada</em> dohraane laayak banata hai, ek jaisa hone ki guarantee nahi. Sateek dohraav ke liye is par bharosa mat karo.</p>
+  </div>
+</details>
+
 <div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
 <div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
   <ol class="l-en"><li>I predict one token at a time, then repeat.</li><li>I remember nothing; the app re-sends the conversation, and you pay for it each time.</li><li>I give chances, and a dice-roll picks; temperature sets how bold the roll is.</li><li>I sound sure even when I'm wrong. Give me facts and check me.</li></ol>

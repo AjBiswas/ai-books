@@ -1,0 +1,19 @@
+haron is a small robot. haron reads the question. haron thinks about the answer.
+haron calls a tool when it needs facts. the tool returns the weather. haron answers the user.
+the user asks about the weather in pune. haron calls the weather tool. the tool says it is sunny.
+haron says the weather in pune is sunny. the user says thank you. haron says you are welcome.
+the user asks about the train to mumbai. haron calls the train tool. the tool says the train leaves at nine.
+haron says the train to mumbai leaves at nine. the user says thank you. haron says you are welcome.
+haron reads the long contract. haron finds the payment date. haron answers with the page number.
+the manager gives haron a budget. haron spends tokens carefully. haron stops when the task is done.
+haron writes a short plan. haron checks each step. haron fixes the mistake. haron tries again.
+the team gives haron a diary. haron writes notes in the diary. haron reads the diary every morning.
+the user asks about the price of tea. haron calls the shop tool. the tool says the price is ten rupees.
+haron says the price of tea is ten rupees. the user says thank you. haron says you are welcome.
+haron is careful with secrets. haron never shares the password. haron asks before it sends money.
+the engineer tests haron every day. haron passes the test. the engineer smiles. haron learns a little more.
+the user asks about the weather in delhi. haron calls the weather tool. the tool says it is cloudy.
+haron says the weather in delhi is cloudy. the user says thank you. haron says you are welcome.
+haron reads the question again. haron is not sure. haron says i do not know. the user is happy it is honest.
+the user asks about the bus to goa. haron calls the bus tool. the tool says the bus leaves at six.
+haron says the bus to goa leaves at six. the user says thank you. haron says you are welcome.

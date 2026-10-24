@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 38 · Inside a Transformer Block</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<script>(function(){var r=document.documentElement,t=null;try{t=localStorage.getItem("harness-book-theme")}catch(e){}r.setAttribute("data-theme",t||(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"))})()</script>
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part IX · Chapter 38</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 38 · Under the hood</span><span class="l-hi">Chapter 38 · Andar ki baat</span></div>
+  <h1><span class="l-en">Inside a Transformer Block</span><span class="l-hi">Transformer Block ke Andar</span></h1>
+  <div class="story">
+    <p class="l-en">Chapter 2 told you an LLM "guesses the next token". This chapter shows the machinery that does the guessing. A transformer is the same block repeated many times (32 times in a typical 7–8B model). Each block does two jobs: <strong>attention</strong>, where every token looks back at earlier tokens and gathers what it needs, and an <strong>MLP</strong>, where each token thinks on its own about what it gathered. Learn one block and you've learned the whole tower.</p>
+    <p class="l-hi">Chapter 2 ne bataaya ki LLM "agla token guess karta hai". Yeh chapter woh machinery dikhaata hai jo guess karti hai. Transformer ek hi block hai jo kai baar dohraaya jaata hai (aam 7–8B model mein 32 baar). Har block do kaam karta hai: <strong>attention</strong>, jahan har token pichhle tokens ko dekh kar zaroori cheez ikattha karta hai, aur <strong>MLP</strong>, jahan har token akele soch-vichaar karta hai ki kya mila. Ek block samjho, poora minar samajh gaye.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Embeddings and positions: turning tokens into vectors</span><span class="l-hi">Embeddings aur positions: tokens ko vectors banana</span></li>
+    <li><b>2</b><span class="l-en">Attention: queries, keys, values and the causal mask</span><span class="l-hi">Attention: queries, keys, values aur causal mask</span></li>
+    <li><b>3</b><span class="l-en">Multiple heads, the MLP, residuals and layer norm</span><span class="l-hi">Kai heads, MLP, residuals aur layer norm</span></li>
+    <li><b>4</b><span class="l-en">Counting weights, and where the KV cache comes from</span><span class="l-hi">Weights ginna, aur KV cache kahan se aata hai</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">From tokens to vectors</span><span class="l-hi">Tokens se vectors tak</span></h2></div>
+<div class="story">
+  <p class="l-en">A token is just an ID number, like 4,217. The first thing the model does is look up that ID in an <strong>embedding table</strong>: a big grid with one row of numbers per token in the vocabulary (4,096 numbers per row in many 7B models). Similar words end up with similar rows, the same idea as embeddings in Chapter 13. But "dog bites man" and "man bites dog" contain the same tokens, so the model also adds a <strong>position</strong> signal to each row, so it knows what came first.</p>
+  <p class="l-hi">Token sirf ek ID number hai, jaise 4,217. Model sabse pehle us ID ko <strong>embedding table</strong> mein dhoondhta hai: ek bada grid jisme vocabulary ke har token ke liye numbers ki ek row hai (kai 7B models mein har row mein 4,096 numbers). Milte-julte shabdon ki rows milti-julti ho jaati hain, wahi idea jo Chapter 13 ke embeddings mein tha. Par "kutta aadmi ko kaatta hai" aur "aadmi kutte ko kaatta hai" mein tokens wahi hain, isliye model har row mein <strong>position</strong> ka signal bhi jodta hai, taaki pata rahe pehle kya aaya.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Attention: every token asks a question</span><span class="l-hi">Attention: har token ek sawaal poochhta hai</span></h2></div>
+<div class="story">
+  <p class="l-en">Think of a classroom. Each student (token) writes three cards. A <strong>query</strong>: "what am I looking for?" A <strong>key</strong>: "what do I know about?" A <strong>value</strong>: "what I'll share if you pick me." Each student compares their query with everyone's keys; good matches get high scores. The scores become percentages (softmax), and the student takes that mix of everyone's values. In "the cat sat because it was tired", the token "it" sends out a query that matches the key of "cat" strongly, so "it" picks up cat-information. One rule makes this a language model: <strong>no peeking at the future</strong>. A token may only look at itself and earlier tokens; this is the <strong>causal mask</strong>.</p>
+  <p class="l-hi">Ek classroom socho. Har student (token) teen card likhta hai. <strong>Query</strong>: "main kya dhoondh raha hoon?" <strong>Key</strong>: "mujhe kis baare mein pata hai?" <strong>Value</strong>: "chuna gaya toh main kya bataunga." Har student apni query sabki keys se milaata hai; achhe mel ko ooncha score. Scores percentages ban jaate hain (softmax), aur student sabki values ka wahi mishran le leta hai. "billi baith gayi kyunki woh thaki thi" mein "woh" token ki query "billi" ki key se zor se milti hai, toh "woh" billi ki jaankari utha leta hai. Ek niyam ise language model banata hai: <strong>bhavishya mein jhaankna mana</strong>. Token sirf khud ko aur pichhle tokens ko dekh sakta hai; yahi <strong>causal mask</strong> hai.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">The whole block</span><span class="l-hi">Poora block</span></h2></div>
+<div class="story">
+  <p class="l-en">Attention runs several times in parallel, as <strong>heads</strong>, each free to learn a different kind of looking: one may track grammar, another may track which name a pronoun refers to. Their results are joined and mixed. Then comes the <strong>MLP</strong>: each token, alone, goes through a wider layer (usually 4× wider) and back. Researchers think much of a model's stored knowledge lives in these MLPs. Two small tricks make deep towers trainable. <strong>Residual connections</strong> add each step's output to its input instead of replacing it, like writing notes in the margin rather than rewriting the page. <strong>Layer norm</strong> keeps the numbers in a healthy range before each step.</p>
+  <p class="l-hi">Attention kai baar parallel mein chalta hai, <strong>heads</strong> ki tarah, har ek alag tarah ka dekhna seekhne ke liye aazaad: ek grammar pakad sakta hai, doosra yeh ki sarvanaam kis naam ki baat kar raha hai. Unke nateeje jod kar milaaye jaate hain. Phir aata hai <strong>MLP</strong>: har token akele ek chaudi layer (aksar 4× chaudi) se guzar kar wapas aata hai. Researchers maante hain model ka bahut saara jama gyaan in MLPs mein rehta hai. Do chhoti chaalein gehre minar ko train karne laayak banaati hain. <strong>Residual connections</strong> har step ka output uske input mein jodte hain, badalte nahi, jaise page dobara likhne ki jagah haashiye mein notes likhna. <strong>Layer norm</strong> har step se pehle numbers ko sehatmand range mein rakhta hai.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: one block, forward pass, with every shape printed</span><span class="l-hi">Coders ke liye: ek block, forward pass, har shape print ke saath</span><span class="lvl">code2/ch38/attention_numpy.py</span></summary>
+  <div class="inner">
+<pre>q, k, v = h @ Wq, h @ Wk, h @ Wv                          # queries, keys, values
+scores = q @ k.T / np.sqrt(dh)                            # how well each query matches each key
+scores[np.triu(np.ones((T, T), bool), 1)] = -np.inf       # causal mask: no peeking at the future
+att = softmax(scores)                                     # each row sums to 1
+x = x + (att @ v) @ Wo                                    # residual: add, don't replace
+x = x + relu(layer_norm(x) @ W1) @ W2                     # MLP, then residual again</pre>
+<pre>$ python code2/ch38/attention_numpy.py
+1. embeddings + positions   x      (6, 16)   one row of 16 numbers per token
+2. queries, keys, values    q,k,v  (6, 16)   'what I look for / what I offer / what I pass on'
+3. attention weights        att    (2, 6, 6)   per head: who looks at whom
+4. after attention + residual       (6, 16)
+5. after MLP + residual             (6, 16)   ready for the next block
+
+weights in this one block: 3,072  (a 7B model has ~32 blocks with d = 4096)
+
+head 1 attention (each row sums to 1; zeros above the diagonal = causal mask)
+               Haron   reads     the    long contrac       .
+     Haron      1.00    0.00    0.00    0.00    0.00    0.00
+     reads      0.78    0.22    0.00    0.00    0.00    0.00
+       the      0.20    0.71    0.08    0.00    0.00    0.00
+      long      0.09    0.21    0.32    0.38    0.00    0.00
+  contract      0.11    0.16    0.52    0.09    0.12    0.00
+         .      0.13    0.09    0.05    0.02    0.03    0.67</pre>
+  <p class="l-en">The shape never changes: 6 tokens × 16 numbers in, 6 × 16 out. That's why blocks can be stacked as high as you like. The weights here are random, so the pattern is meaningless; training (Chapter 39) shapes it.</p>
+  <p class="l-hi">Shape kabhi nahi badalti: 6 tokens × 16 numbers andar, 6 × 16 bahar. Isiliye blocks jitne chaaho utne oonche jod sakte ho. Yahan weights random hain, isliye pattern bematlab hai; training (Chapter 39) use aakaar deti hai.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">Counting the weights, and the KV cache</span><span class="l-hi">Weights ginna, aur KV cache</span></h2></div>
+<div class="story">
+  <p class="l-en">In one block, attention has four d×d matrices (query, key, value, output) and the MLP has two d×4d matrices: about <strong>12 × d²</strong> weights. With d = 4,096 that's about 200 million per block; 32 blocks make about 6.4 billion, plus the embedding table: that's a "7B" model. Now notice something about generation: when token 501 arrives, the keys and values of tokens 1–500 haven't changed. So the engine saves them, the <strong>KV cache</strong>, and only computes the new token's row. That's why the first token of an answer is slow (the whole prompt is processed) and the rest stream quickly, and why long contexts eat GPU memory (Chapter 44 does the maths).</p>
+  <p class="l-hi">Ek block mein attention ke paas chaar d×d matrices (query, key, value, output) hain aur MLP ke paas do d×4d matrices: lagbhag <strong>12 × d²</strong> weights. d = 4,096 ho toh har block mein lagbhag 20 crore; 32 blocks mein lagbhag 6.4 arab, plus embedding table: yahi "7B" model hai. Ab generation ke baare mein ek baat dekho: jab token 501 aata hai, tokens 1–500 ki keys aur values nahi badli. Toh engine unhe bacha leta hai, <strong>KV cache</strong>, aur sirf naye token ki row nikaalta hai. Isiliye jawab ka pehla token dheema hota hai (poora prompt process hota hai) aur baaki tez stream hote hain, aur isiliye lambe contexts GPU memory khaate hain (Chapter 44 hisaab lagaata hai).</p>
+</div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Why "lost in the middle" happens</span><span class="l-hi">"Beech mein kho jaana" kyun hota hai</span></h4>
+  <p class="l-en">Attention is a fixed budget of 100% per token, spread over everything before it. With 100,000 tokens of context, a key fact in the middle competes with a huge crowd, and models in practice attend most to the start and the end. That's the mechanical root of context rot (Ch 10), and why RLM (Ch 35) keeps long inputs outside the window.</p>
+  <p class="l-hi">Attention har token ke liye 100% ka tay budget hai, pichhli har cheez par baanta hua. 1,00,000 tokens ke context mein beech ka zaroori fact badi bheed se muqaabla karta hai, aur models asal mein shuruaat aur aakhir par sabse zyaada dhyaan dete hain. Yahi context rot (Ch 10) ki mechanical jad hai, aur isiliye RLM (Ch 35) lambe inputs window ke bahar rakhta hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Tokens become vectors through an embedding table, plus position information.</li><li>Attention: queries match keys, softmax turns scores into percentages, and tokens gather a mix of values; the causal mask hides the future.</li><li>A block = attention + MLP, each wrapped in layer norm and a residual connection; the model is a tower of identical blocks.</li><li>About 12 × d² weights per block; the KV cache stores past keys and values so generation stays fast.</li></ol>
+  <ol class="l-hi"><li>Tokens embedding table se vectors bante hain, position ki jaankari ke saath.</li><li>Attention: queries keys se milti hain, softmax scores ko percentages banata hai, aur tokens values ka mishran ikattha karte hain; causal mask bhavishya chhupata hai.</li><li>Block = attention + MLP, dono layer norm aur residual connection mein lipte; model ek jaise blocks ka minar hai.</li><li>Har block mein lagbhag 12 × d² weights; KV cache pichhli keys aur values bachata hai taaki generation tez rahe.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Remove the causal mask line from <code>attention_numpy.py</code>. What changes in the attention table, and why would that break a language model? <span class="level">core</span></p><p class="l-hi"><code>attention_numpy.py</code> se causal mask wali line hatao. Attention table mein kya badla, aur isse language model kyun tootega? <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Using 12 × d² per block, estimate the size of a model with d = 8,192 and 80 blocks. Compare with a published 70B model. <span class="level">core</span></p><p class="l-hi">Har block 12 × d² se, d = 8,192 aur 80 blocks wale model ka size andaazo. Kisi chhape 70B model se tulna karo. <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Vaswani et al. (2017). <em>Attention Is All You Need.</em></li>
+  <li>Alammar, J. <em>The Illustrated Transformer</em> (blog).</li>
+  <li>Liu et al. (2023). <em>Lost in the Middle: How Language Models Use Long Contexts.</em></li>
+</ol>
+<nav class="pager"><a href="ch37.html">Ch 37</a><a href="ch39.html"><span class="l-en">Ch 39 · Build a Tiny LLM from Scratch</span><span class="l-hi">Ch 39 · Shunya se Tiny LLM Banao</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show;
+  (function () {
+    var S = B.stage("scA", "Attention: the word 'it' compares its query with earlier words' keys and mostly attends to 'cat'");
+    var s = S.svg; S.height(300);
+    var words = ["the", "cat", "sat", "because", "it"], pcts = [4, 71, 9, 6, 10];
+    var xs = words.map(function (_, k) { return 70 + k * 150; });
+    var boxes = words.map(function (w, k) {
+      var g = E(s, "g", { "class": "anim" });
+      E(g, "rect", { x: xs[k] - 55, y: 200, width: 110, height: 40, rx: 8, "class": k === 4 ? "box-amb" : "box" });
+      E(g, "text", { x: xs[k], y: 225, "text-anchor": "middle", "font-size": 15, "font-weight": 700 }, w);
+      return g;
+    });
+    var qk = E(s, "g", { "class": "anim" });
+    BI(qk, { x: xs[4], y: 270, "text-anchor": "middle", "font-size": 11.5, "class": "mono amb" }, "query: who is 'it'?", "query: 'it' kaun hai?");
+    words.slice(0, 4).forEach(function (w, k) {
+      BI(qk, { x: xs[k], y: 270, "text-anchor": "middle", "font-size": 11, "class": "mono muted" }, "key", "key");
+    });
+    var arcs = E(s, "g", { "class": "anim" });
+    var bars = E(s, "g", { "class": "anim" });
+    pcts.forEach(function (p, k) {
+      var hgt = p * 1.3;                     // bars stand on y = 170, clear of the caption at the top
+      E(arcs, "path", { d: "M" + xs[4] + " 196 Q" + ((xs[4] + xs[k]) / 2) + " " + (196 - 60 - p) + " " + xs[k] + " 196", "class": "line-sig", fill: "none", "stroke-width": 1 + p / 12 });
+      E(bars, "rect", { x: xs[k] - 18, y: 170 - hgt, width: 36, height: hgt, rx: 3, "class": "box-sig" });
+      E(bars, "text", { x: xs[k], y: 170 - hgt - 6, "text-anchor": "middle", "font-size": 13, "font-weight": 700 }, p + "%");
+    });
+    var mask = E(s, "g", { "class": "anim" });
+    BI(mask, { x: 380, y: 26, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700 },
+      "Causal mask: 'it' may look at itself and earlier words only, never later ones",
+      "Causal mask: 'it' sirf khud ko aur pichhle shabdon ko dekh sakta hai, aage walon ko kabhi nahi");
+    B.scene(S.fig, [
+      ["Five tokens. We follow the last one, “it”.", "Paanch tokens. Hum aakhri wale, “it”, ko follow karte hain."],
+      ["“it” sends out a query; every earlier token offers a key.", "“it” ek query bhejta hai; har pichhla token ek key deta hai."],
+      ["Query-key matches become scores, then percentages. “cat” wins with 71%.", "Query-key mel scores bante hain, phir percentages. “cat” 71% se jeetta hai."],
+      ["“it” takes 71% of cat's value, plus a little of the rest. It now “knows” it refers to the cat.", "“it” cat ki value ka 71% leta hai, baaki ka thoda. Ab use “pata” hai woh cat ki baat hai."],
+      ["The causal mask keeps every token from seeing the future, so the model can be trained to predict what comes next.", "Causal mask har token ko bhavishya dekhne se rokta hai, isliye model agla token predict karna seekh paata hai."]
+    ], function (i) {
+      boxes.forEach(function (g) { show(g, true); });
+      show(qk, i >= 1); show(bars, i >= 2); show(arcs, i >= 3); show(mask, i >= 4);
+    });
+  })();
+
+  B.stack("scB", [
+    { en: "Token IDs → embedding table + positions", hi: "Token IDs → embedding table + positions", sen: "each token becomes a row of d numbers", shi: "har token d numbers ki row banta hai", cls: "box" },
+    { en: "Layer norm → multi-head attention → add back (residual)", hi: "Layer norm → multi-head attention → wapas jodo (residual)", sen: "tokens gather information from earlier tokens", shi: "tokens pichhle tokens se jaankari ikattha karte hain", cls: "box-sig" },
+    { en: "Layer norm → MLP (4× wider and back) → add back (residual)", hi: "Layer norm → MLP (4× chauda aur wapas) → wapas jodo (residual)", sen: "each token processes what it gathered", shi: "har token jo mila use process karta hai", cls: "box-amb" },
+    { en: "× N blocks (e.g. 32)", hi: "× N blocks (jaise 32)", sen: "the same block, stacked; each has its own weights", shi: "wahi block, dher mein; har ek ke apne weights", cls: "box-plm" },
+    { en: "Final layer norm → vocabulary scores → softmax", hi: "Aakhri layer norm → vocabulary scores → softmax", sen: "a probability for every possible next token", shi: "har sambhav agle token ki probability", cls: "box" }
+  ], [
+    ["Tokens become vectors: embedding rows plus position information.", "Tokens vectors bante hain: embedding rows plus position ki jaankari."],
+    ["Attention lets each token gather context. The residual adds the result to what was there.", "Attention har token ko context ikattha karne deta hai. Residual nateeja pehle wale mein jodta hai."],
+    ["The MLP lets each token think about what it gathered.", "MLP har token ko jo mila us par sochne deta hai."],
+    ["Repeat the block N times. Same shape in, same shape out.", "Block N baar dohraao. Wahi shape andar, wahi shape bahar."],
+    ["At the top, scores for every token in the vocabulary become next-token probabilities.", "Sabse upar, vocabulary ke har token ke scores agle token ki probabilities bante hain."]
+  ]);
+})();
+</script>
+
+</body>
+</html>

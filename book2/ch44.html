@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ch 44 · Deploying Models: Docker, Kubernetes, GPUs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<script>(function(){var r=document.documentElement,t=null;try{t=localStorage.getItem("harness-book-theme")}catch(e){}r.setAttribute("data-theme",t||(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"))})()</script>
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+<div class="page">
+<div class="topbar">
+  <div class="crumbs"><a href="index.html"><span class="l-en">Contents</span><span class="l-hi">Vishay-suchi</span></a><span>Part X · Chapter 44</span></div>
+  <div class="langtog" role="group" aria-label="Language"><button type="button" data-setlang="en" aria-pressed="true">English</button><button type="button" data-setlang="hi" aria-pressed="false">Hinglish</button></div>
+</div>
+<section class="opener col">
+  <div class="eyebrow"><span class="l-en">Chapter 44 · Engineering deep dives</span><span class="l-hi">Chapter 44 · Engineering ki gehraai</span></div>
+  <h1><span class="l-en">Deploying Models: Docker, Kubernetes, GPUs</span><span class="l-hi">Models Deploy Karna: Docker, Kubernetes, GPUs</span></h1>
+  <div class="story">
+    <p class="l-en">Calling a provider's API (Ch 5) is the easy way to use a model. Sometimes you must run it yourself: the data can't leave your network, the volume makes per-token prices too high, or you need an open model you've fine-tuned. Then you become the provider. This chapter covers what that means in practice: will the model fit on the GPU, which serving engine to use, how to package your service in a container, and how Kubernetes keeps it running and scales it.</p>
+    <p class="l-hi">Provider ki API bulaana (Ch 5) model use karne ka aasaan tareeka hai. Kabhi-kabhi khud chalaana padta hai: data aapke network se bahar nahi ja sakta, volume itna hai ki per-token daam bahut zyaada, ya aapko apna fine-tune kiya open model chahiye. Tab aap khud provider ban jaate ho. Yeh chapter iska asli matlab samjhaata hai: kya model GPU mein fit hoga, kaunsa serving engine, service ko container mein kaise pack karein, aur Kubernetes use kaise chalaata aur scale karta hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">GPU memory maths: weights + KV cache</span><span class="l-hi">GPU memory ka hisaab: weights + KV cache</span></li>
+    <li><b>2</b><span class="l-en">Serving engines: vLLM, TGI, llama.cpp, Ollama</span><span class="l-hi">Serving engines: vLLM, TGI, llama.cpp, Ollama</span></li>
+    <li><b>3</b><span class="l-en">An API service in front of the engine</span><span class="l-hi">Engine ke aage ek API service</span></li>
+    <li><b>4</b><span class="l-en">Docker and Kubernetes: package, probe, scale</span><span class="l-hi">Docker aur Kubernetes: pack, probe, scale</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Will it fit? GPU memory maths</span><span class="l-hi">Kya fit hoga? GPU memory ka hisaab</span></h2></div>
+<div class="story">
+  <p class="l-en">GPU memory holds two big things. The <strong>weights</strong>: parameters × bytes per parameter (16-bit = 2 bytes, 8-bit = 1, 4-bit = 0.5). And the <strong>KV cache</strong> (Ch 38): for every token of every conversation in flight, each layer stores a key and a value. Weights are fixed; the KV cache grows with users × context length. That's why a model that "fits" for one user can run out of memory at lunchtime.</p>
+  <p class="l-hi">GPU memory do badi cheezein rakhti hai. <strong>Weights</strong>: parameters × har parameter ke bytes (16-bit = 2 bytes, 8-bit = 1, 4-bit = 0.5). Aur <strong>KV cache</strong> (Ch 38): chal rahi har baatcheet ke har token ke liye, har layer ek key aur ek value rakhti hai. Weights tay hain; KV cache users × context length ke saath badhta hai. Isiliye jo model ek user ke liye "fit" hota hai, woh lunch ke samay memory se bahar ho sakta hai.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: a fit calculator</span><span class="l-hi">Coders ke liye: fit calculator</span><span class="lvl">code2/ch44/gpu_memory.py</span></summary>
+  <div class="inner">
+<pre>weights = params_b * 1e9 * weight_bytes
+kv      = 2 * layers * kv_heads * head_dim * 2 * users * ctx     # K and V, kept in 16-bit
+need_gb = (weights + kv) * 1.1 / 1e9                            # +10% runtime overhead</pre>
+<pre>$ python code2/ch44/gpu_memory.py
+model                        precision users x context     needs   fits on
+8B (Llama-3.1-8B shape)      16-bit      1 x  8,000       18.8 GB   L4 (24 GB)
+8B (Llama-3.1-8B shape)      16-bit     32 x  8,000       54.5 GB   A100 (80 GB)
+8B (Llama-3.1-8B shape)      8-bit       1 x  8,000       10.0 GB   L4 (24 GB)
+8B (Llama-3.1-8B shape)      8-bit      32 x  8,000       45.7 GB   A100 (80 GB)
+8B (Llama-3.1-8B shape)      4-bit       1 x  8,000        5.6 GB   laptop RTX 4060 (8 GB)
+8B (Llama-3.1-8B shape)      4-bit      32 x  8,000       41.3 GB   A100 (80 GB)
+70B (Llama-3.1-70B shape)    16-bit      1 x  8,000      158.2 GB   2x 80 GB GPUs
+70B (Llama-3.1-70B shape)    16-bit     32 x  8,000      247.6 GB   4x 80 GB GPUs
+70B (Llama-3.1-70B shape)    8-bit       1 x  8,000       80.5 GB   2x 80 GB GPUs
+70B (Llama-3.1-70B shape)    8-bit      32 x  8,000      169.9 GB   3x 80 GB GPUs
+70B (Llama-3.1-70B shape)    4-bit       1 x  8,000       41.7 GB   A100 (80 GB)
+70B (Llama-3.1-70B shape)    4-bit      32 x  8,000      131.1 GB   2x 80 GB GPUs</pre>
+  <p class="l-en">Look at the 8B rows: in 4-bit, the weights need about 5 GB, but 32 users with 8,000-token contexts add 36 GB of KV cache. For busy services, the KV cache, not the model, decides your GPU bill.</p>
+  <p class="l-hi">8B wali rows dekho: 4-bit mein weights ko lagbhag 5 GB chahiye, par 8,000-token context wale 32 users 36 GB KV cache jod dete hain. Vyast services mein GPU ka bill model nahi, KV cache tay karta hai.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Serving engines</span><span class="l-hi">Serving engines</span></h2></div>
+<div class="story">
+  <p class="l-en">Don't serve a model with a for-loop. Serving engines squeeze far more out of a GPU with <strong>continuous batching</strong> (new requests join a running batch every step), <strong>paged KV cache</strong> (memory handed out in small pages, so nothing is wasted), prefix caching and speculative decoding (Ch 24, 29). Pick by situation:</p>
+  <p class="l-hi">Model ko for-loop se serve mat karo. Serving engines GPU se kahin zyaada nikaalte hain <strong>continuous batching</strong> (nayi requests har step chalte batch mein judti hain), <strong>paged KV cache</strong> (memory chhote pages mein di jaati hai, kuch barbaad nahi), prefix caching aur speculative decoding (Ch 24, 29) se. Halaat dekh kar chuno:</p>
+</div>
+<table>
+<thead><tr><th><span class="l-en">Engine</span><span class="l-hi">Engine</span></th><th><span class="l-en">Best for</span><span class="l-hi">Kiske liye best</span></th></tr></thead>
+<tbody>
+<tr><td><b>vLLM</b></td><td><span class="l-en">High-throughput GPU serving with an OpenAI-compatible API; the common default.</span><span class="l-hi">OpenAI-compatible API ke saath zyaada throughput wala GPU serving; aam default.</span></td></tr>
+<tr><td><b>SGLang, TensorRT-LLM</b></td><td><span class="l-en">Squeezing maximum speed from big GPU fleets; more tuning effort.</span><span class="l-hi">Bade GPU fleets se zyaada se zyaada speed; zyaada tuning ki mehnat.</span></td></tr>
+<tr><td><b>Hugging Face TGI</b></td><td><span class="l-en">Teams already on the Hugging Face stack.</span><span class="l-hi">Jo teams pehle se Hugging Face stack par hain.</span></td></tr>
+<tr><td><b>llama.cpp, Ollama</b></td><td><span class="l-en">Laptops, CPUs, small servers, quantised GGUF models (this book's labs).</span><span class="l-hi">Laptops, CPUs, chhote servers, quantised GGUF models (is book ke labs).</span></td></tr>
+</tbody>
+</table>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Your API service in front of the engine</span><span class="l-hi">Engine ke aage aapki API service</span></h2></div>
+<div class="story">
+  <p class="l-en">Never expose the engine directly. Put a thin service in front that checks API keys, records which team used how many tokens, applies rate limits, exposes a <code>/healthz</code> endpoint for probes, and speaks the OpenAI-compatible format so every client library works unchanged. In a company this grows into the gateway of Book 2, Chapter 11.</p>
+  <p class="l-hi">Engine ko kabhi seedha bahar mat kholo. Aage ek patli service rakho jo API keys check kare, kis team ne kitne tokens use kiye likhe, rate limits lagaaye, probes ke liye <code>/healthz</code> endpoint de, aur OpenAI-compatible format bole taaki har client library bina badlaav chale. Company mein yahi Book 2, Chapter 11 ka gateway ban jaata hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: an OpenAI-style endpoint with keys, health and usage</span><span class="l-hi">Coders ke liye: keys, health aur usage wala OpenAI-style endpoint</span><span class="lvl">code2/ch44/serve_proxy.py</span></summary>
+  <div class="inner">
+<pre>def do_POST(self):
+    key = self.headers.get("Authorization", "").removeprefix("Bearer ")
+    if key not in KEYS:
+        return self.send(401, {"error": "invalid API key"})
+    out = call_engine(request)                      # vLLM / Ollama behind the service
+    self.send(200, {"choices": [...], "usage": {...},
+                    "x_metrics": {"team": KEYS[key], "latency_s": ..., "tokens_per_s": ...}})</pre>
+<pre>$ python code2/ch44/serve_proxy.py
+GET  /healthz                -> (200, {'status': 'ok'})
+POST /v1/chat/completions (no key)  -> (401, {'error': 'invalid API key'})
+POST /v1/chat/completions (key)     -> 200
+   answer:  A load balancer distributes incoming network traffic across multiple servers to ensure no single server becomes overwhelmed, improving responsiveness, reliability, and efficient resource utilization.
+   usage:   {'prompt_tokens': 22, 'completion_tokens': 460, 'total_tokens': 482}
+   metrics: {'team': 'team-alpha', 'latency_s': 36.01, 'tokens_per_s': 14.1}</pre>
+  <p class="l-en">A one-sentence answer cost 460 completion tokens: qwen3:4b is a thinking model, and its hidden reasoning is billed as output. On a laptop CPU that's 36 seconds; a GPU serving engine would answer in well under a second.</p>
+  <p class="l-hi">Ek vaakya ke jawab ne 460 completion tokens liye: qwen3:4b sochne wala model hai, aur uski chhupi reasoning output ki tarah gini jaati hai. Laptop CPU par yeh 36 second hai; GPU serving engine ek second se bhi kam mein jawab deta.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">Containers and Kubernetes</span><span class="l-hi">Containers aur Kubernetes</span></h2></div>
+<div class="story">
+  <p class="l-en">A <strong>container</strong> (Docker) packs your service with exactly the Python version and libraries it needs, so it runs the same on your laptop and in production. <strong>Kubernetes</strong> runs many containers across many machines: it restarts crashed ones, sends traffic only to pods whose <strong>readiness probe</strong> passes (a model can take minutes to load), gives each pod a GPU, and adds pods when load rises (<strong>autoscaling</strong>). GPUs are expensive, so autoscale on what really measures load for LLMs, such as the number of waiting requests, and set a maximum so a traffic spike can't empty your budget.</p>
+  <p class="l-hi"><strong>Container</strong> (Docker) aapki service ko theek wahi Python version aur libraries ke saath pack karta hai jo chahiye, taaki laptop aur production mein ek jaisi chale. <strong>Kubernetes</strong> kai machines par kai containers chalaata hai: crash hue ko restart karta hai, traffic sirf un pods ko bhejta hai jinka <strong>readiness probe</strong> pass ho (model load hone mein minutes lag sakte hain), har pod ko GPU deta hai, aur load badhne par pods jodta hai (<strong>autoscaling</strong>). GPUs mehenge hain, isliye us cheez par autoscale karo jo LLMs ka load sach mein naapti hai, jaise intezaar karti requests, aur maximum tay karo taaki traffic ka uchhaal budget khaali na kar de.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: Dockerfile and Kubernetes manifest (not run on the author's laptop)</span><span class="l-hi">Coders ke liye: Dockerfile aur Kubernetes manifest (author ke laptop par nahi chalaaye)</span><span class="lvl">code2/ch44/Dockerfile · k8s.yaml</span></summary>
+  <div class="inner">
+<pre>FROM python:3.12-slim
+RUN useradd --create-home app                    # non-root user
+WORKDIR /home/app
+COPY serve_proxy.py .
+USER app
+EXPOSE 8790
+HEALTHCHECK CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8790/healthz')"
+CMD ["python", "serve_proxy.py", "--serve"]</pre>
+<pre>containers:
+  - name: vllm
+    image: vllm/vllm-openai:latest               # pin an exact version in production
+    args: ["--model", "Qwen/Qwen3-8B", "--max-model-len", "8192", "--gpu-memory-utilization", "0.90"]
+    resources:
+      limits: { nvidia.com/gpu: 1 }              # one GPU per pod
+    readinessProbe:                               # no traffic until the model has loaded
+      httpGet: { path: /health, port: 8000 }
+...
+kind: HorizontalPodAutoscaler
+spec: { minReplicas: 1, maxReplicas: 4 }          # every replica is another GPU on the bill</pre>
+  <p class="l-en">These files are complete and use the documented formats, but they were not built or applied here: the author's laptop has no Docker and no GPU cluster. Treat them as a starting template and test them on your platform.</p>
+  <p class="l-hi">Yeh files poori hain aur documented formats use karti hain, par yahan build ya apply nahi ki gayin: author ke laptop par Docker ya GPU cluster nahi hai. Inhe shuruaati template maano aur apne platform par test karo.</p>
+  </div>
+</details>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Self-host or call an API?</span><span class="l-hi">Khud host karein ya API bulaayein?</span></h4>
+  <p class="l-en">A single always-on cloud GPU costs roughly as much per month as millions of API calls to a small model. Self-hosting pays off when volume is high and steady, when data must stay in your network (some banks and hospitals in India), or when you serve your own fine-tuned model. Otherwise, start with an API and revisit when the bill or the rules force it.</p>
+  <p class="l-hi">Ek hamesha chalta cloud GPU mahine mein lagbhag utna kharch karta hai jitna chhote model ki laakhon API calls. Khud host karna tab faayde ka hai jab volume zyaada aur sthir ho, jab data aapke network mein rehna zaroori ho (India mein kuch banks aur hospitals), ya jab aap apna fine-tune kiya model serve karo. Warna API se shuru karo aur jab bill ya niyam majboor karein tab dobara socho.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>GPU memory = weights + KV cache; the KV cache grows with users × context.</li><li>Use a serving engine (vLLM and friends) for batching and paged KV cache.</li><li>Put a thin API service in front: keys, usage, rate limits, health checks.</li><li>Containers make it portable; Kubernetes restarts, probes and scales it, with a cap on GPUs.</li></ol>
+  <ol class="l-hi"><li>GPU memory = weights + KV cache; KV cache users × context ke saath badhta hai.</li><li>Batching aur paged KV cache ke liye serving engine (vLLM jaise) use karo.</li><li>Aage patli API service rakho: keys, usage, rate limits, health checks.</li><li>Containers ise portable banaate hain; Kubernetes restart, probe aur scale karta hai, GPUs ki seema ke saath.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Use <code>gpu_memory.py</code> to find the most users a 4-bit 8B model can serve at 4,000 tokens each on one 24 GB L4. <span class="level">core</span></p><p class="l-hi"><code>gpu_memory.py</code> se pata karo ki ek 24 GB L4 par 4-bit 8B model 4,000 tokens har ek ke saath kitne zyaada se zyaada users sambhaal sakta hai. <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Add a per-team rate limit (requests per minute) to <code>serve_proxy.py</code> that returns HTTP 429. <span class="level">core</span></p><p class="l-hi"><code>serve_proxy.py</code> mein har team ki rate limit (requests per minute) jodo jo HTTP 429 lautaaye. <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">If you have Docker, build the image and run it against your local Ollama. <span class="level">stretch</span></p><p class="l-hi">Agar Docker hai, image build karo aur apne local Ollama ke saath chalao. <span class="level">stretch</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Kwon et al. (2023). <em>Efficient Memory Management for Large Language Model Serving with PagedAttention</em> (vLLM).</li>
+  <li>vLLM documentation: <em>OpenAI-compatible server</em> and <em>Deploying with Kubernetes</em>.</li>
+  <li>Kubernetes documentation: <em>Configure liveness, readiness and startup probes</em>; <em>Horizontal Pod Autoscaling</em>.</li>
+</ol>
+<nav class="pager"><a href="ch41.html">Ch 41</a><a href="ch46.html"><span class="l-en">Ch 46 · Agent Identity and Access</span><span class="l-hi">Ch 46 · Agent ki Pehchaan aur Access</span></a></nav>
+</article>
+</div>
+<script src="book.js"></script>
+<script>
+(function () {
+  var B = window.Book;
+  B.bars("scA", [
+    { en: "8B weights, 4-bit", hi: "8B weights, 4-bit", v: 4.4, txt: "4.4 GB", cls: "box-sig", step: 0 },
+    { en: "+ KV cache, 1 user × 8k tokens", hi: "+ KV cache, 1 user × 8k tokens", v: 5.6, txt: "5.6 GB total", cls: "box-amb", step: 1 },
+    { en: "+ KV cache, 32 users × 8k", hi: "+ KV cache, 32 users × 8k", v: 41.3, txt: "41.3 GB total", cls: "box-amb", step: 2 },
+    { en: "70B, 16-bit, 1 user", hi: "70B, 16-bit, 1 user", v: 158.2, txt: "158 GB: 2 big GPUs", cls: "box-plm", step: 3 }
+  ], [
+    ["The weights of an 8B model in 4-bit: about 4.4 GB. Fits on a laptop GPU.", "8B model ke 4-bit weights: lagbhag 4.4 GB. Laptop GPU mein fit."],
+    ["One conversation with 8,000 tokens adds about 1 GB of KV cache.", "8,000 tokens ki ek baatcheet lagbhag 1 GB KV cache jodti hai."],
+    ["Thirty-two conversations at once: the KV cache is now 8× bigger than the model.", "Ek saath battees baatcheet: KV cache ab model se 8× bada."],
+    ["A 70B model in 16-bit needs 158 GB even for one user: two 80 GB GPUs.", "16-bit mein 70B model ko ek user ke liye bhi 158 GB chahiye: do 80 GB GPUs."]
+  ], { max: 160 });
+
+  B.flow("scB", [
+    { en: "Code + Dockerfile", hi: "Code + Dockerfile", sen: "same libraries everywhere", shi: "har jagah wahi libraries" },
+    { en: "Image in a registry", hi: "Registry mein image", sen: "versioned, scanned", shi: "versioned, scanned" },
+    { en: "Pods on GPU nodes", hi: "GPU nodes par pods", sen: "1 GPU each", shi: "har ek ko 1 GPU" },
+    { en: "Readiness probe", hi: "Readiness probe", sen: "traffic only after the model loads", shi: "model load hone ke baad hi traffic" },
+    { en: "Service", hi: "Service", sen: "one address, load-balanced", shi: "ek address, load-balanced" },
+    { en: "Autoscaler", hi: "Autoscaler", sen: "add pods on load, up to a cap", shi: "load par pods jodo, seema tak" }
+  ], [
+    ["Package the service and its exact dependencies with a Dockerfile.", "Dockerfile se service aur uski sateek dependencies pack karo."],
+    ["Push the built image to a registry, versioned and security-scanned.", "Bani image ko registry mein push karo, versioned aur security-scanned."],
+    ["Kubernetes runs it as pods, each with a GPU.", "Kubernetes ise pods ki tarah chalaata hai, har ek ke saath GPU."],
+    ["A readiness probe holds traffic until the model has finished loading.", "Readiness probe model load hone tak traffic rokta hai."],
+    ["A service gives clients one stable address and spreads requests over pods.", "Service clients ko ek sthir address deti hai aur requests pods mein baant-ti hai."],
+    ["The autoscaler adds pods as load rises, up to a maximum you can afford.", "Load badhne par autoscaler pods jodta hai, us maximum tak jo aap afford kar sako."]
+  ], { perRow: 3 });
+})();
+</script>
+
+</body>
+</html>

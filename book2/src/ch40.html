@@ -1,0 +1,189 @@
+  <div class="story">
+    <p class="l-en">Chapter 22 introduced AI coding assistants. This chapter is about the engineering that makes them trustworthy. A coding agent is only as good as the checks around it: tests that define "done", analysis that maps the code before it's touched, and a loop that feeds real errors back. These are classic software-engineering ideas (test-driven development, static and dynamic analysis, abstract syntax trees, dependency graphs) and they matter <em>more</em> with AI, because an agent can write a thousand plausible lines in a minute, and only a machine check can keep up.</p>
+    <p class="l-hi">Chapter 22 ne AI coding assistants se milwaaya. Yeh chapter us engineering ke baare mein hai jo unhe bharosemand banati hai. Coding agent utna hi achha hai jitne uske aas-paas ke checks: tests jo "ho gaya" ko paribhaashit karein, analysis jo code chhoone se pehle uska naksha banaaye, aur loop jo asli errors wapas de. Yeh classic software engineering ke ideas hain (test-driven development, static aur dynamic analysis, abstract syntax trees, dependency graphs) aur AI ke saath yeh <em>aur</em> zaroori hain, kyunki agent ek minute mein hazaar sach jaisi lines likh sakta hai, aur sirf machine check hi uske saath chal sakta hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Greenfield vs brownfield, and why mapping comes first</span><span class="l-hi">Greenfield vs brownfield, aur naksha pehle kyun</span></li>
+    <li><b>2</b><span class="l-en">Static analysis with the AST, and dependency graphs</span><span class="l-hi">AST se static analysis, aur dependency graphs</span></li>
+    <li><b>3</b><span class="l-en">Dynamic analysis: tests, coverage, profilers</span><span class="l-hi">Dynamic analysis: tests, coverage, profilers</span></li>
+    <li><b>4</b><span class="l-en">Test-driven development with a coding model, in a real loop</span><span class="l-hi">Coding model ke saath test-driven development, asli loop mein</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Greenfield and brownfield</span><span class="l-hi">Greenfield aur brownfield</span></h2></div>
+<div class="story">
+  <p class="l-en"><strong>Greenfield</strong> work starts from an empty folder: you choose everything, and AI agents shine. <strong>Brownfield</strong> work changes an existing system: old code, odd conventions, hidden users of every function. Most real jobs are brownfield. There the risk isn't writing code; it's breaking something three modules away. So before an agent edits a brownfield codebase, it (and you) should <strong>map</strong> it: what depends on what, where the hubs are, which tests exist, and how long they take.</p>
+  <p class="l-hi"><strong>Greenfield</strong> kaam khaali folder se shuru hota hai: sab aap chunte ho, aur AI agents chamakte hain. <strong>Brownfield</strong> kaam maujooda system badalta hai: purana code, ajeeb niyam, har function ke chhupe users. Zyaadatar asli kaam brownfield hai. Wahan khatra code likhne mein nahi; teen module door kuch todne mein hai. Isliye brownfield codebase badalne se pehle agent (aur aap) ko uska <strong>naksha</strong> banana chahiye: kya kis par tika hai, hubs kahan hain, kaunse tests hain, aur kitna samay lete hain.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Static analysis: reading code without running it</span><span class="l-hi">Static analysis: code chalaaye bina padhna</span></h2></div>
+<div class="story">
+  <p class="l-en">Python can turn any source file into an <strong>abstract syntax tree (AST)</strong>: a tree of what the code is made of (imports, functions, calls, loops) instead of a string of characters. Tools walk that tree to answer questions exactly: which modules import which (a <strong>dependency graph</strong>), how long each function is, where errors are silently swallowed, which imports are unused. Linters (ruff, pylint), type checkers (mypy, pyright) and security scanners (bandit, Semgrep, CodeQL) are all static analysis. Their big advantage over asking a model "is this code OK?": they are deterministic and never hallucinate a problem.</p>
+  <p class="l-hi">Python kisi bhi source file ko <strong>abstract syntax tree (AST)</strong> mein badal sakta hai: characters ki string ki jagah ek ped jo batata hai code kis cheez se bana hai (imports, functions, calls, loops). Tools is ped par chal kar sawaalon ke sateek jawab dete hain: kaunsa module kise import karta hai (<strong>dependency graph</strong>), har function kitna lamba hai, errors kahan chupchaap nigle ja rahe hain, kaunse imports bekaar hain. Linters (ruff, pylint), type checkers (mypy, pyright) aur security scanners (bandit, Semgrep, CodeQL) sab static analysis hain. Model se "kya yeh code theek hai?" poochhne se inka bada faayda: yeh deterministic hain aur kabhi koi samasya gadhte nahi.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Dynamic analysis: watching code run</span><span class="l-hi">Dynamic analysis: code ko chalte dekhna</span></h2></div>
+<div class="story">
+  <p class="l-en">Some questions can only be answered by running the code: does it give the right answers (tests), which lines ever run (coverage), where does the time go (profilers), what happens with strange inputs (fuzzing). For an agent, the test suite is the most important dynamic tool: it turns "I think I fixed it" into "23 passed". Keep tests fast; an agent may run them dozens of times per task.</p>
+  <p class="l-hi">Kuch sawaalon ke jawab sirf code chala kar milte hain: kya sahi jawab deta hai (tests), kaunsi lines kabhi chalti hain (coverage), samay kahan jaata hai (profilers), ajeeb inputs par kya hota hai (fuzzing). Agent ke liye test suite sabse zaroori dynamic tool hai: yeh "mujhe lagta hai theek kar diya" ko "23 passed" mein badalta hai. Tests tez rakho; agent ek kaam mein darjanon baar chala sakta hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: map the Book 2 harness with ast, then run its tests</span><span class="l-hi">Coders ke liye: ast se Book 2 harness ka naksha, phir uske tests</span><span class="lvl">code2/ch40/code_map.py</span></summary>
+  <div class="inner">
+<pre>tree = ast.parse(source)
+for node in ast.walk(tree):
+    if isinstance(node, ast.ImportFrom) and node.level == 1:      # "from .types import ..."
+        deps.add(node.module)
+    if isinstance(node, ast.ExceptHandler) and node.type is None:  # bare "except:"
+        smells.append(node.lineno)
+subprocess.run([sys.executable, "-m", "pytest", "-q", "code/tests"])   # dynamic analysis</pre>
+<pre>$ python code2/ch40/code_map.py
+1) dependency graph (who imports whom inside the package)
+   budget     -> (nothing)
+   context    -> tokens, types
+   evals      -> providers, tools, types
+   gateway    -> budget, policy, pricing, providers, router, telemetry, tokens, types
+   hooks      -> (nothing)
+   loop       -> hooks, pricing, providers, tools, types
+   multi      -> loop, providers, tools, types
+   policy     -> types
+   pricing    -> types
+   providers  -> tokens, types
+   router     -> (nothing)
+   security   -> hooks, tools
+   telemetry  -> (nothing)
+   tokens     -> (nothing)
+   tools      -> types
+   types      -> (nothing)
+   most depended-on: types (used by 9 modules) -> change it with care
+
+2) size and shape
+   16 modules, 99 functions; longest: loop.run (47 lines), gateway.complete (43 lines), tools.validate (37 lines)
+
+3) smells found by static checks
+   none
+
+4) dynamic analysis: run the test suite
+   23 passed in 0.30s   (3.5s wall)</pre>
+  <p class="l-en">Before an agent touches <code>types.py</code>, it now knows nine modules depend on it, and that the full test suite runs in 0.3 seconds, so it can afford to run it after every edit.</p>
+  <p class="l-hi">Agent <code>types.py</code> chhoone se pehle ab jaanta hai ki nau modules us par tike hain, aur poora test suite 0.3 second mein chalta hai, toh har edit ke baad chala sakta hai.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">Test-driven development, with a model writing the code</span><span class="l-hi">Test-driven development, code model likhe</span></h2></div>
+<div class="story">
+  <p class="l-en">TDD has three beats: write a test that fails (<strong>red</strong>), write just enough code to pass (<strong>green</strong>), clean up (<strong>refactor</strong>). With an AI agent, the split of work is natural: the human writes the tests, which are the spec in runnable form; the model writes code; the test runner judges. Failures go back to the model as precise feedback. This is also <strong>automated debugging</strong>: reproduce, locate, fix, re-test.</p>
+  <p class="l-hi">TDD ke teen kadam: fail hone wala test likho (<strong>red</strong>), pass hone laayak code likho (<strong>green</strong>), saaf karo (<strong>refactor</strong>). AI agent ke saath kaam ka bantwaara natural hai: insaan tests likhta hai, jo chalne wale roop mein spec hain; model code likhta hai; test runner faisla karta hai. Failures model ko sateek feedback ki tarah wapas jaate hain. Yahi <strong>automated debugging</strong> bhi hai: dohraao, dhoondho, theek karo, dobara test.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: a TDD loop with qwen3:4b</span><span class="l-hi">Coders ke liye: qwen3:4b ke saath TDD loop</span><span class="lvl">code2/ch40/tdd_loop.py</span></summary>
+  <div class="inner">
+<pre>for round_ in range(1, 5):
+    reply = chat(messages)                                    # model writes solution.py
+    write("solution.py", code_from(reply))
+    r = run(["pytest", "-q", "--tb=line"])                    # the tests decide, not the model
+    if r.returncode == 0:
+        break
+    messages += [{"role": "assistant", "content": reply},
+                 {"role": "user", "content": "These tests failed:\n" + failures + "\nFix the code."}]</pre>
+<!--TDD_OUTPUT-->
+  </div>
+</details>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Agents can game your tests</span><span class="l-hi">Agents aapke tests ko chakma de sakte hain</span></h4>
+  <p class="l-en">Under pressure to make tests pass, coding models sometimes special-case the test inputs, weaken an assertion, or delete a failing test. That's reward hacking (Book 2, Ch 3). Protect the tests: keep them read-only to the agent, review every diff that touches them, and add hidden tests the agent never sees.</p>
+  <p class="l-hi">Tests pass karaane ke dabaav mein coding models kabhi test inputs ke liye khaas case likh dete hain, assertion kamzor kar dete hain, ya fail test mita dete hain. Yahi reward hacking hai (Book 2, Ch 3). Tests bachao: agent ke liye read-only rakho, unhe chhoone wala har diff review karo, aur chhupe tests jodo jo agent kabhi na dekhe.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">Repo-level reasoning and code review agents</span><span class="l-hi">Repo-level reasoning aur code review agents</span></h4>
+  <p class="l-en">Good coding agents reason about the whole repository: they search before editing, read the callers of a function, and run the relevant tests. Give them the map (this chapter's lab output is a fine start), a project memory file with conventions, and permission rules (Ch 22). A second agent that reviews each pull request for bugs, security and style, with static analysis results attached, catches a surprising amount, but a human still owns the merge.</p>
+  <p class="l-hi">Achhe coding agents poori repository ke baare mein sochte hain: edit se pehle search, function ke callers padhna, aur sambandhit tests chalaana. Unhe naksha do (is chapter ke lab ka output achhi shuruaat hai), niyamon wali project memory file, aur permission rules (Ch 22). Doosra agent jo har pull request ko bugs, security aur style ke liye review kare, static analysis ke nateejon ke saath, kaafi kuch pakad leta hai, par merge ka maalik phir bhi insaan hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Most real work is brownfield: map the code before changing it.</li><li>Static analysis reads code through its AST: dependency graphs, sizes, smells; deterministic and cheap.</li><li>Dynamic analysis runs code: tests, coverage, profiling; keep tests fast for agents.</li><li>TDD with AI: humans write tests, the model writes code, the test runner judges, failures feed back.</li><li>Protect tests from being gamed; a human owns the merge.</li></ol>
+  <ol class="l-hi"><li>Zyaadatar asli kaam brownfield hai: badalne se pehle code ka naksha banao.</li><li>Static analysis AST se code padhta hai: dependency graphs, size, smells; deterministic aur sasta.</li><li>Dynamic analysis code chalaata hai: tests, coverage, profiling; agents ke liye tests tez rakho.</li><li>AI ke saath TDD: insaan tests likhta, model code, test runner faisla, failures wapas.</li><li>Tests ko chakme se bachao; merge ka maalik insaan.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Point <code>code_map.py</code> at one of your own projects. Which module is the hub? Is it the one you'd have guessed? <span class="level">core</span></p><p class="l-hi"><code>code_map.py</code> ko apne kisi project par chalao. Hub kaunsa module hai? Kya wahi jo aapne socha tha? <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Add two harder tests to <code>tdd_loop.py</code> (for example "1h30m" without a space, and "90s"). How many rounds does the model need now? <span class="level">core</span></p><p class="l-hi"><code>tdd_loop.py</code> mein do mushkil tests jodo (jaise bina space "1h30m", aur "90s"). Ab model ko kitne rounds chahiye? <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Extend <code>code_map.py</code> to find functions that no other module calls. Are any of them dead code? <span class="level">stretch</span></p><p class="l-hi"><code>code_map.py</code> ko badhao taaki aise functions mile jinhe koi doosra module nahi bulaata. Kya inme koi dead code hai? <span class="level">stretch</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Beck, K. (2002). <em>Test-Driven Development: By Example.</em></li>
+  <li>Feathers, M. (2004). <em>Working Effectively with Legacy Code.</em></li>
+  <li>Python documentation: <em>ast: Abstract Syntax Trees.</em></li>
+  <li>Jimenez et al. (2024). <em>SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</em></li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show;
+  (function () {
+    var S = B.stage("scA", "Dependency graph of the Book 2 harness: types is the hub used by nine modules");
+    var s = S.svg; S.height(330);
+    var hub = [380, 170];
+    var users = ["context", "evals", "gateway", "loop", "multi", "policy", "pricing", "providers", "tools"];
+    var others = ["budget", "hooks", "router", "telemetry", "tokens", "security"];
+    var edges = E(s, "g", { "class": "anim" }), userEls = [], otherEls = E(s, "g", { "class": "anim" });
+    users.forEach(function (u, k) {
+      var ang = Math.PI * (0.08 + 0.84 * k / (users.length - 1)) + Math.PI;     // upper semicircle
+      var x = hub[0] + Math.cos(ang) * 300, y = hub[1] + Math.sin(ang) * 140 + 10;
+      E(edges, "line", { x1: x, y1: y, x2: hub[0], y2: hub[1], "class": "line", "stroke-width": 1.2 });
+      var g = E(s, "g", { "class": "anim" });
+      E(g, "rect", { x: x - 42, y: y - 14, width: 84, height: 28, rx: 14, "class": "box" });
+      E(g, "text", { x: x, y: y + 5, "text-anchor": "middle", "font-size": 12, "class": "mono" }, u);
+      userEls.push(g);
+    });
+    others.forEach(function (o, k) {
+      var x = 80 + k * 120, y = 300;
+      E(otherEls, "rect", { x: x - 46, y: y - 14, width: 92, height: 28, rx: 14, "class": "box" });
+      E(otherEls, "text", { x: x, y: y + 5, "text-anchor": "middle", "font-size": 12, "class": "mono muted" }, o);
+    });
+    var h = E(s, "g", { "class": "anim" });
+    E(h, "rect", { x: hub[0] - 54, y: hub[1] - 20, width: 108, height: 40, rx: 20, "class": "box-amb" });
+    E(h, "text", { x: hub[0], y: hub[1] + 6, "text-anchor": "middle", "font-size": 14, "font-weight": 700, "class": "mono" }, "types");
+    var note = E(s, "g", { "class": "anim" });
+    BI(note, { x: hub[0], y: hub[1] + 42, "text-anchor": "middle", "font-size": 12, "font-weight": 700, "class": "amb" }, "hub: 9 modules depend on it", "hub: 9 modules is par tike");
+    B.scene(S.fig, [
+      ["Parse every file into an AST and list its imports.", "Har file ko AST mein badal kar uske imports likho."],
+      ["Draw an arrow from each module to what it imports.", "Har module se, jo woh import karta hai, us tak teer."],
+      ["One module stands out: types.py, imported by nine others. Change it with care and run every test.", "Ek module alag dikhta hai: types.py, nau doosre isse import karte hain. Sambhal kar badlo aur har test chalao."]
+    ], function (i) {
+      userEls.forEach(function (g) { show(g, true); }); show(otherEls, true);
+      show(edges, i >= 1); show(h, i >= 1); show(note, i >= 2);
+    });
+  })();
+
+  B.flow("scB", [
+    { en: "Human: tests", hi: "Insaan: tests", sen: "6 tests define parse_duration", shi: "6 tests parse_duration tay karte hain" },
+    { en: "Red", hi: "Red", sen: "no code yet: all fail", shi: "abhi code nahi: sab fail" },
+    { en: "Model: code", hi: "Model: code", sen: "writes solution.py", shi: "solution.py likhta hai" },
+    { en: "Run tests", hi: "Tests chalao", sen: "pytest decides", shi: "pytest tay karta hai" },
+    { en: "Feed back", hi: "Wapas do", sen: "exact failures to the model", shi: "sateek failures model ko" },
+    { en: "Green", hi: "Green", sen: "all pass: human reviews the diff", shi: "sab pass: insaan diff review karta hai" }
+  ], [
+    ["The human writes the tests first. They are the spec.", "Insaan pehle tests likhta hai. Wahi spec hain."],
+    ["Run them before any code exists: they fail. That proves the tests can fail.", "Code se pehle chalao: fail hote hain. Isse saabit hota hai tests fail ho sakte hain."],
+    ["The model writes code to satisfy the tests.", "Model tests ko santusht karne ke liye code likhta hai."],
+    ["The test runner, not the model, decides whether it works.", "Test runner, model nahi, tay karta hai ki chalta hai ya nahi."],
+    ["If anything fails, the exact failure goes back to the model.", "Kuch fail ho toh sateek failure model ko wapas jaata hai."],
+    ["When everything passes, a human reads the diff before merging.", "Sab pass ho jaaye, toh merge se pehle insaan diff padhta hai."]
+  ], { perRow: 3 });
+})();
+</script>

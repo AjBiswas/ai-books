@@ -291,7 +291,7 @@ def see(ref):
     if not ref:
         return ""
     if ref.startswith("B2:"):
-        return f'<span class="see">Book 2 · Ch {ref[3:]}</span>'
+        return f'<a class="see" href="../book/ch{int(ref[3:]):02d}.html">Book 2 · Ch {int(ref[3:])}</a>'
     return f'<a class="see" href="ch{int(ref):02d}.html">Ch {int(ref)}</a>'
 
 

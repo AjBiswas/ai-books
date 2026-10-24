@@ -109,6 +109,32 @@ print(resp.choices[0].message.content, resp.choices[0].finish_reason, resp.usage
   </div>
 </details>
 
+<details class="deep">
+  <summary><span class="l-en">For coders: retries with backoff, usage and cost</span><span class="l-hi">Coders ke liye: backoff ke saath retries, usage aur kharch</span><span class="lvl">code2/ch05/api_call.py</span></summary>
+  <div class="inner">
+<pre>for attempt in range(1, retries + 1):
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return json.loads(r.read())
+    except (urllib.error.URLError, TimeoutError):
+        wait = min(8, 0.5 * 2 ** attempt) + random.uniform(0, 0.3)   # exponential backoff + jitter
+        time.sleep(wait)</pre>
+<pre>$ python code2/ch05/api_call.py
+1) wrong address: retries, then gives up cleanly
+   attempt 1 failed (URLError: timed out); waiting 1.3s
+   attempt 2 failed (URLError: timed out); waiting 2.2s
+   gave up: URLError  -&gt; show the user a friendly error, log the details
+
+2) real call
+   answer: A UPI mandate is a pre-authorized instruction from your bank account to a merchant for recurring digital payments. It securely enables automatic, consent-based transactions for services like bill payments or subscriptions, verified by your bank and RBI guidelines.
+   finish_reason: stop   time: 18.7s
+   usage: {'prompt_tokens': 36, 'prompt_tokens_details': {'cached_tokens': 1}, 'completion_tokens': 259, 'total_tokens': 295}   (completion tokens include the model's hidden reasoning)
+   cost at the pretend price: $0.000161  -&gt; x 1 million calls a month = $161</pre>
+  <p class="l-en">The same code talks to a paid provider if you change BASE_URL, the model and the key. Note the usage: a two-sentence answer used 259 completion tokens, because qwen3:4b thinks before answering and that thinking is billed as output.</p>
+  <p class="l-hi">BASE_URL, model aur key badlo toh yahi code paid provider se baat karta hai. Usage dekho: do vaakya ke jawab ne 259 completion tokens liye, kyunki qwen3:4b jawab se pehle sochta hai aur woh soch output ki tarah bill hoti hai.</p>
+  </div>
+</details>
+
 <div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
 <div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
   <ol class="l-en"><li>A request names the model, the instructions, the messages and a token limit; the response gives text, a stop reason and usage.</li><li>Keys live in environment variables, never in code; set a spending limit.</li><li>Retry 429 and 5xx with backoff; fix 400s instead of retrying them.</li><li>Stream for humans, and know what each call costs.</li></ol>

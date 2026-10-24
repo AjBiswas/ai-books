@@ -1,0 +1,172 @@
+  <div class="story">
+    <p class="l-en">Time to build Haron's brain yourself. In this chapter you train a real GPT, small enough to understand line by line and fast enough to train in under a minute on a laptop CPU. It has every part from Chapters 37 and 38: embeddings, positions, causal self-attention, an MLP, residuals, a softmax over the vocabulary, a hand-written backward pass, and the Adam optimiser. It reads one character at a time from a little story about Haron, and learns to write in that style. It won't be clever; it will be <em>yours</em>, and nothing about LLMs will feel like magic again.</p>
+    <p class="l-hi">Ab Haron ka dimaag khud banaane ka samay hai. Is chapter mein aap ek asli GPT train karte ho, itna chhota ki line-dar-line samajh aaye aur itna tez ki laptop CPU par ek minute se kam mein train ho jaaye. Isme Chapter 37 aur 38 ka har hissa hai: embeddings, positions, causal self-attention, MLP, residuals, vocabulary par softmax, haath se likha backward pass, aur Adam optimiser. Yeh Haron ki ek chhoti kahani se ek-ek character padhta hai, aur usi andaaz mein likhna seekhta hai. Yeh chaalaak nahi hoga; yeh <em>aapka</em> hoga, aur iske baad LLMs kabhi jaadu nahi lagenge.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">Data: a text file, a character vocabulary, input/target pairs</span><span class="l-hi">Data: text file, character vocabulary, input/target jode</span></li>
+    <li><b>2</b><span class="l-en">The model: a one-block GPT with 32,043 weights</span><span class="l-hi">Model: 32,043 weights wala ek-block GPT</span></li>
+    <li><b>3</b><span class="l-en">Training: loss from 3.29 to 0.29 in 42 seconds</span><span class="l-hi">Training: 42 second mein loss 3.29 se 0.29</span></li>
+    <li><b>4</b><span class="l-en">Sampling, and what separates this from a real LLM</span><span class="l-hi">Sampling, aur isme aur asli LLM mein farak</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">The data: predicting the next character</span><span class="l-hi">Data: agla character predict karna</span></h2></div>
+<div class="story">
+  <p class="l-en">Our training text is <code>haron.txt</code>: 1,872 characters of simple sentences ("haron calls the weather tool. the tool says it is sunny."). The vocabulary is every distinct character: 26 letters, space, full stop and newline make 27 (lowercase only, to keep it tiny). Real LLMs use sub-word tokens instead (Ch 2), but the job is identical. From any position, take 32 characters as input; the target is the same 32 characters shifted one place to the right. So one window teaches 32 lessons at once: after "h" comes "a", after "ha" comes "r", after "har" comes "o", and so on.</p>
+  <p class="l-hi">Hamara training text hai <code>haron.txt</code>: aasaan vaakyon ke 1,872 characters ("haron calls the weather tool. the tool says it is sunny."). Vocabulary har alag character hai: 26 akshar, space, full stop aur newline milakar 27 (chhota rakhne ke liye sirf lowercase). Asli LLMs iski jagah sub-word tokens use karte hain (Ch 2), par kaam bilkul wahi hai. Kisi bhi jagah se 32 characters input lo; target wahi 32 characters ek jagah daayein khiske hue. Toh ek window ek saath 32 sabak sikhaati hai: "h" ke baad "a", "ha" ke baad "r", "har" ke baad "o", aur aage.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">The model: one GPT block</span><span class="l-hi">Model: ek GPT block</span></h2></div>
+<div class="story">
+  <p class="l-en">Width 48, one attention head, one block, context of 32 characters: <strong>32,043 weights</strong> in total. For scale, Qwen3-4B has about 125,000 times more. The forward pass is the block from Chapter 38. The backward pass is about 30 lines of numpy, each the chain rule applied to one forward line, in reverse order. Before training, we compare the hand-written gradients with numerical estimates on three different weight matrices: the largest difference is 0.00000001. That check is what lets you trust everything after it.</p>
+  <p class="l-hi">Width 48, ek attention head, ek block, 32 characters ka context: kul <strong>32,043 weights</strong>. Tulna ke liye, Qwen3-4B mein lagbhag 1,25,000 guna zyaada hain. Forward pass Chapter 38 wala block hai. Backward pass numpy ki lagbhag 30 lines hai, har line ek forward line par chain rule, ulte kram mein. Training se pehle hum teen alag weight matrices par haath ke likhe gradients ko numerical estimates se milaate hain: sabse bada farak 0.00000001. Yahi check aage ki har cheez par bharosa dilaata hai.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: the heart of tiny_gpt.py</span><span class="l-hi">Coders ke liye: tiny_gpt.py ka dil</span><span class="lvl">code2/ch39/tiny_gpt.py</span></summary>
+  <div class="inner">
+<pre>def forward(P, idx, targets):
+    x0 = P["E"][idx] + P["pos"][:n]                       # token + position embeddings
+    q, k, v = x0 @ P["Wq"], x0 @ P["Wk"], x0 @ P["Wv"]
+    sc = q @ k.transpose(0, 2, 1) / np.sqrt(d)
+    sc[:, MASK[:n, :n]] = -1e9                            # causal mask
+    a = softmax(sc)
+    x1 = x0 + (a @ v) @ P["Wo"]                           # attention + residual
+    h = np.maximum(0, x1 @ P["W1"] + P["b1"])
+    x2 = x1 + h @ P["W2"] + P["b2"]                       # MLP + residual
+    logits = x2 @ P["Wout"] + P["bout"]                   # a score for each of 27 characters
+    loss = -mean(log(softmax(logits)[targets]))           # cross-entropy: surprise at the truth
+
+# training: Adam, 2,000 steps, batches of 32 windows
+for step in range(1, 2001):
+    _, loss, cache = forward(P, *batch())
+    g = backward(P, cache, targets)                       # ~30 lines of chain rule
+    adam_update(P, g)</pre>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">Training: watch it learn</span><span class="l-hi">Training: seekhte hue dekho</span></h2></div>
+<div class="story">
+  <p class="l-en">Loss is "how surprised was the model by the real next character", on average. A model that guesses uniformly among 27 characters scores ln(27) = 3.30, and our untrained model scores 3.29: it knows nothing. Within 500 steps it has learned spelling and common words; by 2,000 steps, phrases and sentence shapes.</p>
+  <p class="l-hi">Loss hai "asli agle character se model kitna chaunka", ausatan. 27 characters mein barabar andaaza lagaane wala model ln(27) = 3.30 score karta hai, aur hamara untrained model 3.29: use kuch nahi pata. 500 steps mein woh spelling aur aam shabd seekh leta hai; 2,000 steps tak, phrases aur vaakyon ka aakaar.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<pre>$ python code2/ch39/tiny_gpt.py
+text: 1872 characters, vocabulary: 27 characters, context: 32, width: 48
+parameters: 32,043
+gradient check: largest difference backprop vs numerical = 9.6e-09
+
+before training:
+  haron  mes lbxgwewlqyuvefp ieqhoawk owqcaiyy rhigbr uchgsrurwgnupwibwtrexs.u apu.qwfosw lqubqfoyok kngbea..fhrgh qb ...p
+step    1  loss 3.294   (0s)
+step  100  loss 1.848   (2s)
+step  250  loss 1.288   (5s)
+step  500  loss 0.657   (11s)
+step 1000  loss 0.359   (21s)
+step 1500  loss 0.332   (31s)
+step 2000  loss 0.285   (42s)
+
+(a random guess over 27 characters would score loss 3.30)
+
+after training:
+  haron writes notes in the diary every morning. | the user asks about the weather in pune rassword. haron answers the task is don
+  the user asks about the train to mumbai. haron calls a tool. the tool says it is cloudy. | haron writes a shop tool. the tool says it is cloudy. | h</pre>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Look closely at the mistakes</span><span class="l-hi">Galtiyon ko dhyaan se dekho</span></h4>
+  <p class="l-en">"the weather in pune <strong>rassword</strong>" blends "pune" with "password" from another sentence. "haron writes a <strong>shop tool</strong>" glues two real phrases into one that never appeared. And it says the Mumbai train answer is "cloudy". These are hallucinations in miniature: the model produces fluent, plausible text from patterns, with no idea what is true. Big LLMs make the same kind of error, just much more rarely and much more convincingly (Book 2, Ch 3).</p>
+  <p class="l-hi">"the weather in pune <strong>rassword</strong>" mein "pune" aur doosre vaakya ka "password" ghul gaye. "haron writes a <strong>shop tool</strong>" do asli phrases ko jod kar aisa bana deta hai jo kabhi aaya hi nahi. Aur Mumbai train ke jawab mein "cloudy" kehta hai. Yeh chhote roop mein hallucinations hain: model patterns se dhaaraapravaah, sach jaisa text banata hai, bina jaane ki sach kya hai. Bade LLMs bhi aisi hi galti karte hain, bas bahut kam aur bahut zyaada yakeen dilaane wale tareeke se (Book 2, Ch 3).</p>
+</div>
+
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">From tiny to real</span><span class="l-hi">Tiny se asli tak</span></h2></div>
+<div class="story">
+  <p class="l-en">Every gap between this toy and a frontier model is a matter of scale and polish, not a different idea.</p>
+  <p class="l-hi">Is khilone aur frontier model ke beech har farak scale aur nikhaar ka hai, alag idea ka nahi.</p>
+</div>
+<table>
+<thead><tr><th></th><th><span class="l-en">Our tiny GPT</span><span class="l-hi">Hamara tiny GPT</span></th><th><span class="l-en">A real 7–8B LLM</span><span class="l-hi">Asli 7–8B LLM</span></th></tr></thead>
+<tbody>
+<tr><td><b>Tokens</b></td><td><span class="l-en">27 characters</span><span class="l-hi">27 characters</span></td><td><span class="l-en">~150,000 sub-word tokens</span><span class="l-hi">~1,50,000 sub-word tokens</span></td></tr>
+<tr><td><b>Blocks × width</b></td><td>1 × 48</td><td>32 × 4,096</td></tr>
+<tr><td><b>Weights</b></td><td>32,043</td><td><span class="l-en">~8 billion</span><span class="l-hi">~8 arab</span></td></tr>
+<tr><td><b>Training text</b></td><td><span class="l-en">1,872 characters</span><span class="l-hi">1,872 characters</span></td><td><span class="l-en">15+ trillion tokens</span><span class="l-hi">15+ kharab tokens</span></td></tr>
+<tr><td><b>Hardware, time</b></td><td><span class="l-en">laptop CPU, 42 seconds</span><span class="l-hi">laptop CPU, 42 second</span></td><td><span class="l-en">thousands of GPUs, weeks</span><span class="l-hi">hazaaron GPUs, hafte</span></td></tr>
+<tr><td><b><span class="l-en">After pre-training</span><span class="l-hi">Pre-training ke baad</span></b></td><td><span class="l-en">nothing</span><span class="l-hi">kuch nahi</span></td><td><span class="l-en">SFT, preference tuning (RLHF/DPO), safety work (Ch 23, Book 2 Ch 4)</span><span class="l-hi">SFT, preference tuning (RLHF/DPO), safety ka kaam (Ch 23, Book 2 Ch 4)</span></td></tr>
+</tbody>
+</table>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">When would you actually train from scratch?</span><span class="l-hi">Asal mein shunya se train kab karoge?</span></h4>
+  <p class="l-en">Almost never for a product: start with an existing model, then prompt, retrieve, or fine-tune (Ch 23). Training from scratch makes sense for research, for tiny specialised models (a classifier for one data type, an on-device keyboard model), or for learning. To go further after this chapter, rewrite <code>tiny_gpt.py</code> in PyTorch: autograd replaces the hand-written backward pass, and a GPU makes 1,000× bigger models practical.</p>
+  <p class="l-hi">Product ke liye lagbhag kabhi nahi: maujooda model se shuru karo, phir prompt, retrieve, ya fine-tune (Ch 23). Shunya se training research ke liye, chhote khaas models ke liye (ek data type ka classifier, on-device keyboard model), ya seekhne ke liye theek hai. Is chapter ke baad aage badhne ke liye <code>tiny_gpt.py</code> ko PyTorch mein dobara likho: autograd haath ke likhe backward pass ki jagah le leta hai, aur GPU 1,000× bade models sambhav bana deta hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>An LLM is trained to predict the next token: inputs and targets are the same text shifted by one.</li><li>A one-block GPT with 32,043 weights learns words and sentence patterns in 42 seconds.</li><li>Check hand-written gradients numerically before trusting them.</li><li>Its mistakes are hallucinations in miniature: fluent patterns, no grasp of truth.</li><li>Real LLMs are the same idea with far more data, width, depth and post-training.</li></ol>
+  <ol class="l-hi"><li>LLM agla token predict karne ke liye train hota hai: inputs aur targets ek jagah khiska hua wahi text.</li><li>32,043 weights wala ek-block GPT 42 second mein shabd aur vaakyon ke pattern seekh leta hai.</li><li>Haath ke likhe gradients par bharosa karne se pehle numerically check karo.</li><li>Iski galtiyan chhote roop mein hallucinations hain: dhaaraapravaah patterns, sach ki samajh nahi.</li><li>Asli LLMs wahi idea hain, bahut zyaada data, width, depth aur post-training ke saath.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Replace <code>haron.txt</code> with 2,000 characters of your own writing (Hinglish works). Train and sample. What style does it pick up? <span class="level">core</span></p><p class="l-hi"><code>haron.txt</code> ki jagah apne likhe 2,000 characters daalo (Hinglish chalega). Train karo aur sample lo. Kaunsa andaaz pakadta hai? <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Change sampling temperature from 0.7 to 0.2 and to 1.5. Relate what you see to Chapter 2. <span class="level">core</span></p><p class="l-hi">Sampling temperature 0.7 se 0.2 aur 1.5 karo. Jo dikhe use Chapter 2 se jodo. <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Split the text 90/10 into train and validation; print validation loss every 250 steps. When does it start to overfit? <span class="level">stretch</span></p><p class="l-hi">Text ko 90/10 train aur validation mein baanto; har 250 steps par validation loss print karo. Overfit kab shuru hota hai? <span class="level">stretch</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Karpathy, A. <em>nanoGPT</em> and <em>Let's build GPT: from scratch, in code, spelled out</em> (video).</li>
+  <li>Radford et al. (2019). <em>Language Models are Unsupervised Multitask Learners</em> (GPT-2).</li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show;
+  (function () {
+    var S = B.stage("scA", "A window of characters as input, and the same window shifted by one as the target");
+    var s = S.svg; S.height(220);
+    var txt = "haron calls", n = txt.length, cw = 54, x0 = 60;
+    var inRow = E(s, "g", { "class": "anim" }), tgRow = E(s, "g", { "class": "anim" }), arrows = E(s, "g", { "class": "anim" });
+    BI(inRow, { x: 10, y: 66, "font-size": 12, "font-weight": 700 }, "input", "input");
+    BI(tgRow, { x: 10, y: 166, "font-size": 12, "font-weight": 700 }, "target", "target");
+    for (var k = 0; k < n; k++) {
+      E(inRow, "rect", { x: x0 + k * cw, y: 40, width: cw - 6, height: 40, rx: 5, "class": "box" });
+      E(inRow, "text", { x: x0 + k * cw + (cw - 6) / 2, y: 66, "text-anchor": "middle", "font-size": 15, "class": "mono" }, txt[k] === " " ? "␣" : txt[k]);
+      var nxt = k + 1 < n ? txt[k + 1] : "…";
+      E(tgRow, "rect", { x: x0 + k * cw, y: 140, width: cw - 6, height: 40, rx: 5, "class": "box-sig" });
+      E(tgRow, "text", { x: x0 + k * cw + (cw - 6) / 2, y: 166, "text-anchor": "middle", "font-size": 15, "class": "mono" }, nxt === " " ? "␣" : nxt);
+      E(arrows, "line", { x1: x0 + k * cw + (cw - 6) / 2, y1: 84, x2: x0 + k * cw + (cw - 6) / 2, y2: 134, "class": "line", "stroke-width": 1.2 });
+    }
+    var note = E(s, "g", { "class": "anim" });
+    BI(note, { x: 380, y: 210, "text-anchor": "middle", "font-size": 12, "class": "muted" },
+      "one window of 32 characters = 32 next-character lessons at once",
+      "32 characters ki ek window = ek saath 32 agle-character ke sabak");
+    B.scene(S.fig, [
+      ["Take a window of the text as input.", "Text ki ek window input ke roop mein lo."],
+      ["The target is the same text shifted one character to the right.", "Target wahi text hai, ek character daayein khiska hua."],
+      ["Each position learns “what comes next after everything so far”. Many lessons per window.", "Har position seekhti hai “ab tak ke baad agla kya”. Har window mein kai sabak."]
+    ], function (i) { show(inRow, true); show(tgRow, i >= 1); show(arrows, i >= 2); show(note, i >= 2); });
+  })();
+
+  B.bars("scB", [
+    { en: "step 1", hi: "step 1", v: 3.294, txt: "3.29 · random letters", cls: "box-amb", step: 0 },
+    { en: "step 100", hi: "step 100", v: 1.848, txt: "1.85 · spaces and letters", cls: "box-amb", step: 1 },
+    { en: "step 500", hi: "step 500", v: 0.657, txt: "0.66 · real words", cls: "box-sig", step: 2 },
+    { en: "step 1,000", hi: "step 1,000", v: 0.359, txt: "0.36 · phrases", cls: "box-sig", step: 3 },
+    { en: "step 2,000", hi: "step 2,000", v: 0.285, txt: "0.29 · sentences", cls: "box-sig", step: 4 }
+  ], [
+    ["Step 1: loss 3.29, the same as guessing among 27 characters at random.", "Step 1: loss 3.29, 27 characters mein random andaaze jitna."],
+    ["Step 100: it has learned that spaces and common letters are frequent.", "Step 100: seekh liya ki space aur aam akshar baar-baar aate hain."],
+    ["Step 500: real words appear: haron, tool, weather.", "Step 500: asli shabd dikhte hain: haron, tool, weather."],
+    ["Step 1,000: common phrases: “the user asks about the”.", "Step 1,000: aam phrases: “the user asks about the”."],
+    ["Step 2,000 (42 seconds): whole sentences in the style of the text.", "Step 2,000 (42 second): text ke andaaz mein poore vaakya."]
+  ], { max: 3.3 });
+})();
+</script>

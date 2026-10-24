@@ -1,0 +1,113 @@
+  <div class="story">
+    <p class="l-en">AI can now write a news article, clone a voice and produce a photo of something that never happened. Two very different tools try to answer "where did this come from?". A <strong>watermark</strong> hides a signal inside the content itself, so a detector holding the key can spot it later. <strong>Provenance</strong> (content credentials, the C2PA standard) attaches a signed record to the content: who made it, with which tool, and what edits were done. This chapter builds both, then shows honestly where each one breaks.</p>
+    <p class="l-hi">AI ab news article likh sakta hai, aawaz copy kar sakta hai aur aisi ghatna ki photo bana sakta hai jo kabhi hui hi nahi. Do bahut alag tools "yeh kahan se aaya?" ka jawab dene ki koshish karte hain. <strong>Watermark</strong> content ke andar hi ek signal chhupata hai, taaki key wala detector baad mein pehchan sake. <strong>Provenance</strong> (content credentials, C2PA standard) content ke saath ek signed record jodta hai: kisne banaaya, kis tool se, aur kya edits hue. Yeh chapter dono banaata hai, phir imaandaari se dikhaata hai ki har ek kahan tootta hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">How a text watermark works: green lists and a z-score</span><span class="l-hi">Text watermark kaise kaam karta hai: green lists aur z-score</span></li>
+    <li><b>2</b><span class="l-en">Why editing and paraphrasing weaken it</span><span class="l-hi">Editing aur paraphrasing ise kamzor kyun karte hain</span></li>
+    <li><b>3</b><span class="l-en">Content credentials (C2PA): signed records</span><span class="l-hi">Content credentials (C2PA): signed records</span></li>
+    <li><b>4</b><span class="l-en">Why "AI detectors" for essays are unreliable</span><span class="l-hi">Essays ke "AI detectors" bharosemand kyun nahi</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">A watermark you can't see</span><span class="l-hi">Aisa watermark jo dikhta nahi</span></h2></div>
+<div class="story">
+  <p class="l-en">Here is the best-known scheme for text (Kirchenbauer and colleagues, 2023). Before choosing each word, the generator uses a secret key and the previous word to split the vocabulary into two halves, a <strong>green list</strong> and a red list. It then gives green words a small nudge. The text still reads naturally; the model just slightly prefers green words. Ordinary human text lands on green about half the time, by chance. Watermarked text lands on green far more often. A detector with the key recomputes the lists, counts green words and computes a <strong>z-score</strong>: how many standard deviations above chance. Above about 4, it's practically impossible by accident. Google's SynthID-Text, used in Gemini, is a production system built on similar ideas.</p>
+  <p class="l-hi">Text ke liye sabse mashhoor tareeka (Kirchenbauer aur saathi, 2023) yeh hai. Har shabd chunne se pehle generator ek secret key aur pichhle shabd se vocabulary ko do hisson mein baant-ta hai, <strong>green list</strong> aur red list. Phir green shabdon ko halka sa dhakka deta hai. Text phir bhi naturally padha jaata hai; model bas green shabd thoda zyaada pasand karta hai. Aam insaani text sanyog se lagbhag aadhi baar green par padta hai. Watermark wala text kahin zyaada baar. Key wala detector lists dobara nikaalta hai, green shabd ginta hai aur <strong>z-score</strong> nikaalta hai: sanyog se kitne standard deviation upar. Lagbhag 4 se upar, galti se hona lagbhag namumkin. Google ka SynthID-Text, jo Gemini mein use hota hai, milte-julte ideas par bana production system hai.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: green-list watermark, detection, and the effect of edits</span><span class="l-hi">Coders ke liye: green-list watermark, detection, aur edits ka asar</span><span class="lvl">code2/ch47/watermark.py</span></summary>
+  <div class="inner">
+<pre>def green(prev):                                     # secret key + previous word -> half the vocabulary
+    seed = sha256(KEY + prev)
+    return random_permutation(V, seed)[: V // 2]
+
+logits[green(out[-1])] += DELTA                      # generation: nudge green words
+
+hits = sum(w in green(prev) for prev, w in pairs)    # detection: count green words
+z = (hits - 0.5 * n) / sqrt(n * 0.25)                # how far above chance?</pre>
+<pre>$ python code2/ch47/watermark.py
+text                          green share   z-score   verdict (z > 4 = watermarked)
+human-written (no watermark)      48%        -0.4    not detected
+AI with watermark                 92%        12.0    WATERMARKED
+AI, 20% of words edited           78%         7.9    WATERMARKED
+AI, 50% of words edited           59%         2.5    not detected
+AI, 80% of words edited           58%         2.3    not detected</pre>
+  <p class="l-en">Light editing leaves the watermark detectable; rewriting half the words hides it. A paraphrasing tool or a second model does exactly that, so a missing watermark proves nothing.</p>
+  <p class="l-hi">Halki editing ke baad watermark pakda jaata hai; aadhe shabd dobara likhne se chhup jaata hai. Paraphrasing tool ya doosra model theek yahi karta hai, isliye watermark na milna kuch saabit nahi karta.</p>
+  </div>
+</details>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Provenance: a signed label instead of a hidden signal</span><span class="l-hi">Provenance: chhupe signal ki jagah signed label</span></h2></div>
+<div class="story">
+  <p class="l-en">The <strong>C2PA</strong> standard (backed by Adobe, Microsoft, Google, the BBC, camera makers and others) works differently. When a camera takes a photo or an AI tool generates an image, it attaches a manifest: creator, tool, actions such as "generated with AI" or "cropped", and a cryptographic hash of the exact bytes, all signed. Anyone can verify it; any edit to the content or the record breaks the check. The weakness is the opposite of a watermark's: credentials are easy to <em>strip</em> (a screenshot loses them). So a valid credential tells you a lot; a missing one tells you only "unknown origin".</p>
+  <p class="l-hi"><strong>C2PA</strong> standard (Adobe, Microsoft, Google, BBC, camera banaane wale aur doosron ka samarthan) alag tarah kaam karta hai. Jab camera photo leta hai ya AI tool image banata hai, woh ek manifest jodta hai: banaane wala, tool, actions jaise "AI se bana" ya "crop kiya", aur sateek bytes ka cryptographic hash, sab signed. Koi bhi verify kar sakta hai; content ya record mein koi bhi badlaav check tod deta hai. Kamzori watermark ki ulti hai: credentials <em>hataana</em> aasaan hai (screenshot mein kho jaate hain). Isliye valid credential bahut kuch batata hai; gaayab credential sirf "anjaan srot".</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: sign and verify a content manifest</span><span class="l-hi">Coders ke liye: content manifest sign aur verify karna</span><span class="lvl">code2/ch47/provenance.py</span></summary>
+  <div class="inner">
+<pre>claim = {"creator": creator, "tool": tool, "actions": actions, "sha256": sha256(content)}
+signature = sign(SIGNING_KEY, claim)               # real C2PA: certificate-based signatures</pre>
+<pre>$ python code2/ch47/provenance.py
+1. original image + manifest      -> valid: made by Acme Marketing with ImageGen v4; actions: generated with AI, cropped
+2. one byte changed               -> INVALID: content changed after signing
+3. someone edits 'creator'        -> INVALID: the record itself was altered
+4. screenshot (credentials lost)  -> no credentials: unknown origin (NOT proof it is fake)</pre>
+  </div>
+</details>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">"AI detectors" for essays: handle with great care</span><span class="l-hi">Essays ke "AI detectors": bahut sambhal kar</span></h4>
+  <p class="l-en">Tools that guess "was this written by AI?" from style alone, without a watermark key, are unreliable. They often flag non-native English writers, short texts and formal writing as AI, and a light paraphrase fools them. Never punish a student or reject a job applicant on a detector score alone. If you run an AI product, prefer watermarking your own outputs and attaching credentials, and say clearly in your terms what you do.</p>
+  <p class="l-hi">Jo tools bina watermark key ke sirf andaaz se "kya yeh AI ne likha?" ka andaaza lagaate hain, woh bharosemand nahi. Woh aksar non-native English likhne walon, chhote texts aur formal lekhan ko AI bata dete hain, aur halka paraphrase unhe chakma de deta hai. Sirf detector score par kabhi kisi student ko saza ya job applicant ko reject mat karo. Agar aap AI product chalaate ho, toh apne outputs par watermark aur credentials jodna behtar hai, aur apni terms mein saaf likho ki kya karte ho.</p>
+</div>
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Rules are arriving</span><span class="l-hi">Niyam aa rahe hain</span></h4>
+  <p class="l-en">The EU AI Act requires providers of generative AI to mark synthetic content in a machine-readable way, and deepfakes to be disclosed. India's IT ministry has advised platforms to label AI-generated media and has proposed rules for visible labels on synthetic content. Expect "label what your AI makes" to become a normal compliance item (Ch 32).</p>
+  <p class="l-hi">EU AI Act generative AI providers se synthetic content ko machine-readable tareeke se mark karna aur deepfakes batana zaroori karta hai. India ke IT mantralaya ne platforms ko AI se bane media par label lagaane ki salaah di hai aur synthetic content par dikhne wale labels ke niyam prastaavit kiye hain. "Apne AI ka banaaya label karo" aam compliance item banne ki ummeed rakho (Ch 32).</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>A text watermark nudges word choices with a secret key; a detector with the key measures a z-score.</li><li>Heavy editing or paraphrasing removes it; absence proves nothing.</li><li>Content credentials (C2PA) attach a signed record; tampering breaks it, but stripping it is easy.</li><li>Style-based AI detectors are unreliable; never act on them alone.</li></ol>
+  <ol class="l-hi"><li>Text watermark secret key se shabdon ke chunaav ko dhakka deta hai; key wala detector z-score naapta hai.</li><li>Bhaari editing ya paraphrasing use hata deti hai; na milna kuch saabit nahi karta.</li><li>Content credentials (C2PA) signed record jodte hain; chhedchhad use todti hai, par hataana aasaan hai.</li><li>Andaaz par chalne wale AI detectors bharosemand nahi; sirf unke bharose kuch mat karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">In <code>watermark.py</code>, lower DELTA from 2.5 to 0.5. How long must a text be before the watermark is detectable? <span class="level">core</span></p><p class="l-hi"><code>watermark.py</code> mein DELTA 2.5 se 0.5 karo. Watermark pakadne ke liye text kitna lamba hona chahiye? <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Find an image with Content Credentials (look for the "CR" icon on a news or stock site) and inspect it with the free C2PA verify tool. <span class="level">core</span></p><p class="l-hi">Content Credentials wali image dhoondho (news ya stock site par "CR" icon dekho) aur muft C2PA verify tool se jaancho. <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Kirchenbauer et al. (2023). <em>A Watermark for Large Language Models.</em></li>
+  <li>Dathathri et al. (2024). <em>Scalable watermarking for identifying large language model outputs</em> (SynthID-Text), Nature.</li>
+  <li>C2PA. <em>Content Credentials technical specification.</em> c2pa.org.</li>
+  <li>Liang et al. (2023). <em>GPT detectors are biased against non-native English writers.</em></li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.bars("scA", [
+    { en: "Human-written text", hi: "Insaan ka likha text", v: 48, txt: "48% green · z = -0.4", cls: "box", step: 0 },
+    { en: "AI text, watermarked", hi: "AI text, watermark ke saath", v: 92, txt: "92% green · z = 12.0", cls: "box-sig", step: 1 },
+    { en: "… 20% of words edited", hi: "… 20% shabd badle", v: 78, txt: "78% · z = 7.9 · still caught", cls: "box-sig", step: 2 },
+    { en: "… 50% of words edited", hi: "… 50% shabd badle", v: 59, txt: "59% · z = 2.5 · missed", cls: "box-amb", step: 3 }
+  ], [
+    ["Human text lands on the secret green list about half the time, by chance.", "Insaani text sanyog se lagbhag aadhi baar secret green list par padta hai."],
+    ["Watermarked AI text: 92% green. A z-score of 12 is impossible by chance.", "Watermark wala AI text: 92% green. 12 ka z-score sanyog se namumkin."],
+    ["Light editing lowers it, but the signal survives.", "Halki editing ise ghataati hai, par signal bacha rehta hai."],
+    ["Rewrite half the words and the signal sinks into the noise.", "Aadhe shabd dobara likho aur signal shor mein doob jaata hai."]
+  ], { max: 100 });
+})();
+</script>

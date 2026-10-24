@@ -50,6 +50,9 @@ def read(path):
 
 
 def rewrite_links(html, book):
+    # cross-book links first: ../book/ is the Harness book (b1), ../book2/ is the AI Engineer book (b2)
+    html = re.sub(r'href="\.\./book2/(ch\d\d)\.html"', lambda m: f'href="#b2-{m.group(1)}"', html)
+    html = re.sub(r'href="\.\./book/(ch\d\d)\.html"', lambda m: f'href="#b1-{m.group(1)}"', html)
     html = re.sub(r'href="(ch\d\d)\.html"', lambda m: f'href="#{book}-{m.group(1)}"', html)
     return html.replace('href="index.html"', f'href="#{book}-index"')
 
@@ -113,7 +116,7 @@ parts = ["""<!doctype html>
 <script>(function(){var r=document.documentElement,t=null;try{t=localStorage.getItem("harness-book-theme")}catch(e){}r.setAttribute("data-theme",t||(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"))})()</script>
 <style>""", fonts, css, """
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
-""", read(os.path.join(ROOT, "search.css")), """
+""", read(os.path.join(ROOT, "search.css")), read(os.path.join(ROOT, "progress.css")), """
 </style>
 </head>
 <body>
@@ -150,6 +153,12 @@ parts.append("""<script>
 </script>
 <script>
 """ + read(os.path.join(ROOT, "search.js")) + """
+</script>
+<script>
+""" + read(os.path.join(ROOT, "quiz.js")) + """
+</script>
+<script>
+""" + read(os.path.join(ROOT, "progress.js")) + """
 </script>
 </body>
 </html>

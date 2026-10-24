@@ -1,0 +1,123 @@
+  <div class="story">
+    <p class="l-en">Some agent tasks take seconds. Others take hours or days: onboarding a new employee across six systems, migrating a codebase, chasing a refund through a payment provider, waiting for a manager to approve something. Over that time, servers restart, APIs time out and people go home. A <strong>long-running agent</strong> must survive all of it without forgetting where it was and, above all, without doing a dangerous step twice. This chapter covers the four ideas that make that possible: state management, durable execution, a control plane, and harness-as-code.</p>
+    <p class="l-hi">Kuch agent kaam seconds lete hain. Kuch ghante ya din: naye employee ko chhe systems mein onboard karna, codebase migrate karna, payment provider ke zariye refund ka peechha karna, manager ki manzoori ka intezaar. Is dauraan servers restart hote hain, APIs time out hoti hain aur log ghar chale jaate hain. <strong>Lamba chalne wala agent</strong> yeh sab jhel ke bhi bhoolna nahi chahiye ki woh kahan tha, aur sabse zaroori, koi khatarnaak step do baar nahi karna chahiye. Yeh chapter woh chaar ideas samjhaata hai jo yeh mumkin banaate hain: state management, durable execution, control plane, aur harness-as-code.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">State: what the agent must remember, and where</span><span class="l-hi">State: agent ko kya yaad rakhna hai, aur kahan</span></li>
+    <li><b>2</b><span class="l-en">Durable execution: checkpoints, resume, and never paying twice</span><span class="l-hi">Durable execution: checkpoints, resume, aur kabhi do baar payment nahi</span></li>
+    <li><b>3</b><span class="l-en">The control plane: policies, limits and approval gates</span><span class="l-hi">Control plane: policies, limits aur approval gates</span></li>
+    <li><b>4</b><span class="l-en">Harness-as-code: reviewed, versioned, tested configuration</span><span class="l-hi">Harness-as-code: review, version aur test ki gayi configuration</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">State lives outside the model</span><span class="l-hi">State model ke bahar rehti hai</span></h2></div>
+<div class="story">
+  <p class="l-en">Haron forgets everything between calls. So the harness keeps the <strong>state</strong>: which steps are done, which are pending, the data each step produced (order details, IDs), money spent, files changed, and who approved what. Keep it somewhere that survives a crash: a database row, not a Python variable. The conversation transcript is <em>not</em> state; it's a log. If a step's result matters later, store it as data, with a name.</p>
+  <p class="l-hi">Haron do calls ke beech sab bhool jaata hai. Isliye harness <strong>state</strong> rakhta hai: kaunse steps ho gaye, kaunse baaki, har step ne kya data banaaya (order details, IDs), kitna paisa kharch hua, kaunsi files badli, aur kisne kya manzoor kiya. Ise aisi jagah rakho jo crash jhel le: database ki row, Python variable nahi. Baatcheet ka transcript state <em>nahi</em> hai; woh log hai. Agar kisi step ka nateeja baad mein kaam aaye, use naam ke saath data ki tarah store karo.</p>
+</div>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">Durable execution: crash, resume, never repeat</span><span class="l-hi">Durable execution: crash, resume, kabhi dohraana nahi</span></h2></div>
+<div class="story">
+  <p class="l-en">The rule is simple: <strong>write a checkpoint after every step</strong>. When the process restarts, it reads the checkpoint, skips everything already done, and continues. Two details make it safe. Write checkpoints <em>atomically</em> (write a temp file, then rename), so a crash never leaves half a record. And make risky steps <strong>idempotent</strong>: doing them twice has the same effect as once. Payment APIs support this with an idempotency key: send the same key again and the provider returns the first result instead of charging again. Engines such as Temporal, Restate, AWS Step Functions and LangGraph's checkpointers package this pattern so you don't build it by hand.</p>
+  <p class="l-hi">Niyam seedha hai: <strong>har step ke baad checkpoint likho</strong>. Process restart ho toh checkpoint padho, jo ho chuka woh chhodo, aage badho. Do details ise surakshit banaate hain. Checkpoints <em>atomically</em> likho (temp file likho, phir rename karo), taaki crash kabhi aadha record na chhode. Aur risky steps ko <strong>idempotent</strong> banao: do baar karne ka asar ek baar jaisa ho. Payment APIs isme idempotency key se madad karti hain: wahi key dobara bhejo toh provider dobara charge karne ki jagah pehla nateeja lautaata hai. Temporal, Restate, AWS Step Functions aur LangGraph ke checkpointers jaise engines is pattern ko tayyar dete hain, taaki haath se na banana pade.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">The control plane decides; the agent does</span><span class="l-hi">Control plane tay karta hai; agent karta hai</span></h2></div>
+<div class="story">
+  <p class="l-en">Split your system in two. The <strong>data plane</strong> does the work: model calls, tool calls, file edits. The <strong>control plane</strong> decides whether each piece of work may happen: is this tool allowed for this agent? Is the amount under the limit? Has a human approved? Is the budget left? Because the control plane is plain code with plain rules, it can't be talked out of a decision by a clever prompt. That's the single most important safety property of an agent platform (Book 2, Ch 11 and 12 build this for a whole company).</p>
+  <p class="l-hi">Apne system ko do mein baanto. <strong>Data plane</strong> kaam karta hai: model calls, tool calls, file edits. <strong>Control plane</strong> tay karta hai ki har kaam ho sakta hai ya nahi: kya yeh tool is agent ke liye allowed hai? Kya rakam limit ke andar hai? Kya insaan ne manzoori di? Kya budget bacha hai? Kyunki control plane saada code aur saade niyam hai, koi chaalaak prompt use faisle se hata nahi sakta. Agent platform ki sabse zaroori suraksha yahi hai (Book 2, Ch 11 aur 12 ise poori company ke liye banaate hain).</p>
+</div>
+
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">Harness-as-code</span><span class="l-hi">Harness-as-code</span></h2></div>
+<div class="story">
+  <p class="l-en">Prompts, tool lists, limits, approval rules and model choices are behaviour. Treat them like code: keep them in a file in git, review changes in pull requests, run the eval suite (Ch 26) on every change, and roll back with one command. "Someone edited the system prompt in a web console last Tuesday" should never be the answer to "why did the agent start refunding everything?"</p>
+  <p class="l-hi">Prompts, tool lists, limits, approval rules aur model ke chunaav behaviour hain. Inhe code ki tarah maano: git mein file mein rakho, pull requests mein badlaav review karo, har badlaav par eval suite (Ch 26) chalao, aur ek command se wapas lo. "Kisi ne pichhle mangalvaar web console mein system prompt badal diya" kabhi bhi "agent sab kuch refund kyun karne laga?" ka jawab nahi hona chahiye.</p>
+</div>
+
+<details class="deep">
+  <summary><span class="l-en">For coders: a refund workflow that waits, crashes, resumes, and pays exactly once</span><span class="l-hi">Coders ke liye: refund workflow jo rukta, crash hota, resume karta, aur theek ek baar pay karta hai</span><span class="lvl">code2/ch41/durable_workflow.py</span></summary>
+  <div class="inner">
+<pre>HARNESS = {                                       # harness-as-code: reviewed, versioned data
+    "steps": ["fetch_order", "check_policy", "issue_refund", "email_customer", "close_ticket"],
+    "limits": {"max_refund_inr": 5000},
+    "needs_approval": ["issue_refund"],          # human approval gate for money movement
+}
+
+for step in HARNESS["steps"]:
+    if step in state["done"]:
+        continue                                  # resume: skip finished steps
+    decision = control_plane(step, state, approved)
+    if decision != "allow":
+        return                                    # wait for a human, or deny
+    run(step, state)
+    state["done"].append(step)
+    save(state)                                   # atomic checkpoint after EVERY step</pre>
+<pre>$ python code2/ch41/durable_workflow.py
+--- run 1: waits for approval (checkpoint has 0 finished steps)
+   done   fetch_order
+   done   check_policy
+   wait   issue_refund    human approval required
+--- run 2: approved, but the mail server crashes (checkpoint has 2 finished steps)
+   skip   fetch_order     already done
+   skip   check_policy    already done
+   done   issue_refund
+   CRASH  email_customer  mail server timed out
+--- run 3: resume after the crash (checkpoint has 3 finished steps)
+   skip   fetch_order     already done
+   skip   check_policy    already done
+   skip   issue_refund    already done
+   done   email_customer
+   done   close_ticket
+   finished: {'order': {'id': 'ORD-77', 'amount_inr': 1899, 'customer': 'asha@example.com'}, 'eligible': True, 'refund_id': 'RF-5512', 'emailed': True, 'closed': True}
+
+payments made: [('refund', 'ORD-77', 1899)]   <- exactly one refund, even though the workflow ran three times</pre>
+  </div>
+</details>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">Models are not deterministic; your workflow should be</span><span class="l-hi">Models deterministic nahi; aapka workflow hona chahiye</span></h4>
+  <p class="l-en">Ask a model the same thing twice and you may get two different plans (even at temperature 0, as the Chapter 2 lab shows). So never let a resumed run re-ask the model what to do for a step that already happened: record the model's decision in the state the first time, and replay it. Do in plain code everything that doesn't need judgement (<strong>deterministic execution</strong>); use the model only where judgement is needed.</p>
+  <p class="l-hi">Model se ek hi baat do baar poochho toh do alag plans mil sakte hain (temperature 0 par bhi, jaisa Chapter 2 ka lab dikhaata hai). Isliye resume hue run ko kabhi us step ke liye model se dobara mat poochhne do jo ho chuka: pehli baar model ka faisla state mein likho, aur use dohraao. Jis kaam mein samajh ki zaroorat nahi, woh saade code mein karo (<strong>deterministic execution</strong>); model sirf wahan jahan samajh chahiye.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Keep agent state in durable storage, as named data, not in the transcript.</li><li>Checkpoint after every step, atomically; resume by skipping finished steps.</li><li>Make risky steps idempotent so a retry can't pay or send twice.</li><li>A control plane of plain rules approves, limits or blocks every action.</li><li>Keep prompts, tools and policies in git as harness-as-code, and test every change.</li></ol>
+  <ol class="l-hi"><li>Agent ki state tikaau storage mein, naam wale data ki tarah rakho, transcript mein nahi.</li><li>Har step ke baad atomically checkpoint; poore steps chhod kar resume.</li><li>Risky steps idempotent banao taaki retry do baar pay ya send na kare.</li><li>Saade niyamon ka control plane har action ko manzoor, seemit ya band karta hai.</li><li>Prompts, tools aur policies git mein harness-as-code ki tarah rakho, aur har badlaav test karo.</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Make <code>issue_refund</code> crash after the payment but before the checkpoint is saved. What goes wrong on resume? Fix it with an idempotency key stored in the ledger. <span class="level">core</span></p><p class="l-hi"><code>issue_refund</code> ko payment ke baad par checkpoint save se pehle crash karao. Resume par kya bigadta hai? Ledger mein idempotency key rakh kar theek karo. <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Move <code>HARNESS</code> into a JSON file and write a test that fails if any money-moving step is missing from <code>needs_approval</code>. <span class="level">core</span></p><p class="l-hi"><code>HARNESS</code> ko JSON file mein le jao aur aisa test likho jo fail ho agar paisa hilaane wala koi step <code>needs_approval</code> mein na ho. <span class="level">core</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Temporal documentation: <em>Durable Execution</em> and <em>Workflows</em>.</li>
+  <li>Stripe API documentation: <em>Idempotent requests</em>.</li>
+  <li>LangGraph documentation: <em>Persistence and checkpointers</em>.</li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book;
+  B.chat("scA", [
+    { who: "note", en: "Run 1 · fetch_order ✓ · check_policy ✓ · issue_refund: WAIT for human approval · checkpoint saved (2 done)", hi: "Run 1 · fetch_order ✓ · check_policy ✓ · issue_refund: insaani manzoori ka INTEZAAR · checkpoint save (2 poore)", step: 0 },
+    { who: "user", en: "Manager approves the ₹1,899 refund.", hi: "Manager ₹1,899 refund manzoor karta hai.", step: 1 },
+    { who: "note", en: "Run 2 · skip 2 done steps · issue_refund ✓ (paid once) · checkpoint · email_customer ✗ CRASH: mail server timed out", hi: "Run 2 · 2 poore steps chhodo · issue_refund ✓ (ek baar paid) · checkpoint · email_customer ✗ CRASH: mail server time out", step: 2 },
+    { who: "note", en: "Run 3 · skip 3 done steps (no second refund!) · email_customer ✓ · close_ticket ✓ · finished", hi: "Run 3 · 3 poore steps chhodo (doosra refund nahi!) · email_customer ✓ · close_ticket ✓ · khatam", step: 3 },
+    { who: "good", en: "Refund issued exactly once, customer emailed, ticket closed. Three runs, one correct outcome.", hi: "Refund theek ek baar, customer ko email, ticket band. Teen runs, ek sahi nateeja.", step: 4 }
+  ], [
+    ["Run 1 does the safe steps, then stops at the approval gate. The checkpoint remembers 2 finished steps.", "Run 1 surakshit steps karta hai, phir approval gate par rukta hai. Checkpoint 2 poore steps yaad rakhta hai."],
+    ["Hours later, a human approves.", "Ghanton baad insaan manzoori deta hai."],
+    ["Run 2 skips what's done, pays, checkpoints, then crashes while emailing.", "Run 2 poora kiya hua chhodta hai, pay karta hai, checkpoint, phir email karte hue crash."],
+    ["Run 3 reads the checkpoint: the refund is already done, so it is NOT repeated.", "Run 3 checkpoint padhta hai: refund ho chuka hai, isliye dohraaya NAHI jaata."],
+    ["That's durable execution: crashes cost time, never correctness.", "Yahi durable execution hai: crash samay khaata hai, sahi-pan kabhi nahi."]
+  ]);
+})();
+</script>

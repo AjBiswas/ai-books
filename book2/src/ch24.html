@@ -45,6 +45,29 @@
   <p class="l-hi">Phones aur naye "AI PCs" neural processing units aur bane-banaaye chhote models ke saath aate hain, notifications ka summary, text dobara likhna aur voice features ke liye, sab offline aur private. Kamzor network wale Indian users ke liye on-device models ka matlab ho sakta hai aisi app jo bina signal ki train mein bhi chale. Dono ka plan karo: turant, private kaamon ke liye chhota local model, aur mushkil ke liye cloud model.</p>
 </div>
 
+<details class="deep">
+  <summary><span class="l-en">For coders: quantise a layer by hand</span><span class="l-hi">Coders ke liye: haath se layer quantise karo</span><span class="lvl">code2/ch24/quantize.py</span></summary>
+  <div class="inner">
+<pre>def quantise(W, bits, group=32):
+    q_max = 2 ** (bits - 1) - 1                     # 127 for 8-bit, 7 for 4-bit
+    g = W.reshape(-1, group)
+    scale = np.abs(g).max(1, keepdims=True) / q_max # one scale per group of 32 weights
+    q = np.clip(np.round(g / scale), -q_max, q_max).astype(np.int8)
+    return q, scale</pre>
+<pre>$ python code2/ch24/quantize.py
+format    size of this layer  weight error  output error
+fp32                 64.0 MB             0             0
+fp16                 32.0 MB       0.018%       0.021%
+int8                 17.0 MB         0.6%         0.5%
+int4                  9.0 MB        10.2%         9.8%
+int2                  5.0 MB        69.0%        66.0%
+
+7B model in fp16 = ~14 GB; in 4-bit = ~4 GB: the difference between 'no' and 'yes' on a laptop.</pre>
+  <p class="l-en">8-bit is nearly free: under 1% error at a quarter of the size. This simple 4-bit scheme loses about 10% per layer; real formats such as GGUF Q4_K_M use smarter grouping and scales, which is why a well-made 4-bit model stays usable. 2-bit breaks the layer.</p>
+  <p class="l-hi">8-bit lagbhag muft hai: chauthaai size par 1% se kam error. Yeh saada 4-bit tareeka har layer mein lagbhag 10% khota hai; GGUF Q4_K_M jaise asli formats behtar grouping aur scales use karte hain, isiliye achha bana 4-bit model kaam ka rehta hai. 2-bit layer tod deta hai.</p>
+  </div>
+</details>
+
 <div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
 <div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
   <ol class="l-en"><li>Small models win on narrow, high-volume, fast or private tasks.</li><li>Distillation lets a big teacher train a small student for one task.</li><li>Quantisation shrinks memory 2–4× with a small quality cost.</li><li>Cascades ask the small model first and escalate only when unsure.</li></ol>
