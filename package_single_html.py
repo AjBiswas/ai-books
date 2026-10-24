@@ -112,6 +112,7 @@ parts = ["""<!doctype html>
 <title>AI Books</title>
 <style>""", fonts, css, """
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+""", read(os.path.join(ROOT, "search.css")), """
 </style>
 </head>
 <body>
@@ -126,7 +127,8 @@ parts.append("""<script>
 (function () {
   var app = document.getElementById("app");
   function route() {
-    var id = (location.hash || "#home").slice(1);
+    var hash = (location.hash || "#home").slice(1).split("~");   // #page~n jumps to the nth h2 (search results)
+    var id = hash[0], sec = Number(hash[1] || 0);
     var t = document.getElementById("t-" + id);
     if (!t) { id = "home"; t = document.getElementById("t-home"); }
     app.innerHTML = "";
@@ -138,11 +140,15 @@ parts.append("""<script>
     });
     var s = document.getElementById("s-" + id);
     if (s) { try { new Function(s.textContent)(); } catch (e) { console.error(id, e); } }
-    window.scrollTo(0, 0);
+    var h = sec ? app.querySelectorAll("h2")[sec - 1] : null;
+    if (h) h.scrollIntoView(); else window.scrollTo(0, 0);
   }
   window.addEventListener("hashchange", route);
   route();
 })();
+</script>
+<script>
+""" + read(os.path.join(ROOT, "search.js")) + """
 </script>
 </body>
 </html>

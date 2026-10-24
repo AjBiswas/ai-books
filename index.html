@@ -156,19 +156,19 @@
 }/* Layout concept: a field manual for harness engineers. Single reading column (~68ch),
    figures break wider, margin-style callouts sit inline with a coloured tab by role. */
 :root {
-  --paper: #f5f7f6;
-  --paper-2: #e9eeed;
+  --paper: #fdfbf6;      /* milky white */
+  --paper-2: #f4f0e7;
   --ink: #15202b;
   --ink-2: #4c5b68;
-  --rule: #d2dadd;
+  --rule: #e2dccf;
   --signal: #0e7a86;      /* primary accent: the harness / engineering */
   --signal-soft: #d6eef0;
   --amber: #a86a00;       /* AI behaviour callouts */
   --amber-soft: #f6ead2;
   --plum: #6b3f8f;        /* enterprise callouts */
   --plum-soft: #ece3f3;
-  --code-bg: #e8eeee;
-  --fig-bg: #ffffff;
+  --code-bg: #f3efe6;
+  --fig-bg: #fffefb;
   --c5: #5d7f1e;          /* extra slice colours for the lucky wheel */
   --c6: #b8456a;
   --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
@@ -499,7 +499,49 @@ details.deep > .inner { padding: 0 1rem 0.5rem; border-top: 1px solid var(--rule
 }
 @media (prefers-reduced-motion: reduce) { .bar .fill { transition: none; } }
 
+/* Mobile header: one tidy row (back link left, language toggle right) */
+h2 { scroll-margin-top: 4.5rem; }
+.opener h1 + .story { margin-top: 1.2rem; }
+@media (max-width: 560px) {
+  .topbar { flex-wrap: nowrap; gap: 0.6rem; padding-block: 0.55rem; margin-bottom: 1.8rem; }
+  .topbar .crumbs { flex: 1 1 auto; min-width: 0; gap: 0.6rem; flex-wrap: nowrap; overflow: hidden; }
+  .topbar .crumbs > * { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar .crumbs > span { display: none; }
+  .topbar .crumbs > a + a { display: none; }
+  .langtog { flex: none; font-size: 0.75rem; }
+  .langtog button { padding: 0.28rem 0.65rem; }
+}
+
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+/* Topic search for the single-file edition (inlined by package_single_html.py). */
+.sbtn { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 20;
+  display: inline-flex; align-items: center; gap: 0.4rem; border: 0; border-radius: 999px; cursor: pointer;
+  padding: 0.65rem 1rem; background: var(--signal); color: var(--paper); font: 600 0.95rem var(--font-display);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .25); }
+.sbtn svg { width: 1.1rem; height: 1.1rem; }
+.sover { position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, .45); display: none; }
+.sover.open { display: block; }
+.sbox { background: var(--paper); color: var(--ink); max-width: 44rem; margin: 4vh auto 0; border-radius: 10px;
+  display: flex; flex-direction: column; max-height: 88vh; overflow: hidden; border: 1px solid var(--rule); }
+.shead { display: flex; gap: 0.5rem; padding: 0.8rem; border-bottom: 1px solid var(--rule); }
+.shead input { flex: 1; min-width: 0; font: 1.05rem var(--font-display); padding: 0.55rem 0.8rem; border-radius: 6px;
+  border: 1px solid var(--rule); background: var(--paper-2); color: var(--ink); }
+.shead button { border: 1px solid var(--ink); background: transparent; color: var(--ink); border-radius: 999px;
+  padding: 0 0.9rem; font: 600 0.85rem var(--font-display); cursor: pointer; }
+.slist { overflow-y: auto; padding: 0.3rem 0.8rem 0.8rem; -webkit-overflow-scrolling: touch; }
+.slist a { display: block; padding: 0.65rem 0.4rem; border-bottom: 1px solid var(--rule); text-decoration: none; color: var(--ink); }
+.slist a:hover, .slist a:focus { background: var(--paper-2); outline: none; }
+.slist .sk { font: 0.7rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--signal); }
+.slist .sh { font: 600 1rem var(--font-display); display: block; margin: 0.15rem 0; }
+.slist .ss { font-size: 0.88rem; color: var(--ink-2); line-height: 1.45; }
+.slist mark { background: var(--signal-soft); color: inherit; padding: 0 1px; border-radius: 2px; }
+.slist .sempty { color: var(--ink-2); padding: 1rem 0.4rem; }
+@media (max-width: 560px) {
+  .sbox { margin: 0; max-height: none; height: 100%; border-radius: 0; border: 0; }
+  .sbtn { padding: 0.75rem; }
+  .sbtn span { display: none; }
+}
+
 </style>
 </head>
 <body>
@@ -10736,7 +10778,8 @@ def chat(body: dict):
 (function () {
   var app = document.getElementById("app");
   function route() {
-    var id = (location.hash || "#home").slice(1);
+    var hash = (location.hash || "#home").slice(1).split("~");   // #page~n jumps to the nth h2 (search results)
+    var id = hash[0], sec = Number(hash[1] || 0);
     var t = document.getElementById("t-" + id);
     if (!t) { id = "home"; t = document.getElementById("t-home"); }
     app.innerHTML = "";
@@ -10748,11 +10791,139 @@ def chat(body: dict):
     });
     var s = document.getElementById("s-" + id);
     if (s) { try { new Function(s.textContent)(); } catch (e) { console.error(id, e); } }
-    window.scrollTo(0, 0);
+    var h = sec ? app.querySelectorAll("h2")[sec - 1] : null;
+    if (h) h.scrollIntoView(); else window.scrollTo(0, 0);
   }
   window.addEventListener("hashchange", route);
   route();
 })();
+</script>
+<script>
+/* Topic search for the single-file edition (inlined by package_single_html.py).
+   The index is built once, on first open, from the chapter <template>s: one entry per chapter
+   and one per section (h2), in both languages. A result links to #page~n (the nth h2). */
+(function () {
+  var BOOK = { b2: "Book 1 · AI Engineer", b1: "Book 2 · Harness" };
+  var index = null;
+
+  var btn = document.createElement("button");
+  btn.className = "sbtn"; btn.type = "button"; btn.setAttribute("aria-label", "Search topics");
+  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">' +
+    '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg><span>Search</span>';
+  var over = document.createElement("div");
+  over.className = "sover"; over.setAttribute("role", "dialog"); over.setAttribute("aria-modal", "true");
+  over.innerHTML = '<div class="sbox"><div class="shead"><input type="search" autocomplete="off" aria-label="Search topics">' +
+    '<button type="button">Close</button></div><div class="slist"></div></div>';
+  document.body.appendChild(btn);
+  document.body.appendChild(over);
+  var q = over.querySelector("input"), list = over.querySelector(".slist");
+
+  function lang() { return window.Book ? window.Book.lang() : "en"; }
+  function txt(el, l) {
+    var c = el.cloneNode(true);
+    c.querySelectorAll(l === "en" ? ".l-hi" : ".l-en").forEach(function (x) { x.remove(); });
+    return c.textContent.replace(/\s+/g, " ").trim();
+  }
+
+  function build() {
+    index = [];
+    document.querySelectorAll("template[id^='t-b']").forEach(function (t) {
+      var id = t.id.slice(2);
+      if (/-index$/.test(id)) return;
+      var root = document.createElement("div");
+      root.appendChild(t.content.cloneNode(true));
+      var h1 = root.querySelector("h1");
+      var base = { id: id, book: BOOK[id.slice(0, 2)], chap: t.getAttribute("data-title").split(" · ")[0] };
+      function entry(n, el) {
+        var e = { id: base.id, book: base.book, chap: base.chap, n: n,
+          head: { en: el ? txt(el, "en") : "", hi: el ? txt(el, "hi") : "" }, body: { en: "", hi: "" } };
+        index.push(e);
+        return e;
+      }
+      var cur = entry(0, h1), n = 0;
+      root.querySelectorAll("h2, h3, p, li, td, th, figcaption, summary").forEach(function (el) {
+        if (el.closest("svg, .topbar")) return;
+        if (el.tagName === "H2") { n += 1; cur = entry(n, el); return; }
+        var outer = el.parentElement && el.parentElement.closest("li, td, th, p");
+        if (outer) return;   // its text is already counted by the enclosing element
+        if (!el.closest(".l-hi")) cur.body.en += " " + txt(el, "en");
+        if (!el.closest(".l-en")) cur.body.hi += " " + txt(el, "hi");
+      });
+    });
+  }
+
+  function esc(s) {
+    return s.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; });
+  }
+  function mark(s, words) {
+    var out = esc(s);
+    words.forEach(function (w) {
+      var re = new RegExp("(" + esc(w).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig");
+      out = out.replace(re, "<mark>$1</mark>");
+    });
+    return out;
+  }
+  function snippet(body, words) {
+    var low = body.toLowerCase(), at = -1;
+    words.some(function (w) { at = low.indexOf(w); return at >= 0; });
+    if (at < 0) return body.slice(0, 140) + (body.length > 140 ? "..." : "");
+    var a = Math.max(0, at - 50), b = Math.min(body.length, at + 110);
+    return (a ? "..." : "") + body.slice(a, b) + (b < body.length ? "..." : "");
+  }
+
+  function search() {
+    if (!index) build();
+    var l = lang();
+    q.placeholder = l === "hi" ? "Topic dhoondhiye: RAG, MCP, tokens..." : "Search topics: RAG, MCP, tokens...";
+    over.querySelector(".shead button").textContent = l === "hi" ? "Band" : "Close";
+    var words = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+    if (!words.length) {
+      list.innerHTML = '<div class="sempty">' + (l === "hi" ? "Koi topic likhiye, jaise RAG, MCP, LoRA, agents." : "Type a topic, like RAG, MCP, LoRA, agents.") + "</div>";
+      return;
+    }
+    var hits = [];
+    index.forEach(function (e) {
+      var head = (e.head.en + " " + e.head.hi).toLowerCase();
+      var all = head + " " + (e.body.en + " " + e.body.hi).toLowerCase();
+      if (!words.every(function (w) { return all.indexOf(w) >= 0; })) return;
+      var score = e.n === 0 ? 2 : 0;
+      words.forEach(function (w) { if (head.indexOf(w) >= 0) score += 10; score += Math.min(5, all.split(w).length - 1); });
+      hits.push({ e: e, score: score });
+    });
+    hits.sort(function (a, b) { return b.score - a.score; });
+    if (!hits.length) {
+      list.innerHTML = '<div class="sempty">' + (l === "hi" ? "Kuchh nahi mila. Doosra shabd try kijiye." : "Nothing found. Try another word.") + "</div>";
+      return;
+    }
+    list.innerHTML = hits.slice(0, 40).map(function (h) {
+      var e = h.e, head = e.head[l] || e.head.en, body = (e.body[l] || e.body.en).trim();
+      return '<a href="#' + e.id + (e.n ? "~" + e.n : "") + '"><span class="sk">' + esc(e.book + " · " + e.chap) + "</span>" +
+        '<span class="sh">' + mark(head, words) + '</span><span class="ss">' + mark(snippet(body, words), words) + "</span></a>";
+    }).join("");
+  }
+
+  function open() { over.classList.add("open"); document.body.style.overflow = "hidden"; search(); q.focus(); }
+  function close() { over.classList.remove("open"); document.body.style.overflow = ""; }
+  btn.addEventListener("click", open);
+  over.querySelector(".shead button").addEventListener("click", close);
+  over.addEventListener("click", function (e) { if (e.target === over) close(); });
+  list.addEventListener("click", function (e) {
+    var a = e.target.closest("a");
+    if (!a) return;
+    close();
+    if (a.getAttribute("href") === location.hash) { e.preventDefault(); window.dispatchEvent(new HashChangeEvent("hashchange")); }
+  });
+  q.addEventListener("input", search);
+  q.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { var a = list.querySelector("a"); if (a) a.click(); }
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && over.classList.contains("open")) close();
+    else if ((e.key === "k" && (e.ctrlKey || e.metaKey)) ||
+             (e.key === "/" && !/INPUT|TEXTAREA/.test(document.activeElement.tagName))) { e.preventDefault(); open(); }
+  });
+})();
+
 </script>
 </body>
 </html>

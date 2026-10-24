@@ -1,19 +1,19 @@
 /* Layout concept: a field manual for harness engineers. Single reading column (~68ch),
    figures break wider, margin-style callouts sit inline with a coloured tab by role. */
 :root {
-  --paper: #f5f7f6;
-  --paper-2: #e9eeed;
+  --paper: #fdfbf6;      /* milky white */
+  --paper-2: #f4f0e7;
   --ink: #15202b;
   --ink-2: #4c5b68;
-  --rule: #d2dadd;
+  --rule: #e2dccf;
   --signal: #0e7a86;      /* primary accent: the harness / engineering */
   --signal-soft: #d6eef0;
   --amber: #a86a00;       /* AI behaviour callouts */
   --amber-soft: #f6ead2;
   --plum: #6b3f8f;        /* enterprise callouts */
   --plum-soft: #ece3f3;
-  --code-bg: #e8eeee;
-  --fig-bg: #ffffff;
+  --code-bg: #f3efe6;
+  --fig-bg: #fffefb;
   --c5: #5d7f1e;          /* extra slice colours for the lucky wheel */
   --c6: #b8456a;
   --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
@@ -343,3 +343,16 @@ details.deep > .inner { padding: 0 1rem 0.5rem; border-top: 1px solid var(--rule
   .chapters .st { grid-column: 2; justify-self: start; }
 }
 @media (prefers-reduced-motion: reduce) { .bar .fill { transition: none; } }
+
+/* Mobile header: one tidy row (back link left, language toggle right) */
+h2 { scroll-margin-top: 4.5rem; }
+.opener h1 + .story { margin-top: 1.2rem; }
+@media (max-width: 560px) {
+  .topbar { flex-wrap: nowrap; gap: 0.6rem; padding-block: 0.55rem; margin-bottom: 1.8rem; }
+  .topbar .crumbs { flex: 1 1 auto; min-width: 0; gap: 0.6rem; flex-wrap: nowrap; overflow: hidden; }
+  .topbar .crumbs > * { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar .crumbs > span { display: none; }
+  .topbar .crumbs > a + a { display: none; }
+  .langtog { flex: none; font-size: 0.75rem; }
+  .langtog button { padding: 0.28rem 0.65rem; }
+}

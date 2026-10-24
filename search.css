@@ -1,0 +1,28 @@
+/* Topic search for the single-file edition (inlined by package_single_html.py). */
+.sbtn { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 20;
+  display: inline-flex; align-items: center; gap: 0.4rem; border: 0; border-radius: 999px; cursor: pointer;
+  padding: 0.65rem 1rem; background: var(--signal); color: var(--paper); font: 600 0.95rem var(--font-display);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .25); }
+.sbtn svg { width: 1.1rem; height: 1.1rem; }
+.sover { position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, .45); display: none; }
+.sover.open { display: block; }
+.sbox { background: var(--paper); color: var(--ink); max-width: 44rem; margin: 4vh auto 0; border-radius: 10px;
+  display: flex; flex-direction: column; max-height: 88vh; overflow: hidden; border: 1px solid var(--rule); }
+.shead { display: flex; gap: 0.5rem; padding: 0.8rem; border-bottom: 1px solid var(--rule); }
+.shead input { flex: 1; min-width: 0; font: 1.05rem var(--font-display); padding: 0.55rem 0.8rem; border-radius: 6px;
+  border: 1px solid var(--rule); background: var(--paper-2); color: var(--ink); }
+.shead button { border: 1px solid var(--ink); background: transparent; color: var(--ink); border-radius: 999px;
+  padding: 0 0.9rem; font: 600 0.85rem var(--font-display); cursor: pointer; }
+.slist { overflow-y: auto; padding: 0.3rem 0.8rem 0.8rem; -webkit-overflow-scrolling: touch; }
+.slist a { display: block; padding: 0.65rem 0.4rem; border-bottom: 1px solid var(--rule); text-decoration: none; color: var(--ink); }
+.slist a:hover, .slist a:focus { background: var(--paper-2); outline: none; }
+.slist .sk { font: 0.7rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--signal); }
+.slist .sh { font: 600 1rem var(--font-display); display: block; margin: 0.15rem 0; }
+.slist .ss { font-size: 0.88rem; color: var(--ink-2); line-height: 1.45; }
+.slist mark { background: var(--signal-soft); color: inherit; padding: 0 1px; border-radius: 2px; }
+.slist .sempty { color: var(--ink-2); padding: 1rem 0.4rem; }
+@media (max-width: 560px) {
+  .sbox { margin: 0; max-height: none; height: 100%; border-radius: 0; border: 0; }
+  .sbtn { padding: 0.75rem; }
+  .sbtn span { display: none; }
+}
