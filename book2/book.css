@@ -235,7 +235,8 @@ td.n, th.n { text-align: right; font-family: var(--font-mono); }
 .chapters { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--rule); }
 .chapters li { display: grid; grid-template-columns: 3rem 1fr auto; gap: 0.8rem; align-items: baseline; padding-block: 0.7rem; border-bottom: 1px solid var(--rule); margin: 0; }
 .chapters .cn { font-family: var(--font-mono); color: var(--ink-2); font-size: 0.85rem; }
-.chapters .ct { font-family: var(--font-display); font-weight: 600; min-width: 0; }
+.chapters .ct { font-family: var(--font-display); font-weight: 600; min-width: 0; text-decoration: none; color: var(--ink); }
+.chapters .ct:hover { color: var(--signal); }
 .chapters .ct > span:not(.l-en):not(.l-hi) { display: block; font-family: var(--font-body); font-weight: 400; color: var(--ink-2); font-size: 0.92rem; }
 .chapters .st { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.1rem 0.45rem; border-radius: 2px; white-space: nowrap; }
 .st.ready { background: var(--signal); color: var(--paper); }
