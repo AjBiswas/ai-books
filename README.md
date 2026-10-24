@@ -6,7 +6,7 @@ Two illustrated, animated storybooks about building with AI, in **English and Hi
 
 | Book | What it covers |
 |---|---|
-| **Book 1 · Becoming an AI Engineer** (34 chapters, start here) | A to Z for new AI engineers: prompting, context engineering, RAG, MCP, skills, agents, local models, fine-tuning, evals, security, cost, production, career |
+| **Book 1 · Becoming an AI Engineer** (36 chapters, start here) | A to Z for new AI engineers: prompting, context engineering, RAG, MCP, skills, agents, local models, fine-tuning, evals, security, cost, production, career |
 | **Book 2 · Building the Harness** (18 chapters) | How LLMs work inside, AI behaviour patterns, building an agent harness, and running an enterprise AI platform with its own rules and token budgets |
 
 ## Offline

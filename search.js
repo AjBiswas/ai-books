@@ -44,7 +44,7 @@
         return e;
       }
       var cur = entry(0, h1), n = 0;
-      root.querySelectorAll("h2, h3, p, li, td, th, figcaption, summary").forEach(function (el) {
+      root.querySelectorAll("h2, h3, h4, p, li, td, th, figcaption, summary, .gloss > div").forEach(function (el) {
         if (el.closest("svg, .topbar")) return;
         if (el.tagName === "H2") { n += 1; cur = entry(n, el); return; }
         var outer = el.parentElement && el.parentElement.closest("li, td, th, p");
@@ -79,10 +79,10 @@
     var l = lang();
     q.placeholder = l === "hi" ? "Topic dhoondhiye: RAG, MCP, tokens..." : "Search topics: RAG, MCP, tokens...";
     over.querySelector(".shead button").textContent = l === "hi" ? "Band" : "Close";
-    var typed = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+    var typed = q.value.toLowerCase().split(/[\s-]+/).filter(Boolean);   // "harness-as-code" = "harness as code"
     var words = typed.filter(function (w) { return !STOP[w]; });
     if (!words.length) words = typed;
-    var phrase = words.join(" ");
+    var phrase = typed.join(" ");
     if (!words.length) {
       list.innerHTML = '<div class="sempty">' + (l === "hi" ? "Koi topic likhiye, jaise RAG, MCP, LoRA, agents." : "Type a topic, like RAG, MCP, LoRA, agents.") + "</div>";
       return;
@@ -90,13 +90,13 @@
     // Every word must match; if nothing does, fall back to sections matching most of the words.
     var hits = [], near = [], need = Math.max(1, Math.ceil(words.length / 2));
     index.forEach(function (e) {
-      var head = (e.head.en + " " + e.head.hi).toLowerCase();
-      var all = head + " " + (e.body.en + " " + e.body.hi).toLowerCase();
+      var head = (e.head.en + " " + e.head.hi).toLowerCase().replace(/-/g, " ");
+      var all = head + " " + (e.body.en + " " + e.body.hi).toLowerCase().replace(/-/g, " ");
       var found = words.filter(function (w) { return all.indexOf(w) >= 0; }).length;
       if (found < need) return;
       var score = (e.n === 0 ? 2 : 0) + found * 20;
-      if (words.length > 1 && head.indexOf(phrase) >= 0) score += 60;
-      else if (words.length > 1 && all.indexOf(phrase) >= 0) score += 30;
+      if (typed.length > 1 && head.indexOf(phrase) >= 0) score += 60;
+      else if (typed.length > 1 && all.indexOf(phrase) >= 0) score += 30;
       words.forEach(function (w) { if (head.indexOf(w) >= 0) score += 10; score += Math.min(5, all.split(w).length - 1); });
       (found === words.length ? hits : near).push({ e: e, score: score });
     });

@@ -18,6 +18,7 @@ PARTS = [
     ("Part V", "Changing the model itself", "Model ko hi badalna"),
     ("Part VI", "Production", "Production"),
     ("Part VII", "Your career", "Aapka career"),
+    ("Part VIII", "Frontier and reference", "Frontier aur reference"),
 ]
 
 # (num, part index, title en, title hi, subtitle en, subtitle hi)
@@ -56,6 +57,8 @@ CHAPTERS = [
     (32, 5, "Responsible AI & the Law", "Zimmedaar AI aur Kanoon", "Bias, privacy, copyright, and the rules you must follow", "Bias, privacy, copyright, aur maanne laayak niyam"),
     (33, 6, "The Hot-Topics Radar", "Hot Topics Radar", "Every buzzword of 2026, explained in one line and placed on a map", "2026 ka har buzzword, ek line mein samjha aur naksha par"),
     (34, 6, "Your Roadmap & Portfolio", "Aapka Roadmap aur Portfolio", "A 90-day plan, five portfolio projects, and interviews", "90 din ka plan, paanch portfolio projects, aur interviews"),
+    (35, 7, "Research Frontier: Beyond the Plain LLM", "Research Frontier: Saade LLM se Aage", "RLM, NCM, diffusion, state-space and concept models, and how to judge the hype", "RLM, NCM, diffusion, state-space aur concept models, aur hype ko kaise parkhein"),
+    (36, 7, "The AI Dictionary", "AI Shabdkosh", "Every term from LLM to NCM in plain words, with a study order", "LLM se NCM tak har shabd aasaan bhasha mein, padhne ke kram ke saath"),
 ]
 
 HEAD = """<!doctype html>
@@ -156,7 +159,7 @@ INDEX_TOP = """<title>Becoming an AI Engineer</title>
 <header class="cover">
   <div class="cover-grid">
     <div>
-      <div class="eyebrow"><span class="l-en">With Haron as your mentor · 34 chapters · A to Z</span><span class="l-hi">Haron aapka mentor · 34 chapters · A se Z</span></div>
+      <div class="eyebrow"><span class="l-en">With Haron as your mentor · 36 chapters · A to Z</span><span class="l-hi">Haron aapka mentor · 36 chapters · A se Z</span></div>
       <h1><span class="l-en">Becoming an AI Engineer</span><span class="l-hi">AI Engineer Banna</span></h1>
       <p class="lede l-en">Everything an AI engineer works with in 2026, from your first prompt to shipping agents in production: prompting, context engineering, RAG, MCP, skills, agents, fine-tuning, local models on your laptop, evals, security, cost, and the career path. Every idea has a picture, an animation, a simple example, and code you can run.</p>
       <p class="lede l-hi">2026 mein AI engineer jis cheez ke saath kaam karta hai, sab kuch: pehle prompt se lekar production mein agents ship karne tak. Prompting, context engineering, RAG, MCP, skills, agents, fine-tuning, laptop par local models, evals, security, kharch, aur career ka raasta. Har idea ke saath picture, animation, aasaan example aur chalne wala code.</p>

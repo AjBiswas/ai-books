@@ -1,0 +1,291 @@
+  <div class="story">
+    <p class="l-en">Every model in this book is the same kind of machine: it reads a window of tokens and writes the next token, one at a time. That design runs into two walls. Feed it a very long input and its attention gets blurry (<strong>context rot</strong>). Ask it for a long answer and it must take one step per token, however simple the text. Researchers attack both walls. This chapter explains the two newest attacks in plain words, <strong>RLM</strong> (Recursive Language Models) and <strong>NCM</strong> (Next-Concept Modeling), puts the other challengers on one page, and gives you a checklist for reading the next "this ends LLMs" headline calmly.</p>
+    <p class="l-hi">Is book ka har model ek hi tarah ki machine hai: tokens ki ek window padhta hai aur agla token likhta hai, ek-ek karke. Is design ke saamne do deewarein hain. Bahut lamba input do toh uska dhyaan dhundhla ho jaata hai (<strong>context rot</strong>). Lamba jawab maango toh har token ke liye ek step lena padta hai, text kitna bhi aasaan ho. Researchers dono deewaron par hamla karte hain. Yeh chapter do sabse naye hamle aasaan shabdon mein samjhaata hai, <strong>RLM</strong> (Recursive Language Models) aur <strong>NCM</strong> (Next-Concept Modeling), baaki challengers ko ek page par rakhta hai, aur agli "LLMs khatam" headline ko shaanti se padhne ki checklist deta hai.</p>
+  </div>
+  <ul class="objectives">
+    <li><b>1</b><span class="l-en">The two walls: long inputs and one-token-at-a-time</span><span class="l-hi">Do deewarein: lambe inputs aur ek-ek token</span></li>
+    <li><b>2</b><span class="l-en">RLM: a model that reads huge inputs with code and calls itself</span><span class="l-hi">RLM: model jo code se bade inputs padhta hai aur khud ko bulaata hai</span></li>
+    <li><b>3</b><span class="l-en">NCM: writing text coarse to fine, many pieces at once</span><span class="l-hi">NCM: text ko mote se baareek, kai hisse ek saath likhna</span></li>
+    <li><b>4</b><span class="l-en">Diffusion, state-space and concept models, and how to judge the hype</span><span class="l-hi">Diffusion, state-space aur concept models, aur hype ko kaise parkhein</span></li>
+  </ul>
+</section>
+
+<article class="col">
+
+<div class="callout enterprise">
+  <span class="tag">In the real world</span>
+  <h4><span class="l-en">Research, not your next production stack</span><span class="l-hi">Research hai, aapka agla production stack nahi</span></h4>
+  <p class="l-en">Everything here is new, some of it weeks old. Results come from the authors' own experiments, often at small scale, and many haven't been independently replicated. Learn the ideas, because they change how you think about harnesses and cost. Keep shipping products on the proven tools from the earlier chapters. (Written in late October 2026.)</p>
+  <p class="l-hi">Yahan sab kuch naya hai, kuch toh kuch hafte purana. Nateeje authors ke apne experiments se hain, aksar chhote scale par, aur kai alag se dohraaye nahi gaye. Ideas seekho, kyunki yeh harness aur kharch ke baare mein sochne ka tareeka badalte hain. Products pichle chapters ke saabit tools par hi ship karte raho. (October 2026 ke aakhir mein likha.)</p>
+</div>
+
+<div class="scene-title"><span class="sn">1</span><h2><span class="l-en">Two walls every LLM hits</span><span class="l-hi">Do deewarein jinse har LLM takraata hai</span></h2></div>
+<div class="story">
+  <p class="l-en">Think of Haron reading a 2,000-page contract in one breath and then answering in one go. Two things go wrong. Details from page 700 get lost in the crowd. And the answer comes out word by word, each word waiting for the one before. Today we patch both walls in the harness. Research is trying to move the walls themselves.</p>
+  <p class="l-hi">Socho Haron 2,000 page ka contract ek saans mein padh kar ek baar mein jawab de raha hai. Do cheezein bigadti hain. Page 700 ki details bheed mein kho jaati hain. Aur jawab shabd-shabd nikalta hai, har shabd pichle ka intezaar karta hai. Aaj hum dono deewaron ko harness mein patch karte hain. Research deewaron ko hi hilaane ki koshish kar raha hai.</p>
+</div>
+<figure class="scene" id="scA"></figure>
+
+<div class="scene-title"><span class="sn">2</span><h2><span class="l-en">RLM: Recursive Language Models</span><span class="l-hi">RLM: Recursive Language Models</span></h2></div>
+<div class="story">
+  <p class="l-en">In December 2025, Alex Zhang, Tim Kraska and Omar Khattab at MIT published <em>Recursive Language Models</em>. The idea is simple: <strong>don't put the long input in the prompt at all</strong>. Store it as a variable inside a Python sandbox (a REPL). The model gets only the question and a note saying "the text is in a variable called <code>context</code>". It then does what a programmer would do: peeks at the text with code, splits it, and calls a fresh copy of a language model on each piece. Each copy reads only a small piece, so its attention stays sharp. The answers come back as short notes, and the root model combines them. If a piece is still too big, the copy can do the same trick again. That's the "recursive" part.</p>
+  <p class="l-hi">December 2025 mein MIT ke Alex Zhang, Tim Kraska aur Omar Khattab ne <em>Recursive Language Models</em> chhaapa. Idea seedha hai: <strong>lamba input prompt mein daalo hi mat</strong>. Use ek Python sandbox (REPL) ke andar variable mein rakho. Model ko sirf sawaal milta hai aur ek note ki "text <code>context</code> naam ke variable mein hai". Phir woh wahi karta hai jo programmer karta: code se text mein jhaankta hai, use todta hai, aur har tukde par language model ki ek nayi copy bulaata hai. Har copy sirf chhota tukda padhti hai, isliye uska dhyaan tez rehta hai. Jawab chhote notes ban kar lautte hain, aur root model unhe jodta hai. Agar tukda ab bhi bada ho, toh copy wahi chaal dobara chal sakti hai. Yahi "recursive" hissa hai.</p>
+</div>
+<figure class="scene" id="scB"></figure>
+
+<div class="story">
+  <p class="l-en">The authors report that RLMs handled inputs about <strong>a hundred times longer</strong> than the model's own context window, and beat both the plain model and common long-context tricks (summarising old text, or retrieval agents) on four long-context tasks, at a similar or lower cost per question. They also fine-tuned a small model, RLM-Qwen3-8B, to work this way.</p>
+  <p class="l-hi">Authors ke mutaabik RLMs ne model ki apni context window se lagbhag <strong>sau guna lambe</strong> inputs sambhaale, aur chaar long-context tasks par saade model aur aam long-context tareekon (purane text ka saar banana, ya retrieval agents) dono ko haraaya, har sawaal par milte-julte ya kam kharch mein. Unhone ek chhote model, RLM-Qwen3-8B, ko bhi isi tarah kaam karne ke liye fine-tune kiya.</p>
+</div>
+
+<div class="callout harness">
+  <span class="tag">Engineer's note</span>
+  <h4><span class="l-en">An RLM is a harness pattern</span><span class="l-hi">RLM ek harness pattern hai</span></h4>
+  <p class="l-en">Look closely and you'll recognise every part: a code tool (Ch 16), a sandbox (Ch 27), sub-agents with clean contexts (Ch 19, and Book 2 Ch 9), and context kept <em>outside</em> the window until needed (Ch 10). It's not a new kind of neural network; it's a smarter way to run any existing model. The costs are real too: many model calls, more latency, and a code sandbox you must lock down.</p>
+  <p class="l-hi">Dhyaan se dekho toh har hissa pehchaana lagega: code tool (Ch 16), sandbox (Ch 27), saaf context wale sub-agents (Ch 19, aur Book 2 Ch 9), aur context ko zaroorat tak window ke <em>bahar</em> rakhna (Ch 10). Yeh naye tarah ka neural network nahi; kisi bhi maujooda model ko chalaane ka smart tareeka hai. Kharch bhi asli hain: kai model calls, zyaada latency, aur ek code sandbox jise aapko band karke rakhna hoga.</p>
+</div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">"RLM" has two meanings</span><span class="l-hi">"RLM" ke do matlab hain</span></h4>
+  <p class="l-en">Many blogs use RLM for <strong>Reasoning Language Model</strong>: a model that thinks before answering (Ch 9). The MIT paper uses it for <strong>Recursive</strong> Language Model. When you see the acronym, check which one is meant.</p>
+  <p class="l-hi">Kai blogs RLM ko <strong>Reasoning Language Model</strong> ke liye use karte hain: aisa model jo jawab se pehle sochta hai (Ch 9). MIT paper ise <strong>Recursive</strong> Language Model ke liye use karta hai. Acronym dikhe toh check karo kaunsa matlab hai.</p>
+</div>
+
+<div class="scene-title"><span class="sn">3</span><h2><span class="l-en">NCM: Next-Concept Modeling</span><span class="l-hi">NCM: Next-Concept Modeling</span></h2></div>
+<div class="story">
+  <p class="l-en">On 12 October 2026, Stanford's Hazy Research lab (Hermann Kumbong, Ishan Khare, Simran Arora, Azalia Mirhoseini, Christopher Ré and colleagues) released <strong>Next-Concept Modeling</strong>. It attacks the second wall. An LLM writes left to right. NCM writes the way an artist paints: first a rough sketch of the whole text, then more detail, then the fine strokes. It has two parts. A special tokenizer turns text into a <strong>hierarchy of codes</strong>: a few codes at the top that capture the broad shape, and more codes at each level below that add detail. A generator then creates the hierarchy <strong>one level at a time, with every code inside a level predicted at once</strong>. A decoder turns the finished hierarchy back into words.</p>
+  <p class="l-hi">12 October 2026 ko Stanford ki Hazy Research lab (Hermann Kumbong, Ishan Khare, Simran Arora, Azalia Mirhoseini, Christopher Ré aur saathi) ne <strong>Next-Concept Modeling</strong> jaari kiya. Yeh doosri deewar par hamla hai. LLM baayein se daayein likhta hai. NCM waise likhta hai jaise artist painting banata hai: pehle poore text ka kachcha sketch, phir zyaada detail, phir baareek strokes. Iske do hisse hain. Ek khaas tokenizer text ko <strong>codes ki hierarchy</strong> mein badalta hai: upar kuch codes jo mota aakaar pakadte hain, aur neeche har level par zyaada codes jo detail jodte hain. Phir ek generator hierarchy ko <strong>ek level ek baar mein banata hai, level ke andar har code ek saath</strong>. Ek decoder poori hierarchy ko wapas shabdon mein badalta hai.</p>
+</div>
+<figure class="scene" id="scC"></figure>
+
+<div class="story">
+  <p class="l-en">The reported numbers are striking, but read what they compare against. NCM generated text <strong>10 to 31 times faster</strong> than strong <em>diffusion</em> language models (21× on LM1B, 10× on OpenWebText, 31× on XSum summaries at matching quality), trained on roughly <strong>4 to 5 times fewer tokens</strong>, and solved more hard Sudoku boards than the baselines. The models were small (about 100 million parameters, with preliminary tests up to 725 million), each checkpoint targets one task, and there was no head-to-head test against frontier LLMs. Code and checkpoints are public on GitHub (HazyResearch/ncm).</p>
+  <p class="l-hi">Bataaye gaye numbers chaunkaane wale hain, par dekho tulna kisse hai. NCM ne majboot <em>diffusion</em> language models se <strong>10 se 31 guna tez</strong> text banaaya (LM1B par 21×, OpenWebText par 10×, XSum summaries par barabar quality ke saath 31×), lagbhag <strong>4 se 5 guna kam tokens</strong> par train hua, aur baselines se zyaada mushkil Sudoku hal kiye. Models chhote the (lagbhag 10 crore parameters, 72.5 crore tak shuruaati tests), har checkpoint ek hi kaam ke liye hai, aur frontier LLMs se seedhi takkar nahi hui. Code aur checkpoints GitHub par khule hain (HazyResearch/ncm).</p>
+</div>
+
+<div class="callout behaviour">
+  <span class="tag">AI behaviour</span>
+  <h4><span class="l-en">"The end of LLMs"? Not yet</span><span class="l-hi">"LLMs ka ant"? Abhi nahi</span></h4>
+  <p class="l-en">Social media called NCM "the end of LLMs" within days. The paper itself makes a narrower claim: a faster point on the <em>non-autoregressive</em> frontier. The "concepts" are learned codes, not ideas a human would name. And the authors list open questions: how it scales, training the tokenizer and generator together, and stopping early instead of always running every level. Treat it as an exciting direction, and watch for independent results at large scale.</p>
+  <p class="l-hi">Kuch hi dinon mein social media ne NCM ko "LLMs ka ant" keh diya. Paper khud chhota daava karta hai: <em>non-autoregressive</em> frontier par ek tez point. "Concepts" seekhe hue codes hain, aise ideas nahi jinhe insaan naam de. Aur authors khule sawaal ginaate hain: yeh kaise scale hota hai, tokenizer aur generator ko saath train karna, aur har level chalaane ki jagah jaldi rukna. Ise romaanchak disha maano, aur bade scale par alag nateejon ka intezaar karo.</p>
+</div>
+
+<div class="scene-title"><span class="sn">4</span><h2><span class="l-en">The other challengers</span><span class="l-hi">Baaki challengers</span></h2></div>
+<div class="story">
+  <p class="l-en">RLM and NCM aren't alone. Three more families try to beat or complement the plain next-token transformer. You'll meet their names in news and job posts, so here's each in one picture.</p>
+  <p class="l-hi">RLM aur NCM akele nahi hain. Teen aur parivaar saade next-token transformer ko harane ya uska saath dene ki koshish karte hain. Inke naam news aur job posts mein milenge, isliye har ek ek picture mein.</p>
+</div>
+<figure class="scene" id="scD"></figure>
+
+<div class="analogy">
+  <div><span class="k"><span class="l-en">Changes how a model is run</span><span class="l-hi">Model chalaane ka tareeka badalte hain</span></span><p class="l-en">RLM, reasoning effort, sub-agents. Work with any model you already use. You can try them this week.</p><p class="l-hi">RLM, reasoning effort, sub-agents. Aapke maujooda kisi bhi model ke saath chalte hain. Isi hafte try kar sakte ho.</p></div>
+  <div><span class="k"><span class="l-en">Changes the model itself</span><span class="l-hi">Model ko hi badalte hain</span></span><p class="l-en">NCM, diffusion LMs, state-space models, concept models. Need new training. You wait for a provider or a strong open model.</p><p class="l-hi">NCM, diffusion LMs, state-space models, concept models. Naya training chahiye. Kisi provider ya majboot open model ka intezaar karna padta hai.</p></div>
+</div>
+
+<div class="scene-title"><span class="sn">5</span><h2><span class="l-en">Reading a research headline like an engineer</span><span class="l-hi">Research headline ko engineer ki tarah padhna</span></h2></div>
+<div class="story">
+  <p class="l-en">Use these six questions on every "breakthrough". Here they are applied to NCM as of today.</p>
+  <p class="l-hi">Har "breakthrough" par yeh chhe sawaal poochho. Yahan aaj ke din NCM par laagu kiye hue.</p>
+</div>
+<figure class="scene" id="scE"></figure>
+
+<div class="remember">
+  <span class="tag"><span class="l-en">Remember</span><span class="l-hi">Yaad rakho</span></span>
+  <p class="l-en">Ideas that change <strong>how you run</strong> a model (like RLM) reach your work fast, because you can build them in your harness. Ideas that change <strong>the model itself</strong> (like NCM) reach you slowly, through providers. Learn both; bet your product only on what you can test today.</p>
+  <p class="l-hi">Jo ideas model <strong>chalaane ka tareeka</strong> badalte hain (jaise RLM) woh aapke kaam tak jaldi pahunchte hain, kyunki aap unhe apne harness mein bana sakte ho. Jo ideas <strong>model ko hi</strong> badalte hain (jaise NCM) woh dheere, providers ke zariye pahunchte hain. Dono seekho; product ka daav sirf us par lagao jo aaj test kar sakte ho.</p>
+</div>
+
+<div class="scene-title"><span class="sn">✓</span><h2><span class="l-en">What we learned</span><span class="l-hi">Humne kya seekha</span></h2></div>
+<div class="say"><svg class="av" viewBox="0 0 120 140" aria-hidden="true"><use href="#tokku"/></svg><div class="bubble">
+  <ol class="l-en"><li>Plain LLMs hit two walls: long inputs blur (context rot), and output comes one token at a time.</li><li>RLM keeps the long input in a code sandbox; the model reads it with code and calls copies of itself on small pieces.</li><li>NCM writes text coarse to fine, a whole level at a time; fast against diffusion models, but still small and early.</li><li>Diffusion, state-space and concept models are the other challengers.</li><li>Ask: compared with what, at what scale, replicated, can I run it, what does it cost?</li></ol>
+  <ol class="l-hi"><li>Saade LLMs do deewaron se takraate hain: lambe inputs dhundhle (context rot), aur output ek-ek token.</li><li>RLM lamba input code sandbox mein rakhta hai; model use code se padhta hai aur chhote tukdon par apni copies bulaata hai.</li><li>NCM text mote se baareek likhta hai, poora level ek saath; diffusion models se tez, par abhi chhota aur shuruaati.</li><li>Diffusion, state-space aur concept models baaki challengers hain.</li><li>Poochho: kisse tulna, kis scale par, dohraaya gaya, kya main chala sakta hoon, kharch kya?</li></ol>
+</div></div>
+
+<h2><span class="l-en">Try it yourself</span><span class="l-hi">Khud karke dekho</span></h2>
+<div class="exercises">
+  <div class="exercise"><p class="l-en">Build a baby RLM with your laptop model: keep a long text file in a Python variable, split it into chunks, ask the model the same question about each chunk, then ask it to combine the notes. Compare with pasting the whole file. <span class="level">core</span></p><p class="l-hi">Laptop model ke saath baby RLM banao: lamba text file Python variable mein rakho, tukdon mein todo, har tukde par model se wahi sawaal poochho, phir notes jodne ko kaho. Poori file paste karne se tulna karo. <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Pick one AI research headline from this month and answer the six questions from scene 5 in writing. <span class="level">core</span></p><p class="l-hi">Is mahine ki ek AI research headline chuno aur scene 5 ke chhe sawaalon ke jawab likho. <span class="level">core</span></p></div>
+  <div class="exercise"><p class="l-en">Read the NCM blog post and draw its hierarchy for a sentence of your own: what might the top level capture? <span class="level">stretch</span></p><p class="l-hi">NCM blog post padho aur apne ek vaakya ke liye uski hierarchy banao: sabse upar ka level kya pakad sakta hai? <span class="level">stretch</span></p></div>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Zhang, Kraska &amp; Khattab (2025). <em>Recursive Language Models.</em> arXiv:2512.24601.</li>
+  <li>Kumbong, Khare et al., Hazy Research, Stanford (2026). <em>Next-Concept Modeling: Fast, Parallel Coarse-to-Fine Text Generation.</em> arXiv:2610.14162; code at github.com/HazyResearch/ncm.</li>
+  <li>Gu &amp; Dao (2023). <em>Mamba: Linear-Time Sequence Modeling with Selective State Spaces.</em></li>
+  <li>Sahoo et al. (2024). <em>Simple and Effective Masked Diffusion Language Models</em> (MDLM).</li>
+  <li>LCM team, Meta (2024). <em>Large Concept Models: Language Modeling in a Sentence Representation Space.</em></li>
+</ol>
+</article>
+<script>
+(function () {
+  var B = window.Book, E = B.E, BI = B.BI, show = B.show;
+
+  B.columns("scA", [
+    { en: "Wall 1: long inputs", hi: "Deewar 1: lambe inputs", cls: "box-amb", step: 0, items: [
+      { en: "Problem: attention spreads thin, details get lost (context rot)", hi: "Samasya: dhyaan bikhar jaata hai, details kho jaati hain (context rot)", step: 0 },
+      { en: "Today's patch: RAG, compaction, sub-agents (Ch 10, 14, 19)", hi: "Aaj ka patch: RAG, compaction, sub-agents (Ch 10, 14, 19)", cls: "box-sig", step: 1 },
+      { en: "Research: RLM keeps the input outside and reads it with code", hi: "Research: RLM input ko bahar rakh kar code se padhta hai", cls: "box-plm", step: 2 } ] },
+    { en: "Wall 2: one token at a time", hi: "Deewar 2: ek-ek token", cls: "box-amb", step: 0, items: [
+      { en: "Problem: 500 words means hundreds of steps in a row", hi: "Samasya: 500 shabd matlab lagaataar saikdon steps", step: 0 },
+      { en: "Today's patch: smaller models, caching, speculative decoding (Ch 29)", hi: "Aaj ka patch: chhote models, caching, speculative decoding (Ch 29)", cls: "box-sig", step: 1 },
+      { en: "Research: diffusion LMs and NCM write many pieces at once", hi: "Research: diffusion LMs aur NCM kai hisse ek saath likhte hain", cls: "box-plm", step: 2 } ] }
+  ], [
+    ["Two walls. Long inputs blur, and every answer is written one token after another.", "Do deewarein. Lambe inputs dhundhle hote hain, aur har jawab ek token ke baad ek likha jaata hai."],
+    ["Today we work around both in the harness, with the tools from earlier chapters.", "Aaj hum dono ko harness mein, pichle chapters ke tools se, ghoom kar sambhaalte hain."],
+    ["Research tries to move the walls: RLM for long inputs, diffusion and NCM for speed.", "Research deewarein hilaane ki koshish karta hai: lambe inputs ke liye RLM, speed ke liye diffusion aur NCM."]
+  ]);
+
+  // RLM: the long input lives in a REPL variable; the root model reads it with code and calls copies of itself
+  (function () {
+    var S = B.stage("scB", "Recursive language model: a root model reads a long input stored in a Python sandbox and calls copies of a model on pieces");
+    var s = S.svg; S.height(372);
+    E(s, "rect", { x: 10, y: 10, width: 350, height: 350, rx: 10, "class": "box" });
+    BI(s, { x: 26, y: 34, "font-size": 12, "font-weight": 700, "class": "mono" }, "Python sandbox (REPL)", "Python sandbox (REPL)");
+    var code = [
+      ["context = \"…10M characters…\"", "the long input, stored as a variable", "lamba input, variable mein rakha"],
+      ["print(len(context), context[:500])", "peek: how long is it, how does it start?", "jhaanko: kitna lamba, shuruaat kaisi?"],
+      ["chunks = split_by_chapter(context)", "split with plain code: 40 pieces", "saade code se todo: 40 tukde"],
+      ["notes = [llm_query(c, q) for c in chunks]", "a fresh model copy reads each piece", "har tukda model ki nayi copy padhti hai"],
+      ["FINAL(llm_query(notes, q))", "combine the short notes into the answer", "chhote notes jod kar jawab"]
+    ];
+    var codeEls = code.map(function (c, k) {
+      var g = E(s, "g", { "class": "anim" }), y = 66 + k * 58;
+      E(g, "text", { x: 26, y: y, "font-size": 11.5, "class": "mono sig" }, c[0]);
+      BI(g, { x: 26, y: y + 18, "font-size": 11, "class": "muted" }, c[1], c[2]);
+      return g;
+    });
+    var root = E(s, "g", { "class": "anim" });
+    B.tokku(root, 520, 14, 50);
+    BI(root, { x: 545, y: 90, "text-anchor": "middle", "font-size": 12, "font-weight": 700 }, "Root model", "Root model");
+    BI(root, { x: 545, y: 106, "text-anchor": "middle", "font-size": 11, "class": "muted" }, "sees the question, not the text", "sawaal dekhta hai, text nahi");
+    var pieces = [], subs = [], notes = [], links = [];
+    for (var j = 0; j < 5; j++) {   // links first, so the chunk boxes are drawn on top of them
+      links.push(E(s, "path", { d: "M545 116 L" + (422 + j * 72) + " 194", "class": "line anim", "stroke-width": 1.2, "stroke-dasharray": "3 3", fill: "none" }));
+    }
+    for (var k = 0; k < 5; k++) {
+      var x = 392 + k * 72;
+      var p = E(s, "g", { "class": "anim" });
+      E(p, "rect", { x: x, y: 140, width: 60, height: 34, rx: 4, "class": "box-amb" });
+      E(p, "text", { x: x + 30, y: 162, "text-anchor": "middle", "font-size": 12, "class": "mono" }, k < 4 ? "#" + (k + 1) : "…40");
+      pieces.push(p);
+      var sb = E(s, "g", { "class": "anim" });
+      B.tokku(sb, x + 13, 198, 34);
+      subs.push(sb);
+      var nt = E(s, "g", { "class": "anim" });
+      E(nt, "rect", { x: x + 2, y: 250, width: 56, height: 26, rx: 13, "class": "box-sig" });
+      E(nt, "text", { x: x + 30, y: 267, "text-anchor": "middle", "font-size": 11 }, "note");
+      notes.push(nt);
+    }
+    var final = E(s, "g", { "class": "anim" });
+    E(final, "rect", { x: 392, y: 300, width: 348, height: 52, rx: 8, "class": "box-sig" });
+    BI(final, { x: 566, y: 322, "text-anchor": "middle", "font-size": 12.5, "font-weight": 700 }, "Answer, with the evidence it found", "Jawab, mile hue saboot ke saath");
+    BI(final, { x: 566, y: 340, "text-anchor": "middle", "font-size": 11, "class": "muted" }, "no single call ever saw all 10M characters", "kisi ek call ne poore 1 crore characters nahi dekhe");
+    function many(list, on) { list.forEach(function (g) { show(g, on); }); }
+    B.scene(S.fig, [
+      ["The long input never goes into the prompt. It's saved as a variable called <code>context</code> inside a Python sandbox.", "Lamba input prompt mein kabhi nahi jaata. Python sandbox ke andar <code>context</code> naam ke variable mein rakha jaata hai."],
+      ["The root model sees only the question. It writes code to peek: how long is the text, and how does it start?", "Root model sirf sawaal dekhta hai. Code likh kar jhaankta hai: text kitna lamba hai, aur shuru kaise hota hai?"],
+      ["It splits the text with ordinary code, here into 40 chapters.", "Woh saade code se text todta hai, yahan 40 chapters mein."],
+      ["For each piece it calls a fresh model copy: <code>llm_query(piece, question)</code>. Each copy reads a small piece, so nothing rots.", "Har tukde par model ki nayi copy bulaata hai: <code>llm_query(tukda, sawaal)</code>. Har copy chhota tukda padhti hai, isliye kuch sadta nahi."],
+      ["Each copy returns a short note. If a piece is still too big, that copy can split it again: that's the recursion.", "Har copy chhota note lautaati hai. Tukda ab bhi bada ho toh woh copy use phir tod sakti hai: yahi recursion hai."],
+      ["The root combines the notes and returns the answer. No single call ever read the whole input.", "Root notes jod kar jawab deta hai. Kisi ek call ne poora input nahi padha."]
+    ], function (i) {
+      codeEls.forEach(function (g, k) { show(g, k <= [0, 1, 2, 3, 3, 4][i]); });
+      show(root, i >= 1);
+      many(pieces, i >= 2);
+      many(links, i >= 3); many(subs, i >= 3);
+      many(notes, i >= 4);
+      show(final, i >= 5);
+    });
+  })();
+
+  // NCM: token-by-token versus coarse-to-fine levels
+  (function () {
+    var S = B.stage("scC", "Next-concept modeling: an LLM writes one token per step, NCM writes a hierarchy of codes level by level");
+    var s = S.svg; S.height(330);
+    var toks = ["Thanks", "for", "your", "order", "!", "It", "ships", "on", "Mon", "day", "."];
+    var ar = E(s, "g", { "class": "anim" });
+    BI(ar, { x: 10, y: 30, "font-size": 12.5, "font-weight": 700 }, "LLM: left to right", "LLM: baayein se daayein");
+    BI(ar, { x: 10, y: 48, "font-size": 11, "class": "muted" }, "11 tokens = 11 steps", "11 tokens = 11 steps");
+    var tokEls = toks.map(function (t, k) {
+      var g = E(ar, "g", { "class": "anim" }), x = 190 + k * 50;
+      E(g, "rect", { x: x, y: 20, width: 46, height: 30, rx: 4, "class": "box" });
+      E(g, "text", { x: x + 23, y: 40, "text-anchor": "middle", "font-size": 11 }, t);
+      E(g, "text", { x: x + 23, y: 64, "text-anchor": "middle", "font-size": 10, "class": "mono muted" }, String(k + 1));
+      return g;
+    });
+    var lv = [[2, "Level 1", "broad shape"], [4, "Level 2", "more detail"], [8, "Level 3", "fine detail"]];
+    var hiLv = ["mota aakaar", "zyaada detail", "baareek detail"];
+    var codes = [417, 88, 902, 15, 333, 760, 41, 529, 12, 618, 274, 905, 77, 450];
+    var ci = 0;
+    var lvEls = lv.map(function (L, r) {
+      var g = E(s, "g", { "class": "anim" }), y = 100 + r * 46, w = (550 - (L[0] - 1) * 6) / L[0];
+      BI(g, { x: 10, y: y + 15, "font-size": 12.5, "font-weight": 700 }, "NCM " + L[1] + " · 1 step", "NCM " + L[1] + " · 1 step");
+      BI(g, { x: 10, y: y + 31, "font-size": 11, "class": "muted" }, L[2], hiLv[r]);
+      for (var k = 0; k < L[0]; k++) {
+        var x = 190 + k * (w + 6);
+        E(g, "rect", { x: x, y: y, width: w, height: 30, rx: 4, "class": ["box-plm", "box-amb", "box-sig"][r] });
+        E(g, "text", { x: x + w / 2, y: y + 20, "text-anchor": "middle", "font-size": 11, "class": "mono" }, "#" + codes[ci++ % codes.length]);
+      }
+      return g;
+    });
+    var dec = E(s, "g", { "class": "anim" });
+    BI(dec, { x: 10, y: 262, "font-size": 12.5, "font-weight": 700 }, "Decoder", "Decoder");
+    BI(dec, { x: 10, y: 278, "font-size": 11, "class": "muted" }, "codes back to words", "codes wapas shabdon mein");
+    E(dec, "rect", { x: 190, y: 248, width: 550, height: 36, rx: 6, "class": "box" });
+    E(dec, "text", { x: 465, y: 271, "text-anchor": "middle", "font-size": 13, "font-weight": 600 }, "Thanks for your order! It ships on Monday.");
+    var note = E(s, "g", { "class": "anim" });
+    BI(note, { x: 380, y: 312, "text-anchor": "middle", "font-size": 11.5, "class": "muted" },
+      "3 levels + decode instead of 11 steps. Each level is still one full model run.",
+      "11 steps ki jagah 3 levels + decode. Har level phir bhi ek poora model run hai.");
+    B.scene(S.fig, [
+      ["An ordinary LLM writes left to right: one token per step. Eleven tokens need eleven steps, one after another.", "Saada LLM baayein se daayein likhta hai: har step ek token. Gyaarah tokens ko gyaarah steps chahiye, ek ke baad ek."],
+      ["NCM starts with a tiny top level: two codes that capture the broad shape of the whole text, made in one step.", "NCM ek chhote upar wale level se shuru hota hai: do codes jo poore text ka mota aakaar pakadte hain, ek step mein."],
+      ["The next level adds detail. All four codes are predicted at the same time.", "Agla level detail jodta hai. Chaaron codes ek hi samay mein predict hote hain."],
+      ["The bottom level adds fine detail, again all at once.", "Sabse neeche ka level baareek detail jodta hai, phir sab ek saath."],
+      ["A decoder turns the finished hierarchy into words. Few steps, each one parallel: that's where the speed comes from.", "Decoder poori hierarchy ko shabdon mein badalta hai. Kam steps, har ek parallel: speed yahin se aati hai."]
+    ], function (i) {
+      show(ar, true);
+      tokEls.forEach(function (g) { show(g, true); });
+      lvEls.forEach(function (g, k) { show(g, k + 1 <= i); });
+      show(dec, i >= 4); show(note, i >= 4);
+    });
+  })();
+
+  B.columns("scD", [
+    { en: "Diffusion LMs", hi: "Diffusion LMs", cls: "box-sig", step: 0, items: [
+      { en: "Start from a noisy, masked draft of the whole answer and refine all of it over a few rounds", hi: "Poore jawab ke shor wale, dhake draft se shuru, kuch rounds mein sab ek saath sudhaaro", step: 0 },
+      { en: "Examples: Inception's Mercury, Google's Gemini Diffusion (experimental)", hi: "Udaharan: Inception ka Mercury, Google ka Gemini Diffusion (experimental)", step: 0 },
+      { en: "Strength: very fast output, good for code edits", hi: "Taakat: bahut tez output, code edits ke liye achha", cls: "box-plm", step: 0 } ] },
+    { en: "State-space models", hi: "State-space models", cls: "box-amb", step: 1, items: [
+      { en: "Keep a fixed-size running memory instead of attending to every past token", hi: "Har pichle token par dhyaan ki jagah ek fixed size ki chalti memory rakho", step: 1 },
+      { en: "Examples: Mamba; hybrids that mix it with attention, like Jamba and Nemotron-H", hi: "Udaharan: Mamba; attention ke saath mile hybrids, jaise Jamba aur Nemotron-H", step: 1 },
+      { en: "Strength: memory and cost don't balloon with long inputs", hi: "Taakat: lambe inputs par memory aur kharch nahi phoolte", cls: "box-plm", step: 1 } ] },
+    { en: "Concept models", hi: "Concept models", cls: "box-plm", step: 2, items: [
+      { en: "Predict the next whole sentence as a meaning vector, not the next word", hi: "Agla shabd nahi, poora agla vaakya meaning vector ke roop mein predict karo", step: 2 },
+      { en: "Example: Meta's Large Concept Model (2024). NCM is a different, coarse-to-fine idea", hi: "Udaharan: Meta ka Large Concept Model (2024). NCM alag, mote-se-baareek idea hai", step: 2 },
+      { en: "Strength: thinks above words; works across languages", hi: "Taakat: shabdon se upar sochta hai; bhashaon ke paar chalta hai", cls: "box-plm", step: 2 } ] }
+  ], [
+    ["<strong>Diffusion language models</strong> write a rough draft of everything, then clean it all up together, like developing a photo.", "<strong>Diffusion language models</strong> sab ka kachcha draft likhte hain, phir sab ek saath saaf karte hain, jaise photo develop karna."],
+    ["<strong>State-space models</strong> carry a compact memory forward, so long inputs stay cheap. Most real systems mix them with attention.", "<strong>State-space models</strong> ek chhoti memory aage le jaate hain, isliye lambe inputs saste rehte hain. Zyaadatar asli systems inhe attention ke saath milaate hain."],
+    ["<strong>Concept models</strong> plan in sentences or ideas instead of tokens. Young, but a sign of where research is heading.", "<strong>Concept models</strong> tokens ki jagah vaakyon ya ideas mein plan karte hain. Naye hain, par research ki disha ka ishaara hain."]
+  ]);
+
+  B.flow("scE", [
+    { en: "Compared with?", hi: "Kisse tulna?", sen: "diffusion LMs, not frontier LLMs", shi: "diffusion LMs, frontier LLMs nahi" },
+    { en: "What scale?", hi: "Kitna scale?", sen: "~100M to 725M parameters", shi: "~10 crore se 72.5 crore parameters" },
+    { en: "Replicated?", hi: "Dohraaya gaya?", sen: "not yet, by others", shi: "abhi doosron ne nahi" },
+    { en: "Can I run it?", hi: "Chala sakta hoon?", sen: "code + task checkpoints; no API", shi: "code + task checkpoints; API nahi" },
+    { en: "Cost & speed?", hi: "Kharch aur speed?", sen: "faster per answer; each level is a full pass", shi: "har jawab tez; har level ek poora pass" },
+    { en: "Changes my product?", hi: "Product badlega?", sen: "not this year; watch it", shi: "is saal nahi; nazar rakho" }
+  ], [
+    ["<strong>Compared with what?</strong> A big speed-up over a slow baseline is not a speed-up over what you use.", "<strong>Kisse tulna?</strong> Dheemi baseline se bada speed-up, aapke istemaal wale se speed-up nahi."],
+    ["<strong>At what scale?</strong> Small models can behave very differently from large ones.", "<strong>Kis scale par?</strong> Chhote models bade models se bahut alag behave kar sakte hain."],
+    ["<strong>Replicated?</strong> Wait for other labs to get the same result.", "<strong>Dohraaya gaya?</strong> Doosri labs ko wahi nateeja milne ka intezaar karo."],
+    ["<strong>Can I run it?</strong> Code, weights, or an API decide whether you can test it at all.", "<strong>Chala sakta hoon?</strong> Code, weights ya API tay karte hain ki aap test kar bhi sakte ho ya nahi."],
+    ["<strong>What does it cost?</strong> Look at latency, money and engineering effort, not just one headline number.", "<strong>Kharch kya?</strong> Latency, paisa aur engineering mehnat dekho, sirf ek headline number nahi."],
+    ["<strong>Does it change my product now?</strong> Usually: learn it, note it on your radar (Ch 33), keep shipping.", "<strong>Kya abhi mera product badlega?</strong> Aksar: seekho, radar par likho (Ch 33), ship karte raho."]
+  ], { perRow: 3 });
+})();
+</script>

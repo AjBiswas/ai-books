@@ -417,3 +417,13 @@ pre { border: 0; border-radius: 16px; box-shadow: inset 0 2px 8px rgba(0, 0, 0, 
   width: 2.9rem; height: 2.9rem; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
   background: var(--knob); color: var(--knob-ink); box-shadow: 0 12px 26px -8px rgba(0, 0, 0, .5); }
 .tbtn svg { width: 1.25rem; height: 1.25rem; }
+
+/* Dictionary (Book 1 Ch 36): chapter pointers on each term, and the study order */
+.gloss .see { display: inline-block; margin-top: 0.35rem; font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.04em; color: var(--ink-2); text-decoration: none; }
+.gloss a.see { color: var(--signal); }
+.gloss > div > span.l-en, .gloss > div > span.l-hi { display: block; }
+.study { padding-left: 1.4rem; }
+.study li { margin-bottom: 0.6rem; }
+.study .see { font-family: var(--font-mono); font-size: 0.75rem; margin-left: 0.4rem; color: var(--ink-2); text-decoration: none; }
+.study a.see { color: var(--signal); }

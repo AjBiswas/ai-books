@@ -40,7 +40,7 @@ HOME = HEAD + """<title>AI Books</title>
   <p class="lede">Open a book. Everything works offline; only the fonts need internet (without it, system fonts are used).</p>
 </header>
 <ol class="chapters" style="margin-top:2rem">
-  <li><span class="cn">1</span><a class="ct" href="book2/index.html">Becoming an AI Engineer<span>34 chapters · from zero to AI engineer, A to Z: prompting, RAG, MCP, agents, local models, production</span></a><span class="st ready">Start here</span></li>
+  <li><span class="cn">1</span><a class="ct" href="book2/index.html">Becoming an AI Engineer<span>36 chapters · from zero to AI engineer, A to Z: prompting, RAG, MCP, agents, local models, production</span></a><span class="st ready">Start here</span></li>
   <li><span class="cn">2</span><a class="ct" href="book1/index.html">Building the Harness<span>18 chapters · LLM internals, agent harnesses, enterprise AI platforms</span></a><span class="st ready">Open</span></li>
 </ol>
 </div>
